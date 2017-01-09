@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.oi.OIMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class Robot extends IterativeRobot {
 
     public static TalonClusterDrive driveSubsystem;
 
-    public static OISubsystem oiSubsystem;
+    public static OI2017 oiSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -25,7 +26,7 @@ public class Robot extends IterativeRobot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		oiSubsystem = new ;
+		oiSubsystem = new OI2017(cfg.getOi());
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive());
 	}
 }

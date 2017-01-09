@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
@@ -9,16 +10,23 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 public class OI2017 extends OISubsystem{
 
 	private Throttle leftThrottle;
-	private Throttle righThrottle;
+	private Throttle rightThrottle;
+
+	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map){
+		super(map.getOi());
+		this.map = map;
+		leftThrottle = new SmoothedThrottle(new Joystick(map.getLeftStick()), 1);
+		rightThrottle = new SmoothedThrottle(new Joystick(map.getRightStick()), 1);
+	}
 
 	@Override
 	public double getDriveAxisLeft() {
-		return 0;
+		return leftThrottle.getValue();
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		return 0;
+		return rightThrottle.getValue();
 	}
 
 	@Override
