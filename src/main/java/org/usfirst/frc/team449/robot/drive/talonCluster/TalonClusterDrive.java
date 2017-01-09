@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CANTalon;
 import maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.CANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
+import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
  * Created by BlairRobot on 2017-01-08.
@@ -15,6 +16,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map){
 		super(map.getDrive());
+		this.map = map;
 		rightMaster = new CANTalonSRX(map.getRightMaster());
 		leftMaster = new CANTalonSRX(map.getLeftMaster());
 		for (CANTalonSRXMap.CANTalonSRX talon : map.getRightSlaveList()){
