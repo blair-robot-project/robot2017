@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.CANTalon;
 import maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.CANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
+import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
@@ -14,9 +16,12 @@ public class TalonClusterDrive extends DriveSubsystem {
 	public CANTalonSRX rightMaster;
 	public CANTalonSRX leftMaster;
 
-	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map){
+	public OI2017 oi;
+
+	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map, OI2017 oi){
 		super(map.getDrive());
 		this.map = map;
+		this.oi = oi;
 		rightMaster = new CANTalonSRX(map.getRightMaster());
 		leftMaster = new CANTalonSRX(map.getLeftMaster());
 		for (CANTalonSRXMap.CANTalonSRX talon : map.getRightSlaveList()){
@@ -52,6 +57,6 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-
+		setDefaultCommand(new DefaultDrive(this, oi));
 	}
 }

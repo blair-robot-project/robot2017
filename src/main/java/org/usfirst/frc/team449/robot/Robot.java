@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.oi.OIMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
@@ -27,6 +28,11 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 		oiSubsystem = new OI2017(cfg.getOi());
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive());
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+	}
+
+	@Override
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
 	}
 }
