@@ -28,6 +28,11 @@ public class DoubleFlywheelShooter extends MappedSubsystem{
 		rightTalon.setPercentVbus(sp);
 	}
 
+	private void setPIDSpeed(double sp){
+		leftTalon.setSpeed(1023/leftTalon.canTalon.getF()/60*sp);
+		rightTalon.setSpeed(1023/rightTalon.canTalon.getF()/60*sp);
+	}
+
 	/**
 	 * A wrapper around the speed method we're currently using/testing
 	 * @param sp The speed to go at, where 0 is off and 1 is max speed.
