@@ -2,3 +2,11 @@ syntax = "proto2";
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
 import "org/usfirst/frc/team449/robot/components/CANTalonSRX.proto";
 
+option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter";
+option java_outer_classname = "DoubleFlywheelShooterMap";
+
+message DoubleFlywheelShooter {
+	required Mechanism mechanism = 1;
+    required CANTalonSRX left_talon = 2;
+    required CANTalonSRX right_talon = 3;
+}
