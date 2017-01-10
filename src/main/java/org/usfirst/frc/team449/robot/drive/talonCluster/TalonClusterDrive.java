@@ -46,6 +46,11 @@ public class TalonClusterDrive extends DriveSubsystem {
 		rightMaster.setPercentVbus(right);
 	}
 
+	public void setPIDThrottle(double left, double right){
+		leftMaster.setSpeed(1023/leftMaster.canTalon.getF()/60*left);
+		rightMaster.setSpeed(1023/rightMaster.canTalon.getF()/60*right);
+	}
+
 	/**
 	 * Allows the type of motor control used to be varied in testing.
 	 * @param left Left throttle value
