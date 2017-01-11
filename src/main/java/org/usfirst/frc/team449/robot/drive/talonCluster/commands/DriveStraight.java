@@ -1,0 +1,49 @@
+package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+
+import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.oi.OISubsystem;
+
+/**
+ * Program created by noah on 1/8/17.
+ */
+public class DriveStraight extends ReferencingCommand {
+	public OISubsystem oi;
+
+	double leftThrottle;
+	double rightThrottle;
+
+	public DriveStraight(TalonClusterDrive drive, OISubsystem oi) {
+		super(drive);
+		this.oi = oi;
+		requires(subsystem);
+		System.out.println("Drive Robot bueno");
+	}
+
+	@Override
+	protected void initialize() {
+		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+	}
+
+	@Override
+	protected void execute() {
+		rightThrottle = oi.getDriveAxisRight();
+		((TalonClusterDrive) subsystem).setDefaultThrottle(rightThrottle, rightThrottle);
+		((TalonClusterDrive) subsystem).logData(rightThrottle);
+	}
+
+	@Override
+	protected boolean isFinished() {
+		return false;
+	}
+
+	@Override
+	protected void end() {
+	}
+
+	@Override
+	protected void interrupted() {
+		System.out.println("DriveStraight Interrupted! Stopping the robot.");
+		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+	}
+}
