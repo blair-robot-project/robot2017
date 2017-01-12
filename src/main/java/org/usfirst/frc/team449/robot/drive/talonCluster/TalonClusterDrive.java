@@ -19,6 +19,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 	public CANTalonSRX rightMaster;
 	public CANTalonSRX leftMaster;
+	public CANTalonSRX formerRight;
 
 	private long startTime;
 
@@ -32,12 +33,15 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 		rightMaster = new CANTalonSRX(map.getRightMaster());
 		leftMaster = new CANTalonSRX(map.getLeftMaster());
+
 		/*
 		rightMaster = new CANTalonSRX(map.getLeftMaster());
 		leftMaster = new CANTalonSRX(map.getRightMaster());
 		*/
 		for (CANTalonSRXMap.CANTalonSRX talon : map.getRightSlaveList()){
 			CANTalonSRX talonObject = new CANTalonSRX(talon);
+			if (talon.getPort() == 4)
+				formerRight = talonObject;
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getRightMaster().getPort());
 		}
@@ -113,6 +117,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 			SmartDashboard.putBoolean("Right reverse limit switch", rightMaster.canTalon.isRevLimitSwitchClosed());
 			SmartDashboard.putBoolean("Right Soft Limit fwd enabled", rightMaster.canTalon.isForwardSoftLimitEnabled());
 			SmartDashboard.putBoolean("Right Soft Limit rev enabled", rightMaster.canTalon.isReverseSoftLimitEnabled());
+			SmartDashboard.putNumber("Former Right Motor voltage", formerRight.canTalon.getOutputVoltage());
 			fw.write(sb.toString());
 		}catch (IOException e){
 			e.printStackTrace();
