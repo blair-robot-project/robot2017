@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.CANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveStraight;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.FileWriter;
@@ -29,8 +29,13 @@ public class TalonClusterDrive extends DriveSubsystem {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
+
 		rightMaster = new CANTalonSRX(map.getRightMaster());
 		leftMaster = new CANTalonSRX(map.getLeftMaster());
+		/*
+		rightMaster = new CANTalonSRX(map.getLeftMaster());
+		leftMaster = new CANTalonSRX(map.getRightMaster());
+		*/
 		for (CANTalonSRXMap.CANTalonSRX talon : map.getRightSlaveList()){
 			CANTalonSRX talonObject = new CANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -65,7 +70,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right){
-		setPIDThrottle(left, right);
+		setPIDThrottle(left, -right);
 	}
 
 	public static double nativeToRPS(double nativeUnits){
@@ -103,6 +108,11 @@ public class TalonClusterDrive extends DriveSubsystem {
 			SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
 			SmartDashboard.putNumber("Right voltage",rightMaster.canTalon.getOutputVoltage());
 			SmartDashboard.putNumber("Left voltage",leftMaster.canTalon.getOutputVoltage());
+			SmartDashboard.putString("Right Control Mode", rightMaster.canTalon.getControlMode().toString());
+			SmartDashboard.putBoolean("Right forward limit switch", rightMaster.canTalon.isFwdLimitSwitchClosed());
+			SmartDashboard.putBoolean("Right reverse limit switch", rightMaster.canTalon.isRevLimitSwitchClosed());
+			SmartDashboard.putBoolean("Right Soft Limit fwd enabled", rightMaster.canTalon.isForwardSoftLimitEnabled());
+			SmartDashboard.putBoolean("Right Soft Limit rev enabled", rightMaster.canTalon.isReverseSoftLimitEnabled());
 			fw.write(sb.toString());
 		}catch (IOException e){
 			e.printStackTrace();
@@ -118,6 +128,6 @@ public class TalonClusterDrive extends DriveSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-		setDefaultCommand(new DriveStraight(this, oi));
+		setDefaultCommand(new PIDTest(this));
 	}
 }
