@@ -64,8 +64,8 @@ public class TalonClusterDrive extends DriveSubsystem {
 	}
 
 	private void setPIDThrottle(double left, double right){
-		leftMaster.setSpeed(RPSToNative(left*leftMaster.getMaxSpeed())/60);
-		rightMaster.setSpeed(RPSToNative(right*leftMaster.getMaxSpeed())/60);
+		leftMaster.setSpeed(.7*RPSToNative(left*leftMaster.getMaxSpeed())/60);
+		rightMaster.setSpeed(.7*RPSToNative(right*leftMaster.getMaxSpeed())/60);
 	}
 
 	/**
