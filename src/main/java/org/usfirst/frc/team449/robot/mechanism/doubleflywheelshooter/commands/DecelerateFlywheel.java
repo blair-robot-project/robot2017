@@ -31,7 +31,7 @@ public class DecelerateFlywheel extends ReferencingCommand{
 
 	@Override
 	protected boolean isFinished() {
-		return true;
+		return false;
 	}
 
 	@Override
