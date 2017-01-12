@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by BlairRobot on 2017-01-08.
+ * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
 public class TalonClusterDrive extends DriveSubsystem {
 
@@ -22,8 +22,6 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 	private long startTime;
 
-	private double rightMapF;
-	private double leftMapF;
 
 	public OI2017 oi;
 
@@ -51,14 +49,14 @@ public class TalonClusterDrive extends DriveSubsystem {
 	 * @param left The left throttle, a number between -1 and 1 inclusive.
 	 * @param right The right throttle, a number between -1 and 1 inclusive.
 	 */
-	public void setVBusThrottle(double left, double right){
+	private void setVBusThrottle(double left, double right){
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(right);
 	}
 
-	public void setPIDThrottle(double left, double right){
-		leftMaster.setSpeed(RPSToNative(left*leftMapF)/60);
-		rightMaster.setSpeed(RPSToNative(right*rightMapF)/60);
+	private void setPIDThrottle(double left, double right){
+		leftMaster.setSpeed(RPSToNative(left*leftMaster.getMaxSpeed())/60);
+		rightMaster.setSpeed(RPSToNative(right*leftMaster.getMaxSpeed())/60);
 	}
 
 	/**
@@ -79,10 +77,8 @@ public class TalonClusterDrive extends DriveSubsystem {
 	}
 
 	public void setPIDF(){
-		rightMapF = rightMaster.canTalon.getF();
-		leftMapF = leftMaster.canTalon.getF();
-		rightMaster.canTalon.setF(1023/RPSToNative(rightMapF));
-		leftMaster.canTalon.setF(1023/RPSToNative(leftMapF));
+		rightMaster.canTalon.setF(1023/RPSToNative(rightMaster.getMaxSpeed()));
+		leftMaster.canTalon.setF(1023/RPSToNative(leftMaster.getMaxSpeed()));
 	}
 
 	public void logData(double throttle){
