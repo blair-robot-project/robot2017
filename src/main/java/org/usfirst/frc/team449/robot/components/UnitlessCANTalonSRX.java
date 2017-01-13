@@ -70,8 +70,7 @@ public class UnitlessCANTalonSRX extends Component {
 		kP = m.getKP();
 		kI = m.getKI();
 		kD = m.getKD();
-		setPIDF(m.getKP(), m.getKI(), m.getKD(), 1023/RPStoNative(maxSpeed));
-		canTalon.setPID(kP, kI, kD, kF, 0, 0, 0);
+		canTalon.setPID(m.getKP(), m.getKI(), m.getKD(), 1023/RPStoNative(m.getMaxSpeed()), 0, 0, 0);
 		canTalon.setProfile(0);
 
 		// Configure more stuff
@@ -83,39 +82,6 @@ public class UnitlessCANTalonSRX extends Component {
 		canTalon.enableReverseSoftLimit(m.getRevSoftLimEnabled());
 		canTalon.setReverseSoftLimit(m.getRevSoftLimVal());
 		canTalon.enableBrakeMode(m.getBrakeMode());
-	}
-
-	/**
-	 * Method called in the constructor that sets the true PID values before they are handed to the Talon's internal
-	 * PID controller.
-	 * <p>
-	 * When called in the constructor, this method takes the map's PIDF values as its arguments, scales them, and
-	 * sticks
-	 * them in the kP, kI, kD, kF fields. Later in the constructor, the Talon is given those fields as the final PIDF.
-	 * <p>
-	 * By default, the map PIDF values are untouched before they go into the Talon. However, you may want to specify
-	 * a scaling factor between the map PIDF and the PIDF that is fed to the Talon. When you are PIDF tuning, you want
-	 * to think of changing PIDF as fractions of a full response. However, robots have intrinsic scaling factors
-	 * between
-	 * the input units and the measured units and PIDF values, so this method allows you to specify external scaling
-	 * factors so that you can have your fractional PIDF in one place on the map and your scaling in another place in
-	 * the map.
-	 * <p>
-	 * To scale PIDF between the map and the Talon, override this method and change what the PIDF fields are assigned
-	 * to.
-	 * <p>
-	 * Note that true PIDF have already been assigned for the first time in the constructor. If you do not want to
-	 * scale
-	 * anything, you do not need to fill out this method, and if you only want to scale one value, you can write in
-	 * just
-	 * that one value when you override this.
-	 *
-	 * @param mkP map kP
-	 * @param mkI map kI
-	 * @param mkD map kD
-	 * @param mkF map KF
-	 */
-	protected void setPIDF(double mkP, double mkI, double mkD, double mkF) {
 	}
 
 	/**

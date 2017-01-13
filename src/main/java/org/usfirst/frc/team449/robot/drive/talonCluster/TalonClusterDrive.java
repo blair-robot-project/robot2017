@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDBackAndForth;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
@@ -73,7 +75,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 		setPIDThrottle(left, -right);
 	}
 
-	public void logData(double throttle){
+	public void logData(){
 		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime()-startTime)/100);
@@ -84,9 +86,10 @@ public class TalonClusterDrive extends DriveSubsystem {
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
 			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-			sb.append(throttle);
+			sb.append(leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			sb.append("\n");
-			SmartDashboard.putNumber("Throttle", throttle);
+			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+			/*
 			SmartDashboard.putNumber("Left Setpoint", leftMaster.canTalon.getSetpoint());
 			SmartDashboard.putNumber("Left Error", leftMaster.canTalon.getError());
 			SmartDashboard.putNumber("Right Setpoint", rightMaster.canTalon.getSetpoint());
@@ -100,6 +103,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 			SmartDashboard.putBoolean("Right reverse limit switch", rightMaster.canTalon.isRevLimitSwitchClosed());
 			SmartDashboard.putBoolean("Right Soft Limit fwd enabled", rightMaster.canTalon.isForwardSoftLimitEnabled());
 			SmartDashboard.putBoolean("Right Soft Limit rev enabled", rightMaster.canTalon.isReverseSoftLimitEnabled());
+			*/
 			fw.write(sb.toString());
 		}catch (IOException e){
 			e.printStackTrace();
@@ -115,6 +119,6 @@ public class TalonClusterDrive extends DriveSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-		setDefaultCommand(new PIDTest(this));
+		setDefaultCommand(new DefaultDrive(this, oi));
 	}
 }

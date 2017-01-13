@@ -29,6 +29,7 @@ public class DefaultDrive extends ReferencingCommand {
     protected void execute() {
         rightThrottle = oi.getDriveAxisRight();
         leftThrottle = oi.getDriveAxisLeft();
+        ((TalonClusterDrive) subsystem).logData();
         ((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
     }
 

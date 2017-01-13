@@ -21,12 +21,12 @@ public class OI2017 extends OISubsystem{
 
 	@Override
 	public double getDriveAxisLeft() {
-		return leftThrottle.getValue();
+		return -leftThrottle.getValue();
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		return rightThrottle.getValue();
+		return -rightThrottle.getValue();
 	}
 
 	@Override

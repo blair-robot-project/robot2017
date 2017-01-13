@@ -25,7 +25,7 @@ public class DriveAtSpeed extends ReferencingCommand{
 	@Override
 	protected void execute() {
 		((TalonClusterDrive) subsystem).setDefaultThrottle(speed, speed);
-		((TalonClusterDrive) subsystem).logData(speed);
+		((TalonClusterDrive) subsystem).logData();
 	}
 
 	@Override
