@@ -2,8 +2,8 @@ package org.usfirst.frc.team449.robot.drive.talonCluster;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.CANTalonSRXMap;
-import org.usfirst.frc.team449.robot.components.CANTalonSRX;
+import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
+import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
@@ -17,9 +17,8 @@ import java.io.PrintWriter;
  */
 public class TalonClusterDrive extends DriveSubsystem {
 
-	public CANTalonSRX rightMaster;
-	public CANTalonSRX leftMaster;
-	public CANTalonSRX formerRight;
+	public UnitlessCANTalonSRX rightMaster;
+	public UnitlessCANTalonSRX leftMaster;
 
 	private long startTime;
 
@@ -31,26 +30,23 @@ public class TalonClusterDrive extends DriveSubsystem {
 		this.map = map;
 		this.oi = oi;
 
-		rightMaster = new CANTalonSRX(map.getRightMaster());
-		leftMaster = new CANTalonSRX(map.getLeftMaster());
+		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
+		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
 
 		/*
 		rightMaster = new CANTalonSRX(map.getLeftMaster());
 		leftMaster = new CANTalonSRX(map.getRightMaster());
 		*/
-		for (CANTalonSRXMap.CANTalonSRX talon : map.getRightSlaveList()){
-			CANTalonSRX talonObject = new CANTalonSRX(talon);
-			if (talon.getPort() == 4)
-				formerRight = talonObject;
+		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()){
+			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getRightMaster().getPort());
 		}
-		for (CANTalonSRXMap.CANTalonSRX talon : map.getLeftSlaveList()){
-			CANTalonSRX talonObject = new CANTalonSRX(talon);
+		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getLeftSlaveList()){
+			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
-		setPIDF();
 	}
 
 	/**
@@ -64,8 +60,8 @@ public class TalonClusterDrive extends DriveSubsystem {
 	}
 
 	private void setPIDThrottle(double left, double right){
-		leftMaster.setSpeed(.7*RPSToNative(left*leftMaster.getMaxSpeed())/60);
-		rightMaster.setSpeed(.7*RPSToNative(right*leftMaster.getMaxSpeed())/60);
+		leftMaster.setSpeed(.7*(left*leftMaster.getMaxSpeed()));
+		rightMaster.setSpeed(.7*(right*rightMaster.getMaxSpeed()));
 	}
 
 	/**
@@ -77,30 +73,17 @@ public class TalonClusterDrive extends DriveSubsystem {
 		setPIDThrottle(left, -right);
 	}
 
-	public static double nativeToRPS(double nativeUnits){
-		return (nativeUnits/(512*4))*10; //512 Counts per revolution, 4 edges per count, 10 100ms per second.
-	}
-
-	public static double RPSToNative(double rps){
-		return (rps/10)*(512*4); //512 Counts per revolution, 4 edges per count, 10 100ms per second.
-	}
-
-	public void setPIDF(){
-		rightMaster.canTalon.setF(1023/RPSToNative(rightMaster.getMaxSpeed()));
-		leftMaster.canTalon.setF(1023/RPSToNative(leftMaster.getMaxSpeed()));
-	}
-
 	public void logData(double throttle){
 		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime()-startTime)/100);
 			sb.append(",");
-			sb.append(nativeToRPS(leftMaster.canTalon.getEncVelocity()));
+			sb.append(leftMaster.getSpeed());
 			sb.append(",");
-			SmartDashboard.putNumber("Left", nativeToRPS(leftMaster.canTalon.getEncVelocity()));
-			sb.append(nativeToRPS(rightMaster.canTalon.getEncVelocity()));
+			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			SmartDashboard.putNumber("Right", nativeToRPS(rightMaster.canTalon.getEncVelocity()));
+			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
 			sb.append(throttle);
 			sb.append("\n");
 			SmartDashboard.putNumber("Throttle", throttle);
@@ -117,7 +100,6 @@ public class TalonClusterDrive extends DriveSubsystem {
 			SmartDashboard.putBoolean("Right reverse limit switch", rightMaster.canTalon.isRevLimitSwitchClosed());
 			SmartDashboard.putBoolean("Right Soft Limit fwd enabled", rightMaster.canTalon.isForwardSoftLimitEnabled());
 			SmartDashboard.putBoolean("Right Soft Limit rev enabled", rightMaster.canTalon.isReverseSoftLimitEnabled());
-			SmartDashboard.putNumber("Former Right Motor voltage", formerRight.canTalon.getOutputVoltage());
 			fw.write(sb.toString());
 		}catch (IOException e){
 			e.printStackTrace();
