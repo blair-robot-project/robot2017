@@ -3,5 +3,30 @@ package org.usfirst.frc.team449.robot.oi;
 /**
  * Created by Justin on 1/12/2017.
  */
-public class OI2017 {
+public class OI2017 extends OISubsystem {
+
+    public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map) {
+        super(map.getOi());
+        this.map = map;
+    }
+
+    @Override
+    protected void initDefaultCommand() {
+        //Inheritance is stupid sometimes.
+    }
+
+    @Override
+    public double getDriveAxisLeft() {
+        return 0; //Do Nothing!
+    }
+
+    @Override
+    public double getDriveAxisRight() {
+        return 0; //Do Nothing!
+    }
+
+    @Override
+    public void toggleCamera() {
+        //Do Nothing!
+    }
 }
