@@ -27,6 +27,8 @@ public class ExecuteProfile extends ReferencingCommand {
 
 	public ExecuteProfile(TalonClusterDrive subsystem) {
 		super(subsystem);
+		requires(subsystem);
+
 		tcd = subsystem;
 
 		leftStatus = new CANTalon.MotionProfileStatus();
