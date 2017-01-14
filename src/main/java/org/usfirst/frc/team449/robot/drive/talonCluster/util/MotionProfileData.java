@@ -28,11 +28,16 @@ public class MotionProfileData {
 	}
 
 	private void processLine(String line) {
-		String[] tokens = line.split(",");
+		String[] tokens = line.split(",\t");
 
 		if (dPtr == -1) {
 			data = new double[Integer.parseInt(tokens[0])][3];
 		} else {
+			// Strip the end of line comma
+			if (tokens[2].endsWith(",")) {
+				tokens[2] = tokens[2].substring(0, tokens[2].length() - 2);
+			}
+
 			data[dPtr] = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
 		}
 		dPtr++;

@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.oi.OIMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
@@ -27,8 +28,13 @@ public class Robot extends IterativeRobot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		oiSubsystem = new OI2017(cfg.getOi());
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+//		oiSubsystem = new OI2017(cfg.getOi());
+//		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+
+		MotionProfileData mpd = new MotionProfileData("/home/lvuser/profile.csv");
+		for (double arr[] : mpd.data) {
+			System.out.println(arr[0] + ", " + arr[1] + ", " + arr[2]);
+		}
 	}
 
 	@Override

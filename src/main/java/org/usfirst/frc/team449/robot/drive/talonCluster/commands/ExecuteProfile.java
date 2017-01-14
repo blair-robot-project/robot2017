@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPUpdaterProcess;
@@ -12,10 +13,11 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 5; // copied off of the CTRE example code
 	private static final String IN_FILE_NAME = "profile.csv";
+	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
 
 	private static boolean started = false;
 
-	private MPUpdaterProcess updaterProcess;
+	private Notifier mpProcessNotifier;
 
 	private TalonClusterDrive tcd;
 	private MotionProfileData profile;
@@ -31,7 +33,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		rightStatus = new CANTalon.MotionProfileStatus();
 
 		profile = new MotionProfileData(IN_FILE_NAME);
-		updaterProcess = new MPUpdaterProcess();
+		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
 	}
 
 	/**
@@ -39,6 +41,8 @@ public class ExecuteProfile extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
+		MPUpdaterProcess updaterProcess = new MPUpdaterProcess();
+
 		// Put the masters in motion profile mode
 		tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 		tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
@@ -68,6 +72,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		// Add the Talons to the updater thread (thread should not have started yet tho)
 		updaterProcess.addTalon(tcd.leftMaster.canTalon);
 		updaterProcess.addTalon(tcd.rightMaster.canTalon);
+		mpProcessNotifier = new Notifier(updaterProcess);
 	}
 
 	/**
@@ -79,7 +84,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		// If the updater has not been started yet, start it
 		// TODO see if you can put this in the initializer method
 		if (!started) {
-			updaterProcess.run();
+			mpProcessNotifier.startPeriodic(UPDATE_RATE);
 			started = true;
 		}
 
@@ -95,7 +100,8 @@ public class ExecuteProfile extends ReferencingCommand {
 		} else if (!(leftStatus.activePointValid && rightStatus.activePointValid)) {
 			System.out.println("ACTIVE POINT INVALID");
 			System.exit(-1);
-		}  else if ((leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) || (rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS)) {
+		} else if ((leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) || (rightStatus.btmBufferCnt <
+				MIN_NUM_LOADED_POINTS)) {
 			System.out.println("HAS NOT LOADED ENOUGH POINTS");
 			System.exit(-1);
 		}
