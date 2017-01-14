@@ -24,6 +24,11 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected void usePIDOutput(double output) {
+		//TODO replace with deadband.
+		if (output > 0)
+			output = Math.max(output, 0.05);
+		else if (output < 0)
+			output = Math.min(output, -0.05);
 		drive.setDefaultThrottle(output, -output);
 	}
 
