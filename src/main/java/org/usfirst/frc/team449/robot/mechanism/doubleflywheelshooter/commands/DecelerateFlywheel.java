@@ -24,6 +24,7 @@ public class DecelerateFlywheel extends ReferencingCommand{
 
 	@Override
 	protected void execute() {
+		flywheelShooter.logData(0.0);
 		flywheelShooter.setDefaultSpeed(0.0);
 		flywheelShooter.spinning = false;
 		System.out.println("DecelerateFlywheel executed");

@@ -16,7 +16,6 @@ public class PIDTune extends ReferencingCommandGroup{
      */
     public PIDTune(MappedSubsystem mappedSubsystem) {
         super(mappedSubsystem);
-        requires(mappedSubsystem);
         DoubleFlywheelShooter flywheelSubsystem = (DoubleFlywheelShooter) mappedSubsystem;
 
         for(int i = 0; i < 5; i++){

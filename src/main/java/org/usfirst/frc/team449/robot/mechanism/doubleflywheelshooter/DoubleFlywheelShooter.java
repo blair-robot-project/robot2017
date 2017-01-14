@@ -24,13 +24,32 @@ public class DoubleFlywheelShooter extends MappedSubsystem{
 	private final static int CPR = 512;
 	
 	private long startTime;
+	private double maxError = 0;
 
 	public DoubleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooterMap.DoubleFlywheelShooter map){
 		super(map.getMechanism());
 		this.map = map;
-		this.leftTalon = new CANTalonSRX(map.getLeftTalon());
-		this.rightTalon = new CANTalonSRX(map.getRightTalon());
-		setPIDF();
+		this.leftTalon = new CANTalonSRX(map.getLeftTalon()) {
+			@Override
+			protected void setPIDF(double mkP, double mkI, double mkD, double mkF) {
+				kP = 0;
+				kI = 0;
+				kD = 0;
+				kF = 1023 / (mkF * 409.6);
+			}
+		};
+		this.rightTalon = new CANTalonSRX(map.getRightTalon()) {
+			@Override
+			protected void setPIDF(double mkP, double mkI, double mkD, double mkF) {
+				kP = 0;
+				kI = 0;
+				kD = 0;
+				kF = 1023 / (mkF * 409.6);
+			}
+		};
+//		setPIDF();
+		System.out.println("left f" + leftTalon.canTalon.getF());
+		System.out.println("right f" + rightTalon.canTalon.getF());
 	}
 
 	/**
@@ -42,33 +61,26 @@ public class DoubleFlywheelShooter extends MappedSubsystem{
 		rightTalon.setPercentVbus(sp);
 	}
 
-	private void setPIDSpeed(double sp){
-		leftTalon.setSpeed(RPSToNative(sp*leftTalon.getMaxSpeed())/60);
-		rightTalon.setSpeed(RPSToNative(sp*rightTalon.getMaxSpeed())/60);
-	}
-
 	/**
 	 * A wrapper around the speed method we're currently using/testing
 	 * @param sp The speed to go at, where 0 is off and 1 is max speed.
 	 */
 	public void setDefaultSpeed(double sp){
-		setVBusSpeed(sp);
-	}
-
-	public void setPIDF(){
-		rightTalon.canTalon.setF(1023/RPSToNative(rightTalon.getMaxSpeed()));
-		leftTalon.canTalon.setF(1023/RPSToNative(leftTalon.getMaxSpeed()));
+//		setVBusSpeed(sp);
+		leftTalon.setSpeed(sp);
+		rightTalon.setSpeed(sp);
 	}
 
 	public static double nativeToRPS(double nativeUnits){
 		return (nativeUnits/(CPR*4))*10;
 	}
 
-	public static double RPSToNative(double RPS){
-		return (RPS/10)*(CPR*4);
-	}
-
 	public void logData(double throttle){
+		maxError = Math.max(Math.max(leftTalon.canTalon.getClosedLoopError(), rightTalon.canTalon.getClosedLoopError()), maxError);
+		SmartDashboard.putNumber("max error", maxError);
+		SmartDashboard.putNumber("left speed", leftTalon.canTalon.getPulseWidthVelocity());
+		SmartDashboard.putNumber("right speed", rightTalon.canTalon.getPulseWidthVelocity());
+
 		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime()-startTime)/100);
@@ -100,12 +112,12 @@ public class DoubleFlywheelShooter extends MappedSubsystem{
 	@Override
 	protected void initDefaultCommand() {
 		try (PrintWriter writer = new PrintWriter("/home/lvuser/shooterLog.csv")) {
-			writer.println("Time,Left,Right,Throttle");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
 		setDefaultCommand(new PIDTune(this));
+		System.out.println("Finished init default command");
 	}
 }
