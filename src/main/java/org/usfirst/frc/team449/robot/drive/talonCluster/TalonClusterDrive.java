@@ -1,6 +1,8 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
@@ -23,6 +25,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 	public UnitlessCANTalonSRX leftMaster;
 
 	private long startTime;
+	public AHRS navx;
 
 
 	public OI2017 oi;
@@ -31,6 +34,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
+		this.navx = new AHRS(SPI.Port.kMXP);
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
@@ -72,7 +76,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right){
-		setPIDThrottle(left, -right);
+		setPIDThrottle(left, right);
 	}
 
 	public void logData(){
