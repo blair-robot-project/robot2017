@@ -29,6 +29,8 @@ public class Robot extends IterativeRobot {
 		}
 		oiSubsystem = new OI2017(cfg.getOi());
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+
+		oiSubsystem.mapButtons();
 	}
 
 	@Override

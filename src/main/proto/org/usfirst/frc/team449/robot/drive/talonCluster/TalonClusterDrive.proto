@@ -1,14 +1,14 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/drive/Drive.proto";
 import "org/usfirst/frc/team449/robot/components/UnitlessCANTalonSRX.proto";
-import "org/usfirst/frc/team449/robot/components/PID.proto";
+//import "org/usfirst/frc/team449/robot/components/PID.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.drive.talonCluster";
 option java_outer_classname = "TalonClusterDriveMap";
 
 message TalonClusterDrive{
     required Drive drive = 1;
-    required PID navx_PID = 6;
+    //required PID navx_PID = 6;
     required UnitlessCANTalonSRX right_master = 2;
     repeated UnitlessCANTalonSRX right_slave = 3;
     required UnitlessCANTalonSRX left_master = 4;

@@ -29,12 +29,13 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected void initialize() {
+		this.setSetpoint(sp);
 		this.getPIDController().enable();
 	}
 
 	@Override
 	protected void execute() {
-		//Do nothing!
+		drive.logData();
 	}
 
 	@Override
