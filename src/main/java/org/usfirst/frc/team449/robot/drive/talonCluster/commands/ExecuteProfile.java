@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  */
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 5; // copied off of the CTRE example code
-	private static final String IN_FILE_NAME = "profile.csv";
+	private static final String IN_FILE_NAME = "/home/lvuser/profile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
 
 	private static boolean started = false;

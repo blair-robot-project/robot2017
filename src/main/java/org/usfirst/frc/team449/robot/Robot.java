@@ -28,13 +28,8 @@ public class Robot extends IterativeRobot {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		oiSubsystem = new OI2017(cfg.getOi());
-//		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
-
-		MotionProfileData mpd = new MotionProfileData("/home/lvuser/profile.csv");
-		for (double arr[] : mpd.data) {
-			System.out.println(arr[0] + ", " + arr[1] + ", " + arr[2]);
-		}
+		oiSubsystem = new OI2017(cfg.getOi());
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 	}
 
 	@Override
