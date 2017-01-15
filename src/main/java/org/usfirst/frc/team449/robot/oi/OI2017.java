@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.oi.components.ExpThrottle;
+import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
@@ -23,8 +25,12 @@ public class OI2017 extends OISubsystem{
 		this.map = map;
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
-		leftThrottle = new SmoothedThrottle(leftStick, 1);
-		rightThrottle = new SmoothedThrottle(rightStick, 1);
+		leftThrottle = new PolyThrottle(leftStick, 1, 1);
+		rightThrottle = new PolyThrottle(rightStick, 1, 1);
+//		leftThrottle = new SmoothedThrottle(leftStick, 1);
+//		rightThrottle = new SmoothedThrottle(rightStick, 1);
+//		leftThrottle = new ExpThrottle(leftStick, 1, 50);
+//		rightThrottle = new ExpThrottle(rightStick, 1, 50);
 		tt90 = new JoystickButton(leftStick, 1);
 		driveStraight = new JoystickButton(rightStick, 1);
 	}
