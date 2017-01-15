@@ -12,13 +12,16 @@ public abstract class PIDAngleCommand extends PIDCommand{
 	protected double minimumOutput;
 	protected boolean minimumOutputEnabled;
 	protected NavxSubsystem subsystem;
+	protected double tolerance;
 
 	public PIDAngleCommand(AnglePIDMap.AnglePID map, NavxSubsystem subsystem){
 		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
 		setInputRange(-180, 180);
 		this.getPIDController().setContinuous(true);
-		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
-		this.getPIDController().setToleranceBuffer(10);
+		tolerance = map.getAbsoluteTolerance();
+		this.getPIDController().setAbsoluteTolerance(tolerance);
+		this.getPIDController().setToleranceBuffer(35);
+		//this.getPIDController().setOutputRange(-0.7, 0.7);
 		this.minimumOutput = map.getMinimumOutput();
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
 		this.subsystem = subsystem;

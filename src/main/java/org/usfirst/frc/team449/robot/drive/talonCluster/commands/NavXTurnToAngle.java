@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
@@ -22,7 +23,7 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled) {
+		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) { //Can't have tolerance be same as deadband because floating-point errors suck
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
@@ -40,11 +41,14 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 	@Override
 	protected void execute() {
 		drive.logData();
+		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
+		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
 	}
 
 	@Override
 	protected boolean isFinished() {
 		return this.getPIDController().onTarget();
+		//return false;
 	}
 
 	@Override
