@@ -8,7 +8,8 @@ option java_outer_classname = "TalonClusterDriveMap";
 
 message TalonClusterDrive{
     required Drive drive = 1;
-    required AnglePID navx_PID = 6;
+    required AnglePID turn_PID = 6;
+    required AnglePID straight_PID = 7;
     required UnitlessCANTalonSRX right_master = 2;
     repeated UnitlessCANTalonSRX right_slave = 3;
     required UnitlessCANTalonSRX left_master = 4;

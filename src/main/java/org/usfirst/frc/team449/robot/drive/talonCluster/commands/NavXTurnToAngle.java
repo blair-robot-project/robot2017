@@ -18,7 +18,7 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	/**
 	 * Default constructor.
-	 * @param map An anglePID map with PID values, an absolute tolerance, and minimum output.
+	 * @param map An turnPID map with PID values, an absolute tolerance, and minimum output.
 	 * @param sp The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */

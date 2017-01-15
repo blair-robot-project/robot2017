@@ -10,8 +10,6 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDBackAndForth;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.FileWriter;
@@ -28,8 +26,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 
 	private long startTime;
 	public AHRS navx;
-	public AnglePIDMap.AnglePID navxPID;
-
+	public AnglePIDMap.AnglePID turnPID;
+	public AnglePIDMap.AnglePID straightPID;
 
 	public OI2017 oi;
 
@@ -38,7 +36,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 		this.map = map;
 		this.oi = oi;
 		this.navx = new AHRS(SPI.Port.kMXP);
-		this.navxPID = map.getNavxPID();
+		this.turnPID = map.getTurnPID();
+		this.straightPID = map.getStraightPID();
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
