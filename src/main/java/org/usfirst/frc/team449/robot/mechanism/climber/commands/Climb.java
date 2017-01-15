@@ -21,6 +21,7 @@ public class Climb extends ReferencingCommand {
         this.climber=climber;
         this.oi=oi;
         climber.setControlMode(CANTalon.TalonControlMode.PercentVbus);
+        System.out.println("Climb constructed");
     }
 
     @Override
@@ -29,6 +30,7 @@ public class Climb extends ReferencingCommand {
     @Override
     protected void execute() {
         //System.out.println("Climb execute");
+        //System.out.println(oi.getClimberThrottle());
         climber.setPercentVbus(deadband(oi.getClimberThrottle()));
     }
 
@@ -42,7 +44,7 @@ public class Climb extends ReferencingCommand {
     protected void interrupted() { System.out.println("Climb interrupted"); }
 
     private double deadband(double v){
-        if(v<0.09 && v>-0.09){
+        if(Math.abs(v)<0.09){
             return 0;
         }
         return v;
