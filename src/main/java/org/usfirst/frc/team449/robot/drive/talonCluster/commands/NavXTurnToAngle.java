@@ -22,10 +22,12 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected void usePIDOutput(double output) {
-		if (output > 0 && output < minimumOutput)
-			output = minimumOutput;
-		else if (output < 0 && output > -minimumOutput)
-			output = -minimumOutput;
+		if (minimumOutputEnabled) {
+			if (output > 0 && output < minimumOutput)
+				output = minimumOutput;
+			else if (output < 0 && output > -minimumOutput)
+				output = -minimumOutput;
+		}
 		drive.setDefaultThrottle(output, -output);
 	}
 

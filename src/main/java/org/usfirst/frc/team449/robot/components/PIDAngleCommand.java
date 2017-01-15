@@ -18,6 +18,7 @@ public abstract class PIDAngleCommand extends PIDCommand{
 		setInputRange(-180, 180);
 		this.getPIDController().setContinuous(true);
 		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
+		this.getPIDController().setToleranceBuffer(10);
 		this.minimumOutput = map.getMinimumOutput();
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
 		this.subsystem = subsystem;
