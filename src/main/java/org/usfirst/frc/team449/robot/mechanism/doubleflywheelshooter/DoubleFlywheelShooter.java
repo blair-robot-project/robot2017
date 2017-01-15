@@ -67,8 +67,8 @@ public class DoubleFlywheelShooter extends MappedSubsystem{
 	 */
 	public void setDefaultSpeed(double sp){
 //		setVBusSpeed(sp);
-		leftTalon.setSpeed(sp);
-		rightTalon.setSpeed(sp);
+		leftTalon.setSpeed(sp*.45);
+		rightTalon.setSpeed(-sp*.42);
 	}
 
 	public static double nativeToRPS(double nativeUnits){
