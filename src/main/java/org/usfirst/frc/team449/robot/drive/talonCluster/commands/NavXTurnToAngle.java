@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
+import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
@@ -13,19 +14,14 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 	private double sp;
 
 	public NavXTurnToAngle(AnglePIDMap.AnglePID map, double sp, TalonClusterDrive drive){
-		super(map);
+		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;
 		requires(drive);
 	}
-	@Override
-	protected double returnPIDInput() {
-		return drive.navx.pidGet();
-	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		//TODO replace with deadband.
 		if (output > 0 && output < minimumOutput)
 			output = minimumOutput;
 		else if (output < 0 && output > -minimumOutput)
