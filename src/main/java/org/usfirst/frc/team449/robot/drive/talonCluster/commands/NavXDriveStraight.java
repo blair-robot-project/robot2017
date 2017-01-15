@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
@@ -21,6 +22,7 @@ public class NavXDriveStraight extends PIDAngleCommand{
 		super (map, drive);
 		this.oi = oi;
 		this.drive = drive;
+		this.getPIDController().setOutputRange(-1./3.,1./3.);
 		requires(drive);
 	}
 
@@ -43,6 +45,14 @@ public class NavXDriveStraight extends PIDAngleCommand{
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
+		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) {
+			//Set the output to the minimum if it's too small.
+			if (output > 0 && output < minimumOutput)
+				output = minimumOutput;
+			else if (output < 0 && output > -minimumOutput)
+				output = -minimumOutput;
+		}
+		SmartDashboard.putNumber("Output", output);
 		drive.setDefaultThrottle(oi.getDriveAxisRight()+output, oi.getDriveAxisRight()-output); //Yes these should both be right, it's driveStraight
 	}
 
