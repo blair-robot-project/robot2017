@@ -1,9 +1,11 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
+import "org/usfirst/frc/team449/robot/components/CANTalonSRX.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.climber";
 option java_outer_classname = "ClimberMap";
 
 message Climber {
     required Mechanism mechanism = 1;
+    required CANTalonSRX winch = 2;
 }
