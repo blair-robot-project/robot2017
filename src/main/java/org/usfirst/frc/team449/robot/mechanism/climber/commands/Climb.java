@@ -11,9 +11,9 @@ import org.usfirst.frc.team449.robot.oi.OI2017;
 public class Climb extends ReferencingCommand {
     /**
      * Instantiate a new <code>Climb</code>, taking control of the climber subsystem.
-     */
-    ClimberSubsystem climber;
-    OI2017 oi;
+                */
+        ClimberSubsystem climber;
+        OI2017 oi;
 
     public Climb(ClimberSubsystem climber, OI2017 oi) {
         super(climber);
@@ -31,7 +31,7 @@ public class Climb extends ReferencingCommand {
     protected void execute() {
         //System.out.println("Climb execute");
         //System.out.println(oi.getClimberThrottle());
-        climber.setPercentVbus(deadband(oi.getClimberThrottle()));
+        climber.setPercentVbus(Math.abs(deadband(oi.getClimberThrottle())));
     }
 
     @Override
