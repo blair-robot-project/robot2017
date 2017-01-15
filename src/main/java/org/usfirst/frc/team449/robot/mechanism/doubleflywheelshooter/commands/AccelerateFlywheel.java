@@ -25,7 +25,7 @@ public class AccelerateFlywheel extends ReferencingCommand{
 	@Override
 	protected void execute() {
 		flywheelShooter.logData(65);
-		flywheelShooter.setDefaultSpeed(65);
+		flywheelShooter.setDefaultSpeed(1);
 		flywheelShooter.spinning = true;
 		System.out.println("AccelerateFlywheel executed");
 	}
