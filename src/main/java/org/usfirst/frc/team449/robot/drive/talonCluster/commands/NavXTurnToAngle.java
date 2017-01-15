@@ -13,33 +13,49 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	private TalonClusterDrive drive;
 	private double sp;
+	private long timeout;
+	private long startTime;
 
-	public NavXTurnToAngle(AnglePIDMap.AnglePID map, double sp, TalonClusterDrive drive){
+	/**
+	 * Default constructor.
+	 * @param map An anglePID map with PID values, an absolute tolerance, and minimum output.
+	 * @param sp The setpoint, in degrees from 180 to -180.
+	 * @param drive The drive subsystem whose motors this is controlling.
+	 */
+	public NavXTurnToAngle(AnglePIDMap.AnglePID map, double sp, TalonClusterDrive drive, double timeout){
 		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;
+		this.timeout = (long) (timeout*1000);
 		requires(drive);
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) { //Can't have tolerance be same as deadband because floating-point errors suck
+		//Enter this conditional if you have minimum output and you're outside the deadband.
+		//Can't have tolerance be same as deadband because floating-point errors suck. 3/4 seems to be about right.
+		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) {
+			//Set the output to the minimum if it's too small.
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
 		}
+		//Which one of these is negative may be different from robot to robot, we don't know.
 		drive.setDefaultThrottle(output, -output);
 	}
 
 	@Override
 	protected void initialize() {
+		this.startTime = System.currentTimeMillis();
 		this.setSetpoint(sp);
+		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}
 
 	@Override
 	protected void execute() {
+		//Just logging, nothing actually gets done.
 		drive.logData();
 		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
 		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
@@ -47,7 +63,8 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected boolean isFinished() {
-		return this.getPIDController().onTarget();
+		//This method is crap and sometimes never terminates because of floating point errors, so we have a timeout
+		return this.getPIDController().onTarget() || System.currentTimeMillis() - startTime > timeout;
 		//return false;
 	}
 
