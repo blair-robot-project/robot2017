@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
@@ -11,8 +12,8 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 	private TalonClusterDrive drive;
 	private double sp;
 
-	public NavXTurnToAngle(double p, double i, double d, double absoluteTolerance, double sp, TalonClusterDrive drive){
-		super(p, i, d, absoluteTolerance);
+	public NavXTurnToAngle(AnglePIDMap.AnglePID map, double sp, TalonClusterDrive drive){
+		super(map);
 		this.drive = drive;
 		this.sp = sp;
 		requires(drive);
@@ -25,10 +26,10 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 	@Override
 	protected void usePIDOutput(double output) {
 		//TODO replace with deadband.
-		if (output > 0)
-			output = Math.max(output, 0.05);
-		else if (output < 0)
-			output = Math.min(output, -0.05);
+		if (output > 0 && output < minimumOutput)
+			output = minimumOutput;
+		else if (output < 0 && output > -minimumOutput)
+			output = -minimumOutput;
 		drive.setDefaultThrottle(output, -output);
 	}
 

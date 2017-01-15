@@ -26,7 +26,7 @@ public class OI2017 extends OISubsystem{
 	}
 
 	public void mapButtons(){
-		tt90.whenPressed(new NavXTurnToAngle(0.01, 0,0, 1, 90, Robot.driveSubsystem));
+		tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.navxPID, 90, Robot.driveSubsystem));
 	}
 
 	@Override

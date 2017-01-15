@@ -4,6 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
@@ -26,6 +27,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 
 	private long startTime;
 	public AHRS navx;
+	public AnglePIDMap.AnglePID navxPID;
 
 
 	public OI2017 oi;
@@ -35,6 +37,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 		this.map = map;
 		this.oi = oi;
 		this.navx = new AHRS(SPI.Port.kMXP);
+		this.navxPID = map.getNavxPID();
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
