@@ -70,7 +70,7 @@ public class UnitlessCANTalonSRX extends Component {
 		kP = m.getKP();
 		kI = m.getKI();
 		kD = m.getKD();
-		canTalon.setPID(m.getKP(), m.getKI(), m.getKD(), 1023/RPStoNative(m.getMaxSpeed()), 0, 0, 0);
+		canTalon.setPID(m.getKP(), m.getKI(), m.getKD(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 0);
 		canTalon.setProfile(0);
 
 		// Configure more stuff
@@ -133,21 +133,21 @@ public class UnitlessCANTalonSRX extends Component {
 	public void setInverted(boolean b) {
 	}
 
-	public Double getMaxSpeed(){
+	public Double getMaxSpeed() {
 		if (maxSpeed == 0.0)
 			return null;
 		return maxSpeed;
 	}
 
-	public double RPStoNative(double RPS){
-		return (RPS/10)*(encoderCPR*4); //4 edges per count, and 10 100ms per second.
+	public double RPStoNative(double RPS) {
+		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
 	}
 
-	public double nativeToRPS(double nat){
-		return (nat/(encoderCPR*4))*10; //4 edges per count, and 10 100ms per second.
+	public double nativeToRPS(double nat) {
+		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
 	}
 
-	public double getSpeed(){
+	public double getSpeed() {
 		return nativeToRPS(canTalon.getEncVelocity());
 	}
 }

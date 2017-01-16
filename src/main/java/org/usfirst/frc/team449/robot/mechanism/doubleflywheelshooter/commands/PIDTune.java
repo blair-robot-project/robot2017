@@ -8,19 +8,19 @@ import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywh
 /**
  * Program created by noah on 1/11/17.
  */
-public class PIDTune extends ReferencingCommandGroup{
-    /**
-     * Instantiate the ReferencingCommandGroup
-     *
-     * @param mappedSubsystem the {@link MappedSubsystem} to feed to this {@code ReferencingCommandGroup}'s {@link ReferencingCommand}s
-     */
-    public PIDTune(MappedSubsystem mappedSubsystem) {
-        super(mappedSubsystem);
-        DoubleFlywheelShooter flywheelSubsystem = (DoubleFlywheelShooter) mappedSubsystem;
+public class PIDTune extends ReferencingCommandGroup {
+	/**
+	 * Instantiate the ReferencingCommandGroup
+	 *
+	 * @param mappedSubsystem the {@link MappedSubsystem} to feed to this {@code ReferencingCommandGroup}'s {@link ReferencingCommand}s
+	 */
+	public PIDTune(MappedSubsystem mappedSubsystem) {
+		super(mappedSubsystem);
+		DoubleFlywheelShooter flywheelSubsystem = (DoubleFlywheelShooter) mappedSubsystem;
 
-        for(int i = 0; i < 5; i++){
-            addSequential(new AccelerateFlywheel(flywheelSubsystem, 5));
-            addSequential(new DecelerateFlywheel(flywheelSubsystem, 5));
-        }
-    }
+		for (int i = 0; i < 5; i++) {
+			addSequential(new AccelerateFlywheel(flywheelSubsystem, 5));
+			addSequential(new DecelerateFlywheel(flywheelSubsystem, 5));
+		}
+	}
 }

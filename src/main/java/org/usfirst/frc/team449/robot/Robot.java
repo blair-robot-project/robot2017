@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
 
 	public static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
-	public void robotInit(){
+	public void robotInit() {
 		System.out.println("Started robotInit");
 		try {
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/map.cfg", Robot2017Map.Robot2017.newBuilder());

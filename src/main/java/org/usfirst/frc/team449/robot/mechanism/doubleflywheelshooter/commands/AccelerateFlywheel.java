@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywh
 /**
  * Created by blairrobot on 1/10/17.
  */
-public class AccelerateFlywheel extends ReferencingCommand{
+public class AccelerateFlywheel extends ReferencingCommand {
 
 	DoubleFlywheelShooter flywheelShooter;
 

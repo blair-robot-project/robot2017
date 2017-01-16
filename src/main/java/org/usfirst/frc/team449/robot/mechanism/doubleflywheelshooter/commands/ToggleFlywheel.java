@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywh
 /**
  * Created by blairrobot on 1/10/17.
  */
-public class ToggleFlywheel extends ReferencingCommandGroup{
+public class ToggleFlywheel extends ReferencingCommandGroup {
 
 	private DoubleFlywheelShooter shooterSubsystem;
 
@@ -16,7 +16,7 @@ public class ToggleFlywheel extends ReferencingCommandGroup{
 		requires(subsystem);
 		shooterSubsystem = (DoubleFlywheelShooter) subsystem;
 
-		if(shooterSubsystem.spinning)
+		if (shooterSubsystem.spinning)
 			addSequential(new DecelerateFlywheel(shooterSubsystem, 1));
 		else
 			addSequential(new AccelerateFlywheel(shooterSubsystem, 1));
