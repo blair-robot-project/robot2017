@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;

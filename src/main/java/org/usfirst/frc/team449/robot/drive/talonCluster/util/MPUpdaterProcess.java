@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.util;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 
 import java.util.LinkedList;
 import java.util.Queue;
