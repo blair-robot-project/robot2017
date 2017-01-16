@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.IOException;
@@ -14,23 +16,24 @@ import java.io.IOException;
 public class Robot extends IterativeRobot {
 
 	public static ClimberSubsystem climberSubsystem;
-	private static OI2017 oi;
+
+  public static TalonClusterDrive driveSubsystem;
+
+  public static OI2017 oiSubsystem;
+
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
-	public void robotInit() {
+	public void robotInit(){
 		try {
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/map.cfg", Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		oiSubsystem = new OI2017(cfg.getOi());
+    climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
-		oi = new OI2017(cfg.getOi());
-		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oi);
-	}
-
-	@Override
-	public void teleopInit() {
-		System.out.println("Teleop init");
+		oiSubsystem.mapButtons();
 	}
 
 	@Override
