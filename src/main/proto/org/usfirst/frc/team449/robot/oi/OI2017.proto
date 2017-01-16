@@ -1,0 +1,12 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/oi/OI.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.oi";
+option java_outer_classname = "OI2017Map";
+
+message OI2017 {
+	required OI oi = 1;
+    required int32 left_stick = 2;
+    required int32 right_stick = 3;
+    required double minimum_output = 4;
+}
