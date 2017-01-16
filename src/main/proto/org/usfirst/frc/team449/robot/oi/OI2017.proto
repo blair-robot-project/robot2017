@@ -8,4 +8,5 @@ message OI2017 {
 	required OI oi = 1;
     required int32 left_stick = 2;
     required int32 right_stick = 3;
+    required double minimum_output = 4;
 }
