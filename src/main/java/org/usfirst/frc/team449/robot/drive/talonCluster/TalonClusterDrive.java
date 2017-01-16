@@ -4,7 +4,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
@@ -26,8 +26,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 
 	private long startTime;
 	public AHRS navx;
-	public AnglePIDMap.AnglePID turnPID;
-	public AnglePIDMap.AnglePID straightPID;
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 
 	public OI2017 oi;
 
@@ -42,10 +42,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
 
-		/*
-		rightMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
-		leftMaster = new UnitlessCANTalonSRX(map.getRightMaster());
-		*/
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()){
 			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);

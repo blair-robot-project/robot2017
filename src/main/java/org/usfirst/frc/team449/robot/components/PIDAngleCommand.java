@@ -2,10 +2,10 @@ package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 
 /**
- * Created by blairrobot on 1/14/17.
+ * A command that uses a NavX to turn to a certain angle.
  */
 public abstract class PIDAngleCommand extends PIDCommand{
 
@@ -15,7 +15,7 @@ public abstract class PIDAngleCommand extends PIDCommand{
 	protected double tolerance;
 
 	//TODO add a timeout.
-	public PIDAngleCommand(AnglePIDMap.AnglePID map, NavxSubsystem subsystem){
+	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem){
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
 		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
 		//Navx reads from -180 to 180.
@@ -26,7 +26,7 @@ public abstract class PIDAngleCommand extends PIDCommand{
 		tolerance = map.getAbsoluteTolerance();
 		this.getPIDController().setAbsoluteTolerance(tolerance);
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
-		this.getPIDController().setToleranceBuffer(25);
+		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
 		//This caps the output we can give. One way to set this up is to make P large and then use this to prevent overshoot.
 		//this.getPIDController().setOutputRange(-0.7, 0.7);
 		//Minimum ouutput, the smallest output it's possible to give. One-tenth of your drive's top speed is about right.

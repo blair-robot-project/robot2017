@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.components;
 import edu.wpi.first.wpilibj.CANTalon;
 
 /**
- * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}
+ * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in.
  */
 public class UnitlessCANTalonSRX extends Component {
 

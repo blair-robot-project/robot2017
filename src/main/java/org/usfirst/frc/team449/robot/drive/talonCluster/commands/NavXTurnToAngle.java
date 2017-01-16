@@ -1,13 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
-import org.usfirst.frc.team449.robot.components.NavxSubsystem;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by blairrobot on 1/14/17.
+ * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
 public class NavXTurnToAngle extends PIDAngleCommand{
 
@@ -22,7 +21,7 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 	 * @param sp The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
-	public NavXTurnToAngle(AnglePIDMap.AnglePID map, double sp, TalonClusterDrive drive, double timeout){
+	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout){
 		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;

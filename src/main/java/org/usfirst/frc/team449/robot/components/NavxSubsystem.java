@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
 /**
- * Program created by noah on 1/14/17.
+ * A subsystem that has a NavX on it.
  */
 public interface NavxSubsystem {
 	double getGyroOutput();

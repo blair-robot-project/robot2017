@@ -3,10 +3,8 @@ package org.usfirst.frc.team449.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.oi.OIMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 import java.io.IOException;
 

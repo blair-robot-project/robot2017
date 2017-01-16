@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.AnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
- * Program created by noah on 1/14/17.
+ * Drives straight using the NavX gyro to keep a constant alignment.
  */
 public class NavXDriveStraight extends PIDAngleCommand{
 
@@ -18,7 +18,7 @@ public class NavXDriveStraight extends PIDAngleCommand{
 	private TalonClusterDrive drive;
 	private double sp;
 
-	public NavXDriveStraight(AnglePIDMap.AnglePID map, TalonClusterDrive drive, OISubsystem oi){
+	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OISubsystem oi){
 		super (map, drive);
 		this.oi = oi;
 		this.drive = drive;

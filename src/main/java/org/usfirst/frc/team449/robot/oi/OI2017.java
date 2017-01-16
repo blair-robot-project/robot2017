@@ -3,12 +3,8 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveStraight;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
-import org.usfirst.frc.team449.robot.oi.components.ExpThrottle;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
-import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
