@@ -10,6 +10,9 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDBackAndForth;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.FileWriter;
@@ -112,7 +115,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-		setDefaultCommand(new DefaultDrive(this, oi));
+//		setDefaultCommand(new DefaultDrive(this, oi));
+//		setDefaultCommand(new PIDTest(this));
+		setDefaultCommand(new ExecuteProfile(this));
 	}
 
 	public double getGyroOutput(){
