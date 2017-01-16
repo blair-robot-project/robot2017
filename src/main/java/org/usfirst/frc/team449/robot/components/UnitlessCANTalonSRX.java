@@ -110,23 +110,6 @@ public class UnitlessCANTalonSRX extends Component {
 		canTalon.set(positionSp);
 	}
 
-	/**
-	 * Give a velocity closed loop setpoint in RPS
-	 * <p>
-	 * Note: This method is called setSpeed since the TalonControlMode enum is called speed. However, the input
-	 * argument is signed and is actually a velocity.
-	 *
-	 * @param velocitySp velocity setpoint in revolutions per second
-	 */
-	public void setSpeed(double velocitySp) {
-		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
-				.FeedbackDevice.CtreMagEncoder_Absolute)
-			canTalon.set(velocitySp * 60); // 60 converts from RPS to RPM, TODO figure out where the 60 should actually go
-		else
-			canTalon.set(RPStoNative(velocitySp));
-	}
-
 	public boolean getInverted() {
 		return false;
 	}
@@ -150,5 +133,22 @@ public class UnitlessCANTalonSRX extends Component {
 
 	public double getSpeed() {
 		return nativeToRPS(canTalon.getEncVelocity());
+	}
+
+	/**
+	 * Give a velocity closed loop setpoint in RPS
+	 * <p>
+	 * Note: This method is called setSpeed since the TalonControlMode enum is called speed. However, the input
+	 * argument is signed and is actually a velocity.
+	 *
+	 * @param velocitySp velocity setpoint in revolutions per second
+	 */
+	public void setSpeed(double velocitySp) {
+		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
+		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
+				.FeedbackDevice.CtreMagEncoder_Absolute)
+			canTalon.set(velocitySp * 60); // 60 converts from RPS to RPM, TODO figure out where the 60 should actually go
+		else
+			canTalon.set(RPStoNative(velocitySp));
 	}
 }

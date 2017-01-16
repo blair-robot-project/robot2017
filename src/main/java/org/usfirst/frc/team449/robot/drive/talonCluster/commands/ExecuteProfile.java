@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPUpdaterProcess;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
@@ -13,14 +12,11 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  */
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
-	private int _loopTimeout = 0;
-	private int _state = 0;
-
 	private static final String IN_FILE_NAME = "/home/lvuser/profile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
-
 	private static boolean started = false;
-
+	private int _loopTimeout = 0;
+	private int _state = 0;
 	private Notifier mpProcessNotifier;
 
 	private TalonClusterDrive tcd;
@@ -123,7 +119,8 @@ public class ExecuteProfile extends ReferencingCommand {
 				startFilling();
 				_state = 1;
 				break;
-			}case 1: {
+			}
+			case 1: {
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) {
 					mpProcessNotifier.startPeriodic(UPDATE_RATE);
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
@@ -133,7 +130,8 @@ public class ExecuteProfile extends ReferencingCommand {
 					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
 					_state = 2;
 				}
-			}case 2: {
+			}
+			case 2: {
 			}
 		}
 	}

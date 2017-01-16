@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by BlairRobot on 2017-01-12.
  */
-public class DriveAtSpeed extends ReferencingCommand{
+public class DriveAtSpeed extends ReferencingCommand {
 
 	double speed;
 

@@ -14,10 +14,9 @@ import java.io.PrintWriter;
  */
 public class DoubleFlywheelShooter extends MappedSubsystem {
 
+	public boolean spinning;
 	private UnitlessCANTalonSRX leftTalon;
 	private UnitlessCANTalonSRX rightTalon;
-	public boolean spinning;
-
 	/**
 	 * Counts per revolution
 	 */

@@ -7,6 +7,6 @@ option java_outer_classname = "DoubleFlywheelShooterMap";
 
 message DoubleFlywheelShooter {
 	required Mechanism mechanism = 1;
-    required UnitlessCANTalonSRX left_talon = 2;
-    required UnitlessCANTalonSRX right_talon = 3;
+	required UnitlessCANTalonSRX left_talon = 2;
+	required UnitlessCANTalonSRX right_talon = 3;
 }

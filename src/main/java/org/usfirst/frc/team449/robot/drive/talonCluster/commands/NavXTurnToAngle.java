@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
-public class NavXTurnToAngle extends PIDAngleCommand{
+public class NavXTurnToAngle extends PIDAngleCommand {
 
 	private TalonClusterDrive drive;
 	private double sp;
@@ -17,15 +17,16 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	/**
 	 * Default constructor.
-	 * @param map An turnPID map with PID values, an absolute tolerance, and minimum output.
-	 * @param sp The setpoint, in degrees from 180 to -180.
+	 *
+	 * @param map   An turnPID map with PID values, an absolute tolerance, and minimum output.
+	 * @param sp    The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
-	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout){
+	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
 		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;
-		this.timeout = (long) (timeout*1000);
+		this.timeout = (long) (timeout * 1000);
 		requires(drive);
 	}
 
@@ -38,7 +39,7 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
 		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband){
+		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
 			output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.

@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by BlairRobot on 2017-01-12.
  */
-public class PIDTest extends ReferencingCommandGroup{
+public class PIDTest extends ReferencingCommandGroup {
 	/**
 	 * Instantiate the ReferencingCommandGroup
 	 *
@@ -24,7 +24,7 @@ public class PIDTest extends ReferencingCommandGroup{
 
 		TalonClusterDrive driveSubsystem = (TalonClusterDrive) mappedSubsystem;
 
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < 5; i++) {
 			addSequential(new DriveAtSpeed(driveSubsystem, 1), 5);
 			addSequential(new DriveAtSpeed(driveSubsystem, 0), 5);
 		}

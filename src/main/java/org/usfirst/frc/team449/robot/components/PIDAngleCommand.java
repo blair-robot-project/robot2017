@@ -7,7 +7,7 @@ import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 /**
  * A command that uses a NavX to turn to a certain angle.
  */
-public abstract class PIDAngleCommand extends PIDCommand{
+public abstract class PIDAngleCommand extends PIDCommand {
 
 	protected double minimumOutput;
 	protected boolean minimumOutputEnabled;
@@ -17,7 +17,7 @@ public abstract class PIDAngleCommand extends PIDCommand{
 	protected boolean deadbandEnabled;
 
 	//TODO add a timeout.
-	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem){
+	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
 		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
 		//Navx reads from -180 to 180.

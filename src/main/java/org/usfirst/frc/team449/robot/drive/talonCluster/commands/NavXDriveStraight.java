@@ -12,14 +12,14 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
-public class NavXDriveStraight extends PIDAngleCommand{
+public class NavXDriveStraight extends PIDAngleCommand {
 
 	private OISubsystem oi;
 	private TalonClusterDrive drive;
 	private double sp;
 
-	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OISubsystem oi){
-		super (map, drive);
+	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OISubsystem oi) {
+		super(map, drive);
 		this.oi = oi;
 		this.drive = drive;
 		requires(drive);
@@ -44,18 +44,18 @@ public class NavXDriveStraight extends PIDAngleCommand{
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) {
+		if (minimumOutputEnabled && this.getPIDController().getError() * 3 / 4 > tolerance) {
 			//Set the output to the minimum if it's too small.
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
 		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband){
+		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
 			output = 0;
 		}
 		SmartDashboard.putNumber("Output", output);
-		drive.setDefaultThrottle(oi.getDriveAxisRight()+output, oi.getDriveAxisRight()-output); //Yes these should both be right, it's driveStraight
+		drive.setDefaultThrottle(oi.getDriveAxisRight() + output, oi.getDriveAxisRight() - output); //Yes these should both be right, it's driveStraight
 	}
 
 	/**

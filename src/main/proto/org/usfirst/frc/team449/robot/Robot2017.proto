@@ -9,7 +9,7 @@ option java_outer_classname = "Robot2017Map";
 
 message Robot2017 {
 	required OI2017 oi = 1;
-  required TalonClusterDrive drive = 2;
-  required Climber climber = 3;
-  required DoubleFlywheelShooter shooter = 4;
+	required TalonClusterDrive drive = 2;
+	required Climber climber = 3;
+	required DoubleFlywheelShooter shooter = 4;
 }

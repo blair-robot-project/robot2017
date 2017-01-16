@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.ctre.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
@@ -9,10 +9,7 @@ import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDBackAndForth;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.FileWriter;
@@ -22,19 +19,17 @@ import java.io.PrintWriter;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
+public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public UnitlessCANTalonSRX rightMaster;
 	public UnitlessCANTalonSRX leftMaster;
-
-	private long startTime;
 	public AHRS navx;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-
 	public OI2017 oi;
+	private long startTime;
 
-	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map, OI2017 oi){
+	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map, OI2017 oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -45,12 +40,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
 
-		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()){
+		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
 			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getRightMaster().getPort());
 		}
-		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getLeftSlaveList()){
+		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getLeftSlaveList()) {
 			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
@@ -59,32 +54,34 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 
 	/**
 	 * Sets the left and right wheel speeds as a voltage percentage, not nearly as precise as PID.
-	 * @param left The left throttle, a number between -1 and 1 inclusive.
+	 *
+	 * @param left  The left throttle, a number between -1 and 1 inclusive.
 	 * @param right The right throttle, a number between -1 and 1 inclusive.
 	 */
-	private void setVBusThrottle(double left, double right){
+	private void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(right);
 	}
 
-	private void setPIDThrottle(double left, double right){
-		leftMaster.setSpeed(.7*(left*leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(.7*(right*rightMaster.getMaxSpeed()));
+	private void setPIDThrottle(double left, double right) {
+		leftMaster.setSpeed(.7 * (left * leftMaster.getMaxSpeed()));
+		rightMaster.setSpeed(.7 * (right * rightMaster.getMaxSpeed()));
 	}
 
 	/**
 	 * Allows the type of motor control used to be varied in testing.
-	 * @param left Left throttle value
+	 *
+	 * @param left  Left throttle value
 	 * @param right Right throttle value
 	 */
-	public void setDefaultThrottle(double left, double right){
+	public void setDefaultThrottle(double left, double right) {
 		setPIDThrottle(left, right);
 	}
 
-	public void logData(){
+	public void logData() {
 		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime()-startTime)/100);
+			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -101,7 +98,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 			fw.write(sb.toString());
-		}catch (IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -120,7 +117,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 		setDefaultCommand(new ExecuteProfile(this));
 	}
 
-	public double getGyroOutput(){
+	public double getGyroOutput() {
 		return navx.pidGet();
 	}
 }
