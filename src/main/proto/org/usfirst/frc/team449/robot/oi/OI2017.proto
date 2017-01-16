@@ -6,6 +6,10 @@ option java_outer_classname = "OI2017Map";
 
 message OI2017 {
 	required OI oi = 1;
-	required int32 button_pad = 4;
-	required int32 toggle_flywheel = 5;
+  required int32 left_stick = 2;
+  required int32 right_stick = 3;
+  required int32 button_pad = 4;
+  required double minimum_output = 5;
+  required int32 climb_button = 6;
+  required int32 toggle_flywheel = 7;
 }

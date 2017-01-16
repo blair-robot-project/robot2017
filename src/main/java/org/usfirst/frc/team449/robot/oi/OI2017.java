@@ -1,37 +1,67 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
+import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
+import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.Climb;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel;
 
 /**
- * Created by blairrobot on 1/10/17.
+ * Created by blairrobot on 1/9/17.
  */
-public class OI2017 extends OISubsystem {
+public class OI2017 extends OISubsystem{
 
-	private Joystick buttonPad;
-	private Button toggleFlywheel;
+	private double minimumOutput;
 
-	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map) {
+	private Throttle leftThrottle;
+	private Throttle rightThrottle;
+  private Joystick buttonPad;
+	private JoystickButton tt90;
+	private JoystickButton driveStraight;
+  private JoystickButton climbButton;
+	private JoystickButton toggleFlywheel;
+
+	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map){
 		super(map.getOi());
-		buttonPad = new Joystick(map.getButtonPad());
+		this.map = map;
+		this.minimumOutput = map.getMinimumOutput();
+		Joystick rightStick = new Joystick(map.getRightStick());
+		Joystick leftStick = new Joystick(map.getLeftStick());
+    buttonPad = new Joystick(map.getButtonPad());
+		leftThrottle = new PolyThrottle(leftStick, 1, 1);
+		rightThrottle = new PolyThrottle(rightStick, 1, 1);
+//		leftThrottle = new SmoothedThrottle(leftStick, 1);
+//		rightThrottle = new SmoothedThrottle(rightStick, 1);
+//		leftThrottle = new ExpThrottle(leftStick, 1, 50);
+//		rightThrottle = new ExpThrottle(rightStick, 1, 50);
+		tt90 = new JoystickButton(leftStick, 1);
+		driveStraight = new JoystickButton(rightStick, 1);
+    climbButton = new JoystickButton(buttonPad, map.getClimbButton());
 		toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
 	}
 
-	public void mapButtons() {
+	public void mapButtons(){
+		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
+		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
+    climbButton.whileHeld(new Climb(Robot.climberSubsystem));
 		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
 	}
 
 	@Override
 	public double getDriveAxisLeft() {
-		return 0; //Do Nothing!
+		if (Math.abs(leftThrottle.getValue()) > minimumOutput)
+			return -leftThrottle.getValue();
+		return 0;
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		return 0; //Do Nothing!
+		if (Math.abs(rightThrottle.getValue()) > minimumOutput)
+			return -rightThrottle.getValue();
+		return 0;
 	}
 
 	@Override

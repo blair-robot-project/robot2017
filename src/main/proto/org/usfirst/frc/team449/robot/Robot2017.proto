@@ -1,11 +1,16 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/oi/OI2017.proto";
 import "org/usfirst/frc/team449/robot/mechanism/doubleflywheelshooter/DoubleFlywheelShooter.proto";
+import "org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.proto";
 
+import "org/usfirst/frc/team449/robot/mechanism/climber/Climber.proto";
+import "org/usfirst/frc/team449/robot/oi/OI2017.proto";
 option java_package = "maps.org.usfirst.frc.team449.robot";
 option java_outer_classname = "Robot2017Map";
 
-message Robot2017{
+message Robot2017 {
 	required OI2017 oi = 1;
-    required DoubleFlywheelShooter shooter = 3;
+  required TalonClusterDrive drive = 2;
+  required Climber climber = 3;
+  required DoubleFlywheelShooter shooter = 4;
 }

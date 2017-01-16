@@ -37,14 +37,18 @@ repositories {
 	}
 
 	maven { url "https://plugins.gradle.org/m2/" }
+
+	/*flatDir {
+		dirs System.properties['user.home'] + '/wpilib/java/current/lib'
+	}*/
 }
 
 dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
-	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '0.1.0-SNAPSHOT'
-	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0-SNAPSHOT'
+	compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
+	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
 	compile project(':449-central-repo')
 }
 
@@ -68,7 +72,7 @@ protobuf {
 			// options.  Note the braces cannot be omitted, otherwise the
 			// plugin will not be added. This is because of the implicit way
 			// NamedDomainObjectContainer binds the methods.
-			grpc {}
+			grpc { }
 		}
 	}
 }
@@ -84,7 +88,7 @@ idea {
 }
 
 task convertFiles << {
-	fileTree("./src/main/resources").matching { include "**/*.cfg" }.each { aFile ->
+	fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
 		exec {
 			commandLine 'dos2unix'
 			args aFile.absolutePath
@@ -94,6 +98,7 @@ task convertFiles << {
 
 gradlerio {
 	deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
+	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
 }
 
 def robotManifest = {

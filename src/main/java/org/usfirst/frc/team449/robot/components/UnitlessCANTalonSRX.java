@@ -1,9 +1,9 @@
 package org.usfirst.frc.team449.robot.components;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.ctre.CANTalon;
 
 /**
- * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}
+ * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in.
  */
 public class UnitlessCANTalonSRX extends Component {
 
@@ -70,6 +70,7 @@ public class UnitlessCANTalonSRX extends Component {
 		kP = m.getKP();
 		kI = m.getKI();
 		kD = m.getKD();
+
 		canTalon.setPID(m.getKP(), m.getKI(), m.getKD(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 0);
 		canTalon.setProfile(0);
 
