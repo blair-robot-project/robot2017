@@ -1,8 +1,0 @@
-syntax = "proto2";
-
-option java_package = "maps.org.usfirst.frc.team449.robot";
-option java_outer_classname = "Robot2017Map";
-
-message Robot2017{
-
-}
