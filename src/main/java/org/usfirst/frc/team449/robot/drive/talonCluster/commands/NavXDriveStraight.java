@@ -22,7 +22,6 @@ public class NavXDriveStraight extends PIDAngleCommand{
 		super (map, drive);
 		this.oi = oi;
 		this.drive = drive;
-		this.getPIDController().setOutputRange(-1./3.,1./3.);
 		requires(drive);
 	}
 
