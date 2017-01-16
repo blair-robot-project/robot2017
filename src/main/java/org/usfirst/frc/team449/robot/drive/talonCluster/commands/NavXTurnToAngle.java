@@ -31,14 +31,15 @@ public class NavXTurnToAngle extends PIDAngleCommand{
 
 	@Override
 	protected void usePIDOutput(double output) {
-		//Enter this conditional if you have minimum output and you're outside the deadband.
-		//Can't have tolerance be same as deadband because floating-point errors suck. 3/4 seems to be about right.
-		if (minimumOutputEnabled && this.getPIDController().getError()*3/4 > tolerance) {
+		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
+		}
+		if (deadbandEnabled && this.getPIDController().getError() <= deadband){
+			output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.
 		drive.setDefaultThrottle(output, -output);

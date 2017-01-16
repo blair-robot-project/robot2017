@@ -51,6 +51,9 @@ public class NavXDriveStraight extends PIDAngleCommand{
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
 		}
+		if (deadbandEnabled && this.getPIDController().getError() <= deadband){
+			output = 0;
+		}
 		SmartDashboard.putNumber("Output", output);
 		drive.setDefaultThrottle(oi.getDriveAxisRight()+output, oi.getDriveAxisRight()-output); //Yes these should both be right, it's driveStraight
 	}

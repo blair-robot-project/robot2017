@@ -13,6 +13,8 @@ public abstract class PIDAngleCommand extends PIDCommand{
 	protected boolean minimumOutputEnabled;
 	protected NavxSubsystem subsystem;
 	protected double tolerance;
+	protected double deadband;
+	protected boolean deadbandEnabled;
 
 	//TODO add a timeout.
 	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem){
@@ -34,6 +36,8 @@ public abstract class PIDAngleCommand extends PIDCommand{
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
 		if (map.getMaximumOutputEnabled())
 			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
+		this.deadband = map.getDeadband();
+		this.deadbandEnabled = map.getDeadbandEnabled();
 		this.subsystem = subsystem;
 	}
 
