@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
+import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.oi.OI2017;
@@ -14,9 +15,11 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
-    public static TalonClusterDrive driveSubsystem;
+	public static ClimberSubsystem climberSubsystem;
 
-    public static OI2017 oiSubsystem;
+  public static TalonClusterDrive driveSubsystem;
+
+  public static OI2017 oiSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -27,6 +30,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 		oiSubsystem = new OI2017(cfg.getOi());
+    climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
 		oiSubsystem.mapButtons();

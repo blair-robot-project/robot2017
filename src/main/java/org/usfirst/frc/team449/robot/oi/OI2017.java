@@ -6,6 +6,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.Climb;
 
 /**
  * Created by blairrobot on 1/9/17.
@@ -16,8 +17,10 @@ public class OI2017 extends OISubsystem{
 
 	private Throttle leftThrottle;
 	private Throttle rightThrottle;
+  private Joystick buttonPad;
 	private JoystickButton tt90;
 	private JoystickButton driveStraight;
+  private JoystickButton climbButton;
 
 	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map){
 		super(map.getOi());
@@ -25,6 +28,7 @@ public class OI2017 extends OISubsystem{
 		this.minimumOutput = map.getMinimumOutput();
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
+    buttonPad = new Joystick(map.getButtonPad());
 		leftThrottle = new PolyThrottle(leftStick, 1, 1);
 		rightThrottle = new PolyThrottle(rightStick, 1, 1);
 //		leftThrottle = new SmoothedThrottle(leftStick, 1);
@@ -33,11 +37,13 @@ public class OI2017 extends OISubsystem{
 //		rightThrottle = new ExpThrottle(rightStick, 1, 50);
 		tt90 = new JoystickButton(leftStick, 1);
 		driveStraight = new JoystickButton(rightStick, 1);
+    climbButton = new JoystickButton(buttonPad, map.getClimbButton());
 	}
 
 	public void mapButtons(){
 		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
 		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
+    climbButton.whileHeld(new Climb(Robot.climberSubsystem));
 	}
 
 	@Override
