@@ -10,8 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  * <p>
  * TODO put this in the central repo
  */
-public abstract class ReferencingCommandGroup extends
-		CommandGroup {
+public abstract class ReferencingCommandGroup extends CommandGroup {
 	/**
 	 * Subsystem to reference to
 	 */

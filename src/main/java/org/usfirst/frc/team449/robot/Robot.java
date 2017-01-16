@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
+import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
@@ -15,6 +16,8 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
+	public static DoubleFlywheelShooter shooterSubsystem;
+
 	public static ClimberSubsystem climberSubsystem;
 
   public static TalonClusterDrive driveSubsystem;
@@ -24,16 +27,22 @@ public class Robot extends IterativeRobot {
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
 	public void robotInit(){
+		System.out.println("Started robotInit");
 		try {
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/map.cfg", Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		oiSubsystem = new OI2017(cfg.getOi());
-    climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
-		oiSubsystem.mapButtons();
+	oiSubsystem = new OI2017(cfg.getOi());
+	System.out.println("Constructed OI");
+    climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+	driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+	shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
+	System.out.println("Constructed DoubleFlywheelShooter");
+
+	oiSubsystem.mapButtons();
+	System.out.println("Mapped buttons");
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraig
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.Climb;
+import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel;
 
 /**
  * Created by blairrobot on 1/9/17.
@@ -21,6 +22,7 @@ public class OI2017 extends OISubsystem{
 	private JoystickButton tt90;
 	private JoystickButton driveStraight;
   private JoystickButton climbButton;
+	private JoystickButton toggleFlywheel;
 
 	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map){
 		super(map.getOi());
@@ -38,12 +40,14 @@ public class OI2017 extends OISubsystem{
 		tt90 = new JoystickButton(leftStick, 1);
 		driveStraight = new JoystickButton(rightStick, 1);
     climbButton = new JoystickButton(buttonPad, map.getClimbButton());
+		toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
 	}
 
 	public void mapButtons(){
 		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
 		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
     climbButton.whileHeld(new Climb(Robot.climberSubsystem));
+		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
 	}
 
 	@Override
@@ -67,6 +71,6 @@ public class OI2017 extends OISubsystem{
 
 	@Override
 	protected void initDefaultCommand() {
-		//Inheritance is stupid sometimes.
+		//Do Nothing!
 	}
 }

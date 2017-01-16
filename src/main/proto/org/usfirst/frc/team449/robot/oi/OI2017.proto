@@ -11,4 +11,5 @@ message OI2017 {
   required int32 button_pad = 4;
   required double minimum_output = 5;
   required int32 climb_button = 6;
+  required int32 toggle_flywheel = 7;
 }
