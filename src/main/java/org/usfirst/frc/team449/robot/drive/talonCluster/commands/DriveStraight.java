@@ -27,8 +27,8 @@ public class DriveStraight extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		rightThrottle = oi.getDriveAxisRight();
-		((TalonClusterDrive) subsystem).setDefaultThrottle(rightThrottle, rightThrottle);
+		leftThrottle = oi.getDriveAxisLeft();
+		((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, leftThrottle);
 		((TalonClusterDrive) subsystem).logData();
 	}
 

@@ -1,8 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import com.kauailabs.navx.frc.AHRS;
+import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
+import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
@@ -18,13 +22,15 @@ import java.io.PrintWriter;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-public class TalonClusterDrive extends DriveSubsystem {
+public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem{
 
 	public UnitlessCANTalonSRX rightMaster;
 	public UnitlessCANTalonSRX leftMaster;
 
 	private long startTime;
-
+	public AHRS navx;
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 
 	public OI2017 oi;
 
@@ -32,14 +38,13 @@ public class TalonClusterDrive extends DriveSubsystem {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
+		this.navx = new AHRS(SPI.Port.kMXP);
+		this.turnPID = map.getTurnPID();
+		this.straightPID = map.getStraightPID();
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
 
-		/*
-		rightMaster = new CANTalonSRX(map.getLeftMaster());
-		leftMaster = new CANTalonSRX(map.getRightMaster());
-		*/
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()){
 			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -73,7 +78,7 @@ public class TalonClusterDrive extends DriveSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right){
-		setPIDThrottle(left, -right);
+		setPIDThrottle(left, right);
 	}
 
 	public void logData(){
@@ -90,21 +95,11 @@ public class TalonClusterDrive extends DriveSubsystem {
 			sb.append(leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			sb.append("\n");
 			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			/*
-			SmartDashboard.putNumber("Left Setpoint", leftMaster.canTalon.getSetpoint());
-			SmartDashboard.putNumber("Left Error", leftMaster.canTalon.getError());
-			SmartDashboard.putNumber("Right Setpoint", rightMaster.canTalon.getSetpoint());
-			SmartDashboard.putNumber("Right Error", rightMaster.canTalon.getError());
-			SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
-			SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
-			SmartDashboard.putNumber("Right voltage",rightMaster.canTalon.getOutputVoltage());
-			SmartDashboard.putNumber("Left voltage",leftMaster.canTalon.getOutputVoltage());
-			SmartDashboard.putString("Right Control Mode", rightMaster.canTalon.getControlMode().toString());
-			SmartDashboard.putBoolean("Right forward limit switch", rightMaster.canTalon.isFwdLimitSwitchClosed());
-			SmartDashboard.putBoolean("Right reverse limit switch", rightMaster.canTalon.isRevLimitSwitchClosed());
-			SmartDashboard.putBoolean("Right Soft Limit fwd enabled", rightMaster.canTalon.isForwardSoftLimitEnabled());
-			SmartDashboard.putBoolean("Right Soft Limit rev enabled", rightMaster.canTalon.isReverseSoftLimitEnabled());
-			*/
+			SmartDashboard.putNumber("Heading", navx.pidGet());
+			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
+			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 			fw.write(sb.toString());
 		}catch (IOException e){
 			e.printStackTrace();
@@ -123,5 +118,9 @@ public class TalonClusterDrive extends DriveSubsystem {
 //		setDefaultCommand(new DefaultDrive(this, oi));
 //		setDefaultCommand(new PIDTest(this));
 		setDefaultCommand(new ExecuteProfile(this));
+	}
+
+	public double getGyroOutput(){
+		return navx.pidGet();
 	}
 }

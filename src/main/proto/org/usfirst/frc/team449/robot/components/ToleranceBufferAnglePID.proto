@@ -1,0 +1,17 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/components/PID.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "ToleranceBufferAnglePIDMap";
+
+message ToleranceBufferAnglePID {
+    required PID PID = 1;
+    required int32 tolerance_buffer = 5;
+    required double absolute_tolerance = 2;
+    required double minimum_output = 3;
+    required bool minimum_output_enabled = 4;
+    required double maximum_output = 6;
+    required bool maximum_output_enabled = 7;
+    required double deadband = 8;
+    required bool deadband_enabled = 9;
+}
