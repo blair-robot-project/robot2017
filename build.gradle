@@ -9,7 +9,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-		classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '+'
+		classpath group: 'gradle.plugin.jaci.openrio.gradle', name: 'GradleRIO', version: '2017.1.1'
 	}
 }
 
@@ -17,13 +17,13 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'eclipse'
-apply plugin: 'GradleRIO'
+apply plugin: "jaci.openrio.gradle.GradleRIO"
 
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
 
-gradlerio.robotClass = "org.usfirst.frc.team449.robot.Robot"   //The class for the main Robot Class. Used in manifest
-gradlerio.team = "449"
+// = "org.usfirst.frc.team449.robot.Robot"   //The class for the main Robot Class. Used in manifest
+//jaci.openrio.gradle.GradleRIO. = "449"
 
 allprojects {
 	tasks.withType(Javadoc).all { enabled = false }
@@ -50,6 +50,7 @@ dependencies {
 	compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
 	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
 	compile project(':449-central-repo')
+	compile fileTree(dir: "libs", include: "*.jar")
 }
 
 protobuf {
@@ -96,14 +97,16 @@ task convertFiles << {
 	}
 }
 
-gradlerio {
-	deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
-	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+frc {
+	//deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
+	//deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+	team = "449"
+	robotClass = "org.usfirst.frc.team449.robot.Robot"
 }
 
 def robotManifest = {
 	attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
-	attributes 'Robot-Class': gradlerio.robotClass
+	attributes 'Robot-Class': frc.robotClass
 }
 
 jar {
