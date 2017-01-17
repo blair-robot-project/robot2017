@@ -47,8 +47,10 @@ dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
-	compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
-	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
+	//compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
+	//compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
+	compile wpilib()
+	compile talonSrx()
 	compile project(':449-central-repo')
 	compile fileTree(dir: "libs", include: "*.jar")
 }
@@ -102,6 +104,15 @@ frc {
 	//deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
 	team = "449"
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
+}
+
+wpi {
+	wpilibVersion = "+"                   // The WPILib version to use. For this version of GradleRIO, must be a 2017 version
+	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
+	opencvVersion = "+"                   // The OpenCV version to use
+	cscoreVersion = "+"                   // The CSCore version to use
+
+	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
 def robotManifest = {
