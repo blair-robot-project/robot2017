@@ -47,7 +47,8 @@ public class OI2017 extends OISubsystem {
 		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
 		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
 		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
-		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
+		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
+		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
 	}
 
 	@Override

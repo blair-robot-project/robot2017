@@ -6,6 +6,7 @@ import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.IOException;
@@ -15,7 +16,8 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
-	public static DoubleFlywheelShooter shooterSubsystem;
+	public static DoubleFlywheelShooter doubleFlywheelShooterSubsystem;
+	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
 	public static ClimberSubsystem climberSubsystem;
 
@@ -37,8 +39,9 @@ public class Robot extends IterativeRobot {
 		System.out.println("Constructed OI");
 		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
-		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-		System.out.println("Constructed DoubleFlywheelShooter");
+		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
+		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getSingleFlywheelShooter());
+		System.out.println("Constructed SingleFlywheelShooter");
 
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");

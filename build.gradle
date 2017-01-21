@@ -49,6 +49,7 @@ dependencies {
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
 	compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
 	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
+	compile fileTree(dir: "lib", include: "*.jar")
 	compile project(':449-central-repo')
 }
 
