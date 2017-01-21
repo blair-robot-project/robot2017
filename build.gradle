@@ -52,7 +52,7 @@ dependencies {
 	compile wpilib()
 	compile talonSrx()
 	compile project(':449-central-repo')
-	compile fileTree(dir: "libs", include: "*.jar")
+	compile fileTree(dir: "lib", include: "*.jar")
 }
 
 protobuf {
