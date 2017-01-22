@@ -35,9 +35,9 @@ public class Robot extends IterativeRobot {
 
 		oiSubsystem = new OI2017(cfg.getOi());
 		System.out.println("Constructed OI");
-		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
-		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
+//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 		System.out.println("Constructed DoubleFlywheelShooter");
 
 		oiSubsystem.mapButtons();
