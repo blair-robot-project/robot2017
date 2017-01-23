@@ -14,10 +14,10 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
  */
 public class OI2017 extends OISubsystem {
 
-	private double minimumOutput;
+	protected double minimumOutput;
 
-	private Throttle leftThrottle;
-	private Throttle rightThrottle;
+	protected Throttle leftThrottle;
+	protected Throttle rightThrottle;
 	private Joystick buttonPad;
 	private JoystickButton tt90;
 	private JoystickButton driveStraight;
