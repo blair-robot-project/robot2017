@@ -46,8 +46,8 @@ public class OI2017 extends OISubsystem {
 	public void mapButtons() {
 		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
 		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
-		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
-		toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
+		//climbButton.whileHeld(new Climb(Robot.climberSubsystem));
+		//toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
 	}
 
 	@Override
