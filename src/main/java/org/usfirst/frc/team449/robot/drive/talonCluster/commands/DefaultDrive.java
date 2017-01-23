@@ -1,5 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.Talon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
@@ -22,6 +24,9 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
+		((TalonClusterDrive) subsystem).leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
+		((TalonClusterDrive) subsystem).rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
+
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
