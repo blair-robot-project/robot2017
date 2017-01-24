@@ -17,6 +17,7 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	private OISubsystem oi;
 	private TalonClusterDrive drive;
 	private double sp;
+	private double lastAngleStick;
 
 	public ArcadeDriveDefaultTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OISubsystem oi) {
 		super(map, drive);
@@ -64,7 +65,7 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void initialize() {
-		this.setSetpointRelative(180*oi.getDriveAxisLeft());
+		this.getPIDController().setSetpoint(drive.getGyroOutput());
 		this.getPIDController().enable();
 	}
 
@@ -74,7 +75,10 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		this.setSetpointRelative(180*oi.getDriveAxisLeft());
+		this.setSetpointRelative(180*oi.getDriveAxisLeft()-180*lastAngleStick);
+		if (oi.getDriveAxisLeft() == 0.0)
+			this.getPIDController().setSetpoint(drive.getGyroOutput());
+		lastAngleStick = oi.getDriveAxisLeft();
 		drive.logData();
 	}
 
