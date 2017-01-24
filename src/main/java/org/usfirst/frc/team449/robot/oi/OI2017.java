@@ -28,25 +28,25 @@ public class OI2017 extends OISubsystem {
 		super(map.getOi());
 		this.map = map;
 		this.joystickDeadband = map.getJoystickDeadband();
-		Joystick rightStick = new Joystick(map.getRightStick());
-		Joystick leftStick = new Joystick(map.getLeftStick());
+		//Joystick rightStick = new Joystick(map.getRightStick());
+		//Joystick leftStick = new Joystick(map.getLeftStick());
 		buttonPad = new Joystick(map.getButtonPad());
-		leftThrottle = new PolyThrottle(leftStick, 1, 1);
-		rightThrottle = new PolyThrottle(rightStick, 1, 1);
+		//leftThrottle = new PolyThrottle(leftStick, 1, 1);
+		//rightThrottle = new PolyThrottle(rightStick, 1, 1);
 //		leftThrottle = new SmoothedThrottle(leftStick, 1);
 //		rightThrottle = new SmoothedThrottle(rightStick, 1);
 //		leftThrottle = new ExpThrottle(leftStick, 1, 50);
 //		rightThrottle = new ExpThrottle(rightStick, 1, 50);
-		tt90 = new JoystickButton(leftStick, 1);
-		driveStraight = new JoystickButton(rightStick, 1);
+		//tt90 = new JoystickButton(leftStick, 1);
+		//driveStraight = new JoystickButton(rightStick, 1);
 		climbButton = new JoystickButton(buttonPad, map.getClimbButton());
-		toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
+		//toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
 	}
 
 	public void mapButtons() {
 		//tt90.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 90, Robot.driveSubsystem, 2.5));
-		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
-		//climbButton.whileHeld(new Climb(Robot.climberSubsystem));
+		//driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
+		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
 		//toggleFlywheel.whenPressed(new ToggleFlywheel(Robot.shooterSubsystem));
 	}
 
