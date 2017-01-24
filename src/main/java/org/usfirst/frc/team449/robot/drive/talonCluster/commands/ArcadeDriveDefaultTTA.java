@@ -64,7 +64,7 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void initialize() {
-		this.getPIDController().setSetpoint(convertToNavXDegrees(this.returnPIDInput()+180*oi.getDriveAxisLeft()));
+		this.setSetpointRelative(180*oi.getDriveAxisLeft());
 		this.getPIDController().enable();
 	}
 
@@ -74,7 +74,7 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		this.getPIDController().setSetpoint(convertToNavXDegrees(this.returnPIDInput()+180*oi.getDriveAxisLeft()));
+		this.setSetpointRelative(180*oi.getDriveAxisLeft());
 		drive.logData();
 	}
 
@@ -128,12 +128,4 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 		this.getPIDController().disable();
 	}
 
-	protected static double convertToNavXDegrees(double degrees){
-		if (degrees > 180){
-			degrees -= 360;
-		} else if (degrees < -180){
-			degrees += 360;
-		}
-		return degrees;
-	}
 }

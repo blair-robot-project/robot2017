@@ -25,12 +25,7 @@ public class NavXRelativeTTA extends PIDAngleCommand {
 	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
 		super(map, drive);
 		this.drive = drive;
-		this.sp = sp + drive.getGyroOutput();
-		if (sp > 180){
-			sp -= 360;
-		} else if (sp < -180){
-			sp += 360;
-		}
+		this.sp = sp;
 		this.timeout = (long) (timeout * 1000);
 		requires(drive);
 	}
@@ -54,7 +49,7 @@ public class NavXRelativeTTA extends PIDAngleCommand {
 	@Override
 	protected void initialize() {
 		this.startTime = System.currentTimeMillis();
-		this.setSetpoint(sp);
+		this.setSetpointRelative(sp);
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}
