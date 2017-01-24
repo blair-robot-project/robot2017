@@ -19,14 +19,14 @@ public class OI2017Arcade extends OI2017 {
 
 	@Override
 	public double getDriveAxisLeft() {
-		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > minimumOutput)
+		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
 			return leftThrottle.getValue() - rightThrottle.getValue();
 		return 0;
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > minimumOutput)
+		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
 			return leftThrottle.getValue() + rightThrottle.getValue();
 		return 0;
 	}

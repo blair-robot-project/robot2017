@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
  */
 public class OI2017 extends OISubsystem {
 
-	protected double minimumOutput;
+	protected double joystickDeadband;
 
 	protected Throttle leftThrottle;
 	protected Throttle rightThrottle;
@@ -27,7 +27,7 @@ public class OI2017 extends OISubsystem {
 	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map) {
 		super(map.getOi());
 		this.map = map;
-		this.minimumOutput = map.getMinimumOutput();
+		this.joystickDeadband = map.getJoystickDeadband();
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
 		buttonPad = new Joystick(map.getButtonPad());
@@ -52,14 +52,14 @@ public class OI2017 extends OISubsystem {
 
 	@Override
 	public double getDriveAxisLeft() {
-		if (Math.abs(leftThrottle.getValue()) > minimumOutput)
+		if (Math.abs(leftThrottle.getValue()) > joystickDeadband)
 			return -leftThrottle.getValue();
 		return 0;
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		if (Math.abs(rightThrottle.getValue()) > minimumOutput)
+		if (Math.abs(rightThrottle.getValue()) > joystickDeadband)
 			return -rightThrottle.getValue();
 		return 0;
 	}

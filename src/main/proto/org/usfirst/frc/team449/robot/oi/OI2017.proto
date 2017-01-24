@@ -9,7 +9,7 @@ message OI2017 {
 	required int32 left_stick = 2;
 	required int32 right_stick = 3;
 	required int32 button_pad = 4;
-	required double minimum_output = 5;
+	required double joystick_deadband = 5;
 	required int32 climb_button = 6;
 	required int32 toggle_flywheel = 7;
 }
