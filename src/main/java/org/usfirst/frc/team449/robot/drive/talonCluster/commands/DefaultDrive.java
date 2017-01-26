@@ -4,18 +4,19 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Talon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
  * Program created by noah on 1/8/17.
  */
 public class DefaultDrive extends ReferencingCommand {
-	public OISubsystem oi;
+	public TankOI oi;
 
 	double leftThrottle;
 	double rightThrottle;
 
-	public DefaultDrive(TalonClusterDrive drive, OISubsystem oi) {
+	public DefaultDrive(TalonClusterDrive drive, TankOI oi) {
 		super(drive);
 		this.oi = oi;
 		requires(subsystem);
@@ -32,8 +33,8 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		rightThrottle = oi.getDriveAxisRight();
-		leftThrottle = oi.getDriveAxisLeft();
+		rightThrottle = oi.getRightThrottle();
+		leftThrottle = oi.getLeftThrottle();
 		((TalonClusterDrive) subsystem).logData();
 		((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
 	}
