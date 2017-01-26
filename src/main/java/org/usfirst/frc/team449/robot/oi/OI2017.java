@@ -2,14 +2,12 @@ package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.Climb;
-import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
-import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
@@ -30,11 +28,17 @@ public class OI2017 extends OISubsystem {
 	private JoystickButton driveStraight;
 	private JoystickButton climbButton;
 	private JoystickButton toggleFlywheel;
+	public Joystick gamepad;
+	public Throttle gRight;
+	public Throttle gLeft;
 
 	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map) {
 		super(map.getOi());
 		this.map = map;
 		this.joystickDeadband = map.getJoystickDeadband();
+		gamepad = new Joystick(5);
+		gRight = new PolyThrottle(gamepad, 3, 1);
+		gLeft = new PolyThrottle(gamepad, 0, 1);
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
 		buttonPad = new Joystick(map.getButtonPad());
@@ -77,6 +81,13 @@ public class OI2017 extends OISubsystem {
 		if (Math.abs(rightThrottle.getValue()) > joystickDeadband)
 			return -rightThrottle.getValue();
 		return 0;
+	}
+
+	public void checkDPad() {
+		SmartDashboard.putNumber("D Pad", gamepad.getPOV());
+		SmartDashboard.putNumber("D Pad 0", gamepad.getPOV(0));
+		SmartDashboard.putNumber("D Pad 1", gamepad.getPOV(1));
+		SmartDashboard.putNumber("D Pad 2", gamepad.getPOV(2));
 	}
 
 	@Override

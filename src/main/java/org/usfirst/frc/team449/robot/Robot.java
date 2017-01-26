@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OI2017Arcade;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.IOException;
 
@@ -34,7 +35,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017(cfg.getOi());
+		oiSubsystem = new OI2017ArcadeGamepad(cfg.getOi());
 		System.out.println("Constructed OI");
 //		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
@@ -48,5 +49,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		oiSubsystem.checkDPad();
 	}
 }
