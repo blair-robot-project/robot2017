@@ -27,6 +27,11 @@ version '1.0'
 
 allprojects {
 	tasks.withType(Javadoc).all { enabled = false }
+	repositories {
+		maven {
+			url 'https://jitpack.io'
+		}
+	}
 }
 
 repositories {
@@ -47,8 +52,7 @@ dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
-	//compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
-	//compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
+	compile 'com.github.blair-robot-project:449-central-repo:v4.0.0-WPILib2017'
 	compile wpilib()
 	compile talonSrx()
 	compile project(':449-central-repo')
