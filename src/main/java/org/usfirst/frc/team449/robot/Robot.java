@@ -22,7 +22,7 @@ public class Robot extends IterativeRobot {
 
 	public static TalonClusterDrive driveSubsystem;
 
-	public static OI2017Arcade oiSubsystem;
+	public static OI2017 oiSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -34,7 +34,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017Arcade(cfg.getOi());
+		oiSubsystem = new OI2017(cfg.getOi());
 		System.out.println("Constructed OI");
 //		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
