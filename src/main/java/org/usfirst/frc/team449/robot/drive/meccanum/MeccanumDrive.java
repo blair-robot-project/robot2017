@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.meccanum;
 
+import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
@@ -19,6 +20,8 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
     public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
     public OI2017 oi;
     private long startTime;
+
+    boolean strafe = false;
 
     public MeccanumDrive(maps.org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDriveMap.MeccanumDrive map, OI2017 oi){
         super(map.getDrive());
@@ -50,6 +53,26 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 
     public void setDefaultThrottle(double fl, double fr, double bl, double br) {
         setPIDThrottle(fl, fr, bl, br);
+    }
+
+    /**
+     * Sets all motors to the same throttle value.
+     * @param throttle the throttle value
+     */
+    public void setDefaultThrottle(double throttle){
+        setDefaultThrottle(throttle, throttle, throttle, throttle);
+    }
+
+    public void toggleStrafe(){
+        strafe = !strafe;
+    }
+
+    public void setDefaultThrottle(double leftOrFront, double rightOrBack){
+        if(!strafe) {
+            setDefaultThrottle(leftOrFront, rightOrBack, leftOrFront, rightOrBack);
+        } else {
+            setDefaultThrottle(leftOrFront, leftOrFront, -rightOrBack, -rightOrBack);   //strafing requires inverting the back motors
+        }
     }
 
     @Override

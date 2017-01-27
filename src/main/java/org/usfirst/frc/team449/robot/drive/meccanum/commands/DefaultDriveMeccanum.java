@@ -31,7 +31,7 @@ public class DefaultDriveMeccanum extends ReferencingCommand {
     protected void execute(){
         leftThrottle = oi.getDriveAxisLeft();
         rightThrottle = oi.getDriveAxisRight();
-        ((MeccanumDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle, leftThrottle, rightThrottle);
+        ((MeccanumDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
     }
 
     @Override
