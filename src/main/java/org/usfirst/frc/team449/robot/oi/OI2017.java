@@ -52,7 +52,7 @@ public class OI2017 extends OISubsystem {
 		turnaround = new JoystickButton(leftStick, map.getTurnaroundButton());
 		tt0 = new JoystickButton(leftStick, map.getTurnTo0Button());
 		tt30 = new JoystickButton(leftStick, map.getTurnTo30Button());
-		tt180 = new JoystickButton(leftStick, map.getTurnTo0Button());
+		tt180 = new JoystickButton(leftStick, map.getTurnTo180Button());
 		tt330 = new JoystickButton(leftStick, map.getTurnTo330Button());
 		driveStraight = new JoystickButton(rightStick, 1);
 
@@ -61,12 +61,12 @@ public class OI2017 extends OISubsystem {
 	}
 
 	public void mapButtons() {
-//		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
-//		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
-//		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
-//		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
-//		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
-//		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
+		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
+		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
+		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
+		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
+		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
+		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
 //		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
 //		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands
 //				.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
