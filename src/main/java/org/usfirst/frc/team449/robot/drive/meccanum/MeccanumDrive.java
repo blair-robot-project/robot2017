@@ -60,7 +60,7 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
      * @param throttle the throttle value
      */
     public void setDefaultThrottle(double throttle){
-        setDefaultThrottle(throttle, throttle, throttle, throttle);
+        setDefaultThrottle(throttle, throttle);
     }
 
     public void toggleStrafe(){

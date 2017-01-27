@@ -2,11 +2,10 @@ package org.usfirst.frc.team449.robot.drive.meccanum.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
+ * Sets all four wheels to move at the same speed.
  * Created by sam on 1/26/17.
  */
 public class DriveStraightMeccanum extends ReferencingCommand {
@@ -27,5 +26,10 @@ public class DriveStraightMeccanum extends ReferencingCommand {
     protected void execute(){
         leftThrottle = oi.getDriveAxisLeft();
         ((MeccanumDrive) subsystem).setDefaultThrottle(leftThrottle);
+    }
+
+    @Override
+    protected boolean isFinished(){
+        return false;
     }
 }
