@@ -36,6 +36,12 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		profile = new MotionProfileData(IN_FILE_NAME);
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
+		try {
+			tcd.leftMaster.setPSlot(1);
+			tcd.rightMaster.setPSlot(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
