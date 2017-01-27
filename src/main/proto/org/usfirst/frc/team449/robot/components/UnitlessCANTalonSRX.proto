@@ -25,9 +25,12 @@ message UnitlessCANTalonSRX {
 	required double nominal_out_voltage = 6;
 	required double peak_out_voltage = 7;
 	required int32 profile = 8;
-	required double kP = 9;
-	required double kI = 10;
-	required double kD = 11;
+	required double kP0 = 9;
+	required double kI0 = 10;
+	required double kD0 = 11;
+	required double kP1 = 24;
+	required double kI1 = 25;
+	required double kD1 = 26;
 	required double max_speed = 22;
 	required bool fwd_lim_norm_open = 13;
 	required bool rev_lim_norm_open = 14;
