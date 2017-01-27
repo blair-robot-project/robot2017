@@ -22,11 +22,13 @@ apply plugin: "jaci.openrio.gradle.GradleRIO"
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
 
-// = "org.usfirst.frc.team449.robot.Robot"   //The class for the main Robot Class. Used in manifest
-//jaci.openrio.gradle.GradleRIO. = "449"
-
 allprojects {
 	tasks.withType(Javadoc).all { enabled = false }
+	repositories {
+		maven {
+			url 'https://jitpack.io'
+		}
+	}
 }
 
 repositories {
@@ -37,21 +39,15 @@ repositories {
 	}
 
 	maven { url "https://plugins.gradle.org/m2/" }
-
-	/*flatDir {
-		dirs System.properties['user.home'] + '/wpilib/java/current/lib'
-	}*/
 }
 
 dependencies {
 	compile 'com.google.protobuf:protobuf-java:3.0.0'
 	compile 'io.grpc:grpc-stub:1.0.0-pre2'
 	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
-	//compile group: 'edu.wpi.first.wpilibj', name: 'athena', version: '2017.1.1'
-	//compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.5'
+	compile 'com.github.blair-robot-project:449-central-repo:v4.0.0-WPILib2017'
 	compile wpilib()
 	compile talonSrx()
-	compile project(':449-central-repo')
 	compile fileTree(dir: "lib", include: "*.jar")
 }
 
