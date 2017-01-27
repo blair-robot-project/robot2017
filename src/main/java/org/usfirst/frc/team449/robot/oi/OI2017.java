@@ -55,8 +55,9 @@ public class OI2017 extends OISubsystem {
 		tt180 = new JoystickButton(leftStick, map.getTurnTo0Button());
 		tt330 = new JoystickButton(leftStick, map.getTurnTo330Button());
 		driveStraight = new JoystickButton(rightStick, 1);
+
 		climbButton = new JoystickButton(buttonPad, map.getClimbButton());
-		toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
+		//toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
 	}
 
 	public void mapButtons() {
