@@ -3,7 +3,3 @@ language: java
 
 script:
   - ./gradlew build
-  - git clone https://github.com/blair-robot-project/449-central-repo.git
-
-
-  # Test
