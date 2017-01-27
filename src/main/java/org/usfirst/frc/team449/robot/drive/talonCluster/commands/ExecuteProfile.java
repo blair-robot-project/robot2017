@@ -34,12 +34,6 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		profile = new MotionProfileData(IN_FILE_NAME);
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
-		try {
-			tcd.leftMaster.setPSlot(1);
-			tcd.rightMaster.setPSlot(1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -55,18 +49,18 @@ public class ExecuteProfile extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
-		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
-		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
-		// TODO take this out
-		tcd.leftTPointStatus = leftStatus;
-		tcd.rightTPointStatus = rightStatus;
 		control();
-
 		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus.activePoint.velocity);
 		tcd.logData();
 	}
 
 	private void control() {
+		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
+		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
+		// TODO take this out
+		tcd.leftTPointStatus = leftStatus;
+		tcd.rightTPointStatus = rightStatus;
+
 		switch (_state) {
 			case 0: {
 				startFilling();
@@ -74,8 +68,18 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 1: {
+				if (leftStatus.btmBufferCnt >= 5 || rightStatus.btmBufferCnt >= 5) {
+					_state = 2;
+					System.out.println("LOADED");
+				} else {
+					System.out.println("NOT FULLY LOADED");
+				}
+				break;
+			}
+			case 2: {
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) {
 					mpProcessNotifier.startPeriodic(UPDATE_RATE);
+					tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					System.out.println("CAN buffer loaded; clearing underrun");
@@ -83,8 +87,6 @@ public class ExecuteProfile extends ReferencingCommand {
 					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
 					_state = 2;
 				}
-			}
-			case 2: {
 			}
 		}
 	}
@@ -113,7 +115,7 @@ public class ExecuteProfile extends ReferencingCommand {
 			point.position = profile.data[i][0];
 			point.velocity = tcd.leftMaster.RPStoNative(profile.data[i][1]);    // note this assumes left and right scaling are same
 			point.timeDurMs = (int) profile.data[i][2];
-			point.profileSlotSelect = 0;    // gain selection
+			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			point.zeroPos = false;
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
@@ -128,5 +130,6 @@ public class ExecuteProfile extends ReferencingCommand {
 		updaterProcess.addTalon(tcd.leftMaster.canTalon);
 		updaterProcess.addTalon(tcd.rightMaster.canTalon);
 		mpProcessNotifier = new Notifier(updaterProcess);
+		System.out.println("Finished loading points");
 	}
 }
