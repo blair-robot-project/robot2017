@@ -68,7 +68,12 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 1: {
-				if (leftStatus.btmBufferCnt >= 5 || rightStatus.btmBufferCnt >= 5) {
+				mpProcessNotifier.startPeriodic(UPDATE_RATE);
+				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
+				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
+				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
+
+				if (leftStatus.btmBufferCnt >= 128 || rightStatus.btmBufferCnt >= 128) {
 					_state = 2;
 					System.out.println("LOADED");
 				} else {
@@ -78,15 +83,16 @@ public class ExecuteProfile extends ReferencingCommand {
 			}
 			case 2: {
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) {
-					mpProcessNotifier.startPeriodic(UPDATE_RATE);
-					tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					System.out.println("CAN buffer loaded; clearing underrun");
 					tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
 					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
-					_state = 2;
+					_state = 3;
 				}
+			}
+			case 3: {
+				// Do nothing
 			}
 		}
 	}
