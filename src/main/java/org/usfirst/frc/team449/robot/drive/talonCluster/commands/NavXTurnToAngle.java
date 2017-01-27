@@ -83,4 +83,8 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		System.out.println("NavXTurnToAngle interrupted!");
 		this.getPIDController().disable();
 	}
+
+	public static double clipTo180(double theta){
+		return (theta+180)%360-180;
+	}
 }

@@ -29,9 +29,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	@Override
 	protected void initialize() {
 		System.out.println("NavXRelativeTurnToAngle init.");
-		this.startTime = System.currentTimeMillis();
-		this.setSetpoint(drive.getGyroOutput());
-		this.setSetpointRelative(sp);
+		this.setSetpoint(clipTo180(drive.getGyroOutput() + sp));
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}
