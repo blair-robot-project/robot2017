@@ -1,0 +1,12 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "AnalogPressureSensorMap";
+
+message AnalogPressureSensor {
+    required int32 port = 1;
+    required double k_prop = 2;  //slope of voltage
+    required double k_offset = 3;
+    required int32 oversample_bits = 4;
+    required int32 average_bits = 5;
+}
