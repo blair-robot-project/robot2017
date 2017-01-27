@@ -61,17 +61,17 @@ public class OI2017 extends OISubsystem {
 	}
 
 	public void mapButtons() {
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
-		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
-		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
-		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands
-				.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
-		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands
-				.ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
+//		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
+//		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
+//		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
+//		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 179, Robot.driveSubsystem, 2.5));
+//		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
+//		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
+//		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
+//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands
+//				.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
+//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands
+//				.ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
 	}
 
 	@Override

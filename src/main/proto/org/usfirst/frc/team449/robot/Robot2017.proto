@@ -12,6 +12,6 @@ message Robot2017 {
 	required OI2017 oi = 1;
 	required TalonClusterDrive drive = 2;
 	required Climber climber = 3;
-	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
-	required SingleFlywheelShooter singleFlywheelShooter = 5;
+//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
+	required SingleFlywheelShooter shooter = 5;
 }
