@@ -10,11 +10,6 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
  */
 public class NavXRelativeTTA extends NavXTurnToAngle {
 
-	private TalonClusterDrive drive;
-	private double sp;
-	private long timeout;
-	private long startTime;
-
 	/**
 	 * Default constructor.
 	 *
@@ -28,6 +23,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 
 	@Override
 	protected void initialize() {
+		this.startTime = System.currentTimeMillis();
 		System.out.println("NavXRelativeTurnToAngle init.");
 		this.setSetpoint(clipTo180(drive.getGyroOutput() + sp));
 		//Make sure to enable the controller!

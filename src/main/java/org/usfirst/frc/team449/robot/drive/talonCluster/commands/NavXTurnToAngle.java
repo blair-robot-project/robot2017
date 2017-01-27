@@ -10,10 +10,10 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
  */
 public class NavXTurnToAngle extends PIDAngleCommand {
 
-	private TalonClusterDrive drive;
-	private double sp;
-	private long timeout;
-	private long startTime;
+	protected TalonClusterDrive drive;
+	protected double sp;
+	protected long timeout;
+	protected long startTime;
 	//private double deadband;
 
 	/**
