@@ -40,13 +40,13 @@ public class Robot extends IterativeRobot {
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getOi());
 		System.out.println("Constructed OI");
 
-//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
-    
+		System.out.println("Constructed drive");
+
+//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
 //		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
 //		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 //		System.out.println("Constructed SingleFlywheelShooter");
-    
 //		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 //		System.out.println("Constructed DoubleFlywheelShooter");
 
