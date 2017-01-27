@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Program created by noah on 1/23/17.
  */
-public class NavXRelativeTTA extends PIDAngleCommand {
+public class NavXRelativeTTA extends NavXTurnToAngle {
 
 	private TalonClusterDrive drive;
 	private double sp;
@@ -23,61 +23,29 @@ public class NavXRelativeTTA extends PIDAngleCommand {
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
 	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
-		super(map, drive);
-		this.drive = drive;
-		this.sp = sp;
-		this.timeout = (long) (timeout * 1000);
-		requires(drive);
-	}
-
-	@Override
-	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput)
-				output = minimumOutput;
-			else if (output < 0 && output > -minimumOutput)
-				output = -minimumOutput;
-		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
-			output = 0;
-		}
-		//Which one of these is negative may be different from robot to robot, we don't know.
-		drive.setDefaultThrottle(output, -output);
+		super(map, sp, drive, timeout);
 	}
 
 	@Override
 	protected void initialize() {
+		System.out.println("NavXRelativeTurnToAngle init.");
 		this.startTime = System.currentTimeMillis();
+		this.setSetpoint(drive.getGyroOutput());
 		this.setSetpointRelative(sp);
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}
 
-	@Override
-	protected void execute() {
-		//Just logging, nothing actually gets done.
-		drive.logData();
-		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
-		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
-	}
-
-	@Override
-	protected boolean isFinished() {
-		//This method is crap and sometimes never terminates because of floating point errors, so we have a timeout
-		return this.getPIDController().onTarget() || System.currentTimeMillis() - startTime > timeout;
-		//return false;
-	}
 
 	@Override
 	protected void end() {
-		System.out.println("NavXTurnToAngle end.");
+		System.out.println("NavXRelativeTurnToAngle end.");
 		this.getPIDController().disable();
 	}
 
 	@Override
 	protected void interrupted() {
-		System.out.println("NavXTurnToAngle interrupted!");
+		System.out.println("NavXRelativeTurnToAngle interrupted!");
 		this.getPIDController().disable();
 	}
 }

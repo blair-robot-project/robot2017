@@ -33,16 +33,19 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 
 	@Override
 	protected void usePIDOutput(double output) {
+		SmartDashboard.putNumber("Preprocessed output", output);
+		SmartDashboard.putNumber("Setpoint", this.getSetpoint());
 		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
-			if (output > deadband && output < minimumOutput)
+			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
-			else if (output < -deadband && output > -minimumOutput)
+			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
-			else if (Math.abs(output) < deadband)
+			else if (Math.abs(this.getPIDController().getAvgError()) < deadband)
 				output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.
+		SmartDashboard.putNumber("Processed output", output);
 		drive.setDefaultThrottle(output, -output);
 	}
 

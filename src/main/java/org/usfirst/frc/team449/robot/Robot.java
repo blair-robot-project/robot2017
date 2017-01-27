@@ -37,7 +37,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017ArcadeGamepad(cfg.getOi());
+		oiSubsystem = new OI2017(cfg.getOi());
 		System.out.println("Constructed OI");
 
 //		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
@@ -57,6 +57,6 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		oiSubsystem.checkDPad();
+		//oiSubsystem.checkDPad();
 	}
 }
