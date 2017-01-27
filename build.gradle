@@ -1,23 +1,11 @@
-buildscript {
-	repositories {
-		mavenCentral()
-		maven {
-			name = "GradleRIO"
-			url = "http://dev.imjac.in/maven"
-		}
-		maven { url "https://plugins.gradle.org/m2/" }
-	}
-	dependencies {
-		classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
-		classpath group: 'gradle.plugin.jaci.openrio.gradle', name: 'GradleRIO', version: '2017.1.1'
-	}
+plugins {
+	id 'org.hidetake.ssh' version "2.7.2"
+	id "java"
+	id "eclipse"
+	id "idea"
+	id "jaci.openrio.gradle.GradleRIO" version "2017.1.1"
+	id "com.google.protobuf" version "0.8.0"
 }
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'com.google.protobuf'
-apply plugin: 'eclipse'
-apply plugin: "jaci.openrio.gradle.GradleRIO"
 
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
@@ -28,6 +16,14 @@ allprojects {
 		maven {
 			url 'https://jitpack.io'
 		}
+	}
+}
+
+remotes {
+	rio {
+		host = 'roboRIO-449-frc.local'
+		user = 'lvuser'
+		knownHosts = allowAnyHosts
 	}
 }
 
@@ -98,7 +94,7 @@ task convertFiles << {
 frc {
 	//deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
 	//deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
-	team = "449"
+	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
 }
 
@@ -124,6 +120,17 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task('copyResources', dependsOn: convertFiles){
+	doLast {
+		ssh.run {
+			session(remotes.rio) {
+				execute 'mkdir ~/449_resources', ignoreError: true
+				put from: 'src/main/resources/*', into: './449_resources/'
+			}
+		}
+	}
 }
 
 artifacts {

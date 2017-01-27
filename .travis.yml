@@ -3,7 +3,8 @@ language: java
 
 script:
   - ./gradlew build
-  - git clone https://github.com/blair-robot-project/449-central-repo.git
 
-
-  # Test
+notifications:
+  email:
+    on_success: never
+    on_failure: always # default: always
