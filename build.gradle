@@ -122,11 +122,11 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task copyResources <<{
+task('copyResources', dependsOn: convertFiles){
 	ssh.run {
 		session (remotes.rio){
 			execute 'mkdir ~/449_resources', ignoreError: true
-			put from: 'src/main/449_resources', into: '.'
+			put from: 'src/main/resources/*', into: './449_resources/'
 		}
 	}
 }
