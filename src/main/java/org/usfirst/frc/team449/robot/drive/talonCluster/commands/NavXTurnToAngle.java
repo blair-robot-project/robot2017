@@ -14,6 +14,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	private double sp;
 	private long timeout;
 	private long startTime;
+	//private double deadband;
 
 	/**
 	 * Default constructor.
@@ -34,13 +35,12 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	protected void usePIDOutput(double output) {
 		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput)
+			if (output > deadband && output < minimumOutput)
 				output = minimumOutput;
-			else if (output < 0 && output > -minimumOutput)
+			else if (output < -deadband && output > -minimumOutput)
 				output = -minimumOutput;
-		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
-			output = 0;
+			else if (Math.abs(output) < deadband)
+				output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.
 		drive.setDefaultThrottle(output, -output);
