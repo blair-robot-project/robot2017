@@ -42,12 +42,12 @@ public class Robot extends IterativeRobot {
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 		System.out.println("Constructed drive");
 
-		//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
-		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-		//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-		//		System.out.println("Constructed SingleFlywheelShooter");
-		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-		//		System.out.println("Constructed DoubleFlywheelShooter");
+//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
+//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+//		System.out.println("Constructed SingleFlywheelShooter");
+//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
+//		System.out.println("Constructed DoubleFlywheelShooter");
 
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
