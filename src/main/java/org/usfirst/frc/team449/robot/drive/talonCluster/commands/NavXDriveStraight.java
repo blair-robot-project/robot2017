@@ -18,7 +18,8 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	private TalonClusterDrive drive;
 	private double sp;
 
-	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OISubsystem oi) {
+	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
+	                         OISubsystem oi) {
 		super(map, drive);
 		this.oi = oi;
 		this.drive = drive;
@@ -55,7 +56,8 @@ public class NavXDriveStraight extends PIDAngleCommand {
 			output = 0;
 		}
 		SmartDashboard.putNumber("Output", output);
-		drive.setDefaultThrottle(oi.getDriveAxisRight() + output, oi.getDriveAxisRight() - output); //Yes these should both be right, it's driveStraight
+		drive.setDefaultThrottle(oi.getDriveAxisRight() + output, oi.getDriveAxisRight() - output); //Yes these should
+		// both be right, it's driveStraight
 	}
 
 	/**

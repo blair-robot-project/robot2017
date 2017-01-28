@@ -62,7 +62,8 @@ public class ExecuteProfile extends ReferencingCommand {
 		tcd.rightTPointStatus = rightStatus;
 		control();
 
-		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus.activePoint.velocity);
+		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
+				.activePoint.velocity);
 		tcd.logData();
 	}
 
@@ -74,7 +75,8 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 1: {
-				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) {
+				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
+						MIN_NUM_LOADED_POINTS) {
 					mpProcessNotifier.startPeriodic(UPDATE_RATE);
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
@@ -111,7 +113,8 @@ public class ExecuteProfile extends ReferencingCommand {
 		for (int i = 0; i < profile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = profile.data[i][0];
-			point.velocity = tcd.leftMaster.RPStoNative(profile.data[i][1]);    // note this assumes left and right scaling are same
+			point.velocity = tcd.leftMaster.RPStoNative(profile.data[i][1]);    // note this assumes left and right
+			// scaling are same
 			point.timeDurMs = (int) profile.data[i][2];
 			point.profileSlotSelect = 0;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward

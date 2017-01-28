@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.ctre.CANTalon;
-import edu.wpi.first.wpilibj.Talon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;

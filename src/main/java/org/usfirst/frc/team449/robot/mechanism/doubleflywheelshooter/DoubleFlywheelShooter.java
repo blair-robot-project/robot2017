@@ -24,7 +24,8 @@ public class DoubleFlywheelShooter extends MappedSubsystem {
 	private long startTime;
 	private double maxError = 0;
 
-	public DoubleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooterMap.DoubleFlywheelShooter map) {
+	public DoubleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter
+			                             .DoubleFlywheelShooterMap.DoubleFlywheelShooter map) {
 		super(map.getMechanism());
 		this.map = map;
 		this.leftTalon = new UnitlessCANTalonSRX(map.getLeftTalon());
@@ -58,7 +59,8 @@ public class DoubleFlywheelShooter extends MappedSubsystem {
 	}
 
 	public void logData(double throttle) {
-		maxError = Math.max(Math.max(leftTalon.canTalon.getClosedLoopError(), rightTalon.canTalon.getClosedLoopError()), maxError);
+		maxError = Math.max(Math.max(leftTalon.canTalon.getClosedLoopError(), rightTalon.canTalon.getClosedLoopError()
+		), maxError);
 		SmartDashboard.putNumber("max error", maxError);
 		SmartDashboard.putNumber("left speed", leftTalon.canTalon.getPulseWidthVelocity());
 		SmartDashboard.putNumber("right speed", rightTalon.canTalon.getPulseWidthVelocity());
