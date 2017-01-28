@@ -11,10 +11,12 @@ import org.usfirst.frc.team449.robot.oi.OI2017;
  * Created by Justin on 1/28/2017.
  */
 public class Intake extends MappedSubsystem {
-	UnitlessCANTalonSRX fixed_talon;
-	UnitlessCANTalonSRX actuated_talon;
-	DoubleSolenoid piston;
-	OI2017 oi;
+
+	private UnitlessCANTalonSRX fixed_talon;
+	private UnitlessCANTalonSRX actuated_talon;
+	private DoubleSolenoid piston;
+	private OI2017 oi;
+	public boolean isIntaking;
 
 	/**
 	 * Creates a mapped subsystem and sets its map
@@ -37,6 +39,10 @@ public class Intake extends MappedSubsystem {
 
 	public void setPiston(DoubleSolenoid.Value value) {
 		piston.set(value);
+	}
+
+	public void setIntaking(boolean isIntaking){
+		this.isIntaking = isIntaking;
 	}
 
 	/**
