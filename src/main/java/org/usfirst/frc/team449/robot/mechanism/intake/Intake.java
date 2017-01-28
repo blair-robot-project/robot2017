@@ -21,7 +21,7 @@ public class Intake extends MappedSubsystem {
 	 *
 	 * @param map the map of constants relevant to this subsystem
 	 */
-	public Intake(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake map, OI2017 oi) {
+	public Intake(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map, OI2017 oi) {
 		super(map.getMechanism());
 		this.map = map;
 		this.fixed_talon = new UnitlessCANTalonSRX(map.getFixedTalon());
