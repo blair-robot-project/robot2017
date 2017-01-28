@@ -8,8 +8,6 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
-import org.usfirst.frc.team449.robot.oi.OI2017Arcade;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.IOException;
 
@@ -32,7 +30,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Started robotInit");
 		try {
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/map.cfg", Robot2017Map.Robot2017.newBuilder());
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/map.cfg",
+					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			System.out.println("Config file not found!");
 			e.printStackTrace();

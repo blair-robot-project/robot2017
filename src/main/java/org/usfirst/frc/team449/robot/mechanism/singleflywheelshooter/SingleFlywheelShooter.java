@@ -23,11 +23,12 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	private long startTime;
 	private double maxError = 0;
 
-	public SingleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooterMap.SingleFlywheelShooter map) {
+	public SingleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter
+			                             .SingleFlywheelShooterMap.SingleFlywheelShooter map) {
 		super(map.getMechanism());
 		this.map = map;
 		this.talon = new UnitlessCANTalonSRX(map.getTalon());
-		System.out.println("f" + talon.canTalon.getF());
+		System.out.println("Shooter F: " + talon.canTalon.getF());
 	}
 
 	/**
@@ -40,7 +41,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	}
 
 	private void setPIDSpeed(double sp) {
-		talon.setSpeed(talon.getMaxSpeed() * sp * .42);
+		talon.setSpeed(talon.getMaxSpeed() * sp);
 	}
 
 	/**

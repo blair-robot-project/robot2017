@@ -1,12 +1,6 @@
 package org.usfirst.frc.team449.robot.oi;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017Map;
-import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
-import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
-import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
  * Created by blairrobot on 1/9/17.

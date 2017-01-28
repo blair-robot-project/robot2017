@@ -1,8 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
@@ -17,7 +15,8 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 * @param sp    The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
-	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
+	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive,
+	                       double timeout) {
 		super(map, sp, drive, timeout);
 	}
 

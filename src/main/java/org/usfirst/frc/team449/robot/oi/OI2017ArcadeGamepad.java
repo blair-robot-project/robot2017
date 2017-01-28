@@ -23,9 +23,9 @@ public class OI2017ArcadeGamepad extends OI2017 {
 			return -(gRight.getValue() + SHIFT);
 		}
 		return gRight.getValue();
-//		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
-//			return leftThrottle.getValue() - rightThrottle.getValue();
-//		return 0;
+		//		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
+		//			return leftThrottle.getValue() - rightThrottle.getValue();
+		//		return 0;
 	}
 
 	@Override
@@ -38,9 +38,9 @@ public class OI2017ArcadeGamepad extends OI2017 {
 		}
 		return gRight.getValue();
 
-//		return (gRight.getValue() + gLeft.getValue());
-//		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
-//			return leftThrottle.getValue() + rightThrottle.getValue();
-//		return 0;
+		//		return (gRight.getValue() + gLeft.getValue());
+		//		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
+		//			return leftThrottle.getValue() + rightThrottle.getValue();
+		//		return 0;
 	}
 }
