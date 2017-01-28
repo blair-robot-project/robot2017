@@ -30,7 +30,7 @@ public class IntakeDown extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	@Override
