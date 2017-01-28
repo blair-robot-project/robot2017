@@ -30,13 +30,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	public OI2017 oi;
-	private long startTime;
-
-
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
-
+	private long startTime;
 	private String logFN = "driveLog.csv";
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap

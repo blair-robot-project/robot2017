@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.mechanism.climber;
 
-import org.usfirst.frc.team449.robot.components.CANTalonSRX;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017;

@@ -12,7 +12,8 @@ public class PIDTune extends ReferencingCommandGroup {
 	/**
 	 * Instantiate the ReferencingCommandGroup
 	 *
-	 * @param mappedSubsystem the {@link MappedSubsystem} to feed to this {@code ReferencingCommandGroup}'s {@link ReferencingCommand}s
+	 * @param mappedSubsystem the {@link MappedSubsystem} to feed to this {@code ReferencingCommandGroup}'s
+	 * {@link ReferencingCommand}s
 	 */
 	public PIDTune(MappedSubsystem mappedSubsystem) {
 		super(mappedSubsystem);

@@ -82,11 +82,13 @@ idea {
 	}
 }
 
-task convertFiles << {
-	fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
-		exec {
-			commandLine 'dos2unix'
-			args aFile.absolutePath
+task convertFiles{
+	doLast {
+		fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
+			exec {
+				commandLine 'dos2unix'
+				args aFile.absolutePath
+			}
 		}
 	}
 }

@@ -23,12 +23,17 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param sp    The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
-	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
+	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive,
+	                       double timeout) {
 		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;
 		this.timeout = (long) (timeout * 1000);
 		requires(drive);
+	}
+
+	public static double clipTo180(double theta) {
+		return (theta + 180) % 360 - 180;
 	}
 
 	@Override
@@ -82,9 +87,5 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	protected void interrupted() {
 		System.out.println("NavXTurnToAngle interrupted!");
 		this.getPIDController().disable();
-	}
-
-	public static double clipTo180(double theta){
-		return (theta+180)%360-180;
 	}
 }

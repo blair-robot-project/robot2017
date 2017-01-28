@@ -8,5 +8,5 @@ option java_outer_classname = "ClimberMap";
 message Climber {
 	required Mechanism mechanism = 1;
 	required UnitlessCANTalonSRX winch = 2;
-    required double max_current = 3;
+	required double max_current = 3;
 }
