@@ -1,31 +1,31 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake;
 
 /**
  * Created by Justin on 1/28/2017.
  */
-public class IntakeIn extends ReferencingCommand {
+public class IntakeUp extends ReferencingCommand {
 
 	Intake intake;
 
-	public IntakeIn(Intake intake) {
+	public IntakeUp(Intake intake) {
 		super(intake);
 		requires(intake);
 		this.intake = intake;
-		System.out.println("IntakeIn constructed");
+		System.out.println("IntakeUp constructed");
 	}
 
 	@Override
 	protected void initialize() {
-		System.out.println("IntakeIn init");
+		System.out.println("IntakeUp init");
 	}
 
 	@Override
 	protected void execute() {
-		intake.setPercentVbus(1);
+		intake.setPiston(DoubleSolenoid.Value.kReverse);
 	}
 
 	@Override
@@ -35,14 +35,12 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-		intake.setPercentVbus(0);
-		System.out.println("IntakeIn end");
+		System.out.println("IntakeUp end");
 	}
 
 	@Override
 	protected void interrupted() {
-		intake.setPercentVbus(0);
-		System.out.println("IntakeIn interrupted, stopping intake.");
+		System.out.println("IntakeUp interrupted.");
 	}
 
 }

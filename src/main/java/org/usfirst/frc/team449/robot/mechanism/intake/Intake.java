@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.intake;
 
 import com.google.protobuf.Message;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.intake.commands.IntakeIn;
@@ -10,7 +11,9 @@ import org.usfirst.frc.team449.robot.oi.OI2017;
  * Created by Justin on 1/28/2017.
  */
 public class Intake extends MappedSubsystem {
-	UnitlessCANTalonSRX talon;
+	UnitlessCANTalonSRX fixed_talon;
+	UnitlessCANTalonSRX actuated_talon;
+	DoubleSolenoid piston;
 	OI2017 oi;
 
 	/**
@@ -21,12 +24,19 @@ public class Intake extends MappedSubsystem {
 	public Intake(maps.org.usfirst.frc.team449.robot.mechanism.intake.IntakeMap.Intake map, OI2017 oi) {
 		super(map.getMechanism());
 		this.map = map;
-		this.talon = new UnitlessCANTalonSRX(map.getTalon());
+		this.fixed_talon = new UnitlessCANTalonSRX(map.getFixedTalon());
+		this.actuated_talon = new UnitlessCANTalonSRX(map.getActuatedTalon());
+		this.piston = new DoubleSolenoid(map.getPiston().getForward(), map.getPiston().getReverse());
 		this.oi = oi;
 	}
 
 	public void setPercentVbus(double percentVbus) {
-		talon.setPercentVbus(percentVbus);
+		fixed_talon.setPercentVbus(percentVbus);
+		actuated_talon.setPercentVbus(percentVbus);
+	}
+
+	public void setPiston(DoubleSolenoid.Value value) {
+		piston.set(value);
 	}
 
 	/**
