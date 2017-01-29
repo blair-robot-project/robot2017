@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
-import org.usfirst.frc.team449.robot.oi.OI2017Arcade;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.IOException;
@@ -43,19 +44,27 @@ public class Robot extends IterativeRobot {
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 		System.out.println("Constructed drive");
 
-//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
-//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-//		System.out.println("Constructed SingleFlywheelShooter");
-//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-//		System.out.println("Constructed DoubleFlywheelShooter");
-
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
 	}
 
 	@Override
+	public void teleopInit() {
+		new DefaultDrive(driveSubsystem, oiSubsystem);
+	}
+
+	@Override
 	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+	}
+
+	@Override
+	public void autonomousInit() {
+		new ExecuteProfile(driveSubsystem);
+	}
+
+	@Override
+	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 	}
 }

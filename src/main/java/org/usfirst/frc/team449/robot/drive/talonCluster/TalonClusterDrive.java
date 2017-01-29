@@ -133,8 +133,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 
 		startTime = System.nanoTime();
-		setDefaultCommand(new ExecuteProfile(this));
-//		setDefaultCommand(new PIDTest(this));
 	}
 
 	public double getGyroOutput() {
