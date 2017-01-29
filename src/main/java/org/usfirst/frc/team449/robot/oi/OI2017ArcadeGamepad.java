@@ -13,7 +13,6 @@ public class OI2017ArcadeGamepad extends OI2017 {
 
 	public OI2017ArcadeGamepad(OI2017Map.OI2017 map) {
 		super(map);
-		rightThrottle = new SmoothedThrottle(new Joystick(5), 0);
 	}
 
 	@Override
@@ -26,8 +25,8 @@ public class OI2017ArcadeGamepad extends OI2017 {
 			toRet = -(gRight.getValue() + SHIFT);
 		} else
 			toRet = gRight.getValue();
-		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
-			return toRet+ leftThrottle.getValue() - rightThrottle.getValue();
+		if (Math.abs(gLeft.getValue() - gRight.getValue()) > joystickDeadband)
+			return toRet + gLeft.getValue() - gRight.getValue();
 		return toRet;
 		//		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
 		//			return leftThrottle.getValue() - rightThrottle.getValue();
@@ -44,8 +43,8 @@ public class OI2017ArcadeGamepad extends OI2017 {
 		} else
 			toRet = gRight.getValue();
 
-		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
-			return toRet + leftThrottle.getValue() + rightThrottle.getValue();
+		if (Math.abs(gLeft.getValue() + gRight.getValue()) > joystickDeadband)
+			return toRet + gLeft.getValue() + gRight.getValue();
 		return toRet;
 
 		//		return (gRight.getValue() + gLeft.getValue());

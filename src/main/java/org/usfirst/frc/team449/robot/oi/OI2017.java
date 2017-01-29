@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraig
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
+import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
@@ -15,9 +16,9 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
  */
 public class OI2017 extends OISubsystem {
 
-	public Joystick gamepad;
-	public Throttle gRight;
-	public Throttle gLeft;
+	protected Joystick gamepad;
+	protected Throttle gRight;
+	protected Throttle gLeft;
 	protected double joystickDeadband;
 	protected Throttle leftThrottle;
 	protected Throttle rightThrottle;
@@ -35,16 +36,16 @@ public class OI2017 extends OISubsystem {
 		super(map.getOi());
 		this.map = map;
 		this.joystickDeadband = map.getJoystickDeadband();
-		gamepad = new Joystick(5);
-		gRight = new PolyThrottle(gamepad, 3, 1);
-		gLeft = new PolyThrottle(gamepad, 0, 1);
+		gamepad = new Joystick(map.getGamepad());
+		gRight = new SmoothedThrottle(gamepad, map.getGamepadRightAxis());
+		gLeft = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis());
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
 		buttonPad = new Joystick(map.getButtonPad());
-		leftThrottle = new PolyThrottle(leftStick, 1, 1);
-		rightThrottle = new PolyThrottle(rightStick, 1, 1);
-//		leftThrottle = new SmoothedThrottle(leftStick, 1);
-//		rightThrottle = new SmoothedThrottle(rightStick, 1);
+//		leftThrottle = new PolyThrottle(leftStick, 1, 1);
+//		rightThrottle = new PolyThrottle(rightStick, 1, 1);
+		leftThrottle = new SmoothedThrottle(leftStick, 1);
+		rightThrottle = new SmoothedThrottle(rightStick, 1);
 //		leftThrottle = new ExpThrottle(leftStick, 1, 50);
 //		rightThrottle = new ExpThrottle(rightStick, 1, 50);
 		turnaround = new JoystickButton(leftStick, map.getTurnaroundButton());
