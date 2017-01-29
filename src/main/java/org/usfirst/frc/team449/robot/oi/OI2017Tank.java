@@ -1,27 +1,21 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
-import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
- * Created by blairrobot on 1/9/17.
+ * Created by ryant on 2017-01-25.
  */
-public class OI2017Arcade extends BaseOI implements ArcadeOI {
-	/**
-	 * Left (rotation control) stick's throttle
-	 */
+public class OI2017Tank extends BaseOI implements TankOI {
 	private Throttle leftThrottle;
-	/**
-	 * Right (fwd/rev control) stick's throttle
-	 */
 	private Throttle rightThrottle;
 
-	private OI2017ArcadeMap.OI2017Arcade map;
+	private OI2017TankMap.OI2017Tank map;
 
-	public OI2017Arcade(maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap.OI2017Arcade map) {
+	public OI2017Tank(maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap.OI2017Tank map) {
 		this.map = map;
 
 		Joystick _leftStick = new Joystick(map.getLeftStick());
@@ -29,23 +23,20 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 		this.leftThrottle = new PolyThrottle(_leftStick, 1, 1);
 		this.rightThrottle = new PolyThrottle(_rightStick, 1, 1);
 	}
-
 	@Override
 	public void mapButtons() {
-		// Do nothing
+		// Do nothing (no buttons yet)
 	}
 
-	/**
-	 * @return rotational velocity component
-	 */
-	public double getRot() {
+	@Override
+	public double getLeftThrottle() {
+		// TODO put a deadband
 		return leftThrottle.getValue();
 	}
 
-	/**
-	 * @return forward velocity component
-	 */
-	public double getFwd() {
+	@Override
+	public double getRightThrottle() {
+		// TODO put a deadband
 		return rightThrottle.getValue();
 	}
 }

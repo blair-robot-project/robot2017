@@ -3,22 +3,22 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 import com.ctre.CANTalon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 
 /**
  * Program created by noah on 1/8/17.
  */
-public class DefaultDrive extends ReferencingCommand {
-	public OISubsystem oi;
+public class OpArcadeDrive extends ReferencingCommand {
+	public ArcadeOI oi;
 
 	double leftThrottle;
 	double rightThrottle;
 
-	public DefaultDrive(TalonClusterDrive drive, OISubsystem oi) {
+	public OpArcadeDrive(TalonClusterDrive drive, ArcadeOI oi) {
 		super(drive);
 		this.oi = oi;
 		requires(subsystem);
-		System.out.println("Drive Robot bueno");
 	}
 
 	@Override
@@ -31,8 +31,9 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		rightThrottle = oi.getDriveAxisRight();
-		leftThrottle = oi.getDriveAxisLeft();
+		rightThrottle = oi.getFwd() + oi.getRot();
+		leftThrottle = oi.getFwd() - oi.getRot();
+
 		((TalonClusterDrive) subsystem).logData();
 		((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
 	}
@@ -48,7 +49,7 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void interrupted() {
-		System.out.println("DefaultDrive Interrupted! Stopping the robot.");
+		System.out.println("OpTankDrive Interrupted! Stopping the robot.");
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 }

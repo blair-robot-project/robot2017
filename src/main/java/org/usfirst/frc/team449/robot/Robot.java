@@ -7,7 +7,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.oi.BaseOI;
+import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 
 import java.io.IOException;
 
@@ -23,7 +24,9 @@ public class Robot extends IterativeRobot {
 
 	public static TalonClusterDrive driveSubsystem;
 
-	public static OI2017 oiSubsystem;
+	//	public static OI2017Arcade oiSubsystem;
+
+	public static BaseOI oi;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -37,20 +40,21 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017(cfg.getOi());
+		oi = new OI2017Tank(cfg.getTankOi());
 		System.out.println("Constructed OI");
 
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), (OI2017Tank) oi);
+
 		System.out.println("Constructed drive");
 
-//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
-//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-//		System.out.println("Constructed SingleFlywheelShooter");
-//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-//		System.out.println("Constructed DoubleFlywheelShooter");
+		//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
+		//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+		//		System.out.println("Constructed SingleFlywheelShooter");
+		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
+		//		System.out.println("Constructed DoubleFlywheelShooter");
 
-		oiSubsystem.mapButtons();
+		oi.mapButtons();
 		System.out.println("Mapped buttons");
 	}
 
