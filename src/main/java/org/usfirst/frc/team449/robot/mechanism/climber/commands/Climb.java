@@ -29,7 +29,7 @@ public class Climb extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return climber.reachedTop();
 	}
 
 	@Override

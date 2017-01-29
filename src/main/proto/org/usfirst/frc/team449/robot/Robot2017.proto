@@ -1,6 +1,7 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/oi/OI2017Tank.proto";
 import "org/usfirst/frc/team449/robot/mechanism/doubleflywheelshooter/DoubleFlywheelShooter.proto";
+import "org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.proto";
 import "org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.proto";
 import "org/usfirst/frc/team449/robot/mechanism/climber/Climber.proto";
 
@@ -11,5 +12,6 @@ message Robot2017 {
 	required OI2017Tank tank_oi = 1;
 	required TalonClusterDrive drive = 2;
 	required Climber climber = 3;
-	required DoubleFlywheelShooter shooter = 4;
+//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
+	required SingleFlywheelShooter shooter = 5;
 }

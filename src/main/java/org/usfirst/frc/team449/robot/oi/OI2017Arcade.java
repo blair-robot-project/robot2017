@@ -38,7 +38,6 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	/**
 	 * @return rotational velocity component
 	 */
-	@Override
 	public double getRot() {
 		return leftThrottle.getValue();
 	}
@@ -46,7 +45,6 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	/**
 	 * @return forward velocity component
 	 */
-	@Override
 	public double getFwd() {
 		return rightThrottle.getValue();
 	}

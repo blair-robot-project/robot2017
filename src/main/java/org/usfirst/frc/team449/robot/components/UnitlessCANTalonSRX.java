@@ -25,28 +25,12 @@ public class UnitlessCANTalonSRX extends Component {
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
-	 * kP of the internal PID loop
-	 */
-	protected double kP;
-	/**
-	 * kI of the internal PID loop
-	 */
-	protected double kI;
-	/**
-	 * kD of the internal PID loop
-	 */
-	protected double kD;
-	/**
-	 * kF of the interal PID loop
-	 */
-	protected double kF;
-
-	/**
 	 * Construct the CANTalonSRX from its map object
 	 *
 	 * @param m CANTalonSRX map object
 	 */
-	public UnitlessCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap.UnitlessCANTalonSRX m) {
+	public UnitlessCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap
+			                           .UnitlessCANTalonSRX m) {
 		// Configure stuff
 		canTalon = new CANTalon(m.getPort());
 		maxSpeed = m.getMaxSpeed();
@@ -62,16 +46,8 @@ public class UnitlessCANTalonSRX extends Component {
 				-m.getPeakOutVoltage());
 		canTalon.setProfile(m.getProfile());
 
-		/*
-		 * Read the PIDF constants from the map, then call setPIDF to scale the stuff in the map as desired to get to
-		 * native units, appropriates or whatever the hell the controller expect, then set the PIDF slots of the
-		 * hardware and choose the slot
-		 */
-		kP = m.getKP();
-		kI = m.getKI();
-		kD = m.getKD();
-
-		canTalon.setPID(m.getKP(), m.getKI(), m.getKD(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 0);
+		canTalon.setPID(m.getKP0(), m.getKI0(), m.getKD0(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 0);
+		canTalon.setPID(m.getKP1(), m.getKI1(), m.getKD1(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 1);
 		canTalon.setProfile(0);
 
 		// Configure more stuff
@@ -147,8 +123,22 @@ public class UnitlessCANTalonSRX extends Component {
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
 				.FeedbackDevice.CtreMagEncoder_Absolute)
-			canTalon.set(velocitySp * 60); // 60 converts from RPS to RPM, TODO figure out where the 60 should actually go
+			canTalon.set(velocitySp * 60); // 60 converts from RPS to RPM, TODO figure out where the 60 should
+			// actually go
 		else
 			canTalon.set(RPStoNative(velocitySp));
+	}
+
+	/**
+	 * Set which slot the Talon reads the PID gains from
+	 *
+	 * @param slot gains slot (0 or 1)
+	 * @throws Exception if the specified slot isn't 0 or 1
+	 */
+	public void setPSlot(int slot) throws Exception {
+		if (slot != 0 && slot != 1) {
+			throw new Exception("Profiling gains slot " + slot + " does not exist!");
+		}
+		canTalon.setProfile(slot);
 	}
 }

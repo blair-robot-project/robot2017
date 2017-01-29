@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-./gradlew build
+./gradlew clean build
 ./deployResources.sh

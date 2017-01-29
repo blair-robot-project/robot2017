@@ -34,10 +34,14 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		//Minimum ouutput, the smallest output it's possible to give. One-tenth of your drive's top speed is about right.
 		this.minimumOutput = map.getMinimumOutput();
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
-		if (map.getMaximumOutputEnabled())
+		if (map.getMaximumOutputEnabled()) {
 			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
-		this.deadband = map.getDeadband();
-		this.deadbandEnabled = map.getDeadbandEnabled();
+		}
+		if (map.getDeadbandEnabled()) {
+			this.deadband = map.getDeadband();
+		} else {
+			this.deadband = 0;
+		}
 		this.subsystem = subsystem;
 	}
 

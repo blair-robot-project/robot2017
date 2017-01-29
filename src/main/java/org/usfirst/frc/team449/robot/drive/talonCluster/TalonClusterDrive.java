@@ -15,6 +15,9 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
@@ -27,9 +30,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	public TankOI oi;
+	// TODO take this out after testing
+	public CANTalon.MotionProfileStatus leftTPointStatus;
+	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
+	private String logFN = "driveLog.csv";
 
-	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap.TalonClusterDrive map, TankOI oi) {
+	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
+			                         .TalonClusterDrive map, TankOI oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -50,6 +58,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
+
+		// TODO take this out
+		leftTPointStatus = new CANTalon.MotionProfileStatus();
+		rightTPointStatus = new CANTalon.MotionProfileStatus();
 	}
 
 	/**
@@ -79,25 +91,29 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	public void logData() {
-		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
+		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
-			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-			sb.append(leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.velocity);
 			sb.append("\n");
+
+			fw.write(sb.toString());
+
+			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
 			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Heading", navx.pidGet());
 			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
-			fw.write(sb.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -105,16 +121,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		try (PrintWriter writer = new PrintWriter("/home/lvuser/driveLog.csv")) {
-			writer.println("Time,Left,Right,Throttle");
+		logFN = "/home/lvuser/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
+		try (PrintWriter writer = new PrintWriter(logFN)) {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		startTime = System.nanoTime();
 		setDefaultCommand(new OpTankDrive(this, oi));
-//		setDefaultCommand(new PIDTest(this));
-//		setDefaultCommand(new ExecuteProfile(this));
+		//		setDefaultCommand(new PIDTest(this));
+		//		setDefaultCommand(new ExecuteProfile(this));
 	}
 
 	public double getGyroOutput() {
