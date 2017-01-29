@@ -22,6 +22,7 @@ public class OI2017 extends OISubsystem {
 	protected double joystickDeadband;
 	protected Throttle leftThrottle;
 	protected Throttle rightThrottle;
+	protected Joystick ttaStick;
 	private Joystick buttonPad;
 	private JoystickButton tt0;
 	private JoystickButton tt30;
@@ -42,17 +43,18 @@ public class OI2017 extends OISubsystem {
 		Joystick rightStick = new Joystick(map.getRightStick());
 		Joystick leftStick = new Joystick(map.getLeftStick());
 		buttonPad = new Joystick(map.getButtonPad());
+		ttaStick = gamepad;
 //		leftThrottle = new PolyThrottle(leftStick, 1, 1);
 //		rightThrottle = new PolyThrottle(rightStick, 1, 1);
 		leftThrottle = new SmoothedThrottle(leftStick, 1);
 		rightThrottle = new SmoothedThrottle(rightStick, 1);
 //		leftThrottle = new ExpThrottle(leftStick, 1, 50);
 //		rightThrottle = new ExpThrottle(rightStick, 1, 50);
-		turnaround = new JoystickButton(leftStick, map.getTurnaroundButton());
-		tt0 = new JoystickButton(leftStick, map.getTurnTo0Button());
-		tt30 = new JoystickButton(leftStick, map.getTurnTo30Button());
-		tt180 = new JoystickButton(leftStick, map.getTurnTo180Button());
-		tt330 = new JoystickButton(leftStick, map.getTurnTo330Button());
+		turnaround = new JoystickButton(ttaStick, map.getTurnaroundButton());
+		tt0 = new JoystickButton(ttaStick, map.getTurnTo0Button());
+		tt30 = new JoystickButton(ttaStick, map.getTurnTo30Button());
+		tt180 = new JoystickButton(ttaStick, map.getTurnTo180Button());
+		tt330 = new JoystickButton(ttaStick, map.getTurnTo330Button());
 		driveStraight = new JoystickButton(rightStick, 1);
 
 		climbButton = new JoystickButton(buttonPad, map.getClimbButton());

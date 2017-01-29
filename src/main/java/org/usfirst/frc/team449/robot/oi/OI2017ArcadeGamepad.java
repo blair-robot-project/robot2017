@@ -54,4 +54,12 @@ public class OI2017ArcadeGamepad extends OI2017 {
 
 		return toRet;
 	}
+
+	public double getVelAxis(){
+		return velThrottle.getValue();
+	}
+
+	public double getTurnAxis(){
+		return turnThrottle.getValue();
+	}
 }
