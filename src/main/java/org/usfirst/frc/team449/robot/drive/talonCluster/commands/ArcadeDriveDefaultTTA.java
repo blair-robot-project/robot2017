@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
@@ -14,16 +15,18 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
  */
 public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 
-	private OISubsystem oi;
+	private OI2017ArcadeGamepad oi;
+	private double turnCoeffecient;
 	private TalonClusterDrive drive;
 	private double sp;
 	private double lastAngleStick;
 
 	public ArcadeDriveDefaultTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
-	                             OISubsystem oi) {
+	                             OI2017ArcadeGamepad oi, double turnCoeffecient) {
 		super(map, drive);
 		this.oi = oi;
 		this.drive = drive;
+		this.turnCoeffecient = turnCoeffecient;
 		requires(drive);
 	}
 
@@ -46,18 +49,17 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled && this.getPIDController().getError() * 3 / 4 > tolerance) {
+		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
-		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
-			output = 0;
+			else if (Math.abs(this.getPIDController().getAvgError()) < deadband)
+				output = 0;
 		}
 		SmartDashboard.putNumber("Output", output);
-		drive.setDefaultThrottle(oi.getDriveAxisRight() + output, oi.getDriveAxisRight() - output);
+		drive.setDefaultThrottle(oi.getVelAxis() + output, oi.getVelAxis() - output);
 	}
 
 	/**
@@ -76,10 +78,12 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		this.setSetpointRelative(180 * oi.getDriveAxisLeft() - 180 * lastAngleStick);
-		if (oi.getDriveAxisLeft() == 0.0)
-			this.getPIDController().setSetpoint(drive.getGyroOutput());
-		lastAngleStick = oi.getDriveAxisLeft();
+		if (oi.getTurnAxis() > 0 && oi.getTurnAxis() > lastAngleStick){
+			this.setSetpointRelative(turnCoeffecient*(oi.getTurnAxis() - lastAngleStick));
+		} else if (oi.getTurnAxis() < 0 && oi.getTurnAxis() < lastAngleStick){
+			this.setSetpointRelative(turnCoeffecient*(oi.getTurnAxis() - lastAngleStick));
+		}
+		lastAngleStick = oi.getTurnAxis();
 		drive.logData();
 	}
 

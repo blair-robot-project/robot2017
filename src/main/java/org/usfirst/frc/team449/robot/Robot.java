@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 
 	public static TalonClusterDrive driveSubsystem;
 
-	public static OI2017 oiSubsystem;
+	public static OI2017ArcadeGamepad oiSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 

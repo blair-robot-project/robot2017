@@ -9,9 +9,11 @@ import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
+	private double arcadeTtaTurnCoeffecient;
 	private String logFN = "driveLog.csv";
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
@@ -41,6 +44,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
+		this.arcadeTtaTurnCoeffecient = map.getArcadeTtaTurnCoeffecient();
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
@@ -130,7 +134,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultDrive(this, oi));
+		setDefaultCommand(new ArcadeDriveDefaultTTA(straightPID,this, (OI2017ArcadeGamepad) oi, arcadeTtaTurnCoeffecient));
 	}
 
 	public double getGyroOutput() {

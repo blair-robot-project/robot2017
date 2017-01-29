@@ -10,6 +10,7 @@ message TalonClusterDrive {
 	required Drive drive = 1;
 	required ToleranceBufferAnglePID turn_PID = 6;
 	required ToleranceBufferAnglePID straight_PID = 7;
+    required double arcade_tta_turn_coeffecient = 8;
 	required UnitlessCANTalonSRX right_master = 2;
 	repeated UnitlessCANTalonSRX right_slave = 3;
 	required UnitlessCANTalonSRX left_master = 4;
