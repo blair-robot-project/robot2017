@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.Joystick;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017Map;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
+import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
  * Created by blairrobot on 1/9/17.
@@ -10,9 +11,13 @@ import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 public class OI2017ArcadeGamepad extends OI2017 {
 
 	static final double SHIFT = 0.3;
+	private Throttle turnThrottle;
+	private Throttle velThrottle;
 
 	public OI2017ArcadeGamepad(OI2017Map.OI2017 map) {
 		super(map);
+		turnThrottle = gLeft;
+		velThrottle = gRight;
 	}
 
 	@Override
@@ -20,36 +25,36 @@ public class OI2017ArcadeGamepad extends OI2017 {
 		double toRet;
 
 		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = gRight.getValue() - SHIFT;
+			toRet = velThrottle.getValue() + SHIFT;
 		} else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = -(gRight.getValue() + SHIFT);
-		} else
-			toRet = gRight.getValue();
-		if (Math.abs(gLeft.getValue() - gRight.getValue()) > joystickDeadband)
-			return toRet + gLeft.getValue() - gRight.getValue();
-		return toRet;
-		//		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
-		//			return leftThrottle.getValue() - rightThrottle.getValue();
-		//		return 0;
+			toRet = velThrottle.getValue() - SHIFT;
+		} else {
+			toRet = velThrottle.getValue();
+		}
+
+		if (Math.abs(turnThrottle.getValue() - velThrottle.getValue()) > joystickDeadband) {
+			toRet += turnThrottle.getValue() - velThrottle.getValue();
+		}
+
+		return -toRet;
 	}
 
 	@Override
 	public double getDriveAxisRight() {
 		double toRet;
+
 		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = -(gRight.getValue() - SHIFT);
+			toRet = velThrottle.getValue() - SHIFT;
 		}else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = gRight.getValue() + SHIFT;
-		} else
-			toRet = gRight.getValue();
+			toRet = velThrottle.getValue() + SHIFT;
+		} else {
+			toRet = velThrottle.getValue();
+		}
 
-		if (Math.abs(gLeft.getValue() + gRight.getValue()) > joystickDeadband)
-			return toRet + gLeft.getValue() + gRight.getValue();
-		return toRet;
+		if (Math.abs(turnThrottle.getValue() + velThrottle.getValue()) > joystickDeadband) {
+			toRet += turnThrottle.getValue() + velThrottle.getValue();
+		}
 
-		//		return (gRight.getValue() + gLeft.getValue());
-		//		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
-		//			return leftThrottle.getValue() + rightThrottle.getValue();
-		//		return 0;
+		return -toRet;
 	}
 }
