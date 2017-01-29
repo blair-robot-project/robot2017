@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017Map;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -22,39 +23,34 @@ public class OI2017ArcadeGamepad extends OI2017 {
 
 	@Override
 	public double getDriveAxisLeft() {
-		double toRet;
+		double toRet = 0;
 
 		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = velThrottle.getValue() + SHIFT;
+			toRet = -velThrottle.getValue() + SHIFT;
 		} else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = velThrottle.getValue() - SHIFT;
-		} else {
-			toRet = velThrottle.getValue();
+			toRet = -velThrottle.getValue() - SHIFT;
+		} else if (Math.abs(-velThrottle.getValue() + turnThrottle.getValue()) > joystickDeadband) {
+			toRet = -velThrottle.getValue() + turnThrottle.getValue();
 		}
 
-		if (Math.abs(turnThrottle.getValue() - velThrottle.getValue()) > joystickDeadband) {
-			toRet += turnThrottle.getValue() - velThrottle.getValue();
-		}
-
-		return -toRet;
+		return toRet;
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		double toRet;
+		double toRet = 0;
 
 		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = velThrottle.getValue() - SHIFT;
+			toRet = -velThrottle.getValue() - SHIFT;
 		}else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = velThrottle.getValue() + SHIFT;
-		} else {
-			toRet = velThrottle.getValue();
+			toRet = -velThrottle.getValue() + SHIFT;
+		} else if (Math.abs(-velThrottle.getValue() - turnThrottle.getValue()) > joystickDeadband) {
+			toRet = -velThrottle.getValue() - turnThrottle.getValue();
 		}
 
-		if (Math.abs(turnThrottle.getValue() + velThrottle.getValue()) > joystickDeadband) {
-			toRet += turnThrottle.getValue() + velThrottle.getValue();
-		}
+		SmartDashboard.putNumber("Turn value", turnThrottle.getValue());
+		SmartDashboard.putNumber("Vel value", velThrottle.getValue());
 
-		return -toRet;
+		return toRet;
 	}
 }
