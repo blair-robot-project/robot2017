@@ -56,10 +56,31 @@ public class OI2017ArcadeGamepad extends OI2017 {
 	}
 
 	public double getVelAxis(){
-		return -velThrottle.getValue();
+		if (Math.abs(velThrottle.getValue()) > joystickDeadband) {
+			return -velThrottle.getValue();
+		} else {
+			return 0;
+		}
 	}
 
 	public double getTurnAxis(){
-		return turnThrottle.getValue();
+		if ((gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0) && Math.abs(turnThrottle.getValue()) > joystickDeadband) {
+			return turnThrottle.getValue();
+		} else {
+			//return -(gamepad.getPOV()/45-4);
+			switch (gamepad.getPOV()/45){
+				//TODO do this in a simple equation.
+				case 0: return 0;
+				case 1: return 0.5;
+				case 2: return 1.0;
+				case 3: return 0.5;
+				case 4: return 0;
+				case 5: return -0.5;
+				case 6: return -1.0;
+				case 7: return -0.5;
+				case 8: return 0;
+				default: return 0;
+			}
+		}
 	}
 }
