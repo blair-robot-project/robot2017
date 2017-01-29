@@ -11,7 +11,6 @@ import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
-import org.usfirst.frc.team449.robot.oi.OI2017;
 
 import java.io.FileWriter;
 import java.io.IOException;
