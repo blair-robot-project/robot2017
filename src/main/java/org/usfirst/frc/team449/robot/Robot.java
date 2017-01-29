@@ -7,8 +7,6 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.BaseOI;
-import org.usfirst.frc.team449.robot.oi.OI2017;
-import org.usfirst.frc.team449.robot.oi.OI2017Arcade;
 import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 
 import java.io.IOException;

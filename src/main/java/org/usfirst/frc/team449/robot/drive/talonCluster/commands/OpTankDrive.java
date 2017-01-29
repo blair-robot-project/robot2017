@@ -10,13 +10,13 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
 /**
  * Program created by noah on 1/8/17.
  */
-public class DefaultDrive extends ReferencingCommand {
+public class OpTankDrive extends ReferencingCommand {
 	public TankOI oi;
 
 	double leftThrottle;
 	double rightThrottle;
 
-	public DefaultDrive(TalonClusterDrive drive, TankOI oi) {
+	public OpTankDrive(TalonClusterDrive drive, TankOI oi) {
 		super(drive);
 		this.oi = oi;
 		requires(subsystem);
@@ -50,7 +50,7 @@ public class DefaultDrive extends ReferencingCommand {
 
 	@Override
 	protected void interrupted() {
-		System.out.println("DefaultDrive Interrupted! Stopping the robot.");
+		System.out.println("OpTankDrive Interrupted! Stopping the robot.");
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 }
