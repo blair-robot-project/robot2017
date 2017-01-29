@@ -43,10 +43,10 @@ public class OI2017 extends OISubsystem {
 		buttonPad = new Joystick(map.getButtonPad());
 		leftThrottle = new PolyThrottle(leftStick, 1, 1);
 		rightThrottle = new PolyThrottle(rightStick, 1, 1);
-//		leftThrottle = new SmoothedThrottle(leftStick, 1);
-//		rightThrottle = new SmoothedThrottle(rightStick, 1);
-//		leftThrottle = new ExpThrottle(leftStick, 1, 50);
-//		rightThrottle = new ExpThrottle(rightStick, 1, 50);
+		//		leftThrottle = new SmoothedThrottle(leftStick, 1);
+		//		rightThrottle = new SmoothedThrottle(rightStick, 1);
+		//		leftThrottle = new ExpThrottle(leftStick, 1, 50);
+		//		rightThrottle = new ExpThrottle(rightStick, 1, 50);
 		turnaround = new JoystickButton(leftStick, map.getTurnaroundButton());
 		tt0 = new JoystickButton(leftStick, map.getTurnTo0Button());
 		tt30 = new JoystickButton(leftStick, map.getTurnTo30Button());
@@ -65,9 +65,11 @@ public class OI2017 extends OISubsystem {
 		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
 		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
 		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
-//		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
-//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
-//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
+		//		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
+		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands
+		// .ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
+		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands
+		// .ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
 	}
 
 	@Override
