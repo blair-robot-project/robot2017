@@ -24,8 +24,6 @@ public class Robot extends IterativeRobot {
 
 	public static TalonClusterDrive driveSubsystem;
 
-	//	public static OI2017Arcade oiSubsystem;
-
 	public static BaseOI oi;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
@@ -61,6 +59,5 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		//oiSubsystem.checkDPad();
 	}
 }
