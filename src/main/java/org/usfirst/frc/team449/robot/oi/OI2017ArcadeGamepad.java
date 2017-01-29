@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017Map;
+import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
@@ -11,13 +12,13 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
  */
 public class OI2017ArcadeGamepad extends OI2017 {
 
-	static final double SHIFT = 0.3;
+	static final double SHIFT = 0.7;
 	private Throttle turnThrottle;
 	private Throttle velThrottle;
 
 	public OI2017ArcadeGamepad(OI2017Map.OI2017 map) {
 		super(map);
-		turnThrottle = gLeft;
+		turnThrottle = new PolyThrottle(gamepad, map.getGamepadLeftAxis(), 2);
 		velThrottle = gRight;
 	}
 
