@@ -4,7 +4,6 @@ import com.ctre.CANTalon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 
 /**
  * Program created by noah on 1/8/17.

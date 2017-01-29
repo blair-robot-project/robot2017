@@ -23,6 +23,7 @@ public class OI2017Tank extends BaseOI implements TankOI {
 		this.leftThrottle = new PolyThrottle(_leftStick, 1, 1);
 		this.rightThrottle = new PolyThrottle(_rightStick, 1, 1);
 	}
+
 	@Override
 	public void mapButtons() {
 		// Do nothing (no buttons yet)
