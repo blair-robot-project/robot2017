@@ -8,6 +8,8 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.oi.OI2017Arcade;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.IOException;
 
@@ -37,7 +39,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017(cfg.getOi());
+		oiSubsystem = new OI2017ArcadeGamepad(cfg.getOi());
 		System.out.println("Constructed OI");
 
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
