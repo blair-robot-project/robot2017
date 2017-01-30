@@ -46,7 +46,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
-			else if (Math.abs(this.getPIDController().getAvgError()) < deadband)
+			else if (Math.abs(this.getPIDController().getError()) < deadband)
 				output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.
