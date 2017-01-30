@@ -70,6 +70,7 @@ public class ExecuteProfile extends ReferencingCommand {
 			case 1: {
 				mpProcessNotifier.startPeriodic(UPDATE_RATE);
 				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
+				tcd.rightMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
 				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
 				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
 

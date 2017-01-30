@@ -132,6 +132,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			e.printStackTrace();
 		}
 
+		setDefaultCommand(new ExecuteProfile(this));
 		startTime = System.nanoTime();
 	}
 

@@ -50,7 +50,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		new DefaultDrive(driveSubsystem, oiSubsystem);
+//		Scheduler.getInstance().add(new DefaultDrive(driveSubsystem, oiSubsystem));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		new ExecuteProfile(driveSubsystem);
+//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 	}
 
 	@Override
