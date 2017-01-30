@@ -134,7 +134,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new ArcadeDriveDefaultTTA(straightPID,this, (OI2017ArcadeGamepad) oi, arcadeTtaTurnCoeffecient));
+		setDefaultCommand(new DefaultDrive(this, oi));
 	}
 
 	public double getGyroOutput() {
