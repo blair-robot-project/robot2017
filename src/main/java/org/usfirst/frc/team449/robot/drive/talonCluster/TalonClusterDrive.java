@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.oi.OI2017;
@@ -134,7 +135,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultDrive(this, oi));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, (OI2017ArcadeGamepad) oi));
 	}
 
 	public double getGyroOutput() {
