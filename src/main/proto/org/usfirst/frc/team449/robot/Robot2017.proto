@@ -4,6 +4,7 @@ import "org/usfirst/frc/team449/robot/mechanism/doubleflywheelshooter/DoubleFlyw
 import "org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.proto";
 import "org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.proto";
 import "org/usfirst/frc/team449/robot/mechanism/climber/Climber.proto";
+import "org/usfirst/frc/team449/robot/mechanism/pneumatics/PneumaticSystem.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot";
 option java_outer_classname = "Robot2017Map";
@@ -14,4 +15,5 @@ message Robot2017 {
 	required Climber climber = 3;
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
 	required SingleFlywheelShooter shooter = 5;
+	//  required PneumaticSystem pneumatics = 6;
 }
