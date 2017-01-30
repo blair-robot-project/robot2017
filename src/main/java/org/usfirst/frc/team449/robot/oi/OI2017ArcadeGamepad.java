@@ -23,35 +23,12 @@ public class OI2017ArcadeGamepad extends OI2017 {
 
 	@Override
 	public double getDriveAxisLeft() {
-		double toRet = 0;
-
-		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = getVelAxis() + SHIFT;
-		} else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = getVelAxis() - SHIFT;
-		} else if (Math.abs(getVelAxis() + turnThrottle.getValue()) > joystickDeadband) {
-			toRet = getVelAxis() + turnThrottle.getValue();
-		}
-
-		return toRet;
+		return getVelAxis() + getTurnAxis();
 	}
 
 	@Override
 	public double getDriveAxisRight() {
-		double toRet = 0;
-
-		if (gamepad.getPOV() > 0 && gamepad.getPOV() < 180) {
-			toRet = getVelAxis() - SHIFT;
-		}else if (gamepad.getPOV() > 180 && gamepad.getPOV() < 360) {
-			toRet = getVelAxis() + SHIFT;
-		} else if (Math.abs(getVelAxis() - turnThrottle.getValue()) > joystickDeadband) {
-			toRet = getVelAxis() - turnThrottle.getValue();
-		}
-
-		SmartDashboard.putNumber("Turn value", turnThrottle.getValue());
-		SmartDashboard.putNumber("Vel value", velThrottle.getValue());
-
-		return toRet;
+		return getVelAxis() - getTurnAxis();
 	}
 
 	public double getVelAxis(){
@@ -66,7 +43,7 @@ public class OI2017ArcadeGamepad extends OI2017 {
 		if ((gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0) && Math.abs(turnThrottle.getValue()) > joystickDeadband) {
 			return turnThrottle.getValue();
 		} else if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)){
-			return gamepad.getPOV() < 180 ? 1:-1;
+			return gamepad.getPOV() < 180 ? SHIFT:-SHIFT;
 		} else {
 			return 0;
 		}
