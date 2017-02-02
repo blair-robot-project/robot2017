@@ -135,8 +135,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 
 
-//		setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new OpTankDrive(this, oi));
+		setDefaultCommand(new ExecuteProfile(this));
+//		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
 	}
