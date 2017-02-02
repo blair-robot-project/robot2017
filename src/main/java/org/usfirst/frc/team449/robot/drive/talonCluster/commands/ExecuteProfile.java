@@ -50,7 +50,20 @@ public class ExecuteProfile extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		control();
-		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus.activePoint.velocity);
+		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
+				.activePoint.velocity);
+		System.out.println("Active Points' Positions: " + leftStatus.activePoint.position + ", " + rightStatus
+				.activePoint.position);
+		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
+		if (!leftStatus.activePointValid || !rightStatus.activePointValid) {
+			System.out.println("INVALID! YOU DONE FUCKED UP");
+		}
+		if (leftStatus.activePoint.isLastPoint || rightStatus.activePoint.isLastPoint) {
+			System.out.println("LAST POINT");
+		}
+		if (leftStatus.activePoint.zeroPos || rightStatus.activePoint.zeroPos) {
+			System.out.println("FIRST POINT");
+		}
 		tcd.logData();
 	}
 
@@ -69,7 +82,8 @@ public class ExecuteProfile extends ReferencingCommand {
 			}
 			case 1: {
 				mpProcessNotifier.startPeriodic(UPDATE_RATE);
-				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
+				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out
+				// what this does
 				tcd.rightMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
 				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
 				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
@@ -83,7 +97,11 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 2: {
-				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS) {
+				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
+						MIN_NUM_LOADED_POINTS) {
+					tcd.leftMaster.canTalon.setEncPosition(0);
+					tcd.rightMaster.canTalon.setEncPosition(0);
+
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					System.out.println("CAN buffer loaded; clearing underrun");
@@ -119,12 +137,13 @@ public class ExecuteProfile extends ReferencingCommand {
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < profile.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = profile.data[i][0];
-			point.velocity = tcd.leftMaster.RPStoNative(profile.data[i][1]);    // note this assumes left and right scaling are same
+			//			point.position = profile.data[i][0] * 20 / 3 * 60;
+			//			point.velocity = profile.data[i][1] * 60 * 20 / 3 * 0;
+			point.position = profile.data[i][0] * 2048;
+			point.velocity = profile.data[i][1] * 2048;
 			point.timeDurMs = (int) profile.data[i][2];
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
-			point.zeroPos = false;
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
 			point.isLastPoint = (i + 1) == profile.data.length; // If its the last point, isLastPoint = true
 

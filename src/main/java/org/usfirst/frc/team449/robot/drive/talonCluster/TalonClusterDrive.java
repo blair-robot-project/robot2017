@@ -99,13 +99,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
-			sb.append(leftMaster.getSpeed());
+			sb.append(leftMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(rightMaster.getSpeed());
+			sb.append(rightMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(leftMaster.canTalon.getEncVelocity());
 			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append(rightMaster.canTalon.getEncVelocity());
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.position);
 			sb.append("\n");
 
 			fw.write(sb.toString());
