@@ -10,10 +10,11 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
  */
 public class NavXTurnToAngle extends PIDAngleCommand {
 
-	private TalonClusterDrive drive;
-	private double sp;
-	private long timeout;
-	private long startTime;
+	protected TalonClusterDrive drive;
+	protected double sp;
+	protected long timeout;
+	protected long startTime;
+	//private double deadband;
 
 	/**
 	 * Default constructor.
@@ -22,7 +23,8 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param sp    The setpoint, in degrees from 180 to -180.
 	 * @param drive The drive subsystem whose motors this is controlling.
 	 */
-	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive, double timeout) {
+	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double sp, TalonClusterDrive drive,
+	                       double timeout) {
 		super(map, drive);
 		this.drive = drive;
 		this.sp = sp;
@@ -30,19 +32,25 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		requires(drive);
 	}
 
+	public static double clipTo180(double theta) {
+		return (theta + 180) % 360 - 180;
+	}
+
 	@Override
 	protected void usePIDOutput(double output) {
+		SmartDashboard.putNumber("Preprocessed output", output);
+		SmartDashboard.putNumber("Setpoint", this.getSetpoint());
 		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
 			if (output > 0 && output < minimumOutput)
 				output = minimumOutput;
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
-		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
-			output = 0;
+			else if (Math.abs(this.getPIDController().getAvgError()) < deadband)
+				output = 0;
 		}
 		//Which one of these is negative may be different from robot to robot, we don't know.
+		SmartDashboard.putNumber("Processed output", output);
 		drive.setDefaultThrottle(output, -output);
 	}
 

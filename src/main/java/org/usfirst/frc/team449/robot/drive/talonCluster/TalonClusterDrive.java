@@ -10,14 +10,15 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
-import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
@@ -29,18 +30,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public AHRS navx;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-	public OI2017 oi;
-	private long startTime;
-
-
+	public TankOI oi;
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
-
+	private long startTime;
 	private String logFN = "driveLog.csv";
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, OI2017 oi) {
+			                         .TalonClusterDrive map, TankOI oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -136,7 +134,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			e.printStackTrace();
 		}
 
-		setDefaultCommand(new ExecuteProfile(this));
+
+//		setDefaultCommand(new ExecuteProfile(this));
+		setDefaultCommand(new OpTankDrive(this, oi));
+
 		startTime = System.nanoTime();
 	}
 

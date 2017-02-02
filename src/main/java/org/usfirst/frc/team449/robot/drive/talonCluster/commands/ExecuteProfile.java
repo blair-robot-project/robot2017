@@ -137,8 +137,6 @@ public class ExecuteProfile extends ReferencingCommand {
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < profile.data.length; ++i) {
 			// Set all the fields of the profile point
-			//			point.position = profile.data[i][0] * 20 / 3 * 60;
-			//			point.velocity = profile.data[i][1] * 60 * 20 / 3 * 0;
 			point.position = profile.data[i][0] * 2048;
 			point.velocity = profile.data[i][1] * 2048;
 			point.timeDurMs = (int) profile.data[i][2];
