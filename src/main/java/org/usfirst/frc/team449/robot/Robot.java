@@ -53,11 +53,27 @@ public class Robot extends IterativeRobot {
 		//		System.out.println("Constructed DoubleFlywheelShooter");
 
 		oi.mapButtons();
+
 		System.out.println("Mapped buttons");
 	}
 
 	@Override
+	public void teleopInit() {
+//		Scheduler.getInstance().add(new DefaultDrive(driveSubsystem, oiSubsystem));
+	}
+
+	@Override
 	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
+	}
+
+	@Override
+	public void autonomousInit() {
+//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+	}
+
+	@Override
+	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 	}
 }

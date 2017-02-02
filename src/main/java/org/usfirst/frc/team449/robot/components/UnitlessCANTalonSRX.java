@@ -135,10 +135,8 @@ public class UnitlessCANTalonSRX extends Component {
 	 * @param slot gains slot (0 or 1)
 	 * @throws Exception if the specified slot isn't 0 or 1
 	 */
+	@Deprecated
 	public void setPSlot(int slot) throws Exception {
-		if (slot != 0 && slot != 1) {
-			throw new Exception("Profiling gains slot " + slot + " does not exist!");
-		}
 		canTalon.setProfile(slot);
 	}
 }

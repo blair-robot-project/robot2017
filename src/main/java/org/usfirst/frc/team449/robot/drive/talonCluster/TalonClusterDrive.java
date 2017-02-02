@@ -9,6 +9,7 @@ import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 
@@ -87,7 +88,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-		setPIDThrottle(left, right);
+//		setPIDThrottle(left, right);
+		setVBusThrottle(1, 1);
 	}
 
 	public void logData() {
@@ -95,13 +97,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
-			sb.append(leftMaster.getSpeed());
+			sb.append(leftMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(rightMaster.getSpeed());
+			sb.append(rightMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(leftMaster.canTalon.getEncVelocity());
 			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append(rightMaster.canTalon.getEncVelocity());
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.position);
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -128,8 +134,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			e.printStackTrace();
 		}
 
-		startTime = System.nanoTime();
+
+//		setDefaultCommand(new ExecuteProfile(this));
 		setDefaultCommand(new OpTankDrive(this, oi));
+
+		startTime = System.nanoTime();
 	}
 
 	public double getGyroOutput() {
