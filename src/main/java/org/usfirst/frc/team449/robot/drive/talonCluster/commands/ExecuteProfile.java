@@ -137,8 +137,8 @@ public class ExecuteProfile extends ReferencingCommand {
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < profile.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = profile.data[i][0] * 2048;
-			point.velocity = profile.data[i][1] * 2048;
+			point.position = profile.data[i][0] * 2048 / 4 * Math.PI ;
+			point.velocity = profile.data[i][1] * 2048 / 4 * Math.PI ;
 			point.timeDurMs = (int) profile.data[i][2];
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
@@ -147,6 +147,9 @@ public class ExecuteProfile extends ReferencingCommand {
 
 			// Send the point to the Talon's buffer
 			tcd.leftMaster.canTalon.pushMotionProfileTrajectory(point);
+
+			point.velocity = point.velocity * -1;
+
 			tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point);
 		}
 
