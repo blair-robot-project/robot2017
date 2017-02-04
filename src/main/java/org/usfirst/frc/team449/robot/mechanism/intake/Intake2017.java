@@ -16,6 +16,7 @@ public class Intake2017 extends MappedSubsystem {
 	private DoubleSolenoid piston;
 	private OI2017 oi;
 	public boolean isIntaking;
+	public boolean intakeUp;
 
 	/**
 	 * Creates a mapped subsystem and sets its map
@@ -42,6 +43,10 @@ public class Intake2017 extends MappedSubsystem {
 
 	public void setIntaking(boolean isIntaking){
 		this.isIntaking = isIntaking;
+	}
+
+	public void setIntakeUp(boolean intakeUp) {
+		this.intakeUp = intakeUp;
 	}
 
 	/**

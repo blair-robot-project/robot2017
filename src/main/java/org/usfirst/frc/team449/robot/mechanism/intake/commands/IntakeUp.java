@@ -26,6 +26,7 @@ public class IntakeUp extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		intake2017.setPiston(DoubleSolenoid.Value.kReverse);
+		intake2017.setIntakeUp(true);
 	}
 
 	@Override

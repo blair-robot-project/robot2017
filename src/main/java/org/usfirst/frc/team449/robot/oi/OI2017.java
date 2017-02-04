@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -32,6 +33,7 @@ public class OI2017 extends OISubsystem {
 	private JoystickButton climbButton;
 	private JoystickButton toggleFlywheel;
 	private JoystickButton toggleIntake;
+	private JoystickButton toggleIntakeUpDown;
 
 	public OI2017(maps.org.usfirst.frc.team449.robot.oi.OI2017Map.OI2017 map) {
 		super(map.getOi());
@@ -59,6 +61,7 @@ public class OI2017 extends OISubsystem {
 		climbButton = new JoystickButton(buttonPad, map.getClimbButton());
 		//toggleFlywheel = new JoystickButton(buttonPad, map.getToggleFlywheel());
 		toggleIntake = new JoystickButton(buttonPad, map.getToggleIntake());
+		toggleIntakeUpDown = new JoystickButton(buttonPad, map.getToggleIntakeUpdown());
 	}
 
 	public void mapButtons() {
@@ -72,6 +75,7 @@ public class OI2017 extends OISubsystem {
 //		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
 //		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
 		toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+		toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
 	}
 
 	@Override
