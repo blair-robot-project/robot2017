@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import com.ctre.CANTalon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
@@ -11,8 +10,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 public class OpTankDrive extends ReferencingCommand {
 	public TankOI oi;
 
-	double leftThrottle;
-	double rightThrottle;
+	private double leftThrottle;
+	private double rightThrottle;
 
 	public OpTankDrive(TalonClusterDrive drive, TankOI oi) {
 		super(drive);
@@ -23,9 +22,6 @@ public class OpTankDrive extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		((TalonClusterDrive) subsystem).leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		((TalonClusterDrive) subsystem).rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 

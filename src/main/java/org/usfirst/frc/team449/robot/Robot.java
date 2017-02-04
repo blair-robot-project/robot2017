@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.BaseOI;
 import org.usfirst.frc.team449.robot.oi.OI2017Tank;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.IOException;
 
@@ -24,7 +25,7 @@ public class Robot extends IterativeRobot {
 
 	public static TalonClusterDrive driveSubsystem;
 
-	public static BaseOI oi;
+	public static OI2017ArcadeGamepad oiSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -38,10 +39,10 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oi = new OI2017Tank(cfg.getTankOi());
+		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
 		System.out.println("Constructed OI");
 
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), (OI2017Tank) oi);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
 		System.out.println("Constructed drive");
 
@@ -52,7 +53,7 @@ public class Robot extends IterativeRobot {
 		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed DoubleFlywheelShooter");
 
-		oi.mapButtons();
+		oiSubsystem.mapButtons();
 
 		System.out.println("Mapped buttons");
 	}

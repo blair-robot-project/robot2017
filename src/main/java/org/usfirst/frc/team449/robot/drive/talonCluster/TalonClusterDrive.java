@@ -12,6 +12,10 @@ import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +34,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public AHRS navx;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-	public TankOI oi;
+	public OI2017ArcadeGamepad oi;
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
@@ -38,7 +42,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private String logFN = "driveLog.csv";
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, TankOI oi) {
+			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -135,10 +139,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 
 
-		setDefaultCommand(new ExecuteProfile(this));
+//		setDefaultCommand(new ExecuteProfile(this));
 //		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
+		//setDefaultCommand(new ExecuteProfile(this));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, (OI2017ArcadeGamepad) oi));
 	}
 
 	public double getGyroOutput() {
