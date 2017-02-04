@@ -6,6 +6,7 @@ import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
@@ -18,6 +19,7 @@ public class Robot extends IterativeRobot {
 
 	public static DoubleFlywheelShooter doubleFlywheelShooterSubsystem;
 	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
+	public static Intake2017 intakeSubsystem;
 
 	public static ClimberSubsystem climberSubsystem;
 
@@ -49,6 +51,8 @@ public class Robot extends IterativeRobot {
 //		System.out.println("Constructed SingleFlywheelShooter");
 //		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 //		System.out.println("Constructed DoubleFlywheelShooter");
+
+		intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
 
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");

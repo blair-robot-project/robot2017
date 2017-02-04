@@ -2,19 +2,19 @@ package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
 /**
  * Created by Justin on 1/28/2017.
  */
 public class IntakeDown extends ReferencingCommand {
 
-	Intake intake;
+	Intake2017 intake2017;
 
-	public IntakeDown(Intake intake) {
-		super(intake);
-		requires(intake);
-		this.intake = intake;
+	public IntakeDown(Intake2017 intake2017) {
+		super(intake2017);
+		requires(intake2017);
+		this.intake2017 = intake2017;
 		System.out.println("IntakeDown constructed");
 	}
 
@@ -25,7 +25,7 @@ public class IntakeDown extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		intake.setPiston(DoubleSolenoid.Value.kForward);
+		intake2017.setPiston(DoubleSolenoid.Value.kForward);
 	}
 
 	@Override

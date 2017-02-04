@@ -1,20 +1,19 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.commands;
 
-import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
 /**
  * Created by Justin on 1/28/2017.
  */
 public class IntakeIn extends ReferencingCommand {
 
-	Intake intake;
+	Intake2017 intake2017;
 
-	public IntakeIn(Intake intake) {
-		super(intake);
-		requires(intake);
-		this.intake = intake;
+	public IntakeIn(Intake2017 intake2017) {
+		super(intake2017);
+		requires(intake2017);
+		this.intake2017 = intake2017;
 		System.out.println("IntakeIn constructed");
 	}
 
@@ -25,8 +24,8 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		intake.setPercentVbus(1);
-		intake.setIntaking(true);
+		intake2017.setPercentVbus(1);
+		intake2017.setIntaking(true);
 	}
 
 	@Override
@@ -36,14 +35,14 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-		intake.setPercentVbus(0);
+		intake2017.setPercentVbus(0);
 		System.out.println("IntakeIn end");
 	}
 
 	@Override
 	protected void interrupted() {
-		intake.setPercentVbus(0);
-		System.out.println("IntakeIn interrupted, stopping intake.");
+		intake2017.setPercentVbus(0);
+		System.out.println("IntakeIn interrupted, stopping intake2017.");
 	}
 
 }
