@@ -1,27 +1,51 @@
 package org.usfirst.frc.team449.robot.oi;
 
-import maps.org.usfirst.frc.team449.robot.oi.OI2017Map;
+import edu.wpi.first.wpilibj.Joystick;
+import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
+import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
  * Created by blairrobot on 1/9/17.
  */
-public class OI2017Arcade extends OI2017 {
+public class OI2017Arcade extends BaseOI implements ArcadeOI {
+	/**
+	 * Left (rotation control) stick's throttle
+	 */
+	private Throttle leftThrottle;
+	/**
+	 * Right (fwd/rev control) stick's throttle
+	 */
+	private Throttle rightThrottle;
 
-	public OI2017Arcade(OI2017Map.OI2017 map) {
-		super(map);
+	private OI2017ArcadeMap.OI2017Arcade map;
+
+	public OI2017Arcade(maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap.OI2017Arcade map) {
+		this.map = map;
+
+		Joystick _leftStick = new Joystick(map.getLeftStick());
+		Joystick _rightStick = new Joystick(map.getRightStick());
+		this.leftThrottle = new PolyThrottle(_leftStick, 1, 1);
+		this.rightThrottle = new PolyThrottle(_rightStick, 1, 1);
 	}
 
 	@Override
-	public double getDriveAxisLeft() {
-		if (Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) > joystickDeadband)
-			return leftThrottle.getValue() - rightThrottle.getValue();
-		return 0;
+	public void mapButtons() {
+		// Do nothing
 	}
 
-	@Override
-	public double getDriveAxisRight() {
-		if (Math.abs(leftThrottle.getValue() + rightThrottle.getValue()) > joystickDeadband)
-			return leftThrottle.getValue() + rightThrottle.getValue();
-		return 0;
+	/**
+	 * @return rotational velocity component
+	 */
+	public double getRot() {
+		return leftThrottle.getValue();
+	}
+
+	/**
+	 * @return forward velocity component
+	 */
+	public double getFwd() {
+		return rightThrottle.getValue();
 	}
 }

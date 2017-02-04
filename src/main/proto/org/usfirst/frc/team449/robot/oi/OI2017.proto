@@ -17,6 +17,9 @@ message OI2017 {
 	required int32 turn_to_180_button = 10;
 	required int32 turn_to_330_button = 11;
 	required int32 turnaround_button = 12;
-    required int32 toggle_intake = 13;
-    required int32 toggle_intake_updown = 14;
+    required int32 toggle_intake = 16;
+    required int32 toggle_intake_updown = 17;
+    required int32 gamepad = 13;
+    required int32 gamepad_left_axis = 14;
+    required int32 gamepad_right_axis = 15;
 }

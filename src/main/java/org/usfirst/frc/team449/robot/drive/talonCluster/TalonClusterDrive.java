@@ -9,15 +9,20 @@ import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
@@ -29,7 +34,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public AHRS navx;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-	public OI2017 oi;
+	public OI2017ArcadeGamepad oi;
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
@@ -37,7 +42,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private String logFN = "driveLog.csv";
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, OI2017 oi) {
+			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -87,7 +92,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-		setPIDThrottle(left, right);
+//		setPIDThrottle(left, right);
+		setVBusThrottle(1, 1);
 	}
 
 	public void logData() {
@@ -95,13 +101,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
-			sb.append(leftMaster.getSpeed());
+			sb.append(leftMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(rightMaster.getSpeed());
+			sb.append(rightMaster.canTalon.getEncPosition());
 			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(leftMaster.canTalon.getEncVelocity());
 			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append(rightMaster.canTalon.getEncVelocity());
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.position);
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -128,9 +138,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			e.printStackTrace();
 		}
 
+
+//		setDefaultCommand(new ExecuteProfile(this));
+//		setDefaultCommand(new OpTankDrive(this, oi));
+
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultDrive(this, oi));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, (OI2017ArcadeGamepad) oi));
 	}
 
 	public double getGyroOutput() {

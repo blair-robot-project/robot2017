@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  */
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
-	private static final String IN_FILE_NAME = "/home/lvuser/profile.csv";
+	private static final String IN_FILE_NAME = "/home/lvuser/449_resources/profile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
 	private int _state = 0;
 	private Notifier mpProcessNotifier;
@@ -34,12 +34,6 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		profile = new MotionProfileData(IN_FILE_NAME);
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
-		try {
-			tcd.leftMaster.setPSlot(1);
-			tcd.rightMaster.setPSlot(1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -55,19 +49,31 @@ public class ExecuteProfile extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
+		control();
+		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
+				.activePoint.velocity);
+		System.out.println("Active Points' Positions: " + leftStatus.activePoint.position + ", " + rightStatus
+				.activePoint.position);
+		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
+		if (!leftStatus.activePointValid || !rightStatus.activePointValid) {
+			System.out.println("INVALID! YOU DONE FUCKED UP");
+		}
+		if (leftStatus.activePoint.isLastPoint || rightStatus.activePoint.isLastPoint) {
+			System.out.println("LAST POINT");
+		}
+		if (leftStatus.activePoint.zeroPos || rightStatus.activePoint.zeroPos) {
+			System.out.println("FIRST POINT");
+		}
+		tcd.logData();
+	}
+
+	private void control() {
 		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
 		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
 		// TODO take this out
 		tcd.leftTPointStatus = leftStatus;
 		tcd.rightTPointStatus = rightStatus;
-		control();
 
-		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
-				.activePoint.velocity);
-		tcd.logData();
-	}
-
-	private void control() {
 		switch (_state) {
 			case 0: {
 				startFilling();
@@ -75,18 +81,37 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 1: {
+				mpProcessNotifier.startPeriodic(UPDATE_RATE);
+				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out
+				// what this does
+				tcd.rightMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
+				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
+				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
+
+				if (leftStatus.btmBufferCnt >= 128 || rightStatus.btmBufferCnt >= 128) {
+					_state = 2;
+					System.out.println("LOADED");
+				} else {
+					System.out.println("NOT FULLY LOADED");
+				}
+				break;
+			}
+			case 2: {
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
 						MIN_NUM_LOADED_POINTS) {
-					mpProcessNotifier.startPeriodic(UPDATE_RATE);
+					tcd.leftMaster.canTalon.setEncPosition(0);
+					tcd.rightMaster.canTalon.setEncPosition(0);
+
 					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 					System.out.println("CAN buffer loaded; clearing underrun");
 					tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
 					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
-					_state = 2;
+					_state = 3;
 				}
 			}
-			case 2: {
+			case 3: {
+				// Do nothing
 			}
 		}
 	}
@@ -112,13 +137,11 @@ public class ExecuteProfile extends ReferencingCommand {
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < profile.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = profile.data[i][0];
-			point.velocity = tcd.leftMaster.RPStoNative(profile.data[i][1]);    // note this assumes left and right
-			// scaling are same
+			point.position = profile.data[i][0] * 2048;
+			point.velocity = profile.data[i][1] * 2048;
 			point.timeDurMs = (int) profile.data[i][2];
-			point.profileSlotSelect = 0;    // gain selection
+			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
-			point.zeroPos = false;
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
 			point.isLastPoint = (i + 1) == profile.data.length; // If its the last point, isLastPoint = true
 
@@ -131,5 +154,6 @@ public class ExecuteProfile extends ReferencingCommand {
 		updaterProcess.addTalon(tcd.leftMaster.canTalon);
 		updaterProcess.addTalon(tcd.rightMaster.canTalon);
 		mpProcessNotifier = new Notifier(updaterProcess);
+		System.out.println("Finished loading points");
 	}
 }
