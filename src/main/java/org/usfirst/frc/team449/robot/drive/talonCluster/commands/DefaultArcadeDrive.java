@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
@@ -27,6 +28,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 
 	@Override
 	protected void initialize() {
+		setpoint = subsystem.getGyroOutput();
 		System.out.println("DefaultArcadeDrive init.");
 		drivingStraight = true;
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
@@ -39,14 +41,17 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 			this.getPIDController().disable();
 		} else if (!drivingStraight && oi.getTurnAxis() == 0){
 			drivingStraight = true;
-			setpoint = subsystem.getGyroOutput();
-			this.getPIDController().disable();
+			setSetpoint(subsystem.getGyroOutput());
+			this.getPIDController().enable();
 		}
-
+		SmartDashboard.putBoolean("drivingStraight", drivingStraight);
+		SmartDashboard.putNumber("velAxis", oi.getVelAxis());
 		if (!drivingStraight) {
 			rightThrottle = oi.getDriveAxisRight();
 			leftThrottle = oi.getDriveAxisLeft();
 			((TalonClusterDrive) subsystem).logData();
+			SmartDashboard.putNumber("right drive axis", rightThrottle);
+			SmartDashboard.putNumber("left drive axis", leftThrottle);
 			((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
 		}
 	}
@@ -71,13 +76,16 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 	protected void usePIDOutput(double output) {
 		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput)
+			if (output > 0 && output < minimumOutput) {
 				output = minimumOutput;
-			else if (output < 0 && output > -minimumOutput)
+			} else if (output < 0 && output > -minimumOutput) {
 				output = -minimumOutput;
-			else if (Math.abs(this.getPIDController().getError()) < deadband)
-				output = 0;
+			}
 		}
+		if (Math.abs(this.getPIDController().getError()) < deadband){
+			output = 0;
+		}
+		SmartDashboard.putNumber("PID output", output);
 		((TalonClusterDrive) subsystem).setDefaultThrottle(oi.getVelAxis()+output, oi.getVelAxis()-output);
 	}
 }

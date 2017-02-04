@@ -18,7 +18,7 @@ message Robot2017 {
 	required Climber climber = 3;
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
 	required SingleFlywheelShooter shooter = 5;
-    required Intake2017 intake = 7;
-	required PneumaticSystem pneumatics = 8;
+    //required Intake2017 intake = 7;
+	//required PneumaticSystem pneumatics = 8;
 
 }

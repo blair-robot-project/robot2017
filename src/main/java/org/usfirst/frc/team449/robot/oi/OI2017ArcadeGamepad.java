@@ -62,7 +62,7 @@ public class OI2017ArcadeGamepad extends OI2017 {
 	 * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
 	 */
 	public double getTurnAxis(){
-		if ((gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0) && Math.abs(turnThrottle.getValue()) > joystickDeadband) {
+		if ((gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0) && (Math.abs(turnThrottle.getValue()) > joystickDeadband)) {
 			return turnThrottle.getValue();
 		} else if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)){
 			return gamepad.getPOV() < 180 ? SHIFT:-SHIFT;

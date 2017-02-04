@@ -92,8 +92,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-//		setPIDThrottle(left, right);
-		setVBusThrottle(1, 1);
+		setPIDThrottle(left, right);
+		//setVBusThrottle(1, 1);
 	}
 
 	public void logData() {
@@ -144,7 +144,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, (OI2017ArcadeGamepad) oi));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, oi));
 	}
 
 	public double getGyroOutput() {

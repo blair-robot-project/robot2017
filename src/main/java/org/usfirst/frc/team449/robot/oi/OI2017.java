@@ -77,8 +77,8 @@ public class OI2017 extends OISubsystem {
 //		climbButton.whileHeld(new Climb(Robot.climberSubsystem));
 //		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands.ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
 //		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
-		toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
-		toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
+//		toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+//		toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
 	}
 
 	@Override
