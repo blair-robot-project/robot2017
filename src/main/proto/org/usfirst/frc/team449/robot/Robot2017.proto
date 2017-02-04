@@ -19,6 +19,6 @@ message Robot2017 {
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
 	required SingleFlywheelShooter shooter = 5;
     required Intake2017 intake = 6;
-	required PneumaticSystem pneumatics = 6;
+	required PneumaticSystem pneumatics = 7;
 
 }
