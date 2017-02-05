@@ -31,7 +31,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		gamepad = new Joystick(map.getGamepad());
 		SHIFT = map.getDpadShift();
 		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
-		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
+		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), false);
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
