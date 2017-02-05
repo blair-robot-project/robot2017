@@ -19,9 +19,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	//How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that much of the way.
 	private static double SHIFT;
 	//The throttle wrapper for the stick controlling turning velocity.
-	private Throttle turnThrottle;
+	private Throttle rotThrottle;
 	//The throttle wrapper for the stick controlling linear velocity.
-	private Throttle velThrottle;
+	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround;
@@ -30,8 +30,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
 		gamepad = new Joystick(map.getGamepad());
 		SHIFT = map.getDpadShift();
-		turnThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
-		velThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
+		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
+		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
@@ -45,8 +45,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
 	public double getFwd(){
-		if (Math.abs(velThrottle.getValue()) > deadband) {
-			return velThrottle.getValue();
+		if (Math.abs(fwdThrottle.getValue()) > deadband) {
+			return fwdThrottle.getValue();
 		} else {
 			return 0;
 		}
@@ -57,10 +57,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
 	 */
 	public double getRot(){
-		if ((gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0) && (Math.abs(turnThrottle.getValue()) > deadband)) {
-			return turnThrottle.getValue();
-		} else if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)){
-			return gamepad.getPOV() < 180 ? SHIFT:-SHIFT;
+		if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)) {
+			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
+		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
+			return rotThrottle.getValue();
 		} else {
 			return 0;
 		}
