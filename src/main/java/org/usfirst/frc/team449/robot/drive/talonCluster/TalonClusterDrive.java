@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
@@ -92,8 +93,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-//		setPIDThrottle(left, right);
-		setVBusThrottle(1, 1);
+		setPIDThrottle(clipToOne(left), clipToOne(right));
+		//setVBusThrottle(1, 1);
 	}
 
 	public void logData() {
@@ -144,10 +145,24 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		startTime = System.nanoTime();
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, (OI2017ArcadeGamepad) oi));
+		setDefaultCommand(new OpArcadeDrive(this, oi));
 	}
 
 	public double getGyroOutput() {
 		return navx.pidGet();
+	}
+
+	/**
+	 * Simple helper function for clipping output to the -1 to 1 scale.
+	 * @param in The number to be processed.
+	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
+	 */
+	private static double clipToOne(double in){
+		if (in > 1)
+			return 1;
+		else if (in < -1)
+			return -1;
+		else
+			return in;
 	}
 }

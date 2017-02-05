@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.oi";
+option java_outer_classname = "OI2017ArcadeGamepadMap";
+
+message OI2017ArcadeGamepad {
+	required int32 gamepad = 1;
+	required int32 gamepad_left_axis = 2;
+	required int32 gamepad_right_axis = 3;
+	required int32 turn_to_0_button = 4;
+	required int32 turn_to_30_button = 5;
+	required int32 turn_to_180_button = 6;
+	required int32 turn_to_330_button = 7;
+	required int32 turnaround_button = 8;
+    required double deadband = 9;
+    required double dpad_shift = 10;
+}

@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
 		//		pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 		//		System.out.println("Constructed PneumaticsSubsystem");
 
-		intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
+		//intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
 
 		oiSubsystem.mapButtons();
 
