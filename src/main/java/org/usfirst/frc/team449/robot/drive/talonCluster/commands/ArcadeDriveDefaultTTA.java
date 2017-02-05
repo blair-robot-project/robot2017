@@ -8,7 +8,6 @@ import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
  * Program created by noah on 1/23/17.
@@ -59,7 +58,7 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 				output = 0;
 		}
 		SmartDashboard.putNumber("Output", output);
-		drive.setDefaultThrottle(oi.getVelAxis() + output, oi.getVelAxis() - output);
+		drive.setDefaultThrottle(oi.getFwd() + output, oi.getFwd() - output);
 	}
 
 	/**
@@ -78,12 +77,12 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		if (oi.getTurnAxis() > 0 && oi.getTurnAxis() > lastAngleStick){
-			this.setSetpointRelative(turnCoeffecient*(oi.getTurnAxis() - lastAngleStick));
-		} else if (oi.getTurnAxis() < 0 && oi.getTurnAxis() < lastAngleStick){
-			this.setSetpointRelative(turnCoeffecient*(oi.getTurnAxis() - lastAngleStick));
+		if (oi.getRot() > 0 && oi.getRot() > lastAngleStick){
+			this.setSetpointRelative(turnCoeffecient*(oi.getRot() - lastAngleStick));
+		} else if (oi.getRot() < 0 && oi.getRot() < lastAngleStick){
+			this.setSetpointRelative(turnCoeffecient*(oi.getRot() - lastAngleStick));
 		}
-		lastAngleStick = oi.getTurnAxis();
+		lastAngleStick = oi.getRot();
 		drive.logData();
 	}
 

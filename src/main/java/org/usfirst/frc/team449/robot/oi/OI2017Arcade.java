@@ -13,11 +13,11 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	/**
 	 * Left (rotation control) stick's throttle
 	 */
-	private Throttle leftThrottle;
+	private Throttle rotThrottle;
 	/**
 	 * Right (fwd/rev control) stick's throttle
 	 */
-	private Throttle rightThrottle;
+	private Throttle velThrottle;
 
 	private OI2017ArcadeMap.OI2017Arcade map;
 
@@ -26,8 +26,8 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 
 		Joystick _leftStick = new Joystick(map.getLeftStick());
 		Joystick _rightStick = new Joystick(map.getRightStick());
-		this.leftThrottle = new PolyThrottle(_leftStick, 1, 1);
-		this.rightThrottle = new PolyThrottle(_rightStick, 1, 1);
+		this.rotThrottle = new PolyThrottle(_leftStick, 1, 1);
+		this.velThrottle = new PolyThrottle(_rightStick, 1, 1);
 	}
 
 	@Override
@@ -39,13 +39,13 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	 * @return rotational velocity component
 	 */
 	public double getRot() {
-		return leftThrottle.getValue();
+		return rotThrottle.getValue();
 	}
 
 	/**
 	 * @return forward velocity component
 	 */
 	public double getFwd() {
-		return rightThrottle.getValue();
+		return velThrottle.getValue();
 	}
 }

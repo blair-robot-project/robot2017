@@ -2,8 +2,6 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
@@ -32,36 +30,35 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 		this.getPIDController().disable();
 		System.out.println("DefaultArcadeDrive init.");
 		drivingStraight = true;
-		vel = oi.getVelAxis();
+		vel = oi.getFwd();
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
 	@Override
 	protected void execute() {
-		/*
-		if (drivingStraight && oi.getTurnAxis() != 0){
+		if (drivingStraight && oi.getRot() != 0){
 			drivingStraight = false;
 			this.getPIDController().disable();
 			System.out.println("Switching to free drive.");
-		} else if (!drivingStraight && oi.getTurnAxis() == 0){
+		} else if (!drivingStraight && oi.getRot() == 0){
 			drivingStraight = true;
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
 			System.out.println("Switching to DriveStraight.");
-		}*/
+		}
 
-		vel = oi.getVelAxis();
+		vel = oi.getFwd();
 		SmartDashboard.putBoolean("drivingStraight", drivingStraight);
 		SmartDashboard.putNumber("velAxis", vel);
 
-		//if (!drivingStraight) {
-			rightThrottle = oi.getDriveAxisRight();
-			leftThrottle = oi.getDriveAxisLeft();
+		if (!drivingStraight) {
+			rightThrottle = oi.getFwd()-oi.getRot();
+			leftThrottle = oi.getFwd()+oi.getRot();
 			((TalonClusterDrive) subsystem).logData();
 			SmartDashboard.putNumber("right drive axis", rightThrottle);
 			SmartDashboard.putNumber("left drive axis", leftThrottle);
 			((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
-		//}
+		}
 	}
 
 	@Override

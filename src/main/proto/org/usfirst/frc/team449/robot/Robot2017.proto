@@ -1,6 +1,6 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/oi/OI2017Tank.proto";
-import "org/usfirst/frc/team449/robot/oi/OI2017.proto";
+import "org/usfirst/frc/team449/robot/oi/OI2017ArcadeGamepad.proto";
 import "org/usfirst/frc/team449/robot/mechanism/doubleflywheelshooter/DoubleFlywheelShooter.proto";
 import "org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.proto";
 import "org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.proto";
@@ -13,7 +13,7 @@ option java_outer_classname = "Robot2017Map";
 
 message Robot2017 {
 	required OI2017Tank tank_oi = 1;
-    required OI2017 arcade_oi = 6;
+    required OI2017ArcadeGamepad arcade_oi = 6;
 	required TalonClusterDrive drive = 2;
 	required Climber climber = 3;
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
