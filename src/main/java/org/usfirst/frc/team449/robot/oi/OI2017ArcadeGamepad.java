@@ -24,18 +24,14 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle velThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0;
-	private JoystickButton tt30;
-	private JoystickButton tt180;
-	private JoystickButton tt330;
-	private JoystickButton turnaround;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
 		gamepad = new Joystick(map.getGamepad());
 		SHIFT = map.getDpadShift();
-		turnThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis());
-		velThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis());
+		turnThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
+		velThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
@@ -50,7 +46,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	public double getFwd(){
 		if (Math.abs(velThrottle.getValue()) > deadband) {
-			return -velThrottle.getValue();
+			return velThrottle.getValue();
 		} else {
 			return 0;
 		}
