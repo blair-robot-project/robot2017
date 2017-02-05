@@ -11,11 +11,11 @@ import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
  */
 public class DefaultArcadeDrive extends PIDAngleCommand{
 	public OI2017ArcadeGamepad oi;
-
-	private double leftThrottle;
-	private double rightThrottle;
+	
 	private boolean drivingStraight;
 	private double vel;
+	private double rot;
+	private TalonClusterDrive driveSubsystem;
 
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OI2017ArcadeGamepad oi) {
 		super(map, drive);
@@ -26,39 +26,31 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 
 	@Override
 	protected void initialize() {
-		this.getPIDController().setSetpoint(subsystem.getGyroOutput());
-		this.getPIDController().disable();
+		this.getPIDController().reset();
 		System.out.println("DefaultArcadeDrive init.");
-		drivingStraight = true;
+		drivingStraight = false;
 		vel = oi.getFwd();
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		driveSubsystem.setDefaultThrottle(0.0, 0.0);
 	}
 
 	@Override
 	protected void execute() {
 		if (drivingStraight && oi.getRot() != 0){
 			drivingStraight = false;
-			this.getPIDController().disable();
+			//Reset disables it too.
+			this.getPIDController().reset();
 			System.out.println("Switching to free drive.");
-		} else if (!drivingStraight && oi.getRot() == 0){
+		} else if (!(drivingStraight) && oi.getRot() == 0){
 			drivingStraight = true;
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
 			System.out.println("Switching to DriveStraight.");
 		}
-
+		driveSubsystem.logData();
 		vel = oi.getFwd();
-		SmartDashboard.putBoolean("drivingStraight", drivingStraight);
-		SmartDashboard.putNumber("velAxis", vel);
-
-		if (!drivingStraight) {
-			rightThrottle = oi.getFwd()-oi.getRot();
-			leftThrottle = oi.getFwd()+oi.getRot();
-			((TalonClusterDrive) subsystem).logData();
-			SmartDashboard.putNumber("right drive axis", rightThrottle);
-			SmartDashboard.putNumber("left drive axis", leftThrottle);
-			((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
-		}
+		rot = oi.getRot();
+		SmartDashboard.putBoolean("driving straight?", drivingStraight);
+		SmartDashboard.putNumber("Vel Axis", vel);
 	}
 
 	@Override
@@ -74,23 +66,27 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 	@Override
 	protected void interrupted() {
 		System.out.println("DefaultArcadeDrive Interrupted! Stopping the robot.");
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		driveSubsystem.setDefaultThrottle(0.0, 0.0);
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput) {
-				output = minimumOutput;
-			} else if (output < 0 && output > -minimumOutput) {
-				output = -minimumOutput;
+		if (drivingStraight) {
+			if (minimumOutputEnabled) {
+				//Set the output to the minimum if it's too small.
+				if (output > 0 && output < minimumOutput) {
+					output = minimumOutput;
+				} else if (output < 0 && output > -minimumOutput) {
+					output = -minimumOutput;
+				}
 			}
+			if (Math.abs(this.getPIDController().getError()) < deadband) {
+				output = 0;
+			}
+			SmartDashboard.putNumber("PID output", output);
+			driveSubsystem.setDefaultThrottle(vel + output, vel - output);
+		} else {
+			driveSubsystem.setDefaultThrottle(vel + rot, vel - rot);
 		}
-		if (Math.abs(this.getPIDController().getError()) < deadband){
-			output = 0;
-		}
-		SmartDashboard.putNumber("PID output", output);
-		((TalonClusterDrive) subsystem).setDefaultThrottle(vel+output, vel-output);
 	}
 }
