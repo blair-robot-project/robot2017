@@ -5,12 +5,11 @@ import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 /**
- * Created by Noah Gleason on 1/30/2017.
+ * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
  */
-public class DefaultArcadeDrive extends PIDAngleCommand{
+public class DefaultArcadeDrive extends PIDAngleCommand {
 	//The OI giving the vel and turn stick values.
 	public ArcadeOI oi;
 
@@ -49,7 +48,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 		rot = oi.getRot();
 
 		//If we're driving straight but the driver tries to turn:
-		if (drivingStraight && rot != 0){
+		if (drivingStraight && rot != 0) {
 			//Switch to free drive
 			drivingStraight = false;
 			//Reset and disable the PID loop.
@@ -57,7 +56,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 			System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(drivingStraight) && rot == 0){
+		else if (!(drivingStraight) && rot == 0) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading
