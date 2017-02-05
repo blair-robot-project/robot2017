@@ -14,7 +14,6 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	protected NavxSubsystem subsystem;
 	protected double tolerance;
 	protected double deadband;
-	protected boolean deadbandEnabled;
 
 	//TODO add a timeout.
 	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {

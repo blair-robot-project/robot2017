@@ -92,7 +92,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-		setPIDThrottle(left, right);
+		setPIDThrottle(clipToOne(left), clipToOne(right));
 		//setVBusThrottle(1, 1);
 	}
 
@@ -149,5 +149,19 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public double getGyroOutput() {
 		return navx.pidGet();
+	}
+
+	/**
+	 * Simple helper function for clipping output to the -1 to 1 scale.
+	 * @param in The number to be processed.
+	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
+	 */
+	private static double clipToOne(double in){
+		if (in > 1)
+			return 1;
+		else if (in < -1)
+			return -1;
+		else
+			return in;
 	}
 }

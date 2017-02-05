@@ -17,7 +17,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 	private double leftThrottle;
 	private double rightThrottle;
 	private boolean drivingStraight;
-	private double setpoint;
+	private double vel;
 
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, OI2017ArcadeGamepad oi) {
 		super(map, drive);
@@ -28,32 +28,40 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 
 	@Override
 	protected void initialize() {
-		setpoint = subsystem.getGyroOutput();
+		this.getPIDController().setSetpoint(subsystem.getGyroOutput());
+		this.getPIDController().disable();
 		System.out.println("DefaultArcadeDrive init.");
 		drivingStraight = true;
+		vel = oi.getVelAxis();
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
 	@Override
 	protected void execute() {
+		/*
 		if (drivingStraight && oi.getTurnAxis() != 0){
 			drivingStraight = false;
 			this.getPIDController().disable();
+			System.out.println("Switching to free drive.");
 		} else if (!drivingStraight && oi.getTurnAxis() == 0){
 			drivingStraight = true;
-			setSetpoint(subsystem.getGyroOutput());
+			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-		}
+			System.out.println("Switching to DriveStraight.");
+		}*/
+
+		vel = oi.getVelAxis();
 		SmartDashboard.putBoolean("drivingStraight", drivingStraight);
-		SmartDashboard.putNumber("velAxis", oi.getVelAxis());
-		if (!drivingStraight) {
+		SmartDashboard.putNumber("velAxis", vel);
+
+		//if (!drivingStraight) {
 			rightThrottle = oi.getDriveAxisRight();
 			leftThrottle = oi.getDriveAxisLeft();
 			((TalonClusterDrive) subsystem).logData();
 			SmartDashboard.putNumber("right drive axis", rightThrottle);
 			SmartDashboard.putNumber("left drive axis", leftThrottle);
 			((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, rightThrottle);
-		}
+		//}
 	}
 
 	@Override
@@ -86,6 +94,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 			output = 0;
 		}
 		SmartDashboard.putNumber("PID output", output);
-		((TalonClusterDrive) subsystem).setDefaultThrottle(oi.getVelAxis()+output, oi.getVelAxis()-output);
+		((TalonClusterDrive) subsystem).setDefaultThrottle(vel+output, vel-output);
 	}
 }
