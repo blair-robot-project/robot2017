@@ -21,6 +21,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 		super(map, drive);
 		this.oi = oi;
 		requires(drive);
+		driveSubsystem = drive;
 		System.out.println("Drive Robot bueno");
 	}
 
