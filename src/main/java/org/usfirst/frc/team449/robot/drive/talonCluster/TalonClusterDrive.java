@@ -38,6 +38,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private long startTime;
 	private String logFN = "driveLog.csv";
 
+	private double maxSpeed;
+
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
@@ -46,6 +48,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
+		maxSpeed = -1;
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
@@ -112,18 +115,19 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append("\n");
 
 			fw.write(sb.toString());
-
-			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Heading", navx.pidGet());
-			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		SmartDashboard.putNumber("Max Speed", maxSpeed);
+		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
+		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Heading", navx.pidGet());
+		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 	}
 
 	@Override
