@@ -2,6 +2,7 @@ syntax = "proto2";
 import "org/usfirst/frc/team449/robot/drive/Drive.proto";
 import "org/usfirst/frc/team449/robot/components/UnitlessCANTalonSRX.proto";
 import "org/usfirst/frc/team449/robot/components/ToleranceBufferAnglePID.proto";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.drive.talonCluster";
 option java_outer_classname = "TalonClusterDriveMap";
@@ -10,6 +11,7 @@ message TalonClusterDrive {
 	required Drive drive = 1;
 	required ToleranceBufferAnglePID turn_PID = 6;
 	required ToleranceBufferAnglePID straight_PID = 7;
+    required DoubleSolenoid shifter = 8;
 	required UnitlessCANTalonSRX right_master = 2;
 	repeated UnitlessCANTalonSRX right_slave = 3;
 	required UnitlessCANTalonSRX left_master = 4;
