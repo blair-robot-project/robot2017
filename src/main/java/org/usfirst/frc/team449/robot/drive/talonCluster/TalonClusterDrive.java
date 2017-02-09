@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster;
 
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
@@ -32,6 +33,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	public OI2017ArcadeGamepad oi;
+	public DoubleSolenoid shifter;
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
@@ -48,6 +50,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
+		this.shifter = new DoubleSolenoid(map.getShifter().getForward(), map.getShifter().getReverse());
 		maxSpeed = -1;
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
@@ -150,6 +153,18 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public double getGyroOutput() {
 		return navx.pidGet();
+	}
+
+	public void setLowGear(boolean setLowGear){
+		if (setLowGear){
+			shifter.set(DoubleSolenoid.Value.kForward);
+			rightMaster.switchToLowGear();
+			leftMaster.switchToLowGear();
+		} else {
+			shifter.set(DoubleSolenoid.Value.kReverse);
+			rightMaster.switchToHighGear();
+			leftMaster.switchToHighGear();
+		}
 	}
 
 	/**
