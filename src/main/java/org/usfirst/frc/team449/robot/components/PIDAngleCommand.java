@@ -46,6 +46,13 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		this.subsystem = subsystem;
 	}
 
+	/*
+	 NOTE: usePIDOutput() is an abstract method in PIDCommand. Any subclass of PIDAngleCommand must implement it.
+	 It is called from the PIDController in PIDCommand, which will give it the output (i.e. u(t)) of the PID loop.
+	 It's up to the programmer to decide how to use this. For any subclass of PIDAngleCommand, you can generally just
+	 use it as a throttle value, or add it the throttle. Remember that one side is positive and one side is negative!
+	 */
+
 	/**
 	 * Returns the input for the pid loop.
 	 * <p>
