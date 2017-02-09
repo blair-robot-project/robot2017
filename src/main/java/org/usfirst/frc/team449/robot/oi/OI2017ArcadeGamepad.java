@@ -6,6 +6,8 @@ import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -24,7 +26,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -38,6 +40,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
 		tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
 		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+		switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
+		switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
 	}
 
 	/**
@@ -72,5 +76,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
 		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
 		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
+		switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
+		switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
 	}
 }

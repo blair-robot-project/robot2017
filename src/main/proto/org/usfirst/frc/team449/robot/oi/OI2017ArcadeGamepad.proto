@@ -14,4 +14,6 @@ message OI2017ArcadeGamepad {
 	required int32 turnaround_button = 8;
     required double deadband = 9;
     required double dpad_shift = 10;
+    required int32 switch_to_low_gear = 11;
+    required int32 switch_to_high_gear = 12;
 }
