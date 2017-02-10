@@ -148,11 +148,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(rightMaster.canTalon.getEncPosition());
 			sb.append(",");
 			*/
-			sb.append(leftMaster.canTalon.getEncVelocity());
+			sb.append(leftMaster.getSpeed());
 			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncVelocity());
+			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			sb.append(sp*rightMaster.getMaxSpeed());
+			sb.append(0.7*sp*rightMaster.getMaxSpeed());
+			sb.append(",");
+			sb.append(rightMaster.getError());
 			/*
 			sb.append(",");
 			sb.append(leftTPointStatus.activePoint.position);
@@ -172,16 +174,16 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 		SmartDashboard.putNumber("Heading", navx.pidGet());
 		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Left Error", leftMaster.getError());
 		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Right Error", rightMaster.getError());
 	}
 
 	@Override
 	protected void initDefaultCommand() {
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,setpoint");
+			writer.println("time,left,right,setpoint,error");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

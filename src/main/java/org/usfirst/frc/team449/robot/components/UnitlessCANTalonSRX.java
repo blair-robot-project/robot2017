@@ -159,4 +159,8 @@ public class UnitlessCANTalonSRX extends Component {
 	public void setPSlot(int slot) throws Exception {
 		canTalon.setProfile(slot);
 	}
+
+	public double getError(){
+		return nativeToRPS(canTalon.getError());
+	}
 }
