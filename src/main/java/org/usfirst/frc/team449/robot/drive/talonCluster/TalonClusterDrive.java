@@ -135,6 +135,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
 		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
+		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
+		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
+		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
 	}
 
 	public void logData(double sp) {
@@ -174,9 +178,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 		SmartDashboard.putNumber("Heading", navx.pidGet());
 		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Left Error", leftMaster.getError());
+		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Right Error", rightMaster.getError());
+		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
+		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
+		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
+		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
 	}
 
 	@Override
