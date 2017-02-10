@@ -95,8 +95,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-		//setPIDThrottle(clipToOne(left), clipToOne(right));
-		setVBusThrottle(left, right);
+		setPIDThrottle(clipToOne(left), clipToOne(right));
+		//setVBusThrottle(left, right);
 	}
 
 	public void logData() {
@@ -140,7 +140,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+	}
 
 
 //		setDefaultCommand(new ExecuteProfile(this));

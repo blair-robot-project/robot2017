@@ -47,7 +47,9 @@ public class UnitlessCANTalonSRX extends Component {
 		canTalon.configPeakOutputVoltage(+map.getPeakOutVoltage(), -map.getPeakOutVoltage());
 
 		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
-		setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
+		if (map.hasKPMp()) {
+			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
+		}
 		canTalon.setProfile(map.getProfile());
 
 		// Configure more stuff
@@ -96,8 +98,12 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public void switchToLowGear(){
-		maxSpeed = map.getMaxSpeedLg();
-		setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
+		if (map.hasKPLg()) {
+			maxSpeed = map.getMaxSpeedLg();
+			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
+		} else {
+			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear constants.");
+		}
 	}
 
 	public boolean getInverted() {
