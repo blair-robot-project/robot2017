@@ -14,7 +14,7 @@ public class SwitchToLowGear extends ReferencingCommand{
 
 	@Override
 	protected void initialize(){
-		//Do nothing!
+		System.out.println("SwitchToLowGear init.");
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class SwitchToLowGear extends ReferencingCommand{
 
 	@Override
 	protected void end() {
-		//Do nothing!
+		System.out.println("SwitchToLowGear end.");
 	}
 
 	@Override
