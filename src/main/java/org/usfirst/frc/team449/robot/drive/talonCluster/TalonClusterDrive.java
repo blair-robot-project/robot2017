@@ -41,6 +41,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private String logFN = "driveLog.csv";
 
 	private double maxSpeed;
+	private final double PID_SCALE = 0.9;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
@@ -80,12 +81,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	private void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
-		rightMaster.setPercentVbus(right);
+		rightMaster.setPercentVbus(-right);
 	}
 
 	private void setPIDThrottle(double left, double right) {
-		leftMaster.setSpeed(.7 * (left * leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(.7 * (right * rightMaster.getMaxSpeed()));
+		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
 	}
 
 	/**
@@ -156,9 +157,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			sb.append(0.7*sp*rightMaster.getMaxSpeed());
+			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
 			sb.append(",");
 			sb.append(rightMaster.getError());
+			sb.append(",");
+			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
+			sb.append(",");
+			sb.append(leftMaster.getError());
 			/*
 			sb.append(",");
 			sb.append(leftTPointStatus.activePoint.position);
@@ -191,7 +196,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	protected void initDefaultCommand() {
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,setpoint,error");
+			writer.println("time,left,right,right setpoint,right error,left setpoint,left error");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
