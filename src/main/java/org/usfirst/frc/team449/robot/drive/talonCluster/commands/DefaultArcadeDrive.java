@@ -34,6 +34,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	protected void initialize() {
 		//Reset all values of the PIDController and disable it.
 		this.getPIDController().reset();
+		this.getPIDController().enable();
 		System.out.println("DefaultArcadeDrive init.");
 		//Initial assignment
 		drivingStraight = false;
@@ -52,7 +53,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			//Switch to free drive
 			drivingStraight = false;
 			//Reset and disable the PID loop.
-			this.getPIDController().reset();
+			//this.getPIDController().reset();
 			System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
@@ -60,9 +61,11 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading
+			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
-			//Enable the controller
 			this.getPIDController().enable();
+			//Enable the controller
+			//this.getPIDController().enable();
 			System.out.println("Switching to DriveStraight.");
 		}
 
@@ -70,6 +73,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		driveSubsystem.logData();
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
 		SmartDashboard.putNumber("Vel Axis", vel);
+		SmartDashboard.putNumber("Rot axis", rot);
 	}
 
 	@Override
@@ -110,7 +114,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			SmartDashboard.putNumber("PID output", output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			driveSubsystem.setDefaultThrottle(vel + output, vel - output);
+			driveSubsystem.setDefaultThrottle(vel - output, vel + output);
 		}
 		//If we're free driving...
 		else {
