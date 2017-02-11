@@ -218,12 +218,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public void setLowGear(boolean setLowGear){
 		if (setLowGear){
 			shifter.set(DoubleSolenoid.Value.kForward);
-			//rightMaster.switchToLowGear();
-			//leftMaster.switchToLowGear();
+			rightMaster.switchToLowGear();
+			leftMaster.switchToLowGear();
 		} else {
 			shifter.set(DoubleSolenoid.Value.kReverse);
-			//rightMaster.switchToHighGear();
-			//leftMaster.switchToHighGear();
+			rightMaster.switchToHighGear();
+			leftMaster.switchToHighGear();
 		}
 	}
 

@@ -7,6 +7,7 @@ import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
@@ -76,7 +77,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+		Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 	}
 
 	@Override

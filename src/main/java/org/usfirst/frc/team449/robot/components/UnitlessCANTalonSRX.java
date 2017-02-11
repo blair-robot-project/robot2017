@@ -114,8 +114,8 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public Double getMaxSpeed() {
-		if (maxSpeed == 0.0)
-			return null;
+		//if (maxSpeed == 0.0)
+		//	return null;
 		return maxSpeed;
 	}
 
