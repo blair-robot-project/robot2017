@@ -51,7 +51,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
-		this.shifter = new DoubleSolenoid(15, map.getShifter().getForward(), map.getShifter().getReverse());
+		if (map.hasShifter()) {
+			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
+		}
 		maxSpeed = -1;
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
@@ -217,14 +219,18 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	public void setLowGear(boolean setLowGear){
-		if (setLowGear){
-			shifter.set(DoubleSolenoid.Value.kForward);
-			rightMaster.switchToLowGear();
-			leftMaster.switchToLowGear();
+		if (shifter != null) {
+			if (setLowGear) {
+				shifter.set(DoubleSolenoid.Value.kForward);
+				rightMaster.switchToLowGear();
+				leftMaster.switchToLowGear();
+			} else {
+				shifter.set(DoubleSolenoid.Value.kReverse);
+				rightMaster.switchToHighGear();
+				leftMaster.switchToHighGear();
+			}
 		} else {
-			shifter.set(DoubleSolenoid.Value.kReverse);
-			rightMaster.switchToHighGear();
-			leftMaster.switchToHighGear();
+			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
 		}
 	}
 

@@ -11,7 +11,8 @@ message TalonClusterDrive {
 	required Drive drive = 1;
 	required ToleranceBufferAnglePID turn_PID = 6;
 	required ToleranceBufferAnglePID straight_PID = 7;
-    required DoubleSolenoid shifter = 8;
+    optional DoubleSolenoid shifter = 8;
+    optional int32 module_number = 9;
 	required UnitlessCANTalonSRX right_master = 2;
 	repeated UnitlessCANTalonSRX right_slave = 3;
 	required UnitlessCANTalonSRX left_master = 4;
