@@ -32,8 +32,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
 		gamepad = new Joystick(map.getGamepad());
 		SHIFT = map.getDpadShift();
-		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
-		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), false);
+		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), true);
+		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
@@ -71,11 +71,12 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	}
 
 	public void mapButtons(){
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
+		double timeout = 5.;
+		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
+		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
+		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
 		switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 		switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
 	}

@@ -207,8 +207,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 //		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
+		setDefaultCommand(new OpArcadeDrive(this, oi));
 		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new PIDTest(this));
+		//setDefaultCommand(new PIDTest(this));
 	}
 
 	public double getGyroOutput() {
