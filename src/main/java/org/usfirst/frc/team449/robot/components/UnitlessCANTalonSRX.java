@@ -128,7 +128,11 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public double getSpeed() {
-		return nativeToRPS(canTalon.getEncVelocity());
+		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
+				.FeedbackDevice.CtreMagEncoder_Absolute){
+			return canTalon.getSpeed()*60;
+		}
+		return nativeToRPS(canTalon.getSpeed());
 	}
 
 	/**

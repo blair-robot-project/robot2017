@@ -103,7 +103,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public void logData() {
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / 100);
+			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
 			/*
 			sb.append(leftMaster.canTalon.getEncPosition());
@@ -145,7 +145,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public void logData(double sp) {
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / 100);
+			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
 			/*
 			sb.append(leftMaster.canTalon.getEncPosition());
