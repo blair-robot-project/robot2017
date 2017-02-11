@@ -1,10 +1,13 @@
 package org.usfirst.frc.team449.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
@@ -38,7 +41,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Started robotInit");
 		try {
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			System.out.println("Config file not found!");
@@ -52,7 +55,7 @@ public class Robot extends IterativeRobot {
 
 		System.out.println("Constructed drive");
 
-		//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+		climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
 		//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed SingleFlywheelShooter");
@@ -65,12 +68,18 @@ public class Robot extends IterativeRobot {
 
 		oiSubsystem.mapButtons();
 
+		if (cfg.hasModule()) {
+			Compressor compressor = new Compressor(15);
+			compressor.setClosedLoopControl(true);
+			compressor.start();
+		}
+
 		System.out.println("Mapped buttons");
 	}
 
 	@Override
 	public void teleopInit() {
-//		Scheduler.getInstance().add(new DefaultDrive(driveSubsystem, oiSubsystem));
+		Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
 	}
 
 	@Override

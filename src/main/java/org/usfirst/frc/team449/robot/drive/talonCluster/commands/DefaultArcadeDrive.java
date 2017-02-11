@@ -43,7 +43,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 			System.out.println("Switching to free drive.");
 		} else if (!(drivingStraight) && oi.getRot() == 0){
 			drivingStraight = true;
-			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
+			this.getPIDController().setSetpoint(subsystem.getGyroOutput());	//start running the angle PID
 			this.getPIDController().enable();
 			System.out.println("Switching to DriveStraight.");
 		}
@@ -85,9 +85,9 @@ public class DefaultArcadeDrive extends PIDAngleCommand{
 				output = 0;
 			}
 			SmartDashboard.putNumber("PID output", output);
-			driveSubsystem.setDefaultThrottle(vel + output, vel - output);
+			driveSubsystem.setDefaultThrottle(vel + output, vel - output);	//turn while moving forward
 		} else {
-			driveSubsystem.setDefaultThrottle(vel + rot, vel - rot);
+			driveSubsystem.setDefaultThrottle(vel + rot, vel - rot);	//if we're free driving, ignore the PID
 		}
 	}
 }

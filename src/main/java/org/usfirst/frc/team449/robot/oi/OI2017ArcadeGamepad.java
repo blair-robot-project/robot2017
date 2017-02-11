@@ -6,7 +6,11 @@ import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
@@ -24,20 +28,23 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
 		gamepad = new Joystick(map.getGamepad());
 		SHIFT = map.getDpadShift();
-		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), false);
-		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), false);
+		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), true);
+		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
 		tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
 		tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
 		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+		switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
+		switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
+		climb = new JoystickButton(gamepad, map.getClimb());
 	}
 
 	/**
@@ -58,7 +65,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	public double getRot(){
 		if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)) {
-			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
+			return gamepad.getPOV() < 180 ? -SHIFT : SHIFT;
 		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
 			return rotThrottle.getValue();
 		} else {
@@ -67,10 +74,15 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	}
 
 	public void mapButtons(){
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
+		double timeout = 5.;
+		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
+		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
+		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
+		switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
+		switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
+		climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
+		climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 	}
 }

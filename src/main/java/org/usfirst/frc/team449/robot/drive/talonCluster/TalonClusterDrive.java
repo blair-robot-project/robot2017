@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster;
 
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
@@ -9,12 +10,8 @@ import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpArcadeDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpTankDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ArcadeDriveDefaultTTA;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
@@ -36,11 +33,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	public OI2017ArcadeGamepad oi;
+	public DoubleSolenoid shifter;
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
 	private String logFN = "driveLog.csv";
+
+	private double maxSpeed;
+	private final double PID_SCALE = 0.9;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
@@ -50,6 +51,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
+		if (map.hasShifter()) {
+			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
+		}
+		maxSpeed = -1;
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
@@ -78,12 +83,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	private void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
-		rightMaster.setPercentVbus(right);
+		rightMaster.setPercentVbus(-right);
 	}
 
 	private void setPIDThrottle(double left, double right) {
-		leftMaster.setSpeed(.7 * (left * leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(.7 * (right * rightMaster.getMaxSpeed()));
+		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
 	}
 
 	/**
@@ -94,62 +99,139 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public void setDefaultThrottle(double left, double right) {
 		setPIDThrottle(clipToOne(left), clipToOne(right));
-		//setVBusThrottle(1, 1);
+		//setVBusThrottle(left, right);
 	}
 
 	public void logData() {
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / 100);
+			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
+			/*
 			sb.append(leftMaster.canTalon.getEncPosition());
 			sb.append(",");
 			sb.append(rightMaster.canTalon.getEncPosition());
 			sb.append(",");
+			*/
 			sb.append(leftMaster.canTalon.getEncVelocity());
 			sb.append(",");
 			sb.append(rightMaster.canTalon.getEncVelocity());
+			/*
 			sb.append(",");
 			sb.append(leftTPointStatus.activePoint.position);
 			sb.append(",");
 			sb.append(rightTPointStatus.activePoint.position);
+			*/
 			sb.append("\n");
 
 			fw.write(sb.toString());
-
-			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Heading", navx.pidGet());
-			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		SmartDashboard.putNumber("Max Speed", maxSpeed);
+		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
+		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Heading", navx.pidGet());
+		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
+		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
+		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
+		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
+	}
+
+	public void logData(double sp) {
+		try (FileWriter fw = new FileWriter(logFN, true)) {
+			StringBuilder sb = new StringBuilder();
+			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
+			sb.append(",");
+			/*
+			sb.append(leftMaster.canTalon.getEncPosition());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getEncPosition());
+			sb.append(",");
+			*/
+			sb.append(leftMaster.getSpeed());
+			sb.append(",");
+			sb.append(rightMaster.getSpeed());
+			sb.append(",");
+			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+			sb.append(",");
+			sb.append(rightMaster.getError());
+			sb.append(",");
+			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
+			sb.append(",");
+			sb.append(leftMaster.getError());
+			/*
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.position);
+			*/
+			sb.append("\n");
+
+			fw.write(sb.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		SmartDashboard.putNumber("Max Speed", maxSpeed);
+		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
+		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Heading", navx.pidGet());
+		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
+		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
+		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
+		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
+		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
+		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-		logFN = "/home/lvuser/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
+		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
+			writer.println("time,left,right,right setpoint,right error,left setpoint,left error");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+	}
 
 
 //		setDefaultCommand(new ExecuteProfile(this));
 //		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
-		//setDefaultCommand(new ExecuteProfile(this));
 		setDefaultCommand(new OpArcadeDrive(this, oi));
+		//setDefaultCommand(new ExecuteProfile(this));
+		//setDefaultCommand(new PIDTest(this));
 	}
 
 	public double getGyroOutput() {
 		return navx.pidGet();
+	}
+
+	public void setLowGear(boolean setLowGear){
+		if (shifter != null) {
+			if (setLowGear) {
+				shifter.set(DoubleSolenoid.Value.kForward);
+				rightMaster.switchToLowGear();
+				leftMaster.switchToLowGear();
+			} else {
+				shifter.set(DoubleSolenoid.Value.kReverse);
+				rightMaster.switchToHighGear();
+				leftMaster.switchToHighGear();
+			}
+		} else {
+			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
+		}
 	}
 
 	/**

@@ -129,6 +129,7 @@ task('copyResources', dependsOn: convertFiles){
 		ssh.run {
 			session(remotes.rio) {
 				execute 'mkdir ~/449_resources', ignoreError: true
+				execute 'mkdir ~/logs', ignoreError: true
 				put from: 'src/main/resources/*', into: './449_resources/'
 			}
 		}

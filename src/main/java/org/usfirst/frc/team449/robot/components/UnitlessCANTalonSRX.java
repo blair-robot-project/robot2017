@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.ctre.CANTalon;
+import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 
 /**
  * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in.
@@ -24,41 +25,42 @@ public class UnitlessCANTalonSRX extends Component {
 
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
+	private UnitlessCANTalonSRXMap.UnitlessCANTalonSRX map;
+
 	/**
 	 * Construct the CANTalonSRX from its map object
 	 *
-	 * @param m CANTalonSRX map object
+	 * @param map CANTalonSRX map object
 	 */
-	public UnitlessCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap
-			                           .UnitlessCANTalonSRX m) {
+	public UnitlessCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap.UnitlessCANTalonSRX map) {
 		// Configure stuff
-		canTalon = new CANTalon(m.getPort());
-		maxSpeed = m.getMaxSpeed();
-		encoderCPR = m.getEncoderCPR();
-		canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.valueOf(m.getFeedbackDevice().getNumber()));
-		feedbackDevice = CANTalon.FeedbackDevice.valueOf(m.getFeedbackDevice().getNumber());
-		canTalon.reverseSensor(m.getReverseSensor());
-		canTalon.reverseOutput(m.getReverseOutput());
-		canTalon.setInverted(m.getIsInverted());
-		canTalon.configNominalOutputVoltage
-				(+m.getNominalOutVoltage(), -m.getNominalOutVoltage());
-		canTalon.configPeakOutputVoltage(+m.getPeakOutVoltage(),
-				-m.getPeakOutVoltage());
-		canTalon.setProfile(m.getProfile());
+		this.map = map;
+		canTalon = new CANTalon(map.getPort());
+		maxSpeed = map.getMaxSpeedHg();
+		encoderCPR = map.getEncoderCPR();
+		canTalon.setFeedbackDevice(CANTalon.FeedbackDevice.valueOf(map.getFeedbackDevice().getNumber()));
+		feedbackDevice = CANTalon.FeedbackDevice.valueOf(map.getFeedbackDevice().getNumber());
+		canTalon.reverseSensor(map.getReverseSensor());
+		canTalon.reverseOutput(map.getReverseOutput());
+		canTalon.setInverted(map.getIsInverted());
+		canTalon.configNominalOutputVoltage(+map.getNominalOutVoltage(), -map.getNominalOutVoltage());
+		canTalon.configPeakOutputVoltage(+map.getPeakOutVoltage(), -map.getPeakOutVoltage());
 
-		canTalon.setPID(m.getKP0(), m.getKI0(), m.getKD0(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 0);
-		canTalon.setPID(m.getKP1(), m.getKI1(), m.getKD1(), 1023 / RPStoNative(m.getMaxSpeed()), 0, 0, 1);
-		canTalon.setProfile(0);
+		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
+		if (map.hasKPMp()) {
+			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
+		}
+		canTalon.setProfile(map.getProfile());
 
 		// Configure more stuff
-		canTalon.ConfigFwdLimitSwitchNormallyOpen(m.getFwdLimNormOpen());
-		canTalon.ConfigRevLimitSwitchNormallyOpen(m.getRevLimNormOpen());
-		canTalon.enableLimitSwitch(m.getFwdLimEnabled(), m.getRevLimEnabled());
-		canTalon.enableForwardSoftLimit(m.getFwdSoftLimEnabled());
-		canTalon.setForwardSoftLimit(m.getFwdSoftLimVal());
-		canTalon.enableReverseSoftLimit(m.getRevSoftLimEnabled());
-		canTalon.setReverseSoftLimit(m.getRevSoftLimVal());
-		canTalon.enableBrakeMode(m.getBrakeMode());
+		canTalon.ConfigFwdLimitSwitchNormallyOpen(map.getFwdLimNormOpen());
+		canTalon.ConfigRevLimitSwitchNormallyOpen(map.getRevLimNormOpen());
+		canTalon.enableLimitSwitch(map.getFwdLimEnabled(), map.getRevLimEnabled());
+		canTalon.enableForwardSoftLimit(map.getFwdSoftLimEnabled());
+		canTalon.setForwardSoftLimit(map.getFwdSoftLimVal());
+		canTalon.enableReverseSoftLimit(map.getRevSoftLimEnabled());
+		canTalon.setReverseSoftLimit(map.getRevSoftLimVal());
+		canTalon.enableBrakeMode(map.getBrakeMode());
 	}
 
 	/**
@@ -86,6 +88,24 @@ public class UnitlessCANTalonSRX extends Component {
 		canTalon.set(positionSp);
 	}
 
+	private void setPIDF(double p, double i, double d, double maxSpeed, int iZone, double closeLoopRampRate, int profile){
+		this.canTalon.setPID(p, i, d, 1023/RPStoNative(maxSpeed), iZone, closeLoopRampRate, profile);
+	}
+
+	public void switchToHighGear(){
+		maxSpeed = map.getMaxSpeedHg();
+		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
+	}
+
+	public void switchToLowGear(){
+		if (map.hasKPLg()) {
+			maxSpeed = map.getMaxSpeedLg();
+			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
+		} else {
+			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear constants.");
+		}
+	}
+
 	public boolean getInverted() {
 		return false;
 	}
@@ -94,8 +114,8 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public Double getMaxSpeed() {
-		if (maxSpeed == 0.0)
-			return null;
+		//if (maxSpeed == 0.0)
+		//	return null;
 		return maxSpeed;
 	}
 
@@ -108,7 +128,11 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public double getSpeed() {
-		return nativeToRPS(canTalon.getEncVelocity());
+		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
+				.FeedbackDevice.CtreMagEncoder_Absolute){
+			return canTalon.getSpeed()*60;
+		}
+		return nativeToRPS(canTalon.getSpeed());
 	}
 
 	/**
@@ -138,5 +162,9 @@ public class UnitlessCANTalonSRX extends Component {
 	@Deprecated
 	public void setPSlot(int slot) throws Exception {
 		canTalon.setProfile(slot);
+	}
+
+	public double getError(){
+		return nativeToRPS(canTalon.getError());
 	}
 }
