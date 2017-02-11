@@ -16,4 +16,5 @@ message OI2017ArcadeGamepad {
     required double dpad_shift = 10;
     required int32 switch_to_low_gear = 11;
     required int32 switch_to_high_gear = 12;
+    required int32 climb = 13;
 }

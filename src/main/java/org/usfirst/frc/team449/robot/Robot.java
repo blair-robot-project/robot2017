@@ -55,7 +55,7 @@ public class Robot extends IterativeRobot {
 
 		System.out.println("Constructed drive");
 
-		//		climberSubsystem = new ClimberSubsystem(cfg.getClimber(), oiSubsystem);
+		climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
 		//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed SingleFlywheelShooter");

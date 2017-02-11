@@ -9,6 +9,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
@@ -26,7 +28,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -42,6 +44,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
 		switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
 		switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
+		climb = new JoystickButton(gamepad, map.getClimb());
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	public double getRot(){
 		if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)) {
-			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
+			return gamepad.getPOV() < 180 ? -SHIFT : SHIFT;
 		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
 			return rotThrottle.getValue();
 		} else {
@@ -79,5 +82,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
 		switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 		switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
+		climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
+		climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 	}
 }
