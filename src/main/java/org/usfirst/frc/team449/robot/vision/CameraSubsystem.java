@@ -24,8 +24,8 @@ public class CameraSubsystem extends MappedSubsystem {
     public CameraSubsystem(CameraMap.CamRobot map){
         super(map);
         staticMap = map;
-        System.out.println("initStart");
-        System.out.println("Set URL of MJPGServer to `http://roboRIO-449-frc.local:5800/stream.mjpg`");
+        System.out.println("CameraSubsystem construct start");
+        System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:5800/stream.mjpg\"");
         server = new MjpegServer("Cameras",5800);
         cam1 = new UsbCamera("cam1",0);
         cam1.setResolution(160,90);
@@ -35,7 +35,7 @@ public class CameraSubsystem extends MappedSubsystem {
         cam2.setFPS(30);
         server.setSource(cam1);
         camNum = 1;
-        System.out.println("initEnd");
+        System.out.println("CameraSubsystem construct end");
     }
 
     @Override
