@@ -21,9 +21,12 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	private double rot;
 	//The talonClusterDrive this command is controlling.
 	private TalonClusterDrive driveSubsystem;
+	//The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
+	private double maxAngularVel;
 
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, ArcadeOI oi) {
 		super(map, drive);
+		maxAngularVel = map.getMaxAngularVel();
 		this.oi = oi;
 		requires(drive);
 		driveSubsystem = drive;
@@ -57,7 +60,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(drivingStraight) && rot == 0) {
+		else if (!(drivingStraight) && rot == 0 && driveSubsystem.navx.getRate() <= maxAngularVel) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading
