@@ -46,7 +46,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private final double PID_SCALE = 0.9;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, ArcadeOI oi) {
+			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;

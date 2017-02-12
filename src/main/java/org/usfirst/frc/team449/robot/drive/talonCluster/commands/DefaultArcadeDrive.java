@@ -23,11 +23,14 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	private TalonClusterDrive driveSubsystem;
 	//The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	private double maxAngularVel;
+	//The map of values
+	ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map;
 
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, ArcadeOI oi) {
 		super(map, drive);
 		maxAngularVel = map.getMaxAngularVel();
 		this.oi = oi;
+		this.map = map;
 		requires(drive);
 		driveSubsystem = drive;
 		System.out.println("Drive Robot bueno");
@@ -113,7 +116,11 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			SmartDashboard.putNumber("PID output", output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			driveSubsystem.setDefaultThrottle(vel - output, vel + output);
+			if (!map.getInverted()) {
+				driveSubsystem.setDefaultThrottle(vel - output, vel + output);
+			} else {
+				driveSubsystem.setDefaultThrottle(vel + output, vel - output);
+			}
 		}
 		//If we're free driving...
 		else {
