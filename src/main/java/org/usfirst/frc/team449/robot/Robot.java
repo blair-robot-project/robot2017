@@ -57,7 +57,9 @@ public class Robot extends IterativeRobot {
 
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
-		cameraSubsystem = new CameraSubsystem(cfg.getCamera());
+		if (cfg.hasCamera()) {
+			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
+		}
 
 		System.out.println("Constructed drive");
 

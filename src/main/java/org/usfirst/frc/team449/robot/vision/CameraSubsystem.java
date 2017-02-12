@@ -4,8 +4,12 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 //import edu.wpi.first.wpilibj.CameraServer;
 
+import maps.org.usfirst.frc.team449.robot.components.UsbCameraMap;
 import maps.org.usfirst.frc.team449.robot.vision.CameraMap;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -15,26 +19,26 @@ public class CameraSubsystem extends MappedSubsystem {
 
 
     public MjpegServer server;
-    public UsbCamera cam1;
-    public UsbCamera cam2;
+    public List<UsbCamera> cameras;
     public int camNum;
 
-    public static CameraMap.CamRobot staticMap;
+    public static CameraMap.Camera map;
 
-    public CameraSubsystem(CameraMap.CamRobot map){
+    public CameraSubsystem(CameraMap.Camera map){
         super(map);
-        staticMap = map;
+        this.map = map;
         System.out.println("CameraSubsystem construct start");
-        System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:5800/stream.mjpg\"");
-        server = new MjpegServer("Cameras",5800);
-        cam1 = new UsbCamera("cam1",0);
-        cam1.setResolution(160,90);
-        cam1.setFPS(30);
-        cam2 = new UsbCamera("cam2",1);
-        cam2.setResolution(160,120);
-        cam2.setFPS(30);
-        server.setSource(cam1);
-        camNum = 1;
+        System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:"+map.getServer().getPort()+"/stream.mjpg\"");
+        server = new MjpegServer(map.getServer().getName(),map.getServer().getPort());
+        cameras = new ArrayList<>();
+        for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()){
+            UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
+            tmp.setResolution(camera.getWidth(), camera.getHeight());
+            tmp.setFPS(camera.getFps());
+            cameras.add(tmp);
+        }
+        server.setSource(cameras.get(0));
+        camNum = 0;
         System.out.println("CameraSubsystem construct end");
     }
 

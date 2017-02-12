@@ -25,13 +25,10 @@ public class ChangeCam extends ReferencingCommand {
     protected void execute() {
         System.out.println("ChangeCam exec start");
 
-        if (cameraSubsystem.camNum == 1){
-            cameraSubsystem.camNum = 2;
-            cameraSubsystem.server.setSource(cameraSubsystem.cam2);
-        }
-        else {
-            cameraSubsystem.camNum = 1;
-            cameraSubsystem.server.setSource(cameraSubsystem.cam1);
+        if (cameraSubsystem.cameras.size() == 1){
+	        System.out.println("You're trying to switch cameras, but your robot only has one camera!");
+        } else {
+        	cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
         }
 
         System.out.println("ChangeCam exec end");
