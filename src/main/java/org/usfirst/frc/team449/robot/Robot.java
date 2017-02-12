@@ -16,6 +16,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.oi.BaseOI;
 import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
+import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
 
@@ -36,6 +37,8 @@ public class Robot extends IterativeRobot {
 
 	public static OI2017ArcadeGamepad oiSubsystem;
 
+	public static CameraSubsystem cameraSubsystem;
+
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
 	public void robotInit() {
@@ -53,6 +56,8 @@ public class Robot extends IterativeRobot {
 		System.out.println("Constructed OI");
 
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+
+		cameraSubsystem = new CameraSubsystem(cfg.getCamera());
 
 		System.out.println("Constructed drive");
 
