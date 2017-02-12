@@ -5,13 +5,14 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import javafx.scene.shape.Arc;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.*;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
@@ -39,6 +40,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
 	private String logFN = "driveLog.csv";
+	public boolean overrideNavX;
 
 	private double maxSpeed;
 	private final double PID_SCALE = 0.9;
@@ -99,7 +101,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public void setDefaultThrottle(double left, double right) {
 		setPIDThrottle(clipToOne(left), clipToOne(right));
-		//setVBusThrottle(left, right);
 	}
 
 	public void logData() {
@@ -209,9 +210,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 //		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
-		setDefaultCommand(new OpArcadeDrive(this, oi));
+		overrideNavX = false;
 		//setDefaultCommand(new ExecuteProfile(this));
-		//setDefaultCommand(new PIDTest(this));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
 	public double getGyroOutput() {

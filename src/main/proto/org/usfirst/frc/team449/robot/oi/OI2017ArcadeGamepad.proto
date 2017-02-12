@@ -17,4 +17,5 @@ message OI2017ArcadeGamepad {
     required int32 switch_to_low_gear = 11;
     required int32 switch_to_high_gear = 12;
     required int32 climb = 13;
+	required int32 override_navX = 14;
 }
