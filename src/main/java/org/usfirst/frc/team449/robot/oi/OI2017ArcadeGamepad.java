@@ -14,6 +14,7 @@ import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
 
 /**
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
@@ -29,7 +30,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX, switchCamera;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -50,6 +51,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasClimb()) {
 			climb = new JoystickButton(gamepad, map.getClimb());
+		}
+		if (map.hasSwitchCamera()){
+			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
 		}
 	}
 
@@ -93,6 +97,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (Robot.climberSubsystem != null) {
 			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		}
+		if (Robot.cameraSubsystem != null){
+			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 	}

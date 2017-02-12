@@ -21,4 +21,5 @@ message OI2017ArcadeGamepad {
     required bool invert_rot = 15;
     required bool invert_fwd = 16;
     required bool invert_dpad = 17;
+    optional int32 switch_camera = 18;
 }
