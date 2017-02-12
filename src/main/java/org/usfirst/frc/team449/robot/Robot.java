@@ -41,8 +41,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Started robotInit");
 		try {
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			System.out.println("Config file not found!");
