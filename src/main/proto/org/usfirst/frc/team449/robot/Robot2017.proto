@@ -15,9 +15,9 @@ message Robot2017 {
 	required OI2017Tank tank_oi = 1;
     required OI2017ArcadeGamepad arcade_oi = 6;
 	required TalonClusterDrive drive = 2;
-	required Climber climber = 3;
+	optional Climber climber = 3;
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
-	required SingleFlywheelShooter shooter = 5;
+	optional SingleFlywheelShooter shooter = 5;
     optional double module = 9;
     //required Intake2017 intake = 7;
 	//required PneumaticSystem pneumatics = 8;
