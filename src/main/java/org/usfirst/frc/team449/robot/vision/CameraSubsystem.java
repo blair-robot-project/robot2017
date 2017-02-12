@@ -35,7 +35,8 @@ public class CameraSubsystem extends MappedSubsystem {
             UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
             tmp.setResolution(camera.getWidth(), camera.getHeight());
             tmp.setFPS(camera.getFps());
-            cameras.add(tmp);
+	        System.out.println("Added "+camera.getName()+" to camera list.");
+	        cameras.add(tmp);
         }
         server.setSource(cameras.get(0));
         camNum = 0;
