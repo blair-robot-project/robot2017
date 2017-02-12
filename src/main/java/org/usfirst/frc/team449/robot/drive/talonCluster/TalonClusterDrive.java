@@ -43,6 +43,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
 	private String logFN = "driveLog.csv";
+	public boolean overrideNavX;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, ArcadeOI oi) {
@@ -145,6 +146,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 //		setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
+		overrideNavX = false;
 		//setDefaultCommand(new ExecuteProfile(this));
 		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}

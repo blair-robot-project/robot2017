@@ -35,7 +35,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 
 	@Override
 	protected void initialize() {
-		//Reset all values of the PIDController and disable it.
+		//Reset all values of the PIDController and enable it.
 		this.getPIDController().reset();
 		this.getPIDController().enable();
 		System.out.println("DefaultArcadeDrive init.");
@@ -51,24 +51,20 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		vel = oi.getFwd();
 		rot = oi.getRot();
 
-		//If we're driving straight but the driver tries to turn:
-		if (drivingStraight && rot != 0) {
+		//If we're driving straight but the driver tries to turn or overrides the NavX:
+		if ((drivingStraight && rot != 0) || driveSubsystem.overrideNavX) {
 			//Switch to free drive
 			drivingStraight = false;
-			//Reset and disable the PID loop.
-			//this.getPIDController().reset();
 			System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
 		else if (!(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
 			//Switch to driving straight
 			drivingStraight = true;
-			//Set the setpoint to the current heading
+			//Set the setpoint to the current heading and reset the NavX
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-			//Enable the controller
-			//this.getPIDController().enable();
 			System.out.println("Switching to DriveStraight.");
 		}
 
