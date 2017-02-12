@@ -34,9 +34,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
 		gamepad = new Joystick(map.getGamepad());
-		SHIFT = map.getDpadShift();
-		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), true);
-		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), true);
+		SHIFT = (map.getInvertDpad() ? -map.getDpadShift() : map.getDpadShift());
+		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
+		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
 		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
@@ -44,9 +44,13 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
 		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
 		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
-		switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
-		switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
-		climb = new JoystickButton(gamepad, map.getClimb());
+		if (map.hasSwitchToLowGear()) {
+			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
+			switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
+		}
+		if (map.hasClimb()) {
+			climb = new JoystickButton(gamepad, map.getClimb());
+		}
 	}
 
 	/**
@@ -67,7 +71,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	public double getRot(){
 		if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)) {
-			return gamepad.getPOV() < 180 ? -SHIFT : SHIFT;
+			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
 		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
 			return rotThrottle.getValue();
 		} else {
@@ -82,10 +86,14 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
 		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
 		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
-		switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
-		switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
-		climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
-		climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		if (Robot.driveSubsystem.shifter != null) {
+			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
+			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
+		}
+		if (Robot.climberSubsystem != null) {
+			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
+			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 	}
 }

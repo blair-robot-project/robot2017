@@ -56,10 +56,14 @@ public class Robot extends IterativeRobot {
 
 		System.out.println("Constructed drive");
 
-		climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+		if (cfg.hasClimber()) {
+			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+		}
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-		//		singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-		//		System.out.println("Constructed SingleFlywheelShooter");
+		if (cfg.hasShooter()) {
+			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+			System.out.println("Constructed SingleFlywheelShooter");
+		}
 		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed DoubleFlywheelShooter");
 		//		pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
@@ -80,7 +84,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+		if (driveSubsystem.shifter != null) {
+			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+		}
 	}
 
 	@Override
