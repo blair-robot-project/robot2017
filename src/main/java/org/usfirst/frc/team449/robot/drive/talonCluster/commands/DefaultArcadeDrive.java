@@ -60,7 +60,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(drivingStraight) && rot == 0 && driveSubsystem.navx.getRate() <= maxAngularVel) {
+		else if (!(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading
