@@ -31,6 +31,8 @@ public class ChangeCam extends ReferencingCommand {
         	cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
         }
 
+        cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
+
         System.out.println("ChangeCam exec end");
     }
 
