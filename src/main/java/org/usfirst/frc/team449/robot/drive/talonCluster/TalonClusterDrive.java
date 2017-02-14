@@ -45,8 +45,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private double maxSpeed;
 	private final double PID_SCALE = 0.9;
 
+	double wheelDia, upshift, downshift;
+
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
+									 .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
 		this.map = map;
 		this.oi = oi;
@@ -71,6 +73,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
+
+		upshift = map.getUpshift();
+		downshift = map.getDownshift();
+		wheelDia = map.getWheelDiameter();
 
 		// TODO take this out
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
@@ -108,21 +114,21 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-			/*
-			sb.append(leftMaster.canTalon.getEncPosition());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncPosition());
-			sb.append(",");
-			*/
+         /*
+         sb.append(leftMaster.canTalon.getEncPosition());
+         sb.append(",");
+         sb.append(rightMaster.canTalon.getEncPosition());
+         sb.append(",");
+         */
 			sb.append(leftMaster.canTalon.getEncVelocity());
 			sb.append(",");
 			sb.append(rightMaster.canTalon.getEncVelocity());
-			/*
-			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.position);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
-			*/
+         /*
+         sb.append(",");
+         sb.append(leftTPointStatus.activePoint.position);
+         sb.append(",");
+         sb.append(rightTPointStatus.activePoint.position);
+         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -150,12 +156,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-			/*
-			sb.append(leftMaster.canTalon.getEncPosition());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncPosition());
-			sb.append(",");
-			*/
+         /*
+         sb.append(leftMaster.canTalon.getEncPosition());
+         sb.append(",");
+         sb.append(rightMaster.canTalon.getEncPosition());
+         sb.append(",");
+         */
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
@@ -167,12 +173,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
 			sb.append(",");
 			sb.append(leftMaster.getError());
-			/*
-			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.position);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
-			*/
+         /*
+         sb.append(",");
+         sb.append(leftTPointStatus.activePoint.position);
+         sb.append(",");
+         sb.append(rightTPointStatus.activePoint.position);
+         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -203,11 +209,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-	}
+		}
 
 
-//		setDefaultCommand(new ExecuteProfile(this));
-//		setDefaultCommand(new OpTankDrive(this, oi));
+//    setDefaultCommand(new ExecuteProfile(this));
+//    setDefaultCommand(new OpTankDrive(this, oi));
 
 		startTime = System.nanoTime();
 		overrideNavX = false;
@@ -233,6 +239,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} else {
 			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
 		}
+	}
+
+	public double getUpshiftFPS(){
+		return upshift/(wheelDia*Math.PI/12);
+	}
+
+	public double getDownshiftFPS(){
+		return downshift/(wheelDia*Math.PI/12);
 	}
 
 	/**
