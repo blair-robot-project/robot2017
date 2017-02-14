@@ -45,6 +45,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private double maxSpeed;
 	private final double PID_SCALE = 0.9;
 
+	boolean lowGear = true;	//we want to start in low gear
+
 	double wheelDia, upshift, downshift;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
@@ -231,14 +233,28 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 				shifter.set(DoubleSolenoid.Value.kForward);
 				rightMaster.switchToLowGear();
 				leftMaster.switchToLowGear();
+				lowGear = true;
 			} else {
 				shifter.set(DoubleSolenoid.Value.kReverse);
 				rightMaster.switchToHighGear();
 				leftMaster.switchToHighGear();
+				lowGear = false;
 			}
 		} else {
 			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
 		}
+	}
+
+	public double getLeftSpeed(){
+		return leftMaster.getSpeed();
+	}
+
+	public double getRightSpeed(){
+		return rightMaster.getSpeed();
+	}
+
+	public boolean inLowGear(){
+		return lowGear;
 	}
 
 	public double getUpshiftFPS(){
