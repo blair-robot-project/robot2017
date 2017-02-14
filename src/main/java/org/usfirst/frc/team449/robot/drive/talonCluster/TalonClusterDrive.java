@@ -266,6 +266,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return downshift/(wheelDia*Math.PI/12);
 	}
 
+	public boolean shouldDownshift(){
+		return Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<getDownshiftFPS() && !lowGear;
+	}
+
+	public boolean shouldUpshift(){
+		return Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>getUpshiftFPS() && lowGear;
+	}
+
 	/**
 	 * Simple helper function for clipping output to the -1 to 1 scale.
 	 * @param in The number to be processed.
