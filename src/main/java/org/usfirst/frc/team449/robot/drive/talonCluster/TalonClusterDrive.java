@@ -151,6 +151,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
+		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
 	public void logData(double sp) {

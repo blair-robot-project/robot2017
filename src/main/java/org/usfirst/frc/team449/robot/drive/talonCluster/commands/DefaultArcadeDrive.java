@@ -56,7 +56,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 
 	@Override
 	protected void execute() {
-		//Janky autoshift. The magnitudes of the left and right speeds are almost always pretty close.
+		//Janky autoshift. The magnitudes of the left and right speeds are almost always pretty close to each other.
 		if(Math.min(Math.abs(driveSubsystem.getLeftSpeed()), Math.abs(driveSubsystem.getRightSpeed()))>upshift &&
 				!driveSubsystem.inLowGear()){
 			driveSubsystem.setLowGear(true);
