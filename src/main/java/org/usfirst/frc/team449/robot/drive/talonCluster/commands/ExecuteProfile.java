@@ -12,13 +12,15 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  */
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
-	private static final String IN_FILE_NAME = "/home/lvuser/profile.csv";
+	private static final String LEFT_IN_FILE_NAME = "/home/lvuser/leftProfile.csv";
+	private static final String RIGHT_IN_FILE_NAME = "/home/lvuser/449_resources/rightprofile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
 	private int _state = 0;
 	private Notifier mpProcessNotifier;
 
 	private TalonClusterDrive tcd;
-	private MotionProfileData profile;
+	private MotionProfileData leftProfile;
+	private MotionProfileData rightProfile;
 
 	private CANTalon.MotionProfileStatus leftStatus;
 	private CANTalon.MotionProfileStatus rightStatus;
@@ -32,7 +34,9 @@ public class ExecuteProfile extends ReferencingCommand {
 		leftStatus = new CANTalon.MotionProfileStatus();
 		rightStatus = new CANTalon.MotionProfileStatus();
 
-		profile = new MotionProfileData(IN_FILE_NAME);
+		leftProfile = new MotionProfileData(LEFT_IN_FILE_NAME);
+		rightProfile = new MotionProfileData(RIGHT_IN_FILE_NAME);
+
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
 	}
 
@@ -135,23 +139,34 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		// Fill the Talon's buffer with points
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
-		for (int i = 0; i < profile.data.length; ++i) {
+		for (int i = 0; i < leftProfile.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = profile.data[i][0] * 2048 / 4 * Math.PI ;
-			point.velocity = profile.data[i][1] * 2048 / 4 * Math.PI ;
-			point.timeDurMs = (int) profile.data[i][2];
+			point.position = leftProfile.data[i][0] * 2048 / 4 * Math.PI ;
+			point.velocity = leftProfile.data[i][1] * 2048 / 4 * Math.PI ;
+			point.timeDurMs = (int) leftProfile.data[i][2];
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
-			point.isLastPoint = (i + 1) == profile.data.length; // If its the last point, isLastPoint = true
+			point.isLastPoint = (i + 1) == leftProfile.data.length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
 			tcd.leftMaster.canTalon.pushMotionProfileTrajectory(point);
+		}
 
-			point.velocity = point.velocity * -1;
+		for (int i = 0; i < rightProfile.data.length; ++i) {
+			// Set all the fields of the profile point
+			point.position = rightProfile.data[i][0] * 2048 / 4 * Math.PI ;
+			point.velocity = rightProfile.data[i][1] * 2048 / 4 * Math.PI ;
+			point.timeDurMs = (int) rightProfile.data[i][2];
+			point.profileSlotSelect = 1;    // gain selection
+			point.velocityOnly = false;  // true => no position servo just velocity feedforward
+			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
+			point.isLastPoint = (i + 1) == rightProfile.data.length; // If its the last point, isLastPoint = true
 
+			// Send the point to the Talon's buffer
 			tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point);
 		}
+
 
 		// Add the Talons to the updater thread (thread should not have started yet tho)
 		updaterProcess.addTalon(tcd.leftMaster.canTalon);
