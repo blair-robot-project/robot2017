@@ -156,7 +156,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		for (int i = 0; i < rightProfile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = rightProfile.data[i][0] * 2048 / 4 * Math.PI ;
-			point.velocity = rightProfile.data[i][1] * 2048 / 4 * Math.PI ;
+			point.velocity = rightProfile.data[i][1] * 2048 / 4 * Math.PI * -1;
 			point.timeDurMs = (int) rightProfile.data[i][2];
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
