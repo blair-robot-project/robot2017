@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
+import org.usfirst.frc.team449.robot.mechanism.intake.commands.FakeIntakeUp;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -30,7 +31,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX, switchCamera;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX, switchCamera, intakeUp, intakeDown;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -52,16 +53,20 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasClimb()) {
 			climb = new JoystickButton(gamepad, map.getClimb());
 		}
-		if (map.hasSwitchCamera()){
-			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
+		if (map.hasSwitchCamera()) {
+//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
 		}
+
+		intakeUp = new JoystickButton(gamepad, 9);
+
 	}
 
 	/**
 	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick it is.
+	 *
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
-	public double getFwd(){
+	public double getFwd() {
 		if (Math.abs(fwdThrottle.getValue()) > deadband) {
 			return fwdThrottle.getValue();
 		} else {
@@ -71,10 +76,11 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	/**
 	 * Get the output of the D-pad or turning joystick, whichever is in use. If both are in use, the D-pad takes preference.
+	 *
 	 * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
 	 */
-	public double getRot(){
-		if (!(gamepad.getPOV() == -1 || gamepad.getPOV()%180 == 0)) {
+	public double getRot() {
+		if (!(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
 			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
 		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
 			return rotThrottle.getValue();
@@ -83,7 +89,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 	}
 
-	public void mapButtons(){
+	public void mapButtons() {
 		double timeout = 5.;
 		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
 		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
@@ -98,9 +104,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
-		if (Robot.cameraSubsystem != null){
-			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
+		if (Robot.cameraSubsystem != null) {
+//			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
+		intakeUp.whenPressed(new FakeIntakeUp());
 	}
 }
