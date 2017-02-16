@@ -48,8 +48,10 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.getPIDController().reset();
 		this.getPIDController().enable();
 		System.out.println("DefaultArcadeDrive init.");
+
 		//Initial assignment
 		drivingStraight = false;
+		driveSubsystem.setLowGear(true);	//starting from rest, we want to be in low gear so we can accelerate
 		vel = oi.getFwd();
 		rot = oi.getRot();
 	}
