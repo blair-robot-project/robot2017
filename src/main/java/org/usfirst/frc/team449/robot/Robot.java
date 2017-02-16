@@ -52,25 +52,25 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
-		System.out.println("Constructed OI");
+//		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
+//		System.out.println("Constructed OI");
 
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+//		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
 //		if (cfg.hasCamera()) {
 //			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
 //		}
 
-		System.out.println("Constructed drive");
+//		System.out.println("Constructed drive");
 
 //		if (cfg.hasClimber()) {
 //			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 //		}
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-//		if (cfg.hasShooter()) {
-//			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-//			System.out.println("Constructed SingleFlywheelShooter");
-//		}
+		if (cfg.hasShooter()) {
+			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+			System.out.println("Constructed SingleFlywheelShooter");
+		}
 		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed DoubleFlywheelShooter");
 //				pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
@@ -78,7 +78,7 @@ public class Robot extends IterativeRobot {
 
 		//intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
 
-		oiSubsystem.mapButtons();
+		//oiSubsystem.mapButtons();
 
 //		if (cfg.hasModule()) {
 //			Compressor compressor = new Compressor(15);
@@ -91,9 +91,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
-		}
+//		if (driveSubsystem.shifter != null) {
+//			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+//		}
 	}
 
 	@Override
