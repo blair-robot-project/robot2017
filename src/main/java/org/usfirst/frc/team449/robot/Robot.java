@@ -57,34 +57,34 @@ public class Robot extends IterativeRobot {
 
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 
-		if (cfg.hasCamera()) {
-			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
-		}
+//		if (cfg.hasCamera()) {
+//			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
+//		}
 
 		System.out.println("Constructed drive");
 
-		if (cfg.hasClimber()) {
-			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
-		}
+//		if (cfg.hasClimber()) {
+//			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+//		}
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-		if (cfg.hasShooter()) {
-			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-			System.out.println("Constructed SingleFlywheelShooter");
-		}
+//		if (cfg.hasShooter()) {
+//			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+//			System.out.println("Constructed SingleFlywheelShooter");
+//		}
 		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
 		//		System.out.println("Constructed DoubleFlywheelShooter");
-		//		pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
+//				pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 		//		System.out.println("Constructed PneumaticsSubsystem");
 
 		//intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
 
 		oiSubsystem.mapButtons();
 
-		if (cfg.hasModule()) {
-			Compressor compressor = new Compressor(15);
-			compressor.setClosedLoopControl(true);
-			compressor.start();
-		}
+//		if (cfg.hasModule()) {
+//			Compressor compressor = new Compressor(15);
+//			compressor.setClosedLoopControl(true);
+//			compressor.start();
+//		}
 
 		System.out.println("Mapped buttons");
 	}

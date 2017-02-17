@@ -213,15 +213,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-
-//    setDefaultCommand(new ExecuteProfile(this));
-//    setDefaultCommand(new OpTankDrive(this, oi));
-
 		startTime = System.nanoTime();
 		overrideNavX = false;
-		//setDefaultCommand(new ExecuteProfile(this));
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+		setDefaultCommand(new OpArcadeDrive(this, oi));
 	}
 
 	public double getGyroOutput() {
