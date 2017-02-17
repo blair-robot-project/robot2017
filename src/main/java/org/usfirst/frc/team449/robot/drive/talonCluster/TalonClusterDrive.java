@@ -61,8 +61,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
-		this.upTimeThresh = map.getUpThresh();
-		this.downTimeThresh = map.getDownThresh();
+		this.upTimeThresh = map.getUpTimeThresh();
+		this.downTimeThresh = map.getDownTimeThresh();
 		okToUpshift = false;
 		okToDownshift = true;
 		if (map.hasShifter()) {

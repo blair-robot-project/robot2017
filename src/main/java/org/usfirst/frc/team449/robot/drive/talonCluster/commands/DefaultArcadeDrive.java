@@ -26,8 +26,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	//The map of values
 	ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map;
 
-	double upshift, downshift;
-
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, ArcadeOI oi) {
 		super(map, drive);
 		maxAngularVel = map.getMaxAngularVel();
