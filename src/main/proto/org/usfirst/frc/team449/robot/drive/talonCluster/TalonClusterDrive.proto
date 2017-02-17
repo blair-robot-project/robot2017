@@ -20,4 +20,6 @@ message TalonClusterDrive {
 	optional double wheel_diameter = 10;
 	optional double upshift = 11;
 	optional double downshift = 12;
+    optional double up_thresh = 13;
+    optional double down_thresh = 14;
 }

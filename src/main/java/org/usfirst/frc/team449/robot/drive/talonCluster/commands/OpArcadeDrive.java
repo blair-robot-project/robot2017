@@ -30,6 +30,8 @@ public class OpArcadeDrive extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
+
+
 		rightThrottle = oi.getFwd() + oi.getRot();
 		leftThrottle = oi.getFwd() - oi.getRot();
 

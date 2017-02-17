@@ -36,9 +36,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		requires(drive);
 		driveSubsystem = drive;
 
-		upshift = driveSubsystem.getUpshiftFPS();
-		downshift = driveSubsystem.getDownshiftFPS();
-
 		System.out.println("Drive Robot bueno");
 	}
 
