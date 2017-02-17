@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 		oiSubsystem.mapButtons();
 
 //		if (cfg.hasModule()) {
-//			Compressor compressor = new Compressor(15);
+//			Compressor compressor = new Compressor(cfg.getModule());
 //			compressor.setClosedLoopControl(true);
 //			compressor.start();
 //		}

@@ -19,7 +19,7 @@ message Robot2017 {
 	optional Climber climber = 3;
 	//	required DoubleFlywheelShooter doubleFlywheelShooter = 4;
 	optional SingleFlywheelShooter shooter = 5;
-    optional double module = 9;
+    optional int32 module = 9;
     optional Camera camera = 10;
     //required Intake2017 intake = 7;
 	//required PneumaticSystem pneumatics = 8;
