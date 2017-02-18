@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.mechanism.intake;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -40,14 +40,11 @@ public class Intake2017 extends MappedSubsystem {
 
 	public void setPiston(DoubleSolenoid.Value value) {
 		piston.set(value);
+		intakeUp = (value == DoubleSolenoid.Value.kReverse);
 	}
 
 	public void setIntaking(boolean isIntaking){
 		this.isIntaking = isIntaking;
-	}
-
-	public void setIntakeUp(boolean intakeUp) {
-		this.intakeUp = intakeUp;
 	}
 
 	/**

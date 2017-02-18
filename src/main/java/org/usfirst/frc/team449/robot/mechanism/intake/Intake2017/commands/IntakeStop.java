@@ -1,7 +1,7 @@
-package org.usfirst.frc.team449.robot.mechanism.intake.commands;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
  * Created by blairrobot on 1/28/17.

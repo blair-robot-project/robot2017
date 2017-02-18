@@ -4,17 +4,12 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.BaseOI;
-import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 

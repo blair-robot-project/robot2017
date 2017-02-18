@@ -1,14 +1,14 @@
-package org.usfirst.frc.team449.robot.mechanism.intake.commands;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
  * Created by Justin on 1/28/2017.
  */
 public class IntakeIn extends ReferencingCommand {
 
-	Intake2017 intake2017;
+	private Intake2017 intake2017;
 
 	public IntakeIn(Intake2017 intake2017) {
 		super(intake2017);
@@ -25,7 +25,7 @@ public class IntakeIn extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		intake2017.setActuatedVictor(1);
-		intake2017.setFixedVictor(-0.5);
+		//intake2017.setFixedVictor(-0.1);
 		intake2017.setIntaking(true);
 	}
 
@@ -36,8 +36,6 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-		intake2017.setActuatedVictor(0);
-		intake2017.setFixedVictor(0);
 		System.out.println("IntakeIn end");
 	}
 
