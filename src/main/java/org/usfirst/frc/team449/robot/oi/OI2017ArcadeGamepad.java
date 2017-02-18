@@ -9,6 +9,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.intake.commands.FakeIntakeUp;
+import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntakeUpDown;
+import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -28,7 +30,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Joystick gamepad;
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
-	private JoystickButton switchCamera, intakeUp, intakeDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh;
+	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -76,7 +78,12 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasToggleOverrideHigh()){
 			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
 		}
-
+		if (map.hasToggleIntake()){
+			toggleIntake = new JoystickButton(gamepad, map.getToggleIntake());
+		}
+		if (map.hasToggleIntakeUpDown()){
+			toggleIntakeUpDown = new JoystickButton(gamepad, map.getToggleIntakeUpDown());
+		}
 	}
 
 	/**
@@ -149,7 +156,12 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			toggleOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift));
 		}
+		if (toggleIntake != null && Robot.intakeSubsystem != null){
+			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+		}
+		if (toggleIntakeUpDown != null && Robot.intakeSubsystem != null){
+			toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
+		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
-		intakeUp.whenPressed(new FakeIntakeUp());
 	}
 }
