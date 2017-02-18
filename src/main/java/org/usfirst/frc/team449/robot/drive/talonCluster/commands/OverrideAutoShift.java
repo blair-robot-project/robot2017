@@ -9,11 +9,13 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 public class OverrideAutoShift extends ReferencingCommand{
 
 	private boolean override;
+	private boolean switchToLowGear;
 
-	public OverrideAutoShift(TalonClusterDrive drive, boolean override){
+	public OverrideAutoShift(TalonClusterDrive drive, boolean override, boolean switchToLowGear){
 		super(drive);
 		requires(subsystem);
 		this.override = override;
+		this.switchToLowGear = switchToLowGear;
 	}
 
 	@Override
@@ -24,6 +26,7 @@ public class OverrideAutoShift extends ReferencingCommand{
 	@Override
 	protected void execute() {
 		((TalonClusterDrive) subsystem).overrideAutoShift = override;
+		((TalonClusterDrive) subsystem).setLowGear(switchToLowGear);
 	}
 
 	@Override

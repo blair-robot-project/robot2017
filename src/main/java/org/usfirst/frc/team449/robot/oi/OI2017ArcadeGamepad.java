@@ -136,20 +136,19 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
 		}
 		if (tmpOverrideHigh != null){
-			tmpOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
-			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true));
-			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false));
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, false));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, false));
 		}
 		if (tmpOverrideLow != null){
-			tmpOverrideLow.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
-			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true));
-			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false));
+			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, true));
+			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, true));
 		}
 		if (toggleOverrideHigh != null){
-			toggleOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
-			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift));
+			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift, false));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
-		intakeUp.whenPressed(new FakeIntakeUp());
+		if (intakeUp != null) {
+			intakeUp.whenPressed(new FakeIntakeUp());
+		}
 	}
 }
