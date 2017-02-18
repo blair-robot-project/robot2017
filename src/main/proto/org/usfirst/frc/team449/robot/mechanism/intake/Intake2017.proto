@@ -1,6 +1,6 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
-import "org/usfirst/frc/team449/robot/components/UnitlessCANTalonSRX.proto";
+import "org/usfirst/frc/team449/robot/components/Motor.proto";
 import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.intake";
@@ -8,7 +8,7 @@ option java_outer_classname = "Intake2017Map";
 
 message Intake2017 {
 	required Mechanism mechanism = 1;
-	required UnitlessCANTalonSRX fixed_talon = 2;
-	required UnitlessCANTalonSRX actuated_talon = 3;
+	required Motor fixed_victor = 2;
+	required Motor actuated_victor = 3;
     required DoubleSolenoid piston = 4;
 }

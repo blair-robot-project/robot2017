@@ -24,7 +24,8 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		intake2017.setPercentVbus(1);
+		intake2017.setActuatedVictor(1);
+		intake2017.setFixedVictor(-0.5);
 		intake2017.setIntaking(true);
 	}
 
@@ -35,13 +36,15 @@ public class IntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-		intake2017.setPercentVbus(0);
+		intake2017.setActuatedVictor(0);
+		intake2017.setFixedVictor(0);
 		System.out.println("IntakeIn end");
 	}
 
 	@Override
 	protected void interrupted() {
-		intake2017.setPercentVbus(0);
+		intake2017.setActuatedVictor(0);
+		intake2017.setFixedVictor(0);
 		System.out.println("IntakeIn interrupted, stopping intake2017.");
 	}
 

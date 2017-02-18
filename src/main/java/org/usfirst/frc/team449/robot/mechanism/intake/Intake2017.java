@@ -1,18 +1,16 @@
 package org.usfirst.frc.team449.robot.mechanism.intake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
-import org.usfirst.frc.team449.robot.mechanism.intake.commands.IntakeIn;
-import org.usfirst.frc.team449.robot.oi.OI2017;
 
 /**
  * Created by Justin on 1/28/2017.
  */
 public class Intake2017 extends MappedSubsystem {
 
-	private UnitlessCANTalonSRX fixed_talon;
-	private UnitlessCANTalonSRX actuated_talon;
+	private VictorSP fixedVictor;
+	private VictorSP actuatedVictor;
 	private DoubleSolenoid piston;
 	public boolean isIntaking;
 	public boolean intakeUp;
@@ -25,14 +23,19 @@ public class Intake2017 extends MappedSubsystem {
 	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
 		super(map.getMechanism());
 		this.map = map;
-		this.fixed_talon = new UnitlessCANTalonSRX(map.getFixedTalon());
-		this.actuated_talon = new UnitlessCANTalonSRX(map.getActuatedTalon());
+		this.fixedVictor = new VictorSP(map.getFixedVictor().getPort());
+		fixedVictor.setInverted(map.getFixedVictor().getInverted());
+		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
+		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
 		this.piston = new DoubleSolenoid(map.getPiston().getForward(), map.getPiston().getReverse());
 	}
 
-	public void setPercentVbus(double percentVbus) {
-		fixed_talon.setPercentVbus(percentVbus);
-		actuated_talon.setPercentVbus(percentVbus);
+	public void setFixedVictor(double speed) {
+		fixedVictor.set(speed);
+	}
+
+	public void setActuatedVictor(double speed){
+		actuatedVictor.set(speed);
 	}
 
 	public void setPiston(DoubleSolenoid.Value value) {
