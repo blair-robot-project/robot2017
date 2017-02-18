@@ -71,7 +71,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 		okToUpshift = false;
 		okToDownshift = true;
-		overrideAutoShift = false;
+		overrideAutoShift = true;
 		timeLastShifted = 0;
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
@@ -131,7 +131,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param right Right throttle value
 	 */
 	public void setDefaultThrottle(double left, double right) {
-		setPIDThrottle(clipToOne(left), clipToOne(right));
+		//setPIDThrottle(clipToOne(left), clipToOne(right));
+		setVBusThrottle(left, right);
 	}
 
 	public void logData() {
@@ -231,7 +232,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 		startTime = System.nanoTime();
 		overrideNavX = false;
-		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, oi));
+		setDefaultCommand(new OpArcadeDrive(this, oi));
 	}
 
 	public double getGyroOutput() {

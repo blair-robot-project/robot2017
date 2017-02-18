@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
 		}
 	}
 
