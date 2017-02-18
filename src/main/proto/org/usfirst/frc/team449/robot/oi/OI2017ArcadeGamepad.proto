@@ -7,11 +7,11 @@ message OI2017ArcadeGamepad {
 	required int32 gamepad = 1;
 	required int32 gamepad_left_axis = 2;
 	required int32 gamepad_right_axis = 3;
-	required int32 turn_to_0_button = 4;
-	required int32 turn_to_30_button = 5;
-	required int32 turn_to_180_button = 6;
-	required int32 turn_to_330_button = 7;
-	required int32 turnaround_button = 8;
+	optional int32 turn_to_0_button = 4;
+	optional int32 turn_to_30_button = 5;
+	optional int32 turn_to_180_button = 6;
+	optional int32 turn_to_330_button = 7;
+	optional int32 turnaround_button = 8;
     required double deadband = 9;
     required double dpad_shift = 10;
     optional int32 switch_to_low_gear = 11;
@@ -22,4 +22,7 @@ message OI2017ArcadeGamepad {
     required bool invert_fwd = 16;
     required bool invert_dpad = 17;
     optional int32 switch_camera = 18;
+    optional int32 tmp_override_low = 19;
+	optional int32 tmp_override_high = 20;
+    optional int32 toggle_override_high = 21;
 }

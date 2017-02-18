@@ -6,21 +6,24 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by Noah Gleason on 2/12/2017.
  */
-public class OverrideNavX extends ReferencingCommand{
+public class OverrideAutoShift extends ReferencingCommand{
 
-	public OverrideNavX(TalonClusterDrive drive){
+	private boolean override;
+
+	public OverrideAutoShift(TalonClusterDrive drive, boolean override){
 		super(drive);
 		requires(subsystem);
+		this.override = override;
 	}
 
 	@Override
 	protected void initialize() {
-		System.out.println("OverrideNavX init");
+		System.out.println("OverrideAutoShift init");
 	}
 
 	@Override
 	protected void execute() {
-		((TalonClusterDrive) subsystem).overrideNavX = true;
+		((TalonClusterDrive) subsystem).overrideAutoShift = override;
 	}
 
 	@Override
@@ -30,12 +33,12 @@ public class OverrideNavX extends ReferencingCommand{
 
 	@Override
 	protected void end() {
-		System.out.println("OverrideNavX end");
+		System.out.println("OverrideAutoShift end");
 	}
 
 	@Override
 	protected void interrupted() {
-		System.out.println("OverrideNavX Interrupted!");
+		System.out.println("OverrideAutoShift Interrupted!");
 	}
 }
 

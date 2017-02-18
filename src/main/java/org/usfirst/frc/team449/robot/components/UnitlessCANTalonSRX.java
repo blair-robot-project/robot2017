@@ -114,8 +114,6 @@ public class UnitlessCANTalonSRX extends Component {
 	}
 
 	public Double getMaxSpeed() {
-		//if (maxSpeed == 0.0)
-		//	return null;
 		return maxSpeed;
 	}
 
@@ -166,5 +164,9 @@ public class UnitlessCANTalonSRX extends Component {
 
 	public double getError(){
 		return nativeToRPS(canTalon.getError());
+	}
+
+	public double getMaxSpeedHG(){
+		return map.getMaxSpeedHg();
 	}
 }

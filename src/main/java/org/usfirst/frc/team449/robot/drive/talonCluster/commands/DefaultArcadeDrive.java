@@ -26,8 +26,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	//The map of values
 	ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map;
 
-	double upshift, downshift;
-
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, ArcadeOI oi) {
 		super(map, drive);
 		maxAngularVel = map.getMaxAngularVel();
@@ -35,9 +33,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.map = map;
 		requires(drive);
 		driveSubsystem = drive;
-
-		upshift = driveSubsystem.getUpshiftFPS();
-		downshift = driveSubsystem.getDownshiftFPS();
 
 		System.out.println("Drive Robot bueno");
 	}
@@ -59,11 +54,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	@Override
 	protected void execute() {
 		//Auto-shifting
-		if(driveSubsystem.shouldUpshift()){
-			driveSubsystem.setLowGear(false);
-		} else if(driveSubsystem.shouldDownshift()){
-			driveSubsystem.setLowGear(true);
-		}
+		driveSubsystem.autoShift();
 
 		//Set vel and rot to what they should be.
 		vel = oi.getFwd();
