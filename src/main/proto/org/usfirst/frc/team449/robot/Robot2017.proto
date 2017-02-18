@@ -7,6 +7,7 @@ import "org/usfirst/frc/team449/robot/mechanism/climber/Climber.proto";
 import "org/usfirst/frc/team449/robot/mechanism/intake/Intake2017.proto";
 import "org/usfirst/frc/team449/robot/mechanism/pneumatics/PneumaticSystem.proto";
 import "org/usfirst/frc/team449/robot/vision/Camera.proto";
+import "org/usfirst/frc/team449/robot/mechanism/feeder/Feeder.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot";
 option java_outer_classname = "Robot2017Map";
@@ -21,4 +22,5 @@ message Robot2017 {
     optional Camera camera = 7;
     optional Intake2017 intake = 8;
 	optional PneumaticSystem pneumatics = 9;
+    optional Feeder feeder = 10;
 }

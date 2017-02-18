@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
+import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.commands.FakeIntakeUp;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -28,7 +29,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Joystick gamepad;
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
-	private JoystickButton switchCamera, intakeUp, intakeDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh;
+	private JoystickButton switchCamera, intakeUp, intakeDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -76,7 +77,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasToggleOverrideHigh()){
 			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
 		}
-
+		if (map.hasToggleFeeder()){
+			toggleFeeder = new JoystickButton(gamepad, map.getToggleFeeder());
+		}
 	}
 
 	/**
@@ -148,6 +151,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (toggleOverrideHigh != null){
 			toggleOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift));
+		}
+		if (toggleFeeder != null && Robot.feederSubsystem != null){
+			toggleFeeder.whenPressed(new ToggleFeeder(Robot.feederSubsystem));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 		intakeUp.whenPressed(new FakeIntakeUp());
