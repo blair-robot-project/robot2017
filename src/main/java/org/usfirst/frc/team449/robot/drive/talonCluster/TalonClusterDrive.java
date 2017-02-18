@@ -47,7 +47,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private double upTimeThresh, downTimeThresh;
 	private boolean okToUpshift, okToDownshift;
 
-	private long timeAboveShift, timeBelowShift;
+	private long timeAboveShift, timeBelowShift, timeLastShifted;
+	private Double shiftDelay;
 
 	public boolean overrideAutoShift = false;
 
@@ -65,9 +66,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.straightPID = map.getStraightPID();
 		this.upTimeThresh = map.getUpTimeThresh();
 		this.downTimeThresh = map.getDownTimeThresh();
+		if (map.hasShiftDelay()) {
+			this.shiftDelay = map.getShiftDelay();
+		}
 		okToUpshift = false;
 		okToDownshift = true;
 		overrideAutoShift = false;
+		timeLastShifted = 0;
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
 		}
@@ -246,6 +251,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 				leftMaster.switchToHighGear();
 				lowGear = false;
 			}
+			timeLastShifted = System.currentTimeMillis();
 		} else {
 			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
 		}
@@ -265,6 +271,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public boolean shouldDownshift(){
 		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<downshift && !lowGear;
+		if(shiftDelay != null){
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+		}
 		if (okToShift && !okToDownshift){
 			okToDownshift = true;
 			timeBelowShift = System.currentTimeMillis();
@@ -276,6 +285,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public boolean shouldUpshift(){
 		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear;
+		if(shiftDelay != null){
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+		}
 		if (okToShift && !okToUpshift){
 			okToUpshift = true;
 			timeAboveShift = System.currentTimeMillis();
