@@ -4,11 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideNavX;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
@@ -31,7 +27,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX, switchCamera, intakeUp, intakeDown;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
+	private JoystickButton switchCamera, intakeUp, intakeDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -40,6 +37,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
+
 		if (map.hasTurnTo0Button()) {
 			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
 		}
@@ -55,7 +53,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if(map.hasTurnaroundButton()) {
 			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
 		}
+
 		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
+
 		if (map.hasSwitchToLowGear()) {
 			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
 			switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
@@ -64,10 +64,18 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb = new JoystickButton(gamepad, map.getClimb());
 		}
 		if (map.hasSwitchCamera()) {
-//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
+			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
 		}
 
-		intakeUp = new JoystickButton(gamepad, 9);
+		if (map.hasTmpOverrideLow()){
+			tmpOverrideLow = new JoystickButton(gamepad, map.getTmpOverrideLow());
+		}
+		if (map.hasTmpOverrideHigh()){
+			tmpOverrideHigh = new JoystickButton(gamepad, map.getTmpOverrideHigh());
+		}
+		if (map.hasToggleOverrideHigh()){
+			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
+		}
 
 	}
 
@@ -101,11 +109,21 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	public void mapButtons() {
 		double timeout = 5.;
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
+		if (turnaround != null) {
+			turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		}
+		if (tt0 != null) {
+			tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
+		}
+		if (tt30 != null) {
+			tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
+		}
+		if (tt180 != null) {
+			tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		}
+		if (tt330 != null) {
+			tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
+		}
 		if (Robot.driveSubsystem.shifter != null) {
 			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
@@ -115,7 +133,21 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
 		if (Robot.cameraSubsystem != null) {
-//			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
+			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
+		}
+		if (tmpOverrideHigh != null){
+			tmpOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false));
+		}
+		if (tmpOverrideLow != null){
+			tmpOverrideLow.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
+			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true));
+			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false));
+		}
+		if (toggleOverrideHigh != null){
+			toggleOverrideHigh.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
+			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 		intakeUp.whenPressed(new FakeIntakeUp());
