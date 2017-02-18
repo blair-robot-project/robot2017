@@ -288,7 +288,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public boolean shouldUpshift(){
 		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear &&
-				!overrideAutoShift && oi.getFwd() > 0;
+				!overrideAutoShift && Math.abs(oi.getFwd()) > 0;
 		if(shiftDelay != null){
 			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
 		}
