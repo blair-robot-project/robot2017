@@ -40,11 +40,21 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
-		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
-		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
-		tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
-		tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
-		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+		if (map.hasTurnTo0Button()) {
+			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
+		}
+		if (map.hasTurnTo30Button()) {
+			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
+		}
+		if (map.hasTurnTo180Button()) {
+			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
+		}
+		if (map.hasTurnTo330Button()) {
+			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
+		}
+		if(map.hasTurnaroundButton()) {
+			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+		}
 		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
 		if (map.hasSwitchToLowGear()) {
 			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());

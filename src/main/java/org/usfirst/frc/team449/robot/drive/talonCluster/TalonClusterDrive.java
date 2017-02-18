@@ -49,6 +49,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	private long timeAboveShift, timeBelowShift;
 
+	public boolean overrideAutoShift = false;
+
 	boolean lowGear = true;	//we want to start in low gear
 
 	double wheelDia, upshift, downshift;
@@ -65,6 +67,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		this.downTimeThresh = map.getDownTimeThresh();
 		okToUpshift = false;
 		okToDownshift = true;
+		overrideAutoShift = false;
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
 		}
@@ -270,7 +273,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} else if(!okToShift && okToDownshift){
 			okToDownshift = false;
 		}
-		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift);
+		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift && !overrideAutoShift);
 	}
 
 	public boolean shouldUpshift(){
@@ -281,7 +284,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} else if(!okToShift && okToUpshift){
 			okToUpshift = false;
 		}
-		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift);
+		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift && !overrideAutoShift);
 	}
 
 	/**
