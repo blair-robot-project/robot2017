@@ -14,7 +14,6 @@ public class Intake2017 extends MappedSubsystem {
 	private UnitlessCANTalonSRX fixed_talon;
 	private UnitlessCANTalonSRX actuated_talon;
 	private DoubleSolenoid piston;
-	private OI2017 oi;
 	public boolean isIntaking;
 	public boolean intakeUp;
 
@@ -23,13 +22,12 @@ public class Intake2017 extends MappedSubsystem {
 	 *
 	 * @param map the map of constants relevant to this subsystem
 	 */
-	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map, OI2017 oi) {
+	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
 		super(map.getMechanism());
 		this.map = map;
 		this.fixed_talon = new UnitlessCANTalonSRX(map.getFixedTalon());
 		this.actuated_talon = new UnitlessCANTalonSRX(map.getActuatedTalon());
 		this.piston = new DoubleSolenoid(map.getPiston().getForward(), map.getPiston().getReverse());
-		this.oi = oi;
 	}
 
 	public void setPercentVbus(double percentVbus) {

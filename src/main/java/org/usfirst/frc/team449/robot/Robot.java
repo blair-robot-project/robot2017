@@ -25,8 +25,8 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
-	public static DoubleFlywheelShooter doubleFlywheelShooterSubsystem;
 	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
+
 	public static Intake2017 intakeSubsystem;
 
 	public static ClimberSubsystem climberSubsystem;
@@ -45,10 +45,11 @@ public class Robot extends IterativeRobot {
 		System.out.println("Started robotInit");
 		try {
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map_only_drive.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
-			System.out.println("Config file not found!");
+			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
 
@@ -56,37 +57,38 @@ public class Robot extends IterativeRobot {
 		System.out.println("Constructed OI");
 
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+		System.out.println("Constructed Drive");
 
-//		if (cfg.hasCamera()) {
-//			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
-//		}
+		if (cfg.hasCamera()) {
+			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
+		}
 
-		System.out.println("Constructed drive");
+		if (cfg.hasClimber()) {
+			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+		}
 
-//		if (cfg.hasClimber()) {
-//			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
-//		}
-		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
-//		if (cfg.hasShooter()) {
-//			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-//			System.out.println("Constructed SingleFlywheelShooter");
-//		}
-		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-		//		System.out.println("Constructed DoubleFlywheelShooter");
-//				pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
-		//		System.out.println("Constructed PneumaticsSubsystem");
+		if (cfg.hasShooter()) {
+			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
+			System.out.println("Constructed SingleFlywheelShooter");
+		}
 
-		//intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
+		if (cfg.hasPneumatics()) {
+			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
+			System.out.println("Constructed PneumaticsSubsystem");
+		}
+
+		if (cfg.hasIntake()) {
+			intakeSubsystem = new Intake2017(cfg.getIntake());
+		}
 
 		oiSubsystem.mapButtons();
+		System.out.println("Mapped buttons");
 
 		if (cfg.hasModule()) {
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
 		}
-
-		System.out.println("Mapped buttons");
 	}
 
 	@Override
