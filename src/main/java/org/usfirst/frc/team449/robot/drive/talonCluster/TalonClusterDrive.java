@@ -110,8 +110,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	private void setPIDThrottle(double left, double right) {
-		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		if (overrideAutoShift) {
+			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		} else {
+			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
+			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
+		}
 	}
 
 	/**
@@ -129,21 +134,19 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-         /*
-         sb.append(leftMaster.canTalon.getEncPosition());
-         sb.append(",");
-         sb.append(rightMaster.canTalon.getEncPosition());
-         sb.append(",");
-         */
-			sb.append(leftMaster.canTalon.getEncVelocity());
+			sb.append(leftMaster.getSpeed());
 			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncVelocity());
-         /*
-         sb.append(",");
-         sb.append(leftTPointStatus.activePoint.position);
-         sb.append(",");
-         sb.append(rightTPointStatus.activePoint.position);
-         */
+			sb.append(rightMaster.getSpeed());
+			sb.append(",");
+			sb.append(leftMaster.getError());
+			sb.append(",");
+			sb.append(rightMaster.getError());
+	         /*
+	         sb.append(",");
+	         sb.append(leftTPointStatus.activePoint.position);
+	         sb.append(",");
+	         sb.append(rightTPointStatus.activePoint.position);
+	         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -172,29 +175,23 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-         /*
-         sb.append(leftMaster.canTalon.getEncPosition());
-         sb.append(",");
-         sb.append(rightMaster.canTalon.getEncPosition());
-         sb.append(",");
-         */
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
 			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
 			sb.append(",");
-			sb.append(leftMaster.getError());
-         /*
-         sb.append(",");
-         sb.append(leftTPointStatus.activePoint.position);
-         sb.append(",");
-         sb.append(rightTPointStatus.activePoint.position);
-         */
+			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+	         /*
+	         sb.append(",");
+	         sb.append(leftTPointStatus.activePoint.position);
+	         sb.append(",");
+	         sb.append(rightTPointStatus.activePoint.position);
+	         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -215,13 +212,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
+		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,right setpoint,right error,left setpoint,left error");
+			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -285,6 +283,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			okToUpshift = false;
 		}
 		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift && !overrideAutoShift);
+	}
+
+	public void autoShift(){
+		if (shouldUpshift()){
+			setLowGear(false);
+		} else if (shouldDownshift()){
+			setLowGear(true);
+		}
 	}
 
 	/**

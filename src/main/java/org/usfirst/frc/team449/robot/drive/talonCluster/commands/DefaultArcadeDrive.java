@@ -54,11 +54,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	@Override
 	protected void execute() {
 		//Auto-shifting
-		if(driveSubsystem.shouldUpshift()){
-			driveSubsystem.setLowGear(false);
-		} else if(driveSubsystem.shouldDownshift()){
-			driveSubsystem.setLowGear(true);
-		}
+		driveSubsystem.autoShift();
 
 		//Set vel and rot to what they should be.
 		vel = oi.getFwd();
