@@ -39,7 +39,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
-	private String logFN = "driveLog.csv";
+	private String logFN;
 	public boolean overrideNavX;
 
 	private double maxSpeed;
@@ -59,6 +59,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 									 .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
+		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
+		try (PrintWriter writer = new PrintWriter(logFN)) {
+			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.map = map;
 		this.oi = oi;
 		this.navx = new AHRS(SPI.Port.kMXP);
@@ -132,6 +139,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public void setDefaultThrottle(double left, double right) {
 		setPIDThrottle(clipToOne(left), clipToOne(right));
+		//setVBusThrottle(left, right);
 	}
 
 	public void logData() {
@@ -158,7 +166,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		maxSpeed = Math.max(maxSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
 		SmartDashboard.putNumber("Max Speed", maxSpeed);
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
@@ -203,7 +211,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		maxSpeed = Math.max(maxSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
 		SmartDashboard.putNumber("Max Speed", maxSpeed);
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
@@ -222,16 +230,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	@Override
 	protected void initDefaultCommand() {
-		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
-		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		startTime = System.nanoTime();
 		overrideNavX = false;
-		setDefaultCommand(new DefaultArcadeDrive(straightPID,this, oi));
+//		setDefaultCommand(new PIDTest(this));
+//		setDefaultCommand(new OpArcadeDrive(this, oi));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
 	public double getGyroOutput() {
@@ -270,9 +273,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	public boolean shouldDownshift(){
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<downshift && !lowGear;
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<downshift && !lowGear && !overrideAutoShift;
 		if(shiftDelay != null){
-			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000 && !overrideAutoShift);
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
 		}
 		if (okToShift && !okToDownshift){
 			okToDownshift = true;
@@ -280,13 +283,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} else if(!okToShift && okToDownshift){
 			okToDownshift = false;
 		}
-		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift && !overrideAutoShift);
+		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift);
 	}
 
 	public boolean shouldUpshift(){
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear;
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear &&
+				!overrideAutoShift && Math.abs(oi.getFwd()) > 0;
 		if(shiftDelay != null){
-			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000 && !overrideAutoShift);
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
 		}
 		if (okToShift && !okToUpshift){
 			okToUpshift = true;
@@ -294,7 +298,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} else if(!okToShift && okToUpshift){
 			okToUpshift = false;
 		}
-		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift && !overrideAutoShift);
+		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift);
 	}
 
 	public void autoShift(){
