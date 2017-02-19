@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
@@ -13,7 +13,7 @@ public class IntakeDown extends ReferencingCommand {
 
 	public IntakeDown(Intake2017 intake2017) {
 		super(intake2017);
-		requires(intake2017);
+//		requires(intake2017);
 		this.intake2017 = intake2017;
 		System.out.println("IntakeDown constructed");
 	}
