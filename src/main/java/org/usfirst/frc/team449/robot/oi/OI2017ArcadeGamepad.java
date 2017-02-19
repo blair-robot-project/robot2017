@@ -18,6 +18,9 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.Toggle
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -38,6 +41,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
 	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
+	private JoystickButton loadShooter, rackShooter, fireShooter;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -47,55 +51,64 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
 
-		if (map.hasTurnTo0Button()) {
-			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
-		}
-		if (map.hasTurnTo30Button()) {
-			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
-		}
-		if (map.hasTurnTo180Button()) {
-			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
-		}
-		if (map.hasTurnTo330Button()) {
-			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
-		}
-		if(map.hasTurnaroundButton()) {
-			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
-		}
+//		if (map.hasTurnTo0Button()) {
+//			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
+//		}
+//		if (map.hasTurnTo30Button()) {
+//			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
+//		}
+//		if (map.hasTurnTo180Button()) {
+//			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
+//		}
+//		if (map.hasTurnTo330Button()) {
+//			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
+//		}
+//		if(map.hasTurnaroundButton()) {
+//			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+//		}
 
-		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
+		overrideNavX = new MJButton(map.getOverrideNavX());
 
 		if (map.hasSwitchToLowGear()) {
-			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
-			switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
+			switchToLowGear = new MJButton(map.getSwitchToLowGear());
+			switchToHighGear = new MJButton(map.getSwitchToHighGear());
 		}
 		if (map.hasClimb()) {
-			climb = new JoystickButton(gamepad, map.getClimb());
+			climb = new MJButton(map.getClimb());
 		}
-		if (map.hasSwitchCamera()) {
-			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
-		}
+//		if (map.hasSwitchCamera()) {
+//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
+//		}
 
-		if (map.hasTmpOverrideLow()){
-			tmpOverrideLow = new JoystickButton(gamepad, map.getTmpOverrideLow());
-		}
-		if (map.hasTmpOverrideHigh()){
-			tmpOverrideHigh = new JoystickButton(gamepad, map.getTmpOverrideHigh());
+		if (map.hasToggleOverrideLow()){
+			tmpOverrideLow = new MJButton(map.getToggleOverrideLow());
 		}
 		if (map.hasToggleOverrideHigh()){
-			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
+			tmpOverrideHigh = new MJButton(map.getToggleOverrideHigh());
+		}
+		if (map.hasToggleOverrideHigh()) {     // TODO check if tmp == toggle
+			toggleOverrideHigh = new MJButton(map.getToggleOverrideHigh());
 		}
 		if (map.hasToggleFeeder()) {
-			toggleFeeder = new JoystickButton(gamepad, map.getToggleFeeder());
+			toggleFeeder = new MJButton(map.getToggleFeeder());
 		}
-		if (map.hasToggleIntake()){
-			toggleIntake = new JoystickButton(gamepad, map.getToggleIntake());
+		if (map.hasToggleIntake()) {
+			toggleIntake = new MJButton(map.getToggleIntake());
 		}
 		if (map.hasToggleIntakeUpDown()){
-			toggleIntakeUpDown = new JoystickButton(gamepad, map.getToggleIntakeUpDown());
+			toggleIntakeUpDown = new MJButton(map.getToggleIntakeUpDown());
 		}
 		if (map.hasShoot()) {
-			shoot = new JoystickButton(gamepad, map.getShoot());
+			shoot = new MJButton(map.getShoot());
+		}
+		if (map.hasLoadShooter()) {
+			loadShooter = new MJButton(map.getLoadShooter());
+		}
+		if (map.hasRackShooter()) {
+			rackShooter = new MJButton(map.getRackShooter());
+		}
+		if (map.hasFireShooter()) {
+			fireShooter = new MJButton(map.getFireShooter());
 		}
 	}
 
@@ -166,9 +179,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (toggleOverrideHigh != null){
 			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift, false));
 		}
-		if (toggleIntake != null && Robot.intakeSubsystem != null){
-			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
-		}
+//		if (toggleIntake != null && Robot.intakeSubsystem != null){
+//			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+//		}
 		if (toggleIntakeUpDown != null && Robot.intakeSubsystem != null){
 			toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
 		}
@@ -177,6 +190,15 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (shoot != null && Robot.singleFlywheelShooterSubsystem != null) {
 			shoot.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
+		}
+		if (loadShooter != null) {
+			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+		}
+		if (rackShooter != null) {
+			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+		}
+		if (fireShooter != null) {
+			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 	}
