@@ -50,14 +50,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public boolean overrideAutoShift = false;
 
-	boolean lowGear = true;	//we want to start in low gear
+	boolean lowGear = true;    //we want to start in low gear
 
 	double wheelDia, upshift, downshift;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-									 .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
+			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
-		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
+		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
+				".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
 			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
 			writer.close();
@@ -80,7 +81,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		timeLastShifted = 0;
 		upshiftFwdDeadband = map.getUpshiftFwdDeadband();
 		if (map.hasShifter()) {
-			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
+			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter()
+					.getReverse());
 		}
 		maxSpeed = -1;
 
@@ -153,7 +155,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
-	         /*
+		     /*
 	         sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
@@ -195,9 +197,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
-			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
+			sb.append(PID_SCALE * sp * leftMaster.getMaxSpeed());
 			sb.append(",");
-			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+			sb.append(PID_SCALE * sp * rightMaster.getMaxSpeed());
 	         /*
 	         sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
@@ -231,8 +233,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	protected void initDefaultCommand() {
 		startTime = System.nanoTime();
 		overrideNavX = false;
-//		setDefaultCommand(new PIDTest(this));
-//		setDefaultCommand(new OpArcadeDrive(this, oi));
+		//		setDefaultCommand(new PIDTest(this));
+		//		setDefaultCommand(new OpArcadeDrive(this, oi));
 		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
@@ -240,7 +242,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return navx.pidGet();
 	}
 
-	public void setLowGear(boolean setLowGear){
+	public void setLowGear(boolean setLowGear) {
 		if (shifter != null) {
 			if (setLowGear) {
 				shifter.set(DoubleSolenoid.Value.kForward);
@@ -259,61 +261,63 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 	}
 
-	public double getLeftSpeed(){
+	public double getLeftSpeed() {
 		return leftMaster.getSpeed();
 	}
 
-	public double getRightSpeed(){
+	public double getRightSpeed() {
 		return rightMaster.getSpeed();
 	}
 
-	public boolean inLowGear(){
+	public boolean inLowGear() {
 		return lowGear;
 	}
 
-	public boolean shouldDownshift(){
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<downshift && !lowGear && !overrideAutoShift;
-		if(shiftDelay != null){
-			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+	public boolean shouldDownshift() {
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift && !lowGear &&
+				!overrideAutoShift || oi.getFwd() == 0 && oi.getRot() != 0 && !overrideAutoShift;
+		if (shiftDelay != null) {
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay * 1000);
 		}
-		if (okToShift && !okToDownshift){
+		if (okToShift && !okToDownshift) {
 			okToDownshift = true;
 			timeBelowShift = System.currentTimeMillis();
-		} else if(!okToShift && okToDownshift){
+		} else if (!okToShift && okToDownshift) {
 			okToDownshift = false;
 		}
-		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift);
+		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh * 1000 && okToShift);
 	}
 
-	public boolean shouldUpshift(){
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear &&
+	public boolean shouldUpshift() {
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift && lowGear &&
 				!overrideAutoShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
-		if(shiftDelay != null){
-			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+		if (shiftDelay != null) {
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay * 1000);
 		}
-		if (okToShift && !okToUpshift){
+		if (okToShift && !okToUpshift) {
 			okToUpshift = true;
 			timeAboveShift = System.currentTimeMillis();
-		} else if(!okToShift && okToUpshift){
+		} else if (!okToShift && okToUpshift) {
 			okToUpshift = false;
 		}
-		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift);
+		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh * 1000 && okToShift);
 	}
 
-	public void autoShift(){
-		if (shouldUpshift()){
+	public void autoShift() {
+		if (shouldUpshift()) {
 			setLowGear(false);
-		} else if (shouldDownshift()){
+		} else if (shouldDownshift()) {
 			setLowGear(true);
 		}
 	}
 
 	/**
 	 * Simple helper function for clipping output to the -1 to 1 scale.
+	 *
 	 * @param in The number to be processed.
 	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
 	 */
-	private static double clipToOne(double in){
+	private static double clipToOne(double in) {
 		if (in > 1)
 			return 1;
 		else if (in < -1)
