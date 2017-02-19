@@ -27,7 +27,7 @@ public class Intake2017 extends MappedSubsystem {
 		fixedVictor.setInverted(map.getFixedVictor().getInverted());
 		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
 		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
-		this.piston = new DoubleSolenoid(map.getPiston().getForward(), map.getPiston().getReverse());
+		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
 	}
 
 	public void setFixedVictor(double speed) {
@@ -40,6 +40,7 @@ public class Intake2017 extends MappedSubsystem {
 
 	public void setPiston(DoubleSolenoid.Value value) {
 		piston.set(value);
+		System.out.println("Set Piston");
 		intakeUp = (value == DoubleSolenoid.Value.kReverse);
 	}
 

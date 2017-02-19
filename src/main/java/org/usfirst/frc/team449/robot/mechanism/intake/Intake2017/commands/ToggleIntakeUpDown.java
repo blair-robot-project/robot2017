@@ -2,13 +2,14 @@ package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.ReferencingCommandGroup;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
  * Created by blairrobot on 2/4/17.
  */
-public class ToggleIntakeUpDown extends ReferencingCommandGroup {
+public class ToggleIntakeUpDown extends ReferencingCommand {
 
 	Intake2017 intake2017;
 
