@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class CameraSubsystem extends MappedSubsystem {
 
-
     public MjpegServer server;
     public List<UsbCamera> cameras;
     public int camNum;

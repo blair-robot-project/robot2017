@@ -53,9 +53,8 @@ public class Robot extends IterativeRobot {
 		}
 
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
-//		System.out.println("Constructed OI");
+		System.out.println("Constructed OI");
 
-//		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 		System.out.println("Constructed Drive");
 
@@ -63,12 +62,6 @@ public class Robot extends IterativeRobot {
 			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
 		}
 
-//		System.out.println("Constructed drive");
-
-//		if (cfg.hasClimber()) {
-//			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
-//		}
-		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
 		if (cfg.hasClimber()) {
 			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 		}
@@ -77,17 +70,15 @@ public class Robot extends IterativeRobot {
 			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 			System.out.println("Constructed SingleFlywheelShooter");
 		}
-		//		shooterSubsystem = new DoubleFlywheelShooter(cfg.getShooter());
-		//		System.out.println("Constructed DoubleFlywheelShooter");
-//				pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
-		//		System.out.println("Constructed PneumaticsSubsystem");
+
+//		pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
+// 		System.out.println("Constructed PneumaticsSubsystem");
 
 		if (cfg.hasPneumatics()) {
 			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 			System.out.println("Constructed PneumaticsSubsystem");
 		}
 
-		//oiSubsystem.mapButtons();
 		if (cfg.hasIntake()) {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
 		}

@@ -152,7 +152,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
-		if (Robot.cameraSubsystem != null) {
+		if (Robot.cameraSubsystem != null && switchCamera != null) {
 			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
 		}
 		if (tmpOverrideHigh != null){
