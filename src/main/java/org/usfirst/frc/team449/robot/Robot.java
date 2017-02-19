@@ -10,6 +10,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
+import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
@@ -36,6 +38,8 @@ public class Robot extends IterativeRobot {
 	public static OI2017ArcadeGamepad oiSubsystem;
 
 	public static CameraSubsystem cameraSubsystem;
+
+	public static FeederSubsystem feederSubsystem;
 
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
@@ -77,6 +81,10 @@ public class Robot extends IterativeRobot {
 
 		if (cfg.hasIntake()) {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
+		}
+
+		if (cfg.hasFeeder()){
+			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
 		oiSubsystem.mapButtons();
