@@ -43,6 +43,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private final double PID_SCALE = 0.9;
 	private double upTimeThresh, downTimeThresh;
 	private boolean okToUpshift, okToDownshift;
+	private double upshiftFwdDeadband;
 
 	private long timeAboveShift, timeBelowShift, timeLastShifted;
 	private Double shiftDelay;
@@ -77,6 +78,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		okToDownshift = true;
 		overrideAutoShift = false;
 		timeLastShifted = 0;
+		upshiftFwdDeadband = map.getUpshiftFwdDeadband();
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
 		}
@@ -285,7 +287,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public boolean shouldUpshift(){
 		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear &&
-				!overrideAutoShift && Math.abs(oi.getFwd()) > 0;
+				!overrideAutoShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
 		if(shiftDelay != null){
 			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
 		}
