@@ -23,4 +23,5 @@ message TalonClusterDrive {
     optional double up_time_thresh = 13 [default = 0];
     optional double down_time_thresh = 14 [default = 0];
     optional double shift_delay = 15;
+    optional double upshift_fwd_deadband = 16 [default = 0];
 }
