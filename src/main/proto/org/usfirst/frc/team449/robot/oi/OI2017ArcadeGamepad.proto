@@ -27,6 +27,8 @@ message OI2017ArcadeGamepad {
     optional JButton toggle_override_high = 16;
     optional JButton shoot = 17;
 
+    optional JButton switch_camera = 23;
+
     // The new ones
     optional JButton loadShooter = 19;
     optional JButton rackShooter = 20;
