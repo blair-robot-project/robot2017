@@ -38,6 +38,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
 	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
+	private JoystickButton loadShooter, rackShooter, fireShooter;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -47,55 +48,64 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
 
-		if (map.hasTurnTo0Button()) {
-			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
-		}
-		if (map.hasTurnTo30Button()) {
-			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
-		}
-		if (map.hasTurnTo180Button()) {
-			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
-		}
-		if (map.hasTurnTo330Button()) {
-			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
-		}
-		if(map.hasTurnaroundButton()) {
-			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
-		}
+//		if (map.hasTurnTo0Button()) {
+//			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
+//		}
+//		if (map.hasTurnTo30Button()) {
+//			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
+//		}
+//		if (map.hasTurnTo180Button()) {
+//			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
+//		}
+//		if (map.hasTurnTo330Button()) {
+//			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
+//		}
+//		if(map.hasTurnaroundButton()) {
+//			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+//		}
 
-		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
+		overrideNavX = new MJButton(map.getOverrideNavX());
 
 		if (map.hasSwitchToLowGear()) {
-			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
-			switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
+			switchToLowGear = new MJButton(map.getSwitchToLowGear());
+			switchToHighGear = new MJButton(map.getSwitchToHighGear());
 		}
 		if (map.hasClimb()) {
-			climb = new JoystickButton(gamepad, map.getClimb());
+			climb = new MJButton(map.getClimb());
 		}
-		if (map.hasSwitchCamera()) {
-			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
-		}
+//		if (map.hasSwitchCamera()) {
+//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
+//		}
 
 		if (map.hasTmpOverrideLow()){
-			tmpOverrideLow = new JoystickButton(gamepad, map.getTmpOverrideLow());
+			tmpOverrideLow = new MJButton(map.getTmpOverrideLow());
 		}
 		if (map.hasTmpOverrideHigh()){
-			tmpOverrideHigh = new JoystickButton(gamepad, map.getTmpOverrideHigh());
+			tmpOverrideHigh = new MJButton(map.getTmpOverrideHigh());
 		}
-		if (map.hasToggleOverrideHigh()){
-			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
+		if (map.hasTmpOverrideHigh()) {     // TODO check if tmp == toggle
+			toggleOverrideHigh = new MJButton(map.getTmpOverrideHigh());
 		}
 		if (map.hasToggleFeeder()) {
-			toggleFeeder = new JoystickButton(gamepad, map.getToggleFeeder());
+			toggleFeeder = new MJButton(map.getToggleFeeder());
 		}
-		if (map.hasToggleIntake()){
-			toggleIntake = new JoystickButton(gamepad, map.getToggleIntake());
+		if (map.hasToggleIntake()) {
+			toggleIntake = new MJButton(map.getToggleIntake());
 		}
 		if (map.hasToggleIntakeUpDown()){
-			toggleIntakeUpDown = new JoystickButton(gamepad, map.getToggleIntakeUpDown());
+			toggleIntakeUpDown = new MJButton(map.getToggleIntakeUpDown());
 		}
 		if (map.hasShoot()) {
-			shoot = new JoystickButton(gamepad, map.getShoot());
+			shoot = new MJButton(map.getShoot());
+		}
+		if (map.hasLoadShooter()) {
+			loadShooter = new MJButton(map.getLoadShooter());
+		}
+		if (map.hasRackShooter()) {
+			rackShooter = new MJButton(map.getRackShooter());
+		}
+		if (map.hasFireShooter()) {
+			fireShooter = new MJButton(map.getFireShooter());
 		}
 	}
 
