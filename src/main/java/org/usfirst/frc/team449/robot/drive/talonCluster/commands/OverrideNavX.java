@@ -20,7 +20,7 @@ public class OverrideNavX extends ReferencingCommand{
 
 	@Override
 	protected void execute() {
-		((TalonClusterDrive) subsystem).overrideNavX = true;
+		((TalonClusterDrive) subsystem).overrideNavX = !((TalonClusterDrive) subsystem).overrideNavX;
 	}
 
 	@Override

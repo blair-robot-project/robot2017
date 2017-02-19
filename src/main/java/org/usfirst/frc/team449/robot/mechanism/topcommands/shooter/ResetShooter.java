@@ -17,6 +17,8 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.De
  */
 public class ResetShooter extends CommandGroup {
 	public ResetShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
+		requires(intake);
+
 		addParallel(new DecelerateFlywheel(sfs, 5));
 
 		addParallel(new IntakeDown(intake));
