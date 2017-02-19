@@ -2,7 +2,6 @@ package org.usfirst.frc.team449.robot.mechanism.feeder.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
 /**
  * Activate the feeder.

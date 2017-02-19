@@ -26,4 +26,6 @@ message OI2017ArcadeGamepad {
 	optional int32 tmp_override_high = 20;
     optional int32 toggle_override_high = 21;
     optional int32 toggle_feeder = 22;
+    optional int32 toggle_intake = 24;
+    optional int32 toggle_intake_up_down = 23;
 }

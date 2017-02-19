@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.mechanism.intake.commands;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;

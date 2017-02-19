@@ -4,18 +4,17 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.BaseOI;
-import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
@@ -48,8 +47,8 @@ public class Robot extends IterativeRobot {
 		System.out.println("Started robotInit");
 		try {
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map_only_drive.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map_only_drive.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			System.out.println("Config file is bad/nonexistent!");
@@ -100,7 +99,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		if (driveSubsystem.shifter != null) {
+		if (driveSubsystem.shifter != null){
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
 	}
@@ -112,7 +111,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 
 	@Override
