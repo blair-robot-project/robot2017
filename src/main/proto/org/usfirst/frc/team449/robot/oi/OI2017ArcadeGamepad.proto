@@ -1,9 +1,38 @@
 syntax = "proto2";
+import "org/usfirst/frc/team449/robot/oi/JButton.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.oi";
 option java_outer_classname = "OI2017ArcadeGamepadMap";
 
 message OI2017ArcadeGamepad {
+	required int32 gamepad = 1;
+	required int32 gamepad_left_axis = 2;
+	required int32 gamepad_right_axis = 3;
+
+    required double deadband = 4;
+    required double dpad_shift = 5;
+
+    required bool invert_fwd = 6;
+    required bool invert_rot = 7;
+    required bool invert_dpad = 18;
+
+    optional JButton switch_to_low_gear = 8;
+    optional JButton switch_to_high_gear = 9;
+    optional JButton override_navX = 10;
+    optional JButton climb = 11;
+    optional JButton toggle_feeder = 12;
+    optional JButton toggle_intake = 13;
+    optional JButton toggle_intake_up_down = 14;
+    optional JButton tmp_override_low = 15;
+    optional JButton tmp_override_high = 16;
+    optional JButton shoot = 17;
+
+    // The new ones
+    optional JButton loadShooter = 19;
+    optional JButton rackShooter = 20;
+    optional JButton fireShooter = 21;
+
+	/*
 	required int32 gamepad = 1;
 	required int32 gamepad_left_axis = 2;
 	required int32 gamepad_right_axis = 3;
@@ -29,4 +58,5 @@ message OI2017ArcadeGamepad {
     optional int32 toggle_intake = 24;
     optional int32 toggle_intake_up_down = 23;
     optional int32 shoot = 25;
+    */
 }
