@@ -7,9 +7,6 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXDriveStraight;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
-import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntakeUpDown;
-import org.usfirst.frc.team449.robot.mechanism.intake.commands.ToggleIntaking;
-import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 

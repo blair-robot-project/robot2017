@@ -9,8 +9,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 public class OverrideNavX extends ReferencingCommand{
 
 	public OverrideNavX(TalonClusterDrive drive){
-	super(drive);
-	requires(subsystem);
+		super(drive);
+		requires(subsystem);
 	}
 
 	@Override

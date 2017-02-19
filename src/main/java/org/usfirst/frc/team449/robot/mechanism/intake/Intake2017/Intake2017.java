@@ -1,20 +1,17 @@
-package org.usfirst.frc.team449.robot.mechanism.intake;
+package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
-import org.usfirst.frc.team449.robot.mechanism.intake.commands.IntakeIn;
-import org.usfirst.frc.team449.robot.oi.OI2017;
 
 /**
  * Created by Justin on 1/28/2017.
  */
 public class Intake2017 extends MappedSubsystem {
 
-	private UnitlessCANTalonSRX fixed_talon;
-	private UnitlessCANTalonSRX actuated_talon;
+	private VictorSP fixedVictor;
+	private VictorSP actuatedVictor;
 	private DoubleSolenoid piston;
-	private OI2017 oi;
 	public boolean isIntaking;
 	public boolean intakeUp;
 
@@ -23,30 +20,32 @@ public class Intake2017 extends MappedSubsystem {
 	 *
 	 * @param map the map of constants relevant to this subsystem
 	 */
-	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map, OI2017 oi) {
+	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
 		super(map.getMechanism());
 		this.map = map;
-		this.fixed_talon = new UnitlessCANTalonSRX(map.getFixedTalon());
-		this.actuated_talon = new UnitlessCANTalonSRX(map.getActuatedTalon());
-		this.piston = new DoubleSolenoid(map.getPiston().getForward(), map.getPiston().getReverse());
-		this.oi = oi;
+		this.fixedVictor = new VictorSP(map.getFixedVictor().getPort());
+		fixedVictor.setInverted(map.getFixedVictor().getInverted());
+		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
+		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
+		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
 	}
 
-	public void setPercentVbus(double percentVbus) {
-		fixed_talon.setPercentVbus(percentVbus);
-		actuated_talon.setPercentVbus(percentVbus);
+	public void setFixedVictor(double speed) {
+		fixedVictor.set(speed);
+	}
+
+	public void setActuatedVictor(double speed){
+		actuatedVictor.set(speed);
 	}
 
 	public void setPiston(DoubleSolenoid.Value value) {
 		piston.set(value);
+		System.out.println("Set Piston");
+		intakeUp = (value == DoubleSolenoid.Value.kReverse);
 	}
 
 	public void setIntaking(boolean isIntaking){
 		this.isIntaking = isIntaking;
-	}
-
-	public void setIntakeUp(boolean intakeUp) {
-		this.intakeUp = intakeUp;
 	}
 
 	/**

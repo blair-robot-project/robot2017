@@ -92,7 +92,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-		setDefaultCommand(new PIDTune(this));
+//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}
 }

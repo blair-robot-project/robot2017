@@ -33,6 +33,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.map = map;
 		requires(drive);
 		driveSubsystem = drive;
+
 		System.out.println("Drive Robot bueno");
 	}
 
@@ -42,14 +43,19 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.getPIDController().reset();
 		this.getPIDController().enable();
 		System.out.println("DefaultArcadeDrive init.");
+
 		//Initial assignment
 		drivingStraight = false;
+		driveSubsystem.setLowGear(true);	//starting from rest, we want to be in low gear so we can accelerate
 		vel = oi.getFwd();
 		rot = oi.getRot();
 	}
 
 	@Override
 	protected void execute() {
+		//Auto-shifting
+		driveSubsystem.autoShift();
+
 		//Set vel and rot to what they should be.
 		vel = oi.getFwd();
 		rot = oi.getRot();

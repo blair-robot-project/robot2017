@@ -6,13 +6,18 @@ import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideAutoShift;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideNavX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
-import org.usfirst.frc.team449.robot.mechanism.intake.commands.FakeIntakeUp;
+import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -31,7 +36,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX, switchCamera, intakeUp, intakeDown;
+	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
+	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -40,12 +46,25 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 		deadband = map.getDeadband();
-		tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
-		tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
-		tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
-		tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
-		turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+
+		if (map.hasTurnTo0Button()) {
+			tt0 = new JoystickButton(gamepad, map.getTurnTo0Button());
+		}
+		if (map.hasTurnTo30Button()) {
+			tt30 = new JoystickButton(gamepad, map.getTurnTo30Button());
+		}
+		if (map.hasTurnTo180Button()) {
+			tt180 = new JoystickButton(gamepad, map.getTurnTo180Button());
+		}
+		if (map.hasTurnTo330Button()) {
+			tt330 = new JoystickButton(gamepad, map.getTurnTo330Button());
+		}
+		if(map.hasTurnaroundButton()) {
+			turnaround = new JoystickButton(gamepad, map.getTurnaroundButton());
+		}
+
 		overrideNavX = new JoystickButton(gamepad, map.getOverrideNavX());
+
 		if (map.hasSwitchToLowGear()) {
 			switchToLowGear = new JoystickButton(gamepad, map.getSwitchToLowGear());
 			switchToHighGear = new JoystickButton(gamepad, map.getSwitchToHighGear());
@@ -54,11 +73,30 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb = new JoystickButton(gamepad, map.getClimb());
 		}
 		if (map.hasSwitchCamera()) {
-//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
+			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
 		}
 
-		intakeUp = new JoystickButton(gamepad, 9);
-
+		if (map.hasTmpOverrideLow()){
+			tmpOverrideLow = new JoystickButton(gamepad, map.getTmpOverrideLow());
+		}
+		if (map.hasTmpOverrideHigh()){
+			tmpOverrideHigh = new JoystickButton(gamepad, map.getTmpOverrideHigh());
+		}
+		if (map.hasToggleOverrideHigh()){
+			toggleOverrideHigh = new JoystickButton(gamepad, map.getToggleOverrideHigh());
+		}
+		if (map.hasToggleFeeder()) {
+			toggleFeeder = new JoystickButton(gamepad, map.getToggleFeeder());
+		}
+		if (map.hasToggleIntake()){
+			toggleIntake = new JoystickButton(gamepad, map.getToggleIntake());
+		}
+		if (map.hasToggleIntakeUpDown()){
+			toggleIntakeUpDown = new JoystickButton(gamepad, map.getToggleIntakeUpDown());
+		}
+		if (map.hasShoot()) {
+			shoot = new JoystickButton(gamepad, map.getShoot());
+		}
 	}
 
 	/**
@@ -91,11 +129,21 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	public void mapButtons() {
 		double timeout = 5.;
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
+		if (turnaround != null) {
+			turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		}
+		if (tt0 != null) {
+			tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, timeout));
+		}
+		if (tt30 != null) {
+			tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, timeout));
+		}
+		if (tt180 != null) {
+			tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, timeout));
+		}
+		if (tt330 != null) {
+			tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, timeout));
+		}
 		if (Robot.driveSubsystem.shifter != null) {
 			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
@@ -105,9 +153,31 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
 		if (Robot.cameraSubsystem != null) {
-//			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
+			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, timeout));
+		}
+		if (tmpOverrideHigh != null){
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, false));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, false));
+		}
+		if (tmpOverrideLow != null){
+			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, true));
+			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, true));
+		}
+		if (toggleOverrideHigh != null){
+			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift, false));
+		}
+		if (toggleIntake != null && Robot.intakeSubsystem != null){
+			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+		}
+		if (toggleIntakeUpDown != null && Robot.intakeSubsystem != null){
+			toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
+		}
+		if (toggleFeeder != null && Robot.feederSubsystem != null){
+			toggleFeeder.whenPressed(new ToggleFeeder(Robot.feederSubsystem));
+		}
+		if (shoot != null && Robot.singleFlywheelShooterSubsystem != null) {
+			shoot.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
-		intakeUp.whenPressed(new FakeIntakeUp());
 	}
 }

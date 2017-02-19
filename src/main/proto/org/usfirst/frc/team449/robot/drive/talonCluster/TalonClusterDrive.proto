@@ -11,10 +11,16 @@ message TalonClusterDrive {
 	required Drive drive = 1;
 	required ToleranceBufferAnglePID turn_PID = 6;
 	required ToleranceBufferAnglePID straight_PID = 7;
-    optional DoubleSolenoid shifter = 8;
-    optional int32 module_number = 9;
+	optional DoubleSolenoid shifter = 8;
+	optional int32 module_number = 9;
 	required UnitlessCANTalonSRX right_master = 2;
 	repeated UnitlessCANTalonSRX right_slave = 3;
 	required UnitlessCANTalonSRX left_master = 4;
 	repeated UnitlessCANTalonSRX left_slave = 5;
+	optional double wheel_diameter = 10;
+	optional double upshift = 11;
+	optional double downshift = 12;
+    optional double up_time_thresh = 13 [default = 0];
+    optional double down_time_thresh = 14 [default = 0];
+    optional double shift_delay = 15;
 }

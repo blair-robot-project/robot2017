@@ -39,20 +39,47 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 	private long startTime;
-	private String logFN = "driveLog.csv";
+	private String logFN;
 	public boolean overrideNavX;
 
 	private double maxSpeed;
 	private final double PID_SCALE = 0.9;
+	private double upTimeThresh, downTimeThresh;
+	private boolean okToUpshift, okToDownshift;
+
+	private long timeAboveShift, timeBelowShift, timeLastShifted;
+	private Double shiftDelay;
+
+	public boolean overrideAutoShift = false;
+
+	boolean lowGear = true;	//we want to start in low gear
+
+	double wheelDia, upshift, downshift;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
+									 .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
+		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
+		try (PrintWriter writer = new PrintWriter(logFN)) {
+			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.map = map;
 		this.oi = oi;
 		this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
+		this.upTimeThresh = map.getUpTimeThresh();
+		this.downTimeThresh = map.getDownTimeThresh();
+		if (map.hasShiftDelay()) {
+			this.shiftDelay = map.getShiftDelay();
+		}
+		okToUpshift = false;
+		okToDownshift = true;
+		overrideAutoShift = false;
+		timeLastShifted = 0;
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter().getReverse());
 		}
@@ -60,6 +87,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
 		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
+
+		long upshiftTIme, downshiftTime;
 
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
 			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
@@ -71,6 +100,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
+
+		upshift = map.getUpshift();
+		downshift = map.getDownshift();
+		wheelDia = map.getWheelDiameter();
 
 		// TODO take this out
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
@@ -89,8 +122,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	private void setPIDThrottle(double left, double right) {
-		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		if (overrideAutoShift) {
+			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		} else {
+			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
+			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
+		}
 	}
 
 	/**
@@ -101,6 +139,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public void setDefaultThrottle(double left, double right) {
 		setPIDThrottle(clipToOne(left), clipToOne(right));
+		//setVBusThrottle(left, right);
 	}
 
 	public void logData() {
@@ -108,28 +147,26 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-			/*
-			sb.append(leftMaster.canTalon.getEncPosition());
+			sb.append(leftMaster.getSpeed());
 			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncPosition());
+			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			*/
-			sb.append(leftMaster.canTalon.getEncVelocity());
+			sb.append(leftMaster.getError());
 			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncVelocity());
-			/*
-			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.position);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
-			*/
+			sb.append(rightMaster.getError());
+	         /*
+	         sb.append(",");
+	         sb.append(leftTPointStatus.activePoint.position);
+	         sb.append(",");
+	         sb.append(rightTPointStatus.activePoint.position);
+	         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		maxSpeed = Math.max(maxSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
 		SmartDashboard.putNumber("Max Speed", maxSpeed);
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
@@ -143,6 +180,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
+		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
 	public void logData(double sp) {
@@ -150,36 +188,30 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
 			sb.append(",");
-			/*
-			sb.append(leftMaster.canTalon.getEncPosition());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getEncPosition());
-			sb.append(",");
-			*/
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
 			sb.append(PID_SCALE*sp*leftMaster.getMaxSpeed());
 			sb.append(",");
-			sb.append(leftMaster.getError());
-			/*
-			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.position);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
-			*/
+			sb.append(PID_SCALE*sp*rightMaster.getMaxSpeed());
+	         /*
+	         sb.append(",");
+	         sb.append(leftTPointStatus.activePoint.position);
+	         sb.append(",");
+	         sb.append(rightTPointStatus.activePoint.position);
+	         */
 			sb.append("\n");
 
 			fw.write(sb.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		maxSpeed = Math.max(maxSpeed, Math.max(leftMaster.getSpeed(), rightMaster.getSpeed()));
+		maxSpeed = Math.max(maxSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
 		SmartDashboard.putNumber("Max Speed", maxSpeed);
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
@@ -193,21 +225,16 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
+		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
-		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + ".csv";
-		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,right setpoint,right error,left setpoint,left error");
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-	}
-
 		startTime = System.nanoTime();
 		overrideNavX = false;
-		setDefaultCommand(new OpArcadeDrive(this, oi));
+//		setDefaultCommand(new PIDTest(this));
+//		setDefaultCommand(new OpArcadeDrive(this, oi));
+		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
 	public double getGyroOutput() {
@@ -220,13 +247,65 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 				shifter.set(DoubleSolenoid.Value.kForward);
 				rightMaster.switchToLowGear();
 				leftMaster.switchToLowGear();
+				lowGear = true;
 			} else {
 				shifter.set(DoubleSolenoid.Value.kReverse);
 				rightMaster.switchToHighGear();
 				leftMaster.switchToHighGear();
+				lowGear = false;
 			}
+			timeLastShifted = System.currentTimeMillis();
 		} else {
 			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
+		}
+	}
+
+	public double getLeftSpeed(){
+		return leftMaster.getSpeed();
+	}
+
+	public double getRightSpeed(){
+		return rightMaster.getSpeed();
+	}
+
+	public boolean inLowGear(){
+		return lowGear;
+	}
+
+	public boolean shouldDownshift(){
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))<downshift && !lowGear && !overrideAutoShift;
+		if(shiftDelay != null){
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+		}
+		if (okToShift && !okToDownshift){
+			okToDownshift = true;
+			timeBelowShift = System.currentTimeMillis();
+		} else if(!okToShift && okToDownshift){
+			okToDownshift = false;
+		}
+		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh*1000 && okToShift);
+	}
+
+	public boolean shouldUpshift(){
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed()))>upshift && lowGear &&
+				!overrideAutoShift && Math.abs(oi.getFwd()) > 0;
+		if(shiftDelay != null){
+			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay*1000);
+		}
+		if (okToShift && !okToUpshift){
+			okToUpshift = true;
+			timeAboveShift = System.currentTimeMillis();
+		} else if(!okToShift && okToUpshift){
+			okToUpshift = false;
+		}
+		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh*1000 && okToShift);
+	}
+
+	public void autoShift(){
+		if (shouldUpshift()){
+			setLowGear(false);
+		} else if (shouldDownshift()){
+			setLowGear(true);
 		}
 	}
 

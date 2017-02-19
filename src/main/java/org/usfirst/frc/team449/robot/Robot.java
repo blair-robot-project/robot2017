@@ -4,17 +4,14 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.DoubleFlywheelShooter;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.BaseOI;
-import org.usfirst.frc.team449.robot.oi.OI2017Tank;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
@@ -25,8 +22,8 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
-	public static DoubleFlywheelShooter doubleFlywheelShooterSubsystem;
 	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
+
 	public static Intake2017 intakeSubsystem;
 
 	public static ClimberSubsystem climberSubsystem;
@@ -39,6 +36,8 @@ public class Robot extends IterativeRobot {
 
 	public static CameraSubsystem cameraSubsystem;
 
+	public static FeederSubsystem feederSubsystem;
+
 	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
 
 	public void robotInit() {
@@ -46,20 +45,23 @@ public class Robot extends IterativeRobot {
 		try {
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map_only_drive.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
-			System.out.println("Config file not found!");
+			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
 
-//		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
+		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
 //		System.out.println("Constructed OI");
 
 //		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+		System.out.println("Constructed Drive");
 
-//		if (cfg.hasCamera()) {
-//			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
-//		}
+		if (cfg.hasCamera()) {
+			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
+		}
 
 //		System.out.println("Constructed drive");
 
@@ -67,6 +69,10 @@ public class Robot extends IterativeRobot {
 //			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 //		}
 		//		doubleFlywheelShooterSubsystem = new DoubleFlywheelShooter(cfg.getDoubleFlywheelShooter());
+		if (cfg.hasClimber()) {
+			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+		}
+
 		if (cfg.hasShooter()) {
 			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 			System.out.println("Constructed SingleFlywheelShooter");
@@ -76,17 +82,28 @@ public class Robot extends IterativeRobot {
 //				pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 		//		System.out.println("Constructed PneumaticsSubsystem");
 
-		//intakeSubsystem = new Intake2017(cfg.getIntake(), oiSubsystem);
+		if (cfg.hasPneumatics()) {
+			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
+			System.out.println("Constructed PneumaticsSubsystem");
+		}
 
 		//oiSubsystem.mapButtons();
+		if (cfg.hasIntake()) {
+			intakeSubsystem = new Intake2017(cfg.getIntake());
+		}
 
-//		if (cfg.hasModule()) {
-//			Compressor compressor = new Compressor(15);
-//			compressor.setClosedLoopControl(true);
-//			compressor.start();
-//		}
+		if (cfg.hasFeeder()){
+			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
+		}
 
+		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
+
+		if (cfg.hasModule()) {
+			Compressor compressor = new Compressor(cfg.getModule());
+			compressor.setClosedLoopControl(true);
+			compressor.start();
+		}
 	}
 
 	@Override
@@ -94,6 +111,9 @@ public class Robot extends IterativeRobot {
 //		if (driveSubsystem.shifter != null) {
 //			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
 //		}
+		if (driveSubsystem.shifter != null){
+			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+		}
 	}
 
 	@Override
@@ -103,7 +123,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 
 	@Override
