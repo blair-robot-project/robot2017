@@ -110,6 +110,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasFireShooter()) {
 			fireShooter = new MJButton(map.getFireShooter());
 		}
+		if (map.hasSwitchCamera()){
+			switchCamera = new MJButton(map.getSwitchCamera());
+		}
 	}
 
 	/**
