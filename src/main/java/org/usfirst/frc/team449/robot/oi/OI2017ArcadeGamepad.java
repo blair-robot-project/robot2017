@@ -119,7 +119,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	public double getFwd() {
 		if (Math.abs(fwdThrottle.getValue()) > deadband) {
-			return fwdThrottle.getValue();
+			return fwdThrottle.getValue()*(1-0.2*rotThrottle.getValue());
 		} else {
 			return 0;
 		}
