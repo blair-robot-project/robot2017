@@ -16,9 +16,10 @@ public class ToggleFlywheel extends ReferencingCommandGroup {
 		requires(subsystem);
 		shooterSubsystem = (SingleFlywheelShooter) subsystem;
 
-		if (shooterSubsystem.spinning)
+		if (shooterSubsystem.spinning) {
 			addSequential(new DecelerateFlywheel(shooterSubsystem, 1));
-		else
+		} else {
 			addSequential(new AccelerateFlywheel(shooterSubsystem, 1));
+		}
 	}
 }

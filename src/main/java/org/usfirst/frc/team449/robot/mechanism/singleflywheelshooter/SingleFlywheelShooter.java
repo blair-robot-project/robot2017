@@ -16,6 +16,8 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 
 	public boolean spinning;
 	private UnitlessCANTalonSRX talon;
+
+	public double throttle=0.5;
 	/**
 	 * Counts per revolution
 	 */
@@ -28,6 +30,9 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		super(map.getMechanism());
 		this.map = map;
 		this.talon = new UnitlessCANTalonSRX(map.getTalon());
+		if(map.hasThrottle()) {
+			this.throttle = map.getThrottle();
+		}
 		System.out.println("Shooter F: " + talon.canTalon.getF());
 	}
 
@@ -58,7 +63,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		SmartDashboard.putNumber("max error", maxError);
 		SmartDashboard.putNumber("speed", talon.canTalon.getPulseWidthVelocity());
 
-		try (FileWriter fw = new FileWriter("/home/lvuser/driveLog.csv", true)) {
+		try (FileWriter fw = new FileWriter("/home/lvuser/shooterLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
@@ -67,7 +72,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			SmartDashboard.putNumber("talon", talon.getSpeed());
 			sb.append(throttle);
 			sb.append("\n");
-			SmartDashboard.putNumber("Throttle", throttle);
+			SmartDashboard.putNumber("Throttle", this.throttle);
 			SmartDashboard.putNumber("Setpoint", talon.canTalon.getSetpoint());
 			SmartDashboard.putNumber("Error", talon.canTalon.getError());
 			SmartDashboard.putNumber("F", talon.canTalon.getF());
@@ -87,7 +92,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-		setDefaultCommand(new PIDTune(this));
+//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}
 }

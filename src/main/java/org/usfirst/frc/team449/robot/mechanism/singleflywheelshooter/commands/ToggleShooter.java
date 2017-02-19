@@ -7,12 +7,12 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 /**
  * Created by blairrobot on 1/10/17.
  */
-public class AccelerateFlywheel extends ReferencingCommand {
+public class ToggleShooter extends ReferencingCommand {
 
 	SingleFlywheelShooter flywheelShooter;
 
-	public AccelerateFlywheel(MappedSubsystem subsystem, double timeout) {
-		super(subsystem, timeout);
+	public ToggleShooter(MappedSubsystem subsystem) {
+		super(subsystem);
 		flywheelShooter = (SingleFlywheelShooter) subsystem;
 		requires(subsystem);
 	}
@@ -20,13 +20,18 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		System.out.println("AccelerateFlywheel init");
+		if (!flywheelShooter.spinning) {
+			flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
+			flywheelShooter.spinning = true;
+		} else {
+			flywheelShooter.setDefaultSpeed(0);
+			flywheelShooter.spinning = false;
+		}
 	}
 
 	@Override
 	protected void execute() {
 		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle*100.0);
-		flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
-		flywheelShooter.spinning = true;
 		System.out.println("AccelerateFlywheel executed");
 	}
 

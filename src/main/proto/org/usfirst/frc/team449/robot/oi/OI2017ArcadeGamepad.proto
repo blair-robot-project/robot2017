@@ -28,4 +28,5 @@ message OI2017ArcadeGamepad {
     optional int32 toggle_feeder = 22;
     optional int32 toggle_intake = 24;
     optional int32 toggle_intake_up_down = 23;
+    optional int32 shoot = 25;
 }

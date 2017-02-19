@@ -4,13 +4,20 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideAutoShift;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideNavX;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -30,7 +37,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Joystick gamepad;
 	private double deadband;
 	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
-	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder;
+	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -86,6 +93,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasToggleIntakeUpDown()){
 			toggleIntakeUpDown = new JoystickButton(gamepad, map.getToggleIntakeUpDown());
+		}
+		if (map.hasShoot()) {
+			shoot = new JoystickButton(gamepad, map.getShoot());
 		}
 	}
 
@@ -164,6 +174,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (toggleFeeder != null && Robot.feederSubsystem != null){
 			toggleFeeder.whenPressed(new ToggleFeeder(Robot.feederSubsystem));
+		}
+		if (shoot != null && Robot.singleFlywheelShooterSubsystem != null) {
+			shoot.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 	}
