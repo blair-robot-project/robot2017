@@ -11,6 +11,7 @@ public class DynamicIntakeStop extends ReferencingCommand {
 
 	public DynamicIntakeStop(Intake2017 intake) {
 		super(intake);
+//		requires(intake);
 		this.intake = intake;
 	}
 

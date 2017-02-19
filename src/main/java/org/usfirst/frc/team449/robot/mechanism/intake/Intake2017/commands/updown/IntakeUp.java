@@ -13,7 +13,7 @@ public class IntakeUp extends ReferencingCommand {
 
 	public IntakeUp(Intake2017 intake2017) {
 		super(intake2017);
-		requires(intake2017);
+//		requires(intake2017);
 		this.intake2017 = intake2017;
 		System.out.println("IntakeUp constructed");
 	}

@@ -18,6 +18,9 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.Toggle
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -77,14 +80,14 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 //			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
 //		}
 
-		if (map.hasTmpOverrideLow()){
-			tmpOverrideLow = new MJButton(map.getTmpOverrideLow());
+		if (map.hasToggleOverrideLow()){
+			tmpOverrideLow = new MJButton(map.getToggleOverrideLow());
 		}
-		if (map.hasTmpOverrideHigh()){
-			tmpOverrideHigh = new MJButton(map.getTmpOverrideHigh());
+		if (map.hasToggleOverrideHigh()){
+			tmpOverrideHigh = new MJButton(map.getToggleOverrideHigh());
 		}
-		if (map.hasTmpOverrideHigh()) {     // TODO check if tmp == toggle
-			toggleOverrideHigh = new MJButton(map.getTmpOverrideHigh());
+		if (map.hasToggleOverrideHigh()) {     // TODO check if tmp == toggle
+			toggleOverrideHigh = new MJButton(map.getToggleOverrideHigh());
 		}
 		if (map.hasToggleFeeder()) {
 			toggleFeeder = new MJButton(map.getToggleFeeder());
@@ -176,9 +179,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (toggleOverrideHigh != null){
 			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift, false));
 		}
-		if (toggleIntake != null && Robot.intakeSubsystem != null){
-			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
-		}
+//		if (toggleIntake != null && Robot.intakeSubsystem != null){
+//			toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+//		}
 		if (toggleIntakeUpDown != null && Robot.intakeSubsystem != null){
 			toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
 		}
@@ -187,6 +190,15 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (shoot != null && Robot.singleFlywheelShooterSubsystem != null) {
 			shoot.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
+		}
+		if (loadShooter != null) {
+			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+		}
+		if (rackShooter != null) {
+			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+		}
+		if (fireShooter != null) {
+			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
 		}
 		overrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
 	}

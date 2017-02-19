@@ -23,14 +23,15 @@ message OI2017ArcadeGamepad {
     optional JButton toggle_feeder = 12;
     optional JButton toggle_intake = 13;
     optional JButton toggle_intake_up_down = 14;
-    optional JButton tmp_override_low = 15;
-    optional JButton tmp_override_high = 16;
+    optional JButton toggle_override_low = 15;
+    optional JButton toggle_override_high = 16;
     optional JButton shoot = 17;
 
     // The new ones
     optional JButton loadShooter = 19;
     optional JButton rackShooter = 20;
     optional JButton fireShooter = 21;
+    optional JButton resetShooter = 22;
 
 	/*
 	required int32 gamepad = 1;
