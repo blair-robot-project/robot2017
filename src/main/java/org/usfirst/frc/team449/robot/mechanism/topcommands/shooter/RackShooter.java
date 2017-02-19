@@ -19,6 +19,8 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.De
  */
 public class RackShooter extends CommandGroup {
 	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
+		requires(intake);
+
 		addParallel(new AccelerateFlywheel(sfs, 5));
 
 		addParallel(new IntakeUp(intake));

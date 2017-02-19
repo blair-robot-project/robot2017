@@ -17,6 +17,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.De
  */
 public class LoadShooter extends CommandGroup {
 	public LoadShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
+		requires(intake);
 		addParallel(new DecelerateFlywheel(sfs, 5));
 
 		addParallel(new IntakeDown(intake));

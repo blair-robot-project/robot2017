@@ -102,6 +102,9 @@ public class Robot extends IterativeRobot {
 //		if (driveSubsystem.shifter != null) {
 //			Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
 //		}
+
+		driveSubsystem.setDefaultThrottle(0, 0);
+
 		if (driveSubsystem.shifter != null){
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
@@ -114,6 +117,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
+		driveSubsystem.setDefaultThrottle(0, 0);
 		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 

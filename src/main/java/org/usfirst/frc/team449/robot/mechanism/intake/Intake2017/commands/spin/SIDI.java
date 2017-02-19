@@ -17,7 +17,7 @@ public class SIDI extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		intake.setFixedVictor(-0.3);
+		intake.setFixedVictor(-0.7);
 		intake.setActuatedVictor(1);
 	}
 
