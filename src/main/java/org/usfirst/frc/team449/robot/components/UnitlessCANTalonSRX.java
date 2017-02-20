@@ -20,7 +20,7 @@ public class UnitlessCANTalonSRX extends Component {
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	protected double encoderCPR;
+	public double encoderCPR;
 
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
