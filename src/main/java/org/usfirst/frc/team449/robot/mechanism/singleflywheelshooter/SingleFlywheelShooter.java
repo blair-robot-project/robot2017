@@ -17,7 +17,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	public boolean spinning;
 	private UnitlessCANTalonSRX talon;
 
-	public double throttle=0.5;
+	public double throttle;
 	/**
 	 * Counts per revolution
 	 */
@@ -92,7 +92,6 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}
 }

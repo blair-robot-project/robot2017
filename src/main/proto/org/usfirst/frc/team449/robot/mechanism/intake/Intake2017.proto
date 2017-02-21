@@ -12,4 +12,8 @@ message Intake2017 {
 	required Motor actuated_victor = 3;
     required DoubleSolenoid piston = 4;
     required int32 pistonModuleNum = 5;
+	required double fixed_pct_pickup = 6;
+	required double moving_pct_pickup = 7;
+	required double fixed_pct_shoot = 8;
+	required double moving_pct_shoot = 9;
 }
