@@ -15,12 +15,10 @@ import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.IntakeBalls;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.PrepareToShoot;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -195,10 +193,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			shoot.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
 		}
 		if (loadShooter != null) {
-			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+			loadShooter.whenPressed(new IntakeBalls(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
 		}
 		if (rackShooter != null) {
-			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+			rackShooter.whenPressed(new PrepareToShoot(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
 		}
 		if (fireShooter != null) {
 			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
