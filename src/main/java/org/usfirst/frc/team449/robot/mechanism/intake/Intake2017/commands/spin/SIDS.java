@@ -17,7 +17,8 @@ public class SIDS extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
-		intake.prepareToShoot();
+		intake.setFixedVictor(-0.3);
+		intake.setActuatedVictor(0);
 	}
 
 	@Override

@@ -14,7 +14,6 @@ public class Intake2017 extends MappedSubsystem {
 	private DoubleSolenoid piston;
 	public boolean isIntaking;
 	public boolean intakeUp;
-	double fixedPctShoot, movingPctShoot, fixedPctPickup, movingPctPickup;
 
 	/**
 	 * Creates a mapped subsystem and sets its map
@@ -29,10 +28,6 @@ public class Intake2017 extends MappedSubsystem {
 		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
 		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
 		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
-		this.fixedPctPickup = map.getFixedPctPickup();
-		this.movingPctPickup = map.getMovingPctPickup();
-		this.fixedPctShoot = map.getFixedPctShoot();
-		this.movingPctShoot = map.getMovingPctShoot();
 	}
 
 	public void setFixedVictor(double speed) {
@@ -47,16 +42,6 @@ public class Intake2017 extends MappedSubsystem {
 		piston.set(value);
 		System.out.println("Set Piston");
 		intakeUp = (value == DoubleSolenoid.Value.kReverse);
-	}
-
-	public void pickupBalls(){
-		setFixedVictor(fixedPctPickup);
-		setActuatedVictor(movingPctPickup);
-	}
-
-	public void prepareToShoot(){
-		setFixedVictor(fixedPctShoot);
-		setActuatedVictor(movingPctShoot);
 	}
 
 	public void setIntaking(boolean isIntaking){
