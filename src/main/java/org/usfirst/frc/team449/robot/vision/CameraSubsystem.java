@@ -17,10 +17,18 @@ import java.util.List;
  */
 public class CameraSubsystem extends MappedSubsystem {
 
+    /**
+     * @param server Hosts the video to view on SmartDashboard
+     * @param cameras Contains list of cameras used on robot
+     * @param camNum Contains number of cameras (total)
+     */
     public MjpegServer server;
     public List<UsbCamera> cameras;
     public int camNum;
 
+    /**
+     * Instantiates a new <code>CameraMap</code>
+     */
     public static CameraMap.Camera map;
 
     public CameraSubsystem(CameraMap.Camera map){
@@ -28,9 +36,15 @@ public class CameraSubsystem extends MappedSubsystem {
         this.map = map;
         System.out.println("CameraSubsystem construct start");
         System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:"+map.getServer().getPort()+"/stream.mjpg\"");
+        /**
+         *
+         */
         server = new MjpegServer(map.getServer().getName(),map.getServer().getPort());
         cameras = new ArrayList<>();
-        for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()){
+        /**
+         * Searches for each camera, then places them into camera list.
+         */
+        for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()) {
             UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
             tmp.setResolution(camera.getWidth(), camera.getHeight());
             tmp.setFPS(camera.getFps());
@@ -41,6 +55,7 @@ public class CameraSubsystem extends MappedSubsystem {
         camNum = 0;
         System.out.println("CameraSubsystem construct end");
     }
+
 
     @Override
     protected void initDefaultCommand () {
