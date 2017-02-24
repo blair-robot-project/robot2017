@@ -27,7 +27,10 @@ public class CameraSubsystem extends MappedSubsystem {
     public int camNum;
 
     /**
-     * Instantiates a new <code>CameraMap</code>
+     * Instantiates a new <code>CameraSubsystem</code> with a
+     * <code>CameraMap</code>
+     *
+     * @param map constants map
      */
     public static CameraMap.Camera map;
 
