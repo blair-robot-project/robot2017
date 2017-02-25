@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
@@ -25,8 +25,8 @@ import java.util.Date;
  */
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
-	public UnitlessCANTalonSRX rightMaster;
-	public UnitlessCANTalonSRX leftMaster;
+	public RotPerSecCANTalonSRX rightMaster;
+	public RotPerSecCANTalonSRX leftMaster;
 	public AHRS navx;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
@@ -86,18 +86,18 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 		maxSpeed = -1;
 
-		rightMaster = new UnitlessCANTalonSRX(map.getRightMaster());
-		leftMaster = new UnitlessCANTalonSRX(map.getLeftMaster());
+		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
+		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
 		long upshiftTIme, downshiftTime;
 
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
-			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
+			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getRightMaster().getPort());
 		}
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getLeftSlaveList()) {
-			UnitlessCANTalonSRX talonObject = new UnitlessCANTalonSRX(talon);
+			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}

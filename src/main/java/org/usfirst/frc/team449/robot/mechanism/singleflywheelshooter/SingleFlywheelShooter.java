@@ -2,8 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.PIDTune;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +14,7 @@ import java.io.PrintWriter;
 public class SingleFlywheelShooter extends MappedSubsystem {
 
 	public boolean spinning;
-	private UnitlessCANTalonSRX talon;
+	private RotPerSecCANTalonSRX talon;
 
 	public double throttle=0.5;
 	/**
@@ -29,7 +28,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			                             .SingleFlywheelShooterMap.SingleFlywheelShooter map) {
 		super(map.getMechanism());
 		this.map = map;
-		this.talon = new UnitlessCANTalonSRX(map.getTalon());
+		this.talon = new RotPerSecCANTalonSRX(map.getTalon());
 		if(map.hasThrottle()) {
 			this.throttle = map.getThrottle();
 		}

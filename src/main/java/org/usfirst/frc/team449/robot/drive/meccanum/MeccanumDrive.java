@@ -1,11 +1,10 @@
 package org.usfirst.frc.team449.robot.drive.meccanum;
 
-import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
-import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017;
 
@@ -15,7 +14,7 @@ import org.usfirst.frc.team449.robot.oi.OI2017;
 public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 
     public AHRS navx;
-    public UnitlessCANTalonSRX frontLeft, frontRight, backLeft, backRight;
+    public RotPerSecCANTalonSRX frontLeft, frontRight, backLeft, backRight;
     public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
     public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
     public OI2017 oi;
@@ -31,10 +30,10 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
         this.straightPID = map.getStraightPID();
         this.oi = oi;
 
-        this.frontLeft = new UnitlessCANTalonSRX(map.getFrontLeft());
-        this.frontRight = new UnitlessCANTalonSRX(map.getFrontRight());
-        this.backLeft = new UnitlessCANTalonSRX(map.getBackLeft());
-        this.backRight = new UnitlessCANTalonSRX(map.getBackRight());
+        this.frontLeft = new RotPerSecCANTalonSRX(map.getFrontLeft());
+        this.frontRight = new RotPerSecCANTalonSRX(map.getFrontRight());
+        this.backLeft = new RotPerSecCANTalonSRX(map.getBackLeft());
+        this.backRight = new RotPerSecCANTalonSRX(map.getBackRight());
     }
 
     private void setVBusThrottle(double fl, double fr, double bl, double br){
