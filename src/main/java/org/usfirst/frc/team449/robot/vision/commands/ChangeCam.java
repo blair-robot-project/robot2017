@@ -5,39 +5,52 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 /**
  * Created by bryanli on 12/1/16.
+ * Toggles camera on button press.
  */
 public class ChangeCam extends ReferencingCommand {
 
+    //Initializes CameraSubsystem
     private CameraSubsystem cameraSubsystem;
 
+    /**
+     * Default constructor
+     */
     public ChangeCam(CameraSubsystem cameraSubsystem, double timeout) {
         super(cameraSubsystem, timeout);
         requires(cameraSubsystem);
         this.cameraSubsystem = cameraSubsystem;
     }
 
+    //Does nothing - Logging to console
     @Override
     protected void initialize() {
         System.out.println("ChangeCam init");
     }
 
+    /**
+     * Toggles between cameras.
+     */
     @Override
     protected void execute() {
+        //Logging to console
         System.out.println("ChangeCam exec start");
 
+        //Switches camNum to next camera, if applicable
         if (cameraSubsystem.cameras.size() == 1){
 	        System.out.println("You're trying to switch cameras, but your robot only has one camera!");
         } else {
         	cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
         }
 
+        //Switches to set camera
         cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
 
+        //Logging to camera
         System.out.println("ChangeCam exec end");
     }
 
     @Override
-    protected boolean isFinished(){ return true; }
+    protected boolean isFinished(){ return true; }//Finishes instantaneously.
 
     @Override
     protected void end() {
