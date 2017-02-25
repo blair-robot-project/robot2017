@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.oi;
 
 /**
- * A basic OI interface that all OI classes should implement.
+ * A basic OI class that all OI classes should implement.
  */
 public abstract class BaseOI {
 	/**

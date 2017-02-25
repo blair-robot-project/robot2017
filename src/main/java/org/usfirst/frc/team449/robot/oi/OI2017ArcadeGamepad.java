@@ -103,7 +103,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		//Instantiate mandatory buttons.
 		toggleOverrideNavX = new MJButton(map.getOverrideNavX());
 
-		//Instatiate optional buttons.
+		//Instantiate optional buttons.
 		if (map.hasTurnTo0()) {
 			turnTo0 = new MJButton(map.getTurnTo0());
 		}

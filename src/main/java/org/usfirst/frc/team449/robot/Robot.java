@@ -66,7 +66,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		//Construct the OI (has to be done first because other subsytems take the OI as an argument.)
+		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
 		System.out.println("Constructed OI");
 

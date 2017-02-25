@@ -11,9 +11,7 @@ public class ChangeCam extends ReferencingCommand {
     //Initializes CameraSubsystem
     private CameraSubsystem cameraSubsystem;
 
-    /**
-     * Default constructor
-     */
+    //Default constructor
     public ChangeCam(CameraSubsystem cameraSubsystem, double timeout) {
         super(cameraSubsystem, timeout);
         requires(cameraSubsystem);
