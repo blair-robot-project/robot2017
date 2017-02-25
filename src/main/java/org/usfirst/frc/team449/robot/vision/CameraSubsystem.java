@@ -13,7 +13,6 @@ import java.util.List;
 
 
 /**
- * Created by bryanli on 11/10/16.
  * Subsystem to initialize and push video to SmartDashboard
  */
 public class CameraSubsystem extends MappedSubsystem {

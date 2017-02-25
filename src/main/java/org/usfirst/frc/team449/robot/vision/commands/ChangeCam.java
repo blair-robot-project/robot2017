@@ -4,7 +4,6 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 /**
- * Created by bryanli on 12/1/16.
  * Toggles camera on button press.
  */
 public class ChangeCam extends ReferencingCommand {
@@ -21,15 +20,12 @@ public class ChangeCam extends ReferencingCommand {
         this.cameraSubsystem = cameraSubsystem;
     }
 
-    //Does nothing - Logging to console
     @Override
     protected void initialize() {
         System.out.println("ChangeCam init");
+        //Does nothing - Logging to console
     }
 
-    /**
-     * Toggles between cameras.
-     */
     @Override
     protected void execute() {
         //Logging to console
@@ -50,7 +46,10 @@ public class ChangeCam extends ReferencingCommand {
     }
 
     @Override
-    protected boolean isFinished(){ return true; }//Finishes instantaneously.
+    protected boolean isFinished(){
+		//Finishes instantaneously.
+		return true;
+    }
 
     @Override
     protected void end() {
