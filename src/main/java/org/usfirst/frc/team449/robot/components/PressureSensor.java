@@ -1,11 +1,9 @@
 package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /**
  * Wrapper for an analog pressure sensor that returns a voltage linearly proportional to pressure.
- * Created by sam on 1/27/17.
  */
 public class PressureSensor extends Component {
     public AnalogInput sensor;
