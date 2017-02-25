@@ -14,39 +14,37 @@ import java.util.List;
 
 /**
  * Created by bryanli on 11/10/16.
+ * Subsystem to initialize and push video to SmartDashboard
  */
 public class CameraSubsystem extends MappedSubsystem {
 
-    /**
-     * @param server Hosts the video to view on SmartDashboard
-     * @param cameras Contains list of cameras used on robot
-     * @param camNum Contains number of cameras (total)
-     */
+    //Video server to view on SmartDashboard
     public MjpegServer server;
+
+    //List of cameras used on robot
     public List<UsbCamera> cameras;
+
+    //Total number of cameras
     public int camNum;
 
-    /**
-     * Instantiates a new <code>CameraSubsystem</code> with a
-     * <code>CameraMap</code>
-     *
-     * @param map constants map
-     */
+    //Instantiates a new CameraSubsystem with the map
     public static CameraMap.Camera map;
 
     public CameraSubsystem(CameraMap.Camera map){
         super(map);
         this.map = map;
+
+        //Logging to SmartDashboard
         System.out.println("CameraSubsystem construct start");
         System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:"+map.getServer().getPort()+"/stream.mjpg\"");
-        /**
-         *
-         */
+
+        //Instantiates server
         server = new MjpegServer(map.getServer().getName(),map.getServer().getPort());
+
+        //Instantiates cameras
         cameras = new ArrayList<>();
-        /**
-         * Searches for each camera, then places them into camera list.
-         */
+
+        //Searches for each camera, then places them into camera list.
         for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()) {
             UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
             tmp.setResolution(camera.getWidth(), camera.getHeight());
@@ -54,9 +52,13 @@ public class CameraSubsystem extends MappedSubsystem {
 	        System.out.println("Added "+camera.getName()+" to camera list.");
 	        cameras.add(tmp);
         }
+
+        //Starts streaming video from first camera, marks that via camNum
         server.setSource(cameras.get(0));
         camNum = 0;
-        System.out.println("CameraSubsystem construct end");
+
+        //Logging to console
+	    System.out.println("CameraSubsystem construct end");
     }
 
 
@@ -64,5 +66,4 @@ public class CameraSubsystem extends MappedSubsystem {
     protected void initDefaultCommand () {
         //Do nothing!
     }
-
 }
