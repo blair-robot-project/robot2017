@@ -23,43 +23,22 @@ message OI2017ArcadeGamepad {
     optional JButton toggle_feeder = 12;
     optional JButton toggle_intake = 13;
     optional JButton toggle_intake_up_down = 14;
-    optional JButton toggle_override_low = 15;
+    optional JButton tmp_override_low = 15;
+    optional JButton tmp_override_high = 24;
     optional JButton toggle_override_high = 16;
     optional JButton shoot = 17;
 
     optional JButton switch_camera = 23;
 
     // The new ones
-    optional JButton loadShooter = 19;
-    optional JButton rackShooter = 20;
-    optional JButton fireShooter = 21;
-    optional JButton resetShooter = 22;
+    optional JButton load_shooter = 19;
+    optional JButton rack_shooter = 20;
+    optional JButton fire_shooter = 21;
+    optional JButton reset_shooter = 22;
 
-	/*
-	required int32 gamepad = 1;
-	required int32 gamepad_left_axis = 2;
-	required int32 gamepad_right_axis = 3;
-	optional int32 turn_to_0_button = 4;
-	optional int32 turn_to_30_button = 5;
-	optional int32 turn_to_180_button = 6;
-	optional int32 turn_to_330_button = 7;
-	optional int32 turnaround_button = 8;
-    required double deadband = 9;
-    required double dpad_shift = 10;
-    optional int32 switch_to_low_gear = 11;
-    optional int32 switch_to_high_gear = 12;
-    optional int32 climb = 13;
-	required int32 override_navX = 14;
-    required bool invert_rot = 15;
-    required bool invert_fwd = 16;
-    required bool invert_dpad = 17;
-    optional int32 switch_camera = 18;
-    optional int32 tmp_override_low = 19;
-	optional int32 tmp_override_high = 20;
-    optional int32 toggle_override_high = 21;
-    optional int32 toggle_feeder = 22;
-    optional int32 toggle_intake = 24;
-    optional int32 toggle_intake_up_down = 23;
-    optional int32 shoot = 25;
-    */
+    optional JButton turn_to_0 = 25;
+	optional JButton turn_to_30 = 26;
+	optional JButton turn_to_180 = 27;
+	optional JButton turn_to_330 = 28;
+	optional JButton turnaround = 29;
 }

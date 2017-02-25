@@ -11,8 +11,10 @@ import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
- * Created by blairrobot on 1/9/17.
+ * The OI for 2017 written before the OI reorganization.
  */
+
+@Deprecated
 public class OI2017 extends OISubsystem {
 
 	protected Joystick gamepad;

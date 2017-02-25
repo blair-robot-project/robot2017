@@ -4,24 +4,29 @@ import edu.wpi.first.wpilibj.Joystick;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
+import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
- * Created by ryant on 2017-01-25.
+ * A simple tank drive, where each joystick controls a side of the robot.
  */
 public class OI2017Tank extends BaseOI implements TankOI {
+	//The left throttle
 	private Throttle leftThrottle;
+	//The right throttle
 	private Throttle rightThrottle;
 
+	//The map
 	private OI2017TankMap.OI2017Tank map;
 
 	public OI2017Tank(maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap.OI2017Tank map) {
 		this.map = map;
 
+		//Instantiate the sticks.
 		Joystick _leftStick = new Joystick(map.getLeftStick());
 		Joystick _rightStick = new Joystick(map.getRightStick());
-		this.leftThrottle = new PolyThrottle(_leftStick, 1, 1);
-		this.rightThrottle = new PolyThrottle(_rightStick, 1, 1);
+		this.leftThrottle = new SmoothedThrottle(_leftStick, 1);
+		this.rightThrottle = new SmoothedThrottle(_rightStick, 1);
 	}
 
 	@Override

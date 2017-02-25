@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.oi;
 
 /**
- * Created by ryant on 2017-01-25.
+ * A basic OI interface that all OI classes should implement.
  */
 public abstract class BaseOI {
+	/**
+	 * Map all buttons to commands. Should only be run after all subsystems have been instantiated.
+	 */
 	public abstract void mapButtons();
 }
