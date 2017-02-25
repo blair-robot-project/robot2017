@@ -1,5 +1,5 @@
 syntax = "proto2";
-import "org/usfirst/frc/team449/robot/oi/JButton.proto";
+import "org/usfirst/frc/team449/robot/oi/JoystickButton.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.oi";
 option java_outer_classname = "OI2017ArcadeGamepadMap";
@@ -16,29 +16,29 @@ message OI2017ArcadeGamepad {
     required bool invert_rot = 7;
     required bool invert_dpad = 18;
 
-    optional JButton switch_to_low_gear = 8;
-    optional JButton switch_to_high_gear = 9;
-    optional JButton override_navX = 10;
-    optional JButton climb = 11;
-    optional JButton toggle_feeder = 12;
-    optional JButton toggle_intake = 13;
-    optional JButton toggle_intake_up_down = 14;
-    optional JButton tmp_override_low = 15;
-    optional JButton tmp_override_high = 24;
-    optional JButton toggle_override_high = 16;
-    optional JButton shoot = 17;
+    optional JoystickButton switch_to_low_gear = 8;
+    optional JoystickButton switch_to_high_gear = 9;
+    optional JoystickButton override_navX = 10;
+    optional JoystickButton climb = 11;
+    optional JoystickButton toggle_feeder = 12;
+    optional JoystickButton toggle_intake = 13;
+    optional JoystickButton toggle_intake_up_down = 14;
+    optional JoystickButton tmp_override_low = 15;
+    optional JoystickButton tmp_override_high = 24;
+    optional JoystickButton toggle_override_high = 16;
+    optional JoystickButton shoot = 17;
 
-    optional JButton switch_camera = 23;
+    optional JoystickButton switch_camera = 23;
 
     // The new ones
-    optional JButton load_shooter = 19;
-    optional JButton rack_shooter = 20;
-    optional JButton fire_shooter = 21;
-    optional JButton reset_shooter = 22;
+    optional JoystickButton load_shooter = 19;
+    optional JoystickButton rack_shooter = 20;
+    optional JoystickButton fire_shooter = 21;
+    optional JoystickButton reset_shooter = 22;
 
-    optional JButton turn_to_0 = 25;
-	optional JButton turn_to_30 = 26;
-	optional JButton turn_to_180 = 27;
-	optional JButton turn_to_330 = 28;
-	optional JButton turnaround = 29;
+    optional JoystickButton turn_to_0 = 25;
+	optional JoystickButton turn_to_30 = 26;
+	optional JoystickButton turn_to_180 = 27;
+	optional JoystickButton turn_to_330 = 28;
+	optional JoystickButton turnaround = 29;
 }
