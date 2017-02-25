@@ -25,72 +25,126 @@ import java.util.Date;
  */
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
+	//The master talon on the right and left sides
 	public RotPerSecCANTalonSRX rightMaster;
 	public RotPerSecCANTalonSRX leftMaster;
+
+	//The NavX gyro.
 	public AHRS navx;
+
+	//The PIDAngleCommand constants for turning to an angle with the NavX
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+
+	//The PIDAngleCommand constants for using the NavX to drive straight.
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
+
+	//The oi used to drive the robot.
 	public OI2017ArcadeGamepad oi;
+
+	//The solenoid that shifts between gears
 	public DoubleSolenoid shifter;
+
 	// TODO take this out after testing
 	public CANTalon.MotionProfileStatus leftTPointStatus;
 	public CANTalon.MotionProfileStatus rightTPointStatus;
+
+	//The time when the robot was enabled.
 	private long startTime;
+
+	//The name of the file we log to.
 	private String logFN;
+
+	//Whether or not to use the NavX for driving straight.
 	public boolean overrideNavX;
 
+	//The max speed the robot has reached during this run. This is NOT the max_speed constant in the map, this is what we use to determine that constant.
 	private double maxSpeed;
+
+	//What we multiply the joystick output by before giving it to the PID loop, to give the loop room to compensate.
 	private final double PID_SCALE = 0.9;
+
+	//The amount of time after up/down shifting before we can do it again
 	private double upTimeThresh, downTimeThresh;
+
+	//Whether we can up/down shift, used as a flag for the delay.
 	private boolean okToUpshift, okToDownshift;
+
+	//The setpoint (on a 0-1 scale) below which we stay in low gear.
 	private double upshiftFwdDeadband;
 
-	private long timeAboveShift, timeBelowShift, timeLastShifted;
+	//The time, in milliseconds, at which we crossed the speed at which we up/down shift.
+	private long timeAboveShift, timeBelowShift;
+
+	//The time we last shifted in either direction.
+	private long timeLastShifted;
+
+	//The minimum time between shifting in either direction
 	private Double shiftDelay;
 
-	public boolean overrideAutoShift = false;
+	//Whether not to override auto shifting.
+	public boolean overrideAutoShift;
 
-	boolean lowGear = true;    //we want to start in low gear
+	//Whether we're in low gear
+	private boolean lowGear = true;    //we want to start in low gear
 
-	double wheelDia, upshift, downshift;
+	//The speed to upshift at
+	private double upshift;
+
+	//The speed to downshift at
+	private double downshift;
 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
+		//Set the logfile name, which includes a timestamp.
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
 				".csv";
+
+		//Write the headers for the logfile.
 		try (PrintWriter writer = new PrintWriter(logFN)) {
 			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		//Set things
 		this.map = map;
 		this.oi = oi;
-		this.navx = new AHRS(SPI.Port.kMXP);
-		this.turnPID = map.getTurnPID();
-		this.straightPID = map.getStraightPID();
-		this.upTimeThresh = map.getUpTimeThresh();
-		this.downTimeThresh = map.getDownTimeThresh();
+		navx = new AHRS(SPI.Port.kMXP);
+		turnPID = map.getTurnPID();
+		straightPID = map.getStraightPID();
+		upTimeThresh = map.getUpTimeThresh();
+		downTimeThresh = map.getDownTimeThresh();
+		upshiftFwdDeadband = map.getUpshiftFwdDeadband();
+		upshift = map.getUpshift();
+		downshift = map.getDownshift();
+
+		//Shift delay is optional, so it'll be null if it isn't in map.
 		if (map.hasShiftDelay()) {
 			this.shiftDelay = map.getShiftDelay();
 		}
+
+		//Initialize shifting constants, assuming robot is stationary.
 		okToUpshift = false;
 		okToDownshift = true;
 		overrideAutoShift = false;
 		timeLastShifted = 0;
-		upshiftFwdDeadband = map.getUpshiftFwdDeadband();
+
+		//If the map has the shifting piston, instantiate it.
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter()
 					.getReverse());
 		}
+
+		//Initialize max
 		maxSpeed = -1;
 
+		//Initialize master talons
 		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
-		long upshiftTIme, downshiftTime;
-
+		//Initialize slave talons.
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -101,10 +155,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
-
-		upshift = map.getUpshift();
-		downshift = map.getDownshift();
-		wheelDia = map.getWheelDiameter();
 
 		// TODO take this out
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
