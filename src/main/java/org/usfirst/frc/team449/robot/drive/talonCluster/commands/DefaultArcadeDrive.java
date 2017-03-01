@@ -26,7 +26,8 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	//The map of values
 	ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map;
 
-	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive, ArcadeOI oi) {
+	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
+	                          ArcadeOI oi) {
 		super(map, drive);
 		maxAngularVel = map.getMaxAngularVel();
 		this.oi = oi;
@@ -46,7 +47,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 
 		//Initial assignment
 		drivingStraight = false;
-		driveSubsystem.setLowGear(true);	//starting from rest, we want to be in low gear so we can accelerate
+		driveSubsystem.setLowGear(true);    //starting from rest, we want to be in low gear so we can accelerate
 		vel = oi.getFwd();
 		rot = oi.getRot();
 	}
@@ -114,7 +115,8 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 					output = -minimumOutput;
 				}
 			}
-			//Set the output to 0 if we're within the deadband. Whether or not the deadband is enabled is dealt with in PIDAngleCommand.
+			//Set the output to 0 if we're within the deadband. Whether or not the deadband is enabled is dealt with
+			// in PIDAngleCommand.
 			if (Math.abs(this.getPIDController().getError()) < deadband) {
 				output = 0;
 			}

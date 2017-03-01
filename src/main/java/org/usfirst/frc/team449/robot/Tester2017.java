@@ -9,7 +9,8 @@
 // */
 //public class Tester2017 {
 //	public static void main(String[] args) throws IOException {
-//		Robot2017Map.Robot2017 cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("final_map.cfg", Robot2017Map.Robot2017.newBuilder());
+//		Robot2017Map.Robot2017 cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("final_map.cfg", Robot2017Map
+// .Robot2017.newBuilder());
 //
 //	}
 //}

@@ -35,7 +35,8 @@ public abstract class PIDAngleCommand extends PIDCommand {
 
 	/**
 	 * Default constructor.
-	 * @param map The map with this command's constants.
+	 *
+	 * @param map       The map with this command's constants.
 	 * @param subsystem The NavX subsystem.
 	 */
 	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
@@ -55,11 +56,13 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
 		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
 
-		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about right.
+		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
+		// right.
 		this.minimumOutput = map.getMinimumOutput();
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
 
-		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to prevent overshoot.
+		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
+		// prevent overshoot.
 		if (map.getMaximumOutputEnabled()) {
 			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
 		}

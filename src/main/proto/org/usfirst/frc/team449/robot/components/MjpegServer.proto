@@ -3,7 +3,7 @@ syntax = "proto2";
 option java_package = "maps.org.usfirst.frc.team449.robot.components";
 option java_outer_classname = "MjpegServerMap";
 
-message MjpegServer{
+message MjpegServer {
 	required string name = 1;
-    required int32 port = 2;
+	required int32 port = 2;
 }

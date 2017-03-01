@@ -31,7 +31,7 @@ public class ToggleShooter extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle*100.0);
+		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle * 100.0);
 		System.out.println("AccelerateFlywheel executed");
 	}
 

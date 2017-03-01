@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import edu.wpi.first.wpilibj.Talon;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
@@ -15,7 +14,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 
 	public DriveAtSpeed(TalonClusterDrive drive, double speed, double seconds) {
 		super(drive);
-//		requires(subsystem);
+		//		requires(subsystem);
 		this.speed = speed;
 		this.seconds = seconds;
 		System.out.println("Drive Robot bueno");

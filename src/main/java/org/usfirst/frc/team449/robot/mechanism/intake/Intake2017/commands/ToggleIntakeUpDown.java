@@ -1,9 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.ReferencingCommandGroup;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
@@ -27,7 +25,7 @@ public class ToggleIntakeUpDown extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		intake2017.setPiston(intake2017.intakeUp? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+		intake2017.setPiston(intake2017.intakeUp ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 	}
 
 	@Override

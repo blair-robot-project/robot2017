@@ -35,7 +35,7 @@ message UnitlessCANTalonSRX {
 	required double kI_hg = 28;
 	required double kD_hg = 29;
 	optional double max_speed_lg = 22;
-    required double max_speed_hg = 30;
+	required double max_speed_hg = 30;
 	required bool fwd_lim_norm_open = 13;
 	required bool rev_lim_norm_open = 14;
 	required bool fwd_lim_enabled = 15;

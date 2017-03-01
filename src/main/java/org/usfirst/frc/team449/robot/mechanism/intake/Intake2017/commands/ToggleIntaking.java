@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 /**
  * Created by blairrobot on 1/28/17.
  */
-public class ToggleIntaking extends ReferencingCommand{
+public class ToggleIntaking extends ReferencingCommand {
 
 	private Intake2017 intake2017;
 
@@ -24,7 +24,7 @@ public class ToggleIntaking extends ReferencingCommand{
 
 	@Override
 	protected void execute() {
-		if (intake2017.isIntaking){
+		if (intake2017.isIntaking) {
 			intake2017.setActuatedVictor(0);
 			intake2017.setFixedVictor(0);
 		} else {

@@ -8,5 +8,5 @@ option java_outer_classname = "SingleFlywheelShooterMap";
 message SingleFlywheelShooter {
 	required Mechanism mechanism = 1;
 	required UnitlessCANTalonSRX talon = 2;
-    optional double throttle = 3;
+	optional double throttle = 3;
 }

@@ -6,12 +6,12 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by Noah Gleason on 2/12/2017.
  */
-public class OverrideAutoShift extends ReferencingCommand{
+public class OverrideAutoShift extends ReferencingCommand {
 
 	private boolean override;
 	private boolean switchToLowGear;
 
-	public OverrideAutoShift(TalonClusterDrive drive, boolean override, boolean switchToLowGear){
+	public OverrideAutoShift(TalonClusterDrive drive, boolean override, boolean switchToLowGear) {
 		super(drive);
 		requires(subsystem);
 		this.override = override;

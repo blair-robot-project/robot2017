@@ -11,7 +11,7 @@ public class StaticIntakeStop extends ReferencingCommand {
 
 	public StaticIntakeStop(Intake2017 intake) {
 		super(intake);
-//		requires(intake);
+		//		requires(intake);
 		this.intake = intake;
 	}
 

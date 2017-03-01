@@ -4,7 +4,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideAutoShift;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideNavX;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
@@ -25,7 +30,8 @@ import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
  */
 public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
-	//How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that much of the way.
+	//How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
+	// much of the way.
 	private static double SHIFT;
 
 	//The throttle wrapper for the stick controlling turning velocity.
@@ -85,7 +91,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	//Lower and run the intake while turning off the flywheel and feeder.
 	private JoystickButton loadShooter;
-	//Raise the intake and run the static one to agitate the ball bin. Run the flywheel to get it up to speed, but don't run the feeder.
+	//Raise the intake and run the static one to agitate the ball bin. Run the flywheel to get it up to speed, but
+	// don't run the feeder.
 	private JoystickButton rackShooter;
 	//Same as rack, but run the feeder in order to fire balls.
 	private JoystickButton fireShooter;
@@ -116,7 +123,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasTurnTo330()) {
 			turnTo330 = new MappedJoystickButton(map.getTurnTo330());
 		}
-		if(map.hasTurnaround()) {
+		if (map.hasTurnaround()) {
 			turnaround = new MappedJoystickButton(map.getTurnaround());
 		}
 		if (map.hasSwitchToLowGear()) {
@@ -126,10 +133,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasClimb()) {
 			climb = new MappedJoystickButton(map.getClimb());
 		}
-		if (map.hasTmpOverrideLow()){
+		if (map.hasTmpOverrideLow()) {
 			tmpOverrideLow = new MappedJoystickButton(map.getTmpOverrideLow());
 		}
-		if (map.hasTmpOverrideHigh()){
+		if (map.hasTmpOverrideHigh()) {
 			tmpOverrideHigh = new MappedJoystickButton(map.getTmpOverrideHigh());
 		}
 		if (map.hasToggleOverrideHigh()) {
@@ -141,7 +148,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasToggleIntake()) {
 			toggleIntake = new MappedJoystickButton(map.getToggleIntake());
 		}
-		if (map.hasToggleIntakeUpDown()){
+		if (map.hasToggleIntakeUpDown()) {
 			toggleIntakeUpDown = new MappedJoystickButton(map.getToggleIntakeUpDown());
 		}
 		if (map.hasShoot()) {
@@ -156,13 +163,14 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasFireShooter()) {
 			fireShooter = new MappedJoystickButton(map.getFireShooter());
 		}
-		if (map.hasSwitchCamera()){
+		if (map.hasSwitchCamera()) {
 			switchCamera = new MappedJoystickButton(map.getSwitchCamera());
 		}
 	}
 
 	/**
-	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick it is.
+	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of
+	 * joystick it is.
 	 *
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
@@ -172,14 +180,15 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			//TODO put this number in the map
 			final double ROT_SCALE = 0.2;
 			//Scale based on rotational throttle for more responsive turning at high speed
-			return fwdThrottle.getValue()*(1-ROT_SCALE*rotThrottle.getValue());
+			return fwdThrottle.getValue() * (1 - ROT_SCALE * rotThrottle.getValue());
 		} else {
 			return 0;
 		}
 	}
 
 	/**
-	 * Get the output of the D-pad or turning joystick, whichever is in use. If both are in use, the D-pad takes preference.
+	 * Get the output of the D-pad or turning joystick, whichever is in use. If both are in use, the D-pad takes
+	 * preference.
 	 *
 	 * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
 	 */
@@ -208,7 +217,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Map drive commands
 		if (turnaround != null) {
-			turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, TIMEOUT));
+			turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem,
+					TIMEOUT));
 		}
 		if (turnTo0 != null) {
 			turnTo0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, TIMEOUT));
@@ -217,25 +227,28 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			turnTo30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, TIMEOUT));
 		}
 		if (turnTo180 != null) {
-			turnTo180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, TIMEOUT));
+			turnTo180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem,
+					TIMEOUT));
 		}
 		if (turnTo330 != null) {
-			turnTo330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, TIMEOUT));
+			turnTo330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem,
+					TIMEOUT));
 		}
 		if (Robot.driveSubsystem.shifter != null && switchToHighGear != null && switchToLowGear != null) {
 			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
 			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
 		}
-		if (tmpOverrideHigh != null){
+		if (tmpOverrideHigh != null) {
 			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, false));
 			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, false));
 		}
-		if (tmpOverrideLow != null){
+		if (tmpOverrideLow != null) {
 			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, true));
 			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, true));
 		}
-		if (toggleOverrideHigh != null){
-			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem.overrideAutoShift, false));
+		if (toggleOverrideHigh != null) {
+			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem
+					.overrideAutoShift, false));
 		}
 
 		//Map climber commands
@@ -250,17 +263,17 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 
 		//Map intake commands
-		if (Robot.intakeSubsystem != null){
+		if (Robot.intakeSubsystem != null) {
 			if (toggleIntakeUpDown != null) {
 				toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
 			}
-			if (toggleIntake != null){
+			if (toggleIntake != null) {
 				toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
 			}
 		}
 
 		//Map feeder commands
-		if (toggleFeeder != null && Robot.feederSubsystem != null){
+		if (toggleFeeder != null && Robot.feederSubsystem != null) {
 			toggleFeeder.whenPressed(new ToggleFeeder(Robot.feederSubsystem));
 		}
 
@@ -271,13 +284,16 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Map group commands
 		if (loadShooter != null) {
-			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
+					.feederSubsystem));
 		}
 		if (rackShooter != null) {
-			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
+					.feederSubsystem));
 		}
 		if (fireShooter != null) {
-			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot.feederSubsystem));
+			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
+					.feederSubsystem));
 		}
 	}
 }

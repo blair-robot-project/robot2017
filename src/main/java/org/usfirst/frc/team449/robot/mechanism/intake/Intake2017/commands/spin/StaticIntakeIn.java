@@ -11,7 +11,7 @@ public class StaticIntakeIn extends ReferencingCommand {
 
 	public StaticIntakeIn(Intake2017 intake) {
 		super(intake);
-//		requires(intake);
+		//		requires(intake);
 		this.intake = intake;
 	}
 
@@ -27,11 +27,11 @@ public class StaticIntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-//		intake.setFixedVictor(0);
+		//		intake.setFixedVictor(0);
 	}
 
 	@Override
 	protected void interrupted() {
-//		intake.setFixedVictor(0);
+		//		intake.setFixedVictor(0);
 	}
 }

@@ -6,11 +6,11 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 /**
  * Created by Noah Gleason on 2/11/2017.
  */
-public class StopClimbing extends ReferencingCommand{
+public class StopClimbing extends ReferencingCommand {
 
 	ClimberSubsystem climber;
 
-	public StopClimbing (ClimberSubsystem climber) {
+	public StopClimbing(ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
 		this.climber = climber;

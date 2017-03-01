@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		//Construct feeder if it's in the map.
-		if (cfg.hasFeeder()){
+		if (cfg.hasFeeder()) {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
@@ -127,7 +127,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setDefaultThrottle(0, 0);
 
 		//Switch to low gear if we have gears
-		if (driveSubsystem.shifter != null){
+		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
 	}

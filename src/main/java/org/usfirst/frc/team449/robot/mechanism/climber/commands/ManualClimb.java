@@ -10,7 +10,7 @@ public class ManualClimb extends ReferencingCommand {
 
 	ClimberSubsystem climber;
 
-	public ManualClimb (ClimberSubsystem climber) {
+	public ManualClimb(ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
 		this.climber = climber;

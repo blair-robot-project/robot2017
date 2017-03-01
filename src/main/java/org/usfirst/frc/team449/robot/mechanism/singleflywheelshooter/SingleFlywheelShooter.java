@@ -16,7 +16,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	public boolean spinning;
 	private RotPerSecCANTalonSRX talon;
 
-	public double throttle=0.5;
+	public double throttle = 0.5;
 	/**
 	 * Counts per revolution
 	 */
@@ -29,7 +29,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		super(map.getMechanism());
 		this.map = map;
 		this.talon = new RotPerSecCANTalonSRX(map.getTalon());
-		if(map.hasThrottle()) {
+		if (map.hasThrottle()) {
 			this.throttle = map.getThrottle();
 		}
 		System.out.println("Shooter F: " + talon.canTalon.getF());
@@ -91,7 +91,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 			e.printStackTrace();
 		}
 		startTime = System.nanoTime();
-//		setDefaultCommand(new PIDTune(this));
+		//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}
 }

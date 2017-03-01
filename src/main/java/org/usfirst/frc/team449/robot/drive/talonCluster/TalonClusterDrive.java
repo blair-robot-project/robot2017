@@ -57,7 +57,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	//Whether or not to use the NavX for driving straight.
 	public boolean overrideNavX;
 
-	//The max speed the robot has reached during this run. This is NOT the max_speed constant in the map, this is what we use to determine that constant.
+	//The max speed the robot has reached during this run. This is NOT the max_speed constant in the map, this is what
+	// we use to determine that constant.
 	private double maxSpeed;
 
 	//What we multiply the joystick output by before giving it to the PID loop, to give the loop room to compensate.
@@ -205,7 +206,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
-		     /*
+			 /*
 	         sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");

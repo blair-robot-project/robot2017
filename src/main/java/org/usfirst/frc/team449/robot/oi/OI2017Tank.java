@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.Joystick;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
-import org.usfirst.frc.team449.robot.oi.components.PolyThrottle;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 

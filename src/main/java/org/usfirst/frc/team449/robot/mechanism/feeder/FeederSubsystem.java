@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 /**
  * Created by Noah Gleason on 2/18/2017.
  */
-public class FeederSubsystem extends MechanismSubsystem{
+public class FeederSubsystem extends MechanismSubsystem {
 
 	private VictorSP victor;
 	private double speed;
@@ -21,12 +21,12 @@ public class FeederSubsystem extends MechanismSubsystem{
 		running = false;
 	}
 
-	public void runVictor(){
+	public void runVictor() {
 		victor.set(speed);
 		running = true;
 	}
 
-	public void stopVictor(){
+	public void stopVictor() {
 		victor.set(0);
 		running = false;
 	}

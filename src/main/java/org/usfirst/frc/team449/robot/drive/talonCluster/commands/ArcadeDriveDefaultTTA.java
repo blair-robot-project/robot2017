@@ -77,10 +77,10 @@ public class ArcadeDriveDefaultTTA extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		if (oi.getRot() > 0 && oi.getRot() > lastAngleStick){
-			this.setSetpointRelative(turnCoeffecient*(oi.getRot() - lastAngleStick));
-		} else if (oi.getRot() < 0 && oi.getRot() < lastAngleStick){
-			this.setSetpointRelative(turnCoeffecient*(oi.getRot() - lastAngleStick));
+		if (oi.getRot() > 0 && oi.getRot() > lastAngleStick) {
+			this.setSetpointRelative(turnCoeffecient * (oi.getRot() - lastAngleStick));
+		} else if (oi.getRot() < 0 && oi.getRot() < lastAngleStick) {
+			this.setSetpointRelative(turnCoeffecient * (oi.getRot() - lastAngleStick));
 		}
 		lastAngleStick = oi.getRot();
 		drive.logData();

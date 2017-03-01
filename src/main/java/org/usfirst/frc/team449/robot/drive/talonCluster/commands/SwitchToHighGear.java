@@ -7,13 +7,13 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by BlairRobot on 2017-02-09.
  */
-public class SwitchToHighGear extends ReferencingCommand{
+public class SwitchToHighGear extends ReferencingCommand {
 	public SwitchToHighGear(MappedSubsystem subsystem) {
 		super(subsystem);
 	}
 
 	@Override
-	protected void initialize(){
+	protected void initialize() {
 		System.out.println("SwitchToHighGear init.");
 	}
 

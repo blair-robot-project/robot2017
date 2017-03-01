@@ -37,7 +37,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	 *
 	 * @param map CANTalonSRX map object
 	 */
-	public RotPerSecCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap.UnitlessCANTalonSRX map) {
+	public RotPerSecCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap
+			                            .UnitlessCANTalonSRX map) {
 		// Configure stuff
 		this.map = map;
 		canTalon = new CANTalon(map.getPort());
@@ -101,22 +102,25 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Set up all the PIDF constants, using a maxSpeed insead of an F value.
-	 * @param p The proportional gain term of the loop
-	 * @param i The integral gain term of the loop
-	 * @param d The derivative gain term of the loop
-	 * @param maxSpeed The max speed of this motor, in RPS
-	 * @param iZone Integration zone -- prevents accumulation of integration error with large errors. Setting this to zero will ignore any izone stuff.
+	 *
+	 * @param p                 The proportional gain term of the loop
+	 * @param i                 The integral gain term of the loop
+	 * @param d                 The derivative gain term of the loop
+	 * @param maxSpeed          The max speed of this motor, in RPS
+	 * @param iZone             Integration zone -- prevents accumulation of integration error with large errors.
+	 *                             Setting this to zero will ignore any izone stuff.
 	 * @param closeLoopRampRate Closed loop ramp rate. Maximum change in voltage, in volts / sec.
-	 * @param profile The profile to use (must be 0 or 1).
+	 * @param profile           The profile to use (must be 0 or 1).
 	 */
-	private void setPIDF(double p, double i, double d, double maxSpeed, int iZone, double closeLoopRampRate, int profile){
-		this.canTalon.setPID(p, i, d, 1023/RPStoNative(maxSpeed), iZone, closeLoopRampRate, profile);
+	private void setPIDF(double p, double i, double d, double maxSpeed, int iZone, double closeLoopRampRate, int
+			profile) {
+		this.canTalon.setPID(p, i, d, 1023 / RPStoNative(maxSpeed), iZone, closeLoopRampRate, profile);
 	}
 
 	/**
 	 * Switch to using the high gear PID constants.
 	 */
-	public void switchToHighGear(){
+	public void switchToHighGear() {
 		//Switch max speed to high gear max speed
 		maxSpeed = map.getMaxSpeedHg();
 		//Set the slot 0 constants to the high gear ones.
@@ -126,7 +130,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * Switch to using the low gear PID constants.
 	 */
-	public void switchToLowGear(){
+	public void switchToLowGear() {
 		//If there are low gear constants in the map
 		if (map.hasKPLg()) {
 			//Switch max speed to low gear max speed
@@ -135,7 +139,8 @@ public class RotPerSecCANTalonSRX extends Component {
 			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
 		} else {
 			//Warn the user if they're trying to do this but don't have the low gear constants in the map.
-			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear constants.");
+			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +
+					"constants.");
 		}
 	}
 
@@ -145,6 +150,7 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Convert from RPS to the CANTalon native velocity units
+	 *
 	 * @param RPS The RPS velocity you want to convert
 	 * @return That velocity in CANTalon native units
 	 */
@@ -154,6 +160,7 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Convert from CANTalon native velocity units to rotations per second.
+	 *
 	 * @param nat A velocity in CANTalon native units
 	 * @return That velocity in RPS
 	 */
@@ -163,7 +170,7 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Get the velocity of the CANTalon in RPS
-	 *<p>
+	 * <p>
 	 * Note: This method is called getSpeed since the TalonControlMode enum is called speed. However, the output
 	 * is signed and is actually a velocity.
 	 *
@@ -172,8 +179,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	public double getSpeed() {
 		//If we use a CTRE encoder, it returns in rotations per minute
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
-				.FeedbackDevice.CtreMagEncoder_Absolute){
-			return canTalon.getSpeed()/60;
+				.FeedbackDevice.CtreMagEncoder_Absolute) {
+			return canTalon.getSpeed() / 60;
 		}
 		//Otherwise, convert from natives.
 		return nativeToRPS(canTalon.getSpeed());
@@ -213,17 +220,19 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Get the current closed-loop velocity error in RPS. WARNING: will give garbage if not in velocity mode.
+	 *
 	 * @return The closed-loop error in RPS
 	 */
-	public double getError(){
+	public double getError() {
 		return nativeToRPS(canTalon.getError());
 	}
 
 	/**
 	 * Get the high gear max speed. Sometimes useful for scaling joystick output.
+	 *
 	 * @return The high gear max speed in RPS
 	 */
-	public double getMaxSpeedHG(){
+	public double getMaxSpeedHG() {
 		return map.getMaxSpeedHg();
 	}
 }

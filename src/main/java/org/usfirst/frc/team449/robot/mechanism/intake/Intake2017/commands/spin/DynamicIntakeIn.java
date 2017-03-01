@@ -11,7 +11,7 @@ public class DynamicIntakeIn extends ReferencingCommand {
 
 	public DynamicIntakeIn(Intake2017 intake) {
 		super(intake);
-//		requires(intake);
+		//		requires(intake);
 		this.intake = intake;
 	}
 
@@ -27,11 +27,11 @@ public class DynamicIntakeIn extends ReferencingCommand {
 
 	@Override
 	protected void end() {
-//		intake.setActuatedVictor(0);
+		//		intake.setActuatedVictor(0);
 	}
 
 	@Override
 	protected void interrupted() {
-//		intake.setActuatedVictor(0);
+		//		intake.setActuatedVictor(0);
 	}
 }

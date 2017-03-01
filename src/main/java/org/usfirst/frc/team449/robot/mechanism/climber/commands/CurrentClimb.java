@@ -28,7 +28,7 @@ public class CurrentClimb extends ReferencingCommand {
 		//if (climber.reachedTop()){
 		//	climber.setPercentVbus(0);
 		//} else {
-			climber.setPercentVbus(1);
+		climber.setPercentVbus(1);
 		//}
 		SmartDashboard.putNumber("Current", climber.canTalonSRX.canTalon.getOutputCurrent());
 	}
