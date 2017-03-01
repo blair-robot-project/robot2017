@@ -25,83 +25,162 @@ import java.util.Date;
  */
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
-	//The master talon on the right and left sides
+	/**
+	 * Right master Talon
+	 */
 	public RotPerSecCANTalonSRX rightMaster;
+	/**
+	 * Left master Talon
+	 */
 	public RotPerSecCANTalonSRX leftMaster;
 
-	//The NavX gyro.
+	/**
+	 * The NavX gyro
+	 */
 	public AHRS navx;
 
-	//The PIDAngleCommand constants for turning to an angle with the NavX
+	/**
+	 * The PIDAngleCommand constants for turning to an angle with the NavX
+	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 
-	//The PIDAngleCommand constants for using the NavX to drive straight.
+	/**
+	 * The PIDAngleCommand constants for using the NavX to drive straight
+	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 
-	//The oi used to drive the robot.
+	/**
+	 * The oi used to drive the robot
+	 */
 	public OI2017ArcadeGamepad oi;
 
-	//The solenoid that shifts between gears
+	/**
+	 * The solenoid that shifts between gears
+	 */
 	public DoubleSolenoid shifter;
 
-	// TODO take this out after testing
+	// TODO take these out after testing
+	/**
+	 * Current status of the left side MP
+	 */
 	public CANTalon.MotionProfileStatus leftTPointStatus;
+	/**
+	 * Current status of the right side MP
+	 */
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 
-	//The time when the robot was enabled.
+	/**
+	 * The time (nanoseconds) when the robot was enabled (for use in logging)
+	 */
 	private long startTime;
 
-	//The name of the file we log to.
+	/**
+	 * The name of the file to log to
+	 */
 	private String logFN;
 
-	//Whether or not to use the NavX for driving straight.
+	/**
+	 * Whether or not to use the NavX for driving straight
+	 */
 	public boolean overrideNavX;
 
-	//The max speed the robot has reached during this run. This is NOT the max_speed constant in the map, this is what
-	// we use to determine that constant.
+	/**
+	 * Measured max speed of robot reached in a run. Used for testing and tuning. NOT max_speed tuning constant
+	 *
+	 * @deprecated
+	 */
+	@Deprecated
 	private double maxSpeed;
 
-	//What we multiply the joystick output by before giving it to the PID loop, to give the loop room to compensate.
+	// TODO externalize
+	/**
+	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
+	 * loop space to compensate.
+	 */
 	private final double PID_SCALE = 0.9;
 
-	//The amount of time after up/down shifting before we can do it again
-	private double upTimeThresh, downTimeThresh;
+	/**
+	 * Upshift timeout.
+	 * The robot will wait for this this number of milliseconds before upshifting after a downshift
+	 */
+	private double upTimeThresh;
+	/**
+	 * Downshift timeout.
+	 * The robot will wait for this this number of milliseconds before downshifting after an upshift
+	 */
+	private double downTimeThresh;
 
-	//Whether we can up/down shift, used as a flag for the delay.
-	private boolean okToUpshift, okToDownshift;
+	/**
+	 * Whether we can up shift, used as a flag for the delay
+	 */
+	private boolean okToUpshift;
+	/**
+	 * Whether we can down shift, used as a flag for the delay
+	 */
+	private boolean okToDownshift;
 
-	//The setpoint (on a 0-1 scale) below which we stay in low gear.
+	// TODO refactor; THIS IS NOT A DEADBAND
+	/**
+	 * The setpoint (on a 0-1 scale) below which we stay in low gear
+	 */
 	private double upshiftFwdDeadband;
 
-	//The time, in milliseconds, at which we crossed the speed at which we up/down shift.
-	private long timeAboveShift, timeBelowShift;
+	/**
+	 * The last time (in milliseconds) at which we upshifted
+	 */
+	private long timeAboveShift;
+	/**
+	 * The last time (in milliseconds) at which we downshifted
+	 */
+	private long timeBelowShift;
 
-	//The time we last shifted in either direction.
+	/**
+	 * The time we last shifted (milliseconds)
+	 */
 	private long timeLastShifted;
 
-	//The minimum time between shifting in either direction
+	// TODO simplify shifting and make this a primitive
+	/**
+	 * The minimum time between shifting in either direction
+	 */
 	private Double shiftDelay;
 
-	//Whether not to override auto shifting.
+	/**
+	 * Whether not to override auto shifting
+	 */
 	public boolean overrideAutoShift;
 
-	//Whether we're in low gear
+	// TODO set this when we shift
+	// TODO make this an enum instead of a boolean
+	/**
+	 * Whether we're in low gear
+	 */
 	private boolean lowGear = true;    //we want to start in low gear
 
-	//The speed to upshift at
+	/**
+	 * The speed setpoint at the upshift break
+	 */
 	private double upshift;
 
-	//The speed to downshift at
+	/**
+	 * The speed setpoint at the downshiftshift break
+	 */
 	private double downshift;
 
+	/**
+	 * Construct a TalonClusterDrive
+	 *
+	 * @param map config map
+	 * @param oi  OI to read throttle from
+	 */
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi) {
 		super(map.getDrive());
-		//Set the logfile name, which includes a timestamp.
+
+		// Write the headers for the logfile.
+		// TODO externalize this shit
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
 				".csv";
-
-		//Write the headers for the logfile.
 		try (PrintWriter writer = new PrintWriter(logFN)) {
 			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
 			writer.close();
@@ -109,7 +188,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			e.printStackTrace();
 		}
 
-		//Set things
 		this.map = map;
 		this.oi = oi;
 		navx = new AHRS(SPI.Port.kMXP);
@@ -121,31 +199,31 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		upshift = map.getUpshift();
 		downshift = map.getDownshift();
 
-		//Shift delay is optional, so it'll be null if it isn't in map.
+		// Shift delay is optional, so it'll be null if it isn't in map.
 		if (map.hasShiftDelay()) {
 			this.shiftDelay = map.getShiftDelay();
 		}
 
-		//Initialize shifting constants, assuming robot is stationary.
+		// Initialize shifting constants, assuming robot is stationary.
 		okToUpshift = false;
 		okToDownshift = true;
 		overrideAutoShift = false;
 		timeLastShifted = 0;
 
-		//If the map has the shifting piston, instantiate it.
+		// If the map has the shifting piston, instantiate it.
 		if (map.hasShifter()) {
 			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter()
 					.getReverse());
 		}
 
-		//Initialize max
+		// Initialize max
 		maxSpeed = -1;
 
-		//Initialize master talons
+		// Initialize master talons
 		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
-		//Initialize slave talons.
+		// Initialize slave talons.
 		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -157,22 +235,29 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
 
-		// TODO take this out
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
 		rightTPointStatus = new CANTalon.MotionProfileStatus();
 	}
 
 	/**
-	 * Sets the left and right wheel speeds as a voltage percentage, not nearly as precise as PID.
+	 * Sets the left and right wheel speeds as a percent of max voltage, not nearly as precise as PID.
 	 *
-	 * @param left  The left throttle, a number between -1 and 1 inclusive.
-	 * @param right The right throttle, a number between -1 and 1 inclusive.
+	 * @param left  The left voltage throttle, [-1, 1]
+	 * @param right The right voltage throttle, [-1, 1]
 	 */
 	private void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(-right);
 	}
 
+	// TODO refactor to specifiy PID VELOCITY setpoint
+
+	/**
+	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint
+	 *
+	 * @param left  The left PID velocity setpoint as a percent [-1, 1]
+	 * @param right The right PID velocity setpoint as a percent [-1, 1]
+	 */
 	private void setPIDThrottle(double left, double right) {
 		if (overrideAutoShift) {
 			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
@@ -184,7 +269,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	/**
-	 * Allows the type of motor control used to be varied in testing.
+	 * setPIDThrottle or setVBusThrottle, whichever is set as the "default"
 	 *
 	 * @param left  Left throttle value
 	 * @param right Right throttle value
@@ -194,6 +279,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//setVBusThrottle(left, right);
 	}
 
+	/**
+	 * Log stuff to file
+	 */
 	public void logData() {
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
@@ -207,7 +295,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			 /*
-	         sb.append(",");
+			 sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
 	         sb.append(rightTPointStatus.activePoint.position);
@@ -235,6 +323,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
+	/**
+	 * Log stuff to file, with a given veocity setpoint to log
+	 *
+	 * @param sp velocity setpoint
+	 */
 	public void logData(double sp) {
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
@@ -251,8 +344,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(PID_SCALE * sp * leftMaster.getMaxSpeed());
 			sb.append(",");
 			sb.append(PID_SCALE * sp * rightMaster.getMaxSpeed());
-	         /*
-	         sb.append(",");
+			 /*
+			 sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
 	         sb.append(rightTPointStatus.activePoint.position);
@@ -280,6 +373,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
+	/**
+	 * Stuff run on enable
+	 * Reset starTime, turn on navX control, and start DefaultArcadeDrive
+	 */
 	@Override
 	protected void initDefaultCommand() {
 		startTime = System.nanoTime();
@@ -289,10 +386,22 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
+	/**
+	 * Get the robot's heading using the navX
+	 *
+	 * @return robot heading (degrees) [-180, 180]
+	 */
 	public double getGyroOutput() {
 		return navx.pidGet();
 	}
 
+	// TODO generalize up-down with an enum
+
+	/**
+	 * Shift as appropriate
+	 *
+	 * @param setLowGear whether to shift down (if false, shift up)
+	 */
 	public void setLowGear(boolean setLowGear) {
 		if (shifter != null) {
 			if (setLowGear) {
@@ -312,18 +421,32 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 	}
 
+	/**
+	 * @return left cluster measured velocity
+	 */
 	public double getLeftSpeed() {
 		return leftMaster.getSpeed();
 	}
 
+	/**
+	 * @return right cluster measured velocity
+	 */
 	public double getRightSpeed() {
 		return rightMaster.getSpeed();
 	}
 
+	/**
+	 * @return whether the robot is in low gear
+	 */
 	public boolean inLowGear() {
 		return lowGear;
 	}
 
+	// TODO simplify the should-shift logic
+
+	/**
+	 * @return whether the robot should downshift
+	 */
 	public boolean shouldDownshift() {
 		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift && !lowGear &&
 				!overrideAutoShift || oi.getFwd() == 0 && oi.getRot() != 0 && !overrideAutoShift;
@@ -339,6 +462,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return (System.currentTimeMillis() - timeBelowShift > downTimeThresh * 1000 && okToShift);
 	}
 
+	/**
+	 * @return whether the robot should upshift
+	 */
 	public boolean shouldUpshift() {
 		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift && lowGear &&
 				!overrideAutoShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
@@ -354,6 +480,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return (System.currentTimeMillis() - timeAboveShift > upTimeThresh * 1000 && okToShift);
 	}
 
+	/**
+	 * Shift if necessary
+	 */
 	public void autoShift() {
 		if (shouldUpshift()) {
 			setLowGear(false);
