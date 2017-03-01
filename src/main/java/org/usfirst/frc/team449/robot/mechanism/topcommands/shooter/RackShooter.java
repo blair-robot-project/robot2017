@@ -10,17 +10,22 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 
 /**
- * Created by ryant on 2017-02-18.
+ * Command group for racking the shooter.
+ * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
 public class RackShooter extends CommandGroup {
+	/**
+	 * Constructs a RackShooter command group
+	 *
+	 * @param sfs    shooter subsystem
+	 * @param intake intake subsystem
+	 * @param feeder feeder subsystem
+	 */
 	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
 		requires(intake);
-
 		addParallel(new AccelerateFlywheel(sfs, 5));
-
 		addParallel(new IntakeUp(intake));
 		addParallel(new SIDS(intake));
-
 		addParallel(new StopFeeder(feeder));
 	}
 }
