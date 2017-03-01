@@ -8,21 +8,60 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPUpdaterProcess;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 
 /**
- * Load and execute a motion profile on the master Talons in the two motor clusters
+ * ReferencingCommand to load and execute a motion profile on the master Talons in the two motor clusters
  */
 public class ExecuteProfile extends ReferencingCommand {
+	/**
+	 * Number of points that must be loaded before we start executing the profile
+	 */
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
+	/**
+	 * Filename of the MP input file
+	 */
 	private static final String IN_FILE_NAME = "/home/lvuser/449_resources/profile.csv";
+	/**
+	 * Update rate of the {@link MPUpdaterProcess}
+	 */
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
+
+	// TODO make _state and enum
+	/**
+	 * State variable of the FSM used to chose when to load points and when to execute the profile
+	 */
 	private int _state = 0;
+
+	/**
+	 * Scheduler {@link Notifier} for updating the Talons' MP
+	 */
 	private Notifier mpProcessNotifier;
 
+	/**
+	 * Drive that the MP will be executed on
+	 */
 	private TalonClusterDrive tcd;
+
+	/**
+	 * Motion profile data
+	 *
+	 * @deprecated to be replaced with PathGenerator stuff in MP_2_Sides future
+	 */
 	private MotionProfileData profile;
 
+	/**
+	 * MP status of the left master
+	 */
 	private CANTalon.MotionProfileStatus leftStatus;
+
+	/**
+	 * MP status of the right master
+	 */
 	private CANTalon.MotionProfileStatus rightStatus;
 
+	/**
+	 * Construct a new ExecuteProfile command
+	 *
+	 * @param subsystem drive subsystem to execute the command on
+	 */
 	public ExecuteProfile(TalonClusterDrive subsystem) {
 		super(subsystem);
 		requires(subsystem);
@@ -37,15 +76,8 @@ public class ExecuteProfile extends ReferencingCommand {
 	}
 
 	/**
-	 * Set up the Talons' modes and populate the trajectory point buffer
-	 */
-	@Override
-	protected void initialize() {
-	}
-
-	/**
-	 * If its the first execute call, start the thread
-	 * Other than that, error check every loop call
+	 * If its the first execute call, start the thread. Otherwise, error check every loop call. Note that the real
+	 * logic is executed in the control method for black-magic Scheduler timing reasons.
 	 */
 	@Override
 	protected void execute() {
@@ -67,6 +99,9 @@ public class ExecuteProfile extends ReferencingCommand {
 		tcd.logData();
 	}
 
+	/**
+	 * Execute the logic that controls if trajectory points are being loaded or if the profile is being executed
+	 */
 	private void control() {
 		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
 		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
@@ -116,6 +151,9 @@ public class ExecuteProfile extends ReferencingCommand {
 		}
 	}
 
+	/**
+	 * Fill the Talon MP hardware buffer
+	 */
 	private void startFilling() {
 		MPUpdaterProcess updaterProcess = new MPUpdaterProcess();
 
