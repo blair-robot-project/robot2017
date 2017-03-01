@@ -9,21 +9,39 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by blairrobot on 1/10/17.
+ * Class for the flywheel
  */
 public class SingleFlywheelShooter extends MappedSubsystem {
-
-	public boolean spinning;
+	/**
+	 * The flywheel's Talon
+	 */
 	private RotPerSecCANTalonSRX talon;
 
-	public double throttle = 0.5;
 	/**
-	 * Counts per revolution
+	 * Whether the flywheel is currently commanded to spin
 	 */
+	public boolean spinning;
 
+	// TODO externalize
+	/**
+	 * Throttle at which to run the shooter
+	 */
+	public double throttle = 0.5;
+
+	/**
+	 * Measured start time in nanoseconds (for logging)
+	 */
 	private long startTime;
+	/**
+	 * Measured max PID error so far (for testing purposes)
+	 */
 	private double maxError = 0;
 
+	/**
+	 * Construct a SingleFlywheelShooter
+	 *
+	 * @param map config map
+	 */
 	public SingleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter
 			                             .SingleFlywheelShooterMap.SingleFlywheelShooter map) {
 		super(map.getMechanism());
@@ -36,14 +54,19 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	}
 
 	/**
-	 * Sets the flywheel to go at a speed between 1 and 0, where 1 is max speed.
+	 * Set the flywheel's percent voltage
 	 *
-	 * @param sp The speed to go at.
+	 * @param sp percent voltage setpoint [-1, 1]
 	 */
 	private void setVBusSpeed(double sp) {
 		talon.setPercentVbus(sp);
 	}
 
+	/**
+	 * Set the flywheel's percent PID velocity setpoint
+	 *
+	 * @param sp percent PID velocity setpoint [-1, 1]
+	 */
 	private void setPIDSpeed(double sp) {
 		talon.setSpeed(talon.getMaxSpeed() * sp);
 	}
@@ -57,6 +80,11 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		setPIDSpeed(sp);
 	}
 
+	/**
+	 * Log data
+	 *
+	 * @param throttle velocity throttle to put in the log file
+	 */
 	public void logData(double throttle) {
 		maxError = Math.max(talon.canTalon.getClosedLoopError(), maxError);
 		SmartDashboard.putNumber("max error", maxError);
@@ -82,7 +110,9 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		}
 	}
 
-
+	/**
+	 * Init the log file on enabling
+	 */
 	@Override
 	protected void initDefaultCommand() {
 		try (PrintWriter writer = new PrintWriter("/home/lvuser/shooterLog.csv")) {

@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 /**
  * Created by blairrobot on 1/10/17.
  */
+@Deprecated
 public class ToggleFlywheel extends ReferencingCommandGroup {
 
 	private SingleFlywheelShooter shooterSubsystem;

@@ -5,21 +5,30 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 
 /**
- * Created by blairrobot on 1/10/17.
+ * Command for toggling whether the shooter is running
  */
 public class ToggleShooter extends ReferencingCommand {
-
+	/**
+	 * Flywheel subsystem to execute the command on
+	 */
 	SingleFlywheelShooter flywheelShooter;
 
+	/**
+	 * Construct an AccelerateFLywheel command
+	 *
+	 * @param subsystem shooter to execute the command on
+	 */
 	public ToggleShooter(MappedSubsystem subsystem) {
 		super(subsystem);
 		flywheelShooter = (SingleFlywheelShooter) subsystem;
 		requires(subsystem);
 	}
 
+	/**
+	 * Toggle the shooter
+	 */
 	@Override
 	protected void initialize() {
-		System.out.println("AccelerateFlywheel init");
 		if (!flywheelShooter.spinning) {
 			flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
 			flywheelShooter.spinning = true;
@@ -29,25 +38,29 @@ public class ToggleShooter extends ReferencingCommand {
 		}
 	}
 
+	/**
+	 * Log to file
+	 */
 	@Override
 	protected void execute() {
 		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle * 100.0);
-		System.out.println("AccelerateFlywheel executed");
 	}
 
+	/**
+	 * Finish the command instantly, as the setpoint has already been set
+	 *
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
 		return true;
 	}
 
-	@Override
-	protected void end() {
-		System.out.println("AccelerateFlywheel end");
-	}
-
+	/**
+	 * Stop the flywheel if the command is interrupted
+	 */
 	@Override
 	protected void interrupted() {
 		flywheelShooter.setDefaultSpeed(0);
-		System.out.println("AccelerateFlywheel interrupted, stopping flywheel.");
 	}
 }
