@@ -7,9 +7,8 @@ import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
- * A simple, two-stick arcade drive OI.
+ * A simple, two-stick arcade drive OI that uses two distinct joysticks
  */
-
 public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	/**
 	 * Left (rotation control) stick's throttle
@@ -25,6 +24,11 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 	 */
 	private OI2017ArcadeMap.OI2017Arcade map;
 
+	/**
+	 * Construct an OI2017Arcade
+	 *
+	 * @param map config map
+	 */
 	public OI2017Arcade(maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap.OI2017Arcade map) {
 		this.map = map;
 
@@ -35,6 +39,9 @@ public class OI2017Arcade extends BaseOI implements ArcadeOI {
 		this.velThrottle = new SmoothedThrottle(_rightStick, 1);
 	}
 
+	/**
+	 * Map the buttons (call this after all subsytems are constructed)
+	 */
 	@Override
 	public void mapButtons() {
 		// Do nothing

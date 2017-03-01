@@ -30,73 +30,119 @@ import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
  */
 public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
-	//How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
-	// much of the way.
+	/**
+	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
+	 * much of the way
+	 */
 	private static double SHIFT;
 
-	//The throttle wrapper for the stick controlling turning velocity.
+	/**
+	 * The throttle wrapper for the stick controlling turning velocity
+	 */
 	private Throttle rotThrottle;
 
-	//The throttle wrapper for the stick controlling linear velocity.
+	/**
+	 * The throttle wrapper for the stick controlling linear velocity
+	 */
 	private Throttle fwdThrottle;
 
-	//The controller with the drive sticks.
+	/**
+	 * The controller with the drive sticks
+	 */
 	private Joystick gamepad;
 
-	//The joystick output under which any input is considered noise.
+	/**
+	 * The joystick output under which any input is considered noise
+	 */
 	private double deadband;
 
-	//Turn to 0, 30, 180, or 330 degrees relative to the position the robot was turned on at.
+	/**
+	 * Button for turning to 0 degrees absolute heading (where robot was powered on)
+	 */
 	private JoystickButton turnTo0;
+	/**
+	 * Button for turning to 30 degrees absolute heading (where robot was powered on)
+	 */
 	private JoystickButton turnTo30;
+	/**
+	 * Button for turning to 180 degrees absolute heading (where robot was powered on)
+	 */
 	private JoystickButton turnTo180;
+	/**
+	 * Button for turning to 330 degrees absolute heading (where robot was powered on)
+	 */
 	private JoystickButton turnTo330;
-
-	//Turn 180 degrees relative to the robot's current position.
+	/**
+	 * Button for a 180 degree relative turn
+	 */
 	private JoystickButton turnaround;
-
-	//Gear switching for drive.
+	/**
+	 * Button for switching to low gear
+	 */
 	private JoystickButton switchToLowGear;
+	/**
+	 * Button for switching to high gear
+	 */
 	private JoystickButton switchToHighGear;
-
-	//Run the climber while the button is held AND the current limit hasn't been reached.
+	/**
+	 * Button for climbing
+	 */
 	private JoystickButton climb;
-
-	//Toggle whether we're overriding the NavX DriveStraight for slam alignment.
+	/**
+	 * Button for toggling whether to use NavX DriveStraight
+	 */
 	private JoystickButton toggleOverrideNavX;
-
-	//Switch which camera we're displaying on SmartDashboard.
+	/**
+	 * Button for toggling cameras
+	 */
 	private JoystickButton switchCamera;
-
-	//Switch whether or not the intake is sucking in balls.
+	/**
+	 * Button for toggling intake on/off
+	 */
 	private JoystickButton toggleIntake;
-
-	//Switch whether the intake is up or down.
+	/**
+	 * Button for toggling intake up/down
+	 */
 	private JoystickButton toggleIntakeUpDown;
-
-	//While this button is held, stay in low gear and don't autoshift.
+	/**
+	 * Button held to stay in low gear
+	 */
 	private JoystickButton tmpOverrideLow;
-
-	//While this button is held, stay in high gear and don't autoshift.
+	/**
+	 * Button held to stay in high gear
+	 */
 	private JoystickButton tmpOverrideHigh;
-
-	//Toggle overriding autoshifting. When autoshifting is turned off, switch to high gear.
+	/**
+	 * Button for toggling autoshifting
+	 */
 	private JoystickButton toggleOverrideHigh;
-
-	//Switch whether or not the feeder is feeding balls into the shooter.
+	/**
+	 * Button for toggling feeder
+	 */
 	private JoystickButton toggleFeeder;
-
-	//Toggle whether the flywheel is on or off.
+	/**
+	 * Button for toggling shooter
+	 */
 	private JoystickButton toggleShooter;
 
-	//Lower and run the intake while turning off the flywheel and feeder.
+	/**
+	 * Button for running the LoadShooter command group (intake balls)
+	 */
 	private JoystickButton loadShooter;
-	//Raise the intake and run the static one to agitate the ball bin. Run the flywheel to get it up to speed, but
-	// don't run the feeder.
+	/**
+	 * Button for running the RackShooter command group (set up to shoot)
+	 */
 	private JoystickButton rackShooter;
-	//Same as rack, but run the feeder in order to fire balls.
+	/**
+	 * Button for running the FireShooter command group (fire the shooter)
+	 */
 	private JoystickButton fireShooter;
 
+	/**
+	 * Construct the OI2017ArcadeGamepad
+	 *
+	 * @param map config map
+	 */
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//Instantiate stick and joysticks
 		gamepad = new Joystick(map.getGamepad());
