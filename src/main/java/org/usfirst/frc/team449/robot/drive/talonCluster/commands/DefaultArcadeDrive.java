@@ -39,7 +39,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
 	private double maxAngularVel;
-
 	/**
 	 * The map of values
 	 */

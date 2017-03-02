@@ -540,11 +540,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
 	 */
 	private static double clipToOne(double in) {
-		if (in > 1)
-			return 1;
-		else if (in < -1)
-			return -1;
-		else
-			return in;
+		return Math.min(Math.max(in, -1), 1);
 	}
 }
