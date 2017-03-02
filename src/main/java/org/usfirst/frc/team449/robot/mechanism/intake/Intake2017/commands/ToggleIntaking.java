@@ -4,12 +4,19 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
- * Created by blairrobot on 1/28/17.
+ * Command for toggling the intake in and out
  */
 public class ToggleIntaking extends ReferencingCommand {
-
+	/**
+	 * The intake subsystem to execute the command on
+	 */
 	private Intake2017 intake2017;
 
+	/**
+	 * Construct a ToggleIntakeUpDown command
+	 *
+	 * @param intake2017 intake subsytem to execute the command on
+	 */
 	public ToggleIntaking(Intake2017 intake2017) {
 		super(intake2017);
 		requires(intake2017);
@@ -17,11 +24,9 @@ public class ToggleIntaking extends ReferencingCommand {
 		System.out.println("ToggleIntaking constructed");
 	}
 
-	@Override
-	protected void initialize() {
-		System.out.println("ToggleIntaking init");
-	}
-
+	/**
+	 * Set the motors as appropriate
+	 */
 	@Override
 	protected void execute() {
 		if (intake2017.isIntaking) {
@@ -34,21 +39,23 @@ public class ToggleIntaking extends ReferencingCommand {
 		intake2017.setIntaking(!intake2017.isIntaking);
 	}
 
+	/**
+	 * Finish instantly as the piston is set in execute
+	 *
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
 		return true;
 	}
 
-	@Override
-	protected void end() {
-		System.out.println("ToggleIntaking end");
-	}
-
+	/**
+	 * Stop the motors if the command is interrupted
+	 */
 	@Override
 	protected void interrupted() {
 		intake2017.setActuatedVictor(0);
 		intake2017.setFixedVictor(0);
 		System.out.println("ToggleIntaking interrupted, stopping intake2017.");
 	}
-
 }
