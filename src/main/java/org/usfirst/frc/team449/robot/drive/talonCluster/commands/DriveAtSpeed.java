@@ -4,17 +4,34 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by BlairRobot on 2017-01-12.
+ * Go at a certain speed for a set number of seconds
  */
 public class DriveAtSpeed extends ReferencingCommand {
 
-	double speed;
-	double seconds;
-	long startTime;
+	/**
+	 * Speed to go at
+	 */
+	private double speed;
 
+	/**
+	 * How long to run for
+	 */
+	private double seconds;
+
+	/**
+	 * When this command was initialized.
+	 */
+	private long startTime;
+
+	/**
+	 * Default constructor
+	 * @param drive The drive we're controlling
+	 * @param speed How fast to go, in RPS
+	 * @param seconds How long to drive for.
+	 */
 	public DriveAtSpeed(TalonClusterDrive drive, double speed, double seconds) {
+		//Initialize stuff
 		super(drive);
-		//		requires(subsystem);
 		this.speed = speed;
 		this.seconds = seconds;
 		System.out.println("Drive Robot bueno");
@@ -22,24 +39,30 @@ public class DriveAtSpeed extends ReferencingCommand {
 
 	@Override
 	protected void initialize() {
+		//Set up start time
 		startTime = System.nanoTime();
+		//Reset drive speed
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
 	@Override
 	protected void execute() {
+		//Set the speed
 		((TalonClusterDrive) subsystem).setDefaultThrottle(speed, speed);
+		//Log data
 		((TalonClusterDrive) subsystem).logData(speed);
 	}
 
 	@Override
 	protected boolean isFinished() {
+		//Time-based exit
 		return (System.nanoTime() - startTime) * 1e-9 > seconds;
 	}
 
 	@Override
 	protected void end() {
 		((TalonClusterDrive) subsystem).logData();
+		//Break on exit.
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0, 0);
 	}
 
@@ -47,6 +70,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 	protected void interrupted() {
 		System.out.println("DriveAtSpeed Interrupted! Stopping the robot.");
 		((TalonClusterDrive) subsystem).logData();
+		//Break if we're interrupted
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 }

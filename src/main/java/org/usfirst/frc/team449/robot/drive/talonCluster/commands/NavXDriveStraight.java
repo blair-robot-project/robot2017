@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
+//TODO update this to the new OI organization.
 public class NavXDriveStraight extends PIDAngleCommand {
 
 	private OISubsystem oi;

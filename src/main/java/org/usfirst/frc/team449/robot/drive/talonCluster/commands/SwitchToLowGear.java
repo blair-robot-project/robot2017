@@ -5,7 +5,7 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by BlairRobot on 2017-02-09.
+ * A wrapper command that switches to low gear.
  */
 public class SwitchToLowGear extends ReferencingCommand {
 	public SwitchToLowGear(MappedSubsystem subsystem) {

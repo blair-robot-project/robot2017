@@ -4,11 +4,11 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by Noah Gleason on 2/12/2017.
+ * Toggle whether or not to use the NavX to drive straight.
  */
-public class OverrideNavX extends ReferencingCommand {
+public class ToggleOverrideNavX extends ReferencingCommand {
 
-	public OverrideNavX(TalonClusterDrive drive) {
+	public ToggleOverrideNavX(TalonClusterDrive drive) {
 		super(drive);
 		requires(subsystem);
 	}
@@ -20,6 +20,7 @@ public class OverrideNavX extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
+		//Toggle whether or not we're overriding the NavX
 		((TalonClusterDrive) subsystem).overrideNavX = !((TalonClusterDrive) subsystem).overrideNavX;
 	}
 

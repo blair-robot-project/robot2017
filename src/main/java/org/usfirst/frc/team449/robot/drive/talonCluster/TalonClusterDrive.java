@@ -475,8 +475,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldDownshift() {
 		//Whether we should shift, ignoring timing regulation.
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift && !lowGear &&
-				!overrideAutoShift || oi.getFwd() == 0 && oi.getRot() != 0 && !overrideAutoShift;
+		boolean okToShift = (Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift ||
+				(oi.getFwd() == 0 && oi.getRot() != 0)) && !lowGear && !overrideAutoShift;
 		//If we're using a both-way shift delay (must wait shiftDelay seconds after shifting EITHER WAY before shifting again)
 		if (shiftDelay != null) {
 			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay * 1000);

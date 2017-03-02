@@ -11,10 +11,12 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  * ReferencingCommand to load and execute a motion profile on the master Talons in the two motor clusters
  */
 public class ExecuteProfile extends ReferencingCommand {
+	//TODO Externalize all this shit
 	/**
 	 * Number of points that must be loaded before we start executing the profile
 	 */
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
+
 	/**
 	 * Filename of the MP input file
 	 */

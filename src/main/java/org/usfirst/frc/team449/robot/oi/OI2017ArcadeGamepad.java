@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideAutoShift;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideNavX;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ToggleOverrideNavX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
@@ -259,7 +259,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		final double TIMEOUT = 5.;
 
 		//Map mandatory commands
-		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem));
+		toggleOverrideNavX.whenPressed(new ToggleOverrideNavX(Robot.driveSubsystem));
 
 		//Map drive commands
 		if (turnaround != null) {
