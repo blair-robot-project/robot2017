@@ -163,7 +163,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	private double upshift;
 
 	/**
-	 * The speed setpoint at the downshiftshift break
+	 * The speed setpoint at the downshift break
 	 */
 	private double downshift;
 
