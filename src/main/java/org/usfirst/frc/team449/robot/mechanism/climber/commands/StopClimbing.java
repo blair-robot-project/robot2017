@@ -4,10 +4,13 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 
 /**
- * Created by Noah Gleason on 2/11/2017.
+ * Interrupts the current climb command and manually stops the climber.
  */
 public class StopClimbing extends ReferencingCommand {
 
+	/**
+	 * The climber this is controlling
+	 */
 	ClimberSubsystem climber;
 
 	public StopClimbing(ClimberSubsystem climber) {
@@ -24,11 +27,13 @@ public class StopClimbing extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
+		//Stop climbing
 		climber.setPercentVbus(0);
 	}
 
 	@Override
 	protected boolean isFinished() {
+		//Finishes instantaneously
 		return true;
 	}
 
