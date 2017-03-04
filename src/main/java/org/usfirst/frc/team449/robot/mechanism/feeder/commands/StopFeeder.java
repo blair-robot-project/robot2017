@@ -4,11 +4,14 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 
 /**
- * Activate the feeder.
+ * Stop the feeder.
  */
 public class StopFeeder extends ReferencingCommand {
 
-	FeederSubsystem feeder;
+	/**
+	 * The feeder subsystem this controls.
+	 */
+	private FeederSubsystem feeder;
 
 	public StopFeeder(FeederSubsystem feeder) {
 		super(feeder);
@@ -29,6 +32,7 @@ public class StopFeeder extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
+		//Runs instantaneously
 		return true;
 	}
 

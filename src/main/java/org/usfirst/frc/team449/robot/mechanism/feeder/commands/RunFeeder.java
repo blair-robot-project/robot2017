@@ -8,7 +8,10 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
  */
 public class RunFeeder extends ReferencingCommand {
 
-	FeederSubsystem feeder;
+	/**
+	 * The feeder subsystem this controls.
+	 */
+	private FeederSubsystem feeder;
 
 	public RunFeeder(FeederSubsystem feeder) {
 		super(feeder);
@@ -29,6 +32,7 @@ public class RunFeeder extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
+		//Runs instantaneously
 		return true;
 	}
 

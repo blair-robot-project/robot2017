@@ -4,11 +4,14 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 
 /**
- * Activate the feeder.
+ * Toggle the feeder.
  */
 public class ToggleFeeder extends ReferencingCommand {
 
-	FeederSubsystem feeder;
+	/**
+	 * The feeder subsystem this controls.
+	 */
+	private FeederSubsystem feeder;
 
 	public ToggleFeeder(FeederSubsystem feeder) {
 		super(feeder);
@@ -33,6 +36,7 @@ public class ToggleFeeder extends ReferencingCommand {
 
 	@Override
 	protected boolean isFinished() {
+		//Runs instantaneously
 		return true;
 	}
 
