@@ -1,9 +1,9 @@
 syntax = "proto2";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.components";
-option java_outer_classname = "UnitlessCANTalonSRXMap";
+option java_outer_classname = "RotPerSecCANTalonSRXMap";
 
-message UnitlessCANTalonSRX {
+message RotPerSecCANTalonSRX {
 	required int32 port = 1;
 
 	// Feedback Device represents CTRE's {@link CANTalon.FeedbackDevice}

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.ctre.CANTalon;
-import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
+import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 
 /**
  * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in. Every
@@ -32,15 +32,14 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * 	The map used to construct this object.
 	 */
-	private UnitlessCANTalonSRXMap.UnitlessCANTalonSRX map;
+	private RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map;
 
 	/**
 	 * Construct the CANTalonSRX from its map object
 	 *
 	 * @param map CANTalonSRX map object
 	 */
-	public RotPerSecCANTalonSRX(maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap
-			                            .UnitlessCANTalonSRX map) {
+	public RotPerSecCANTalonSRX(RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map) {
 		// Configure stuff
 		this.map = map;
 		canTalon = new CANTalon(map.getPort());

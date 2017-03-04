@@ -5,8 +5,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import maps.org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
@@ -224,12 +224,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
 		// Initialize slave talons.
-		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getRightSlaveList()) {
+		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getRightSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getRightMaster().getPort());
 		}
-		for (UnitlessCANTalonSRXMap.UnitlessCANTalonSRX talon : map.getLeftSlaveList()) {
+		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getLeftSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
