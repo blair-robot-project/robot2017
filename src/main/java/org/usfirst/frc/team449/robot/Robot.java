@@ -64,7 +64,7 @@ public class Robot extends IterativeRobot {
 
 	/**
 	 * The object constructed directly from map.cfg.
-	 * */
+	 */
 	private static Robot2017Map.Robot2017 cfg;
 
 	/**
