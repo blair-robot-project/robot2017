@@ -11,7 +11,7 @@ public class ToggleShooter extends ReferencingCommand {
 	/**
 	 * Flywheel subsystem to execute the command on
 	 */
-	SingleFlywheelShooter flywheelShooter;
+	private SingleFlywheelShooter flywheelShooter;
 
 	/**
 	 * Construct an AccelerateFLywheel command

@@ -11,7 +11,7 @@ public class DecelerateFlywheel extends ReferencingCommand {
 	/**
 	 * Flywheel subsystem to execute the command on
 	 */
-	SingleFlywheelShooter flywheelShooter;
+	private SingleFlywheelShooter flywheelShooter;
 
 	/**
 	 * Construct a DecelerateFLywheel command
@@ -44,10 +44,11 @@ public class DecelerateFlywheel extends ReferencingCommand {
 		System.out.println("DecelerateFlywheel executed");
 	}
 
+	//TODO make AccelerateFlywheel and DecelerateFlywheel consistent here.
 	/**
-	 * Finish the command instantly, as the setpoint has already been set
+	 * Runs constantly in order to log data.
 	 *
-	 * @return true
+	 * @return false
 	 */
 	@Override
 	protected boolean isFinished() {

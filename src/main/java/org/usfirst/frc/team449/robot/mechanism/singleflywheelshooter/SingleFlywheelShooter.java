@@ -24,7 +24,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 
 	// TODO externalize
 	/**
-	 * Throttle at which to run the shooter
+	 * Throttle at which to run the shooter, defaults to 0.5
 	 */
 	public double throttle = 0.5;
 
@@ -47,6 +47,8 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		super(map.getMechanism());
 		this.map = map;
 		this.talon = new RotPerSecCANTalonSRX(map.getTalon());
+
+		//If we have a throttle in the map, use that instead of 0.5
 		if (map.hasThrottle()) {
 			this.throttle = map.getThrottle();
 		}
@@ -74,7 +76,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	/**
 	 * A wrapper around the speed method we're currently using/testing
 	 *
-	 * @param sp The speed to go at, where 0 is off and 1 is max speed.
+	 * @param sp The speed to go at [-1, 1]
 	 */
 	public void setDefaultSpeed(double sp) {
 		setPIDSpeed(sp);
@@ -90,7 +92,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		SmartDashboard.putNumber("max error", maxError);
 		SmartDashboard.putNumber("speed", talon.canTalon.getPulseWidthVelocity());
 
-		try (FileWriter fw = new FileWriter("/home/lvuser/shooterLog.csv", true)) {
+		try (FileWriter fw = new FileWriter("/home/lvuser/logs/shooterLog.csv", true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
@@ -115,7 +117,8 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	 */
 	@Override
 	protected void initDefaultCommand() {
-		try (PrintWriter writer = new PrintWriter("/home/lvuser/shooterLog.csv")) {
+		//TODO Externalize filepath.
+		try (PrintWriter writer = new PrintWriter("/home/lvuser/logs/shooterLog.csv")) {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

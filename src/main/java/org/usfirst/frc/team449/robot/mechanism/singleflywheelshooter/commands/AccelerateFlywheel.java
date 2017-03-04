@@ -11,7 +11,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	/**
 	 * Flywheel subsystem to execute the command on
 	 */
-	SingleFlywheelShooter flywheelShooter;
+	private SingleFlywheelShooter flywheelShooter;
 
 	/**
 	 * Construct an AccelerateFLywheel command
@@ -38,12 +38,13 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
-		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle * 100.0);
+		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.spinning = true;
 		System.out.println("AccelerateFlywheel executed");
 	}
 
+	//TODO make AccelerateFlywheel and DecelerateFlywheel consistent here.
 	/**
 	 * Finish the command instantly, as the setpoint has already been set
 	 *
