@@ -11,8 +11,12 @@ public class StopClimbing extends ReferencingCommand {
 	/**
 	 * The climber this is controlling
 	 */
-	ClimberSubsystem climber;
+	private ClimberSubsystem climber;
 
+	/**
+	 * Default constructor
+	 * @param climber The climber subsystem for this command to control
+	 */
 	public StopClimbing(ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
@@ -20,33 +24,49 @@ public class StopClimbing extends ReferencingCommand {
 		System.out.println("CurrentClimb constructed");
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("CurrentClimb init");
 	}
 
+	/**
+	 * Stop the climb motor.
+	 */
 	@Override
 	protected void execute() {
-		//Stop climbing
 		climber.setPercentVbus(0);
 	}
 
+	/**
+	 * Finishes instantaneously because it's just a state-change command.
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Finishes instantaneously
 		return true;
 	}
 
+	/**
+	 * Stop the motor and log that the command has ended.
+	 */
 	@Override
 	protected void end() {
+		//Stop climbing for safety
 		climber.setPercentVbus(0);
-		System.out.println("CurrentClimb end");
+		System.out.println("StopClimbing end");
 	}
 
+	/**
+	 * Stop the motor and log that the command has been interrupted.
+	 */
 	@Override
 	protected void interrupted() {
+		//Stop climbing for safety
 		climber.setPercentVbus(0);
-		System.out.println("CurrentClimb interrupted, stopping climb.");
+		System.out.println("StopClimbing interrupted, stopping climb.");
 	}
 
 }

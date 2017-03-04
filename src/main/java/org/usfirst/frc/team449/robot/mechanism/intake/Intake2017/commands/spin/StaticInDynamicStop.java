@@ -13,18 +13,29 @@ public class StaticInDynamicStop extends ReferencingCommand {
 	 */
 	private Intake2017 intake;
 
+	/**
+	 * Default constructor.
+	 * @param intake The intake subsystem this controls.
+	 */
 	public StaticInDynamicStop(Intake2017 intake) {
 		super(intake);
 		this.intake = intake;
 	}
 
+	/**
+	 * Set the fixed motor to go in slowly and the actuated motor to stop.
+	 */
 	@Override
-	protected void initialize() {
+	protected void execute() {
 		//TODO Stop hardcoding these
 		intake.setFixedVictor(-0.3);
 		intake.setActuatedVictor(0);
 	}
 
+	/**
+	 * Runs instantaneously.
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
 		return true;

@@ -8,22 +8,34 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
  */
 public class ChangeCam extends ReferencingCommand {
 
-	//Initializes CameraSubsystem
+	/**
+	 * The cameraSubsystem this command controls
+	 */
 	private CameraSubsystem cameraSubsystem;
 
-	//Default constructor
+	//TODO get rid of timeout.
+	/**
+	 * Default constructor.
+	 * @param cameraSubsystem The cameraSubsystem this command controls.
+	 * @param timeout The timeout for this command (does nothing)
+	 */
 	public ChangeCam(CameraSubsystem cameraSubsystem, double timeout) {
 		super(cameraSubsystem, timeout);
 		requires(cameraSubsystem);
 		this.cameraSubsystem = cameraSubsystem;
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("ChangeCam init");
-		//Does nothing - Logging to console
 	}
 
+	/**
+	 * Switch the MjpegServer to use the next camera in the list
+	 */
 	@Override
 	protected void execute() {
 		//Logging to console
@@ -43,17 +55,26 @@ public class ChangeCam extends ReferencingCommand {
 		System.out.println("ChangeCam exec end");
 	}
 
+	/**
+	 * Finishes instantaneously.
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Finishes instantaneously.
 		return true;
 	}
 
+	/**
+	 * Log when this command ends
+	 */
 	@Override
 	protected void end() {
 		System.out.println("ChangeCam end");
 	}
 
+	/**
+	 * Log when this command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("ChangeCam interrupted!");

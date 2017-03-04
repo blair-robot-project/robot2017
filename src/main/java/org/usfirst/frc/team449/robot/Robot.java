@@ -22,35 +22,53 @@ import java.io.IOException;
  */
 public class Robot extends IterativeRobot {
 
-	//The shooter subsystem (flywheel only)
+	/**
+	 * The shooter subsystem (flywheel only)
+	 */
 	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
-	//The intake subsystem (intake motors and pistons)
+	/**
+	 * The intake subsystem (intake motors and pistons)
+	 */
 	public static Intake2017 intakeSubsystem;
 
-	//The climber
+	/**
+	 *The climber
+	 */
 	public static ClimberSubsystem climberSubsystem;
 
-	//The pneumatics (maybe doesn't work?)
+	/**
+	 *The pneumatics (maybe doesn't work?)
+	 */
 	public static PneumaticsSubsystem pneumaticsSubsystem;
 
-	//The drive
+	/**
+	 *The drive
+	 */
 	public static TalonClusterDrive driveSubsystem;
 
-	//OI, using an Xbox-style controller and arcade drive.
+	/**
+	 * OI, using an Xbox-style controller and arcade drive.
+	 */
 	public static OI2017ArcadeGamepad oiSubsystem;
 
-	//The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
+	/**
+	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
+	 */
 	public static CameraSubsystem cameraSubsystem;
 
-	//The auger used to feed balls into the shooter.
+	/**
+	 * The auger used to feed balls into the shooter.
+	 */
 	public static FeederSubsystem feederSubsystem;
 
-	//The object constructed directly from map.cfg.
+	/**
+	 * The object constructed directly from map.cfg.
+	 * */
 	private static Robot2017Map.Robot2017 cfg;
 
 	/**
-	 * This is the method that runs when you turn on the robot.
+	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
 		System.out.println("Started robotInit.");

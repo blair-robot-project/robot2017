@@ -37,14 +37,20 @@ public class DriveAtSpeed extends ReferencingCommand {
 		System.out.println("Drive Robot bueno");
 	}
 
+	/**
+	 * Set up start time.
+	 */
 	@Override
 	protected void initialize() {
 		//Set up start time
 		startTime = System.nanoTime();
-		//Reset drive speed
+		//Reset drive speed (for safety reasons)
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
+	/**
+	 * Send output to motors and log data
+	 */
 	@Override
 	protected void execute() {
 		//Set the speed
@@ -53,19 +59,29 @@ public class DriveAtSpeed extends ReferencingCommand {
 		((TalonClusterDrive) subsystem).logData(speed);
 	}
 
+	/**
+	 * Exit after the command's been running for long enough
+	 * @return True if timeout has been reached, false otherwise
+	 */
 	@Override
 	protected boolean isFinished() {
 		//Time-based exit
 		return (System.nanoTime() - startTime) * 1e-9 > seconds;
 	}
 
+	/**
+	 * Stop the drive when the command ends.
+	 */
 	@Override
 	protected void end() {
 		((TalonClusterDrive) subsystem).logData();
-		//Break on exit.
+		//Brake on exit.
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0, 0);
 	}
 
+	/**
+	 * Log and stop the drive when the command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("DriveAtSpeed Interrupted! Stopping the robot.");

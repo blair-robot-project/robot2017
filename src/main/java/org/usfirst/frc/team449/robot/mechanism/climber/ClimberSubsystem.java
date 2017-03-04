@@ -17,6 +17,10 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 */
 	private double max_current;
 
+	/**
+	 * Construct a ClimberSubsystem
+	 * @param map the config map
+	 */
 	public ClimberSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.climber.ClimberMap.Climber map) {
 		super(map.getMechanism());
 		//Instantiate things
@@ -25,6 +29,12 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		this.max_current = map.getMaxCurrent();
 	}
 
+	/**
+	 * Initialize the default command for a subsystem By default subsystems have
+	 * no default command, but if they do, the default command is set with this
+	 * method. It is called on all Subsystems by CommandBase in the users program
+	 * after all the Subsystems are created.
+	 */
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing!

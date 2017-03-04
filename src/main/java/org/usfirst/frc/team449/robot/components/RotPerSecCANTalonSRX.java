@@ -29,7 +29,9 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
-	//The map used to construct this object.
+	/**
+	 * 	The map used to construct this object.
+	 */
 	private UnitlessCANTalonSRXMap.UnitlessCANTalonSRX map;
 
 	/**
@@ -144,6 +146,10 @@ public class RotPerSecCANTalonSRX extends Component {
 		}
 	}
 
+	/**
+	 * Get the max speed of the gear the talon is currently in.
+	 * @return max speed, in RPS, as given in the map.
+	 */
 	public double getMaxSpeed() {
 		return maxSpeed;
 	}

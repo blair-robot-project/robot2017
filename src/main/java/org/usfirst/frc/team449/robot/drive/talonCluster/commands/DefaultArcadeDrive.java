@@ -66,6 +66,9 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		System.out.println("Drive Robot bueno");
 	}
 
+	/**
+	 * Initialize PIDController and variables.
+	 */
 	@Override
 	protected void initialize() {
 		//Reset all values of the PIDController and enable it.
@@ -82,6 +85,9 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		driveSubsystem.setLowGear(true);
 	}
 
+	/**
+	 * Decide whether or not we should be in free drive or straight drive, and log data.
+	 */
 	@Override
 	protected void execute() {
 		//Auto-shifting
@@ -115,23 +121,36 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		SmartDashboard.putNumber("Rot axis", rot);
 	}
 
+	/**
+	 * Run constantly because this is a defaultDrive
+	 * @return false
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Runs constantly because this is a defaultDrive
 		return false;
 	}
 
+	/**
+	 * Log when this command ends
+	 */
 	@Override
 	protected void end() {
 		System.out.println("DefaultArcadeDrive End.");
 	}
 
+	/**
+	 * Stop the motors and log when this command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("DefaultArcadeDrive Interrupted! Stopping the robot.");
 		driveSubsystem.setDefaultThrottle(0.0, 0.0);
 	}
 
+	/**
+	 * Give the correct output to the motors based on whether we're in free drive or drive straight.
+	 * @param output The output of the angular PID loop.
+	 */
 	@Override
 	protected void usePIDOutput(double output) {
 		//If we're driving straight..

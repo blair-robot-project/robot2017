@@ -474,9 +474,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @return whether the robot should downshift
 	 */
 	public boolean shouldDownshift() {
-		//Whether we should shift, ignoring timing regulation.
-		boolean okToShift = (Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift ||
-				(oi.getFwd() == 0 && oi.getRot() != 0)) && !lowGear && !overrideAutoShift;
+		//We should shift if we're going slower than the downshift speed
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
+		//Or if we're just turning in place.
+		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
+		//But there's no need to downshift if we're already in low gear.
+		okToShift = okToShift && !lowGear;
+		//And we don't want to shift if autoshifting is turned off.
+		okToShift = okToShift && !overrideAutoShift;
+
 		//If we're using a both-way shift delay (must wait shiftDelay seconds after shifting EITHER WAY before shifting again)
 		if (shiftDelay != null) {
 			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay * 1000);
@@ -499,9 +505,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @return whether the robot should upshift
 	 */
 	public boolean shouldUpshift() {
-		//Whether we should shift, ignoring timing regulation.
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift && lowGear &&
-				!overrideAutoShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
+		//We should shift if we're going faster than the upshift speed...
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift;
+		//AND the driver's trying to go forward fast.
+		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
+		//But there's no need to upshift if we're already in high gear.
+		okToShift = okToShift && lowGear;
+		//And we don't want to shift if autoshifting is turned off.
+		okToShift = okToShift && !overrideAutoShift;
+
 		//If we're using a both-way shift delay (must wait shiftDelay seconds after shifting EITHER WAY before shifting again)
 		if (shiftDelay != null) {
 			return okToShift && (System.currentTimeMillis() - timeLastShifted > shiftDelay * 1000);

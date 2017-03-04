@@ -14,6 +14,10 @@ public class CurrentClimb extends ReferencingCommand {
 	 */
 	private ClimberSubsystem climber;
 
+	/**
+	 * Default constructor
+	 * @param climber The climber subsystem for this command to control
+	 */
 	public CurrentClimb(ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
@@ -21,24 +25,37 @@ public class CurrentClimb extends ReferencingCommand {
 		System.out.println("CurrentClimb constructed");
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("CurrentClimb init");
 	}
 
+	/**
+	 * Climb at full speed and log the current
+	 */
 	@Override
 	protected void execute() {
 		//Climb as fast as we can
 		climber.setPercentVbus(1);
+		//Log current to SmartDashboard
 		SmartDashboard.putNumber("Current", climber.canTalonSRX.canTalon.getOutputCurrent());
 	}
 
+	/**
+	 * Stop when the current limit is exceeded.
+	 * @return true when the current limit is exceed, false otherwise.
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Stop when the current limit is exceeded.
 		return climber.reachedTop();
 	}
 
+	/**
+	 * Stop the motor and log that the command has ended.
+	 */
 	@Override
 	protected void end() {
 		//Stop the motor when we reach the top.
@@ -46,6 +63,9 @@ public class CurrentClimb extends ReferencingCommand {
 		System.out.println("CurrentClimb end");
 	}
 
+	/**
+	 * Stop the motor and log that the command has been interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		//Stop climbing if we're for some reason interrupted.

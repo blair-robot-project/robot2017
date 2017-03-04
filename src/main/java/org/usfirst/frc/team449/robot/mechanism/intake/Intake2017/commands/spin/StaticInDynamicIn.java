@@ -13,18 +13,29 @@ public class StaticInDynamicIn extends ReferencingCommand {
 	 */
 	private Intake2017 intake;
 
+	/**
+	 * Default constructor.
+	 * @param intake The intake subsystem this controls.
+	 */
 	public StaticInDynamicIn(Intake2017 intake) {
 		super(intake);
 		this.intake = intake;
 	}
 
+	/**
+	 * Set the fixed and actuated motors to go in.
+	 */
 	@Override
-	protected void initialize() {
+	protected void execute() {
 		//TODO Stop hardcoding these
 		intake.setFixedVictor(-0.7);
 		intake.setActuatedVictor(1);
 	}
 
+	/**
+	 * Runs instantaneously.
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
 		return true;

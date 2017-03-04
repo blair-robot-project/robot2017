@@ -87,15 +87,12 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	/**
 	 * Returns the input for the pid loop.
 	 * <p>
-	 * <p>
 	 * It returns the input for the pid loop, so if this command was based off of
 	 * a gyro, then it should return the angle of the gyro
 	 * </p>
 	 * <p>
-	 * <p>
 	 * All subclasses of {@link PIDCommand} must override this method.
 	 * </p>
-	 * <p>
 	 * <p>
 	 * This method will be called in a different thread then the {@link Scheduler}
 	 * thread.

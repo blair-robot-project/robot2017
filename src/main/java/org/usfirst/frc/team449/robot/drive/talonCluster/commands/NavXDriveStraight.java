@@ -1,8 +1,5 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.PIDCommand;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
@@ -28,21 +25,9 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * Uses the value that the pid loop calculated. The calculated value is the
-	 * "output" parameter. This method is a good time to set motor values, maybe
-	 * something along the lines of
-	 * <code>driveline.tankDrive(output, -output)</code>
-	 * <p>
-	 * <p>
-	 * All subclasses of {@link PIDCommand} must override this method.
-	 * </p>
-	 * <p>
-	 * <p>
-	 * This method will be called in a different thread then the {@link Scheduler}
-	 * thread.
-	 * </p>
+	 * Give output to the drive based on the out of the PID loop.
 	 *
-	 * @param output the value the pid loop calculated
+	 * @param output the value the PID loop calculated
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
@@ -62,8 +47,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * The initialize method is called the first time this Command is run after
-	 * being started.
+	 * Set the setpoint of the angle PID.
 	 */
 	@Override
 	protected void initialize() {
@@ -72,8 +56,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * The execute method is called repeatedly until this Command either finishes
-	 * or is canceled.
+	 * Log the drive data.
 	 */
 	@Override
 	protected void execute() {
@@ -81,17 +64,9 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * Returns whether this command is finished. If it is, then the command will
-	 * be removed and {@link Command#end() end()} will be called.
-	 * <p>
-	 * <p>
-	 * It may be useful for a team to reference the {@link Command#isTimedOut()
-	 * isTimedOut()} method for time-sensitive commands.
-	 * </p>
-	 * $
+	 * Finishes instantaneously.
 	 *
-	 * @return whether this command is finished.
-	 * @see Command#isTimedOut() isTimedOut()
+	 * @return true
 	 */
 	@Override
 	protected boolean isFinished() {
@@ -99,9 +74,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * Called when the command ended peacefully. This is where you may want to
-	 * wrap up loose ends, like shutting off a motor that was being used in the
-	 * command.
+	 * Log when this command ends
 	 */
 	@Override
 	protected void end() {
@@ -110,19 +83,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * Called when the command ends because somebody called
-	 * {@link Command#cancel() cancel()} or another command shared the same
-	 * requirements as this one, and booted it out.
-	 * <p>
-	 * <p>
-	 * This is where you may want to wrap up loose ends, like shutting off a motor
-	 * that was being used in the command.
-	 * </p>
-	 * <p>
-	 * <p>
-	 * Generally, it is useful to simply call the {@link Command#end() end()}
-	 * method within this method
-	 * </p>
+	 * Log when this command is interrupted.
 	 */
 	@Override
 	protected void interrupted() {

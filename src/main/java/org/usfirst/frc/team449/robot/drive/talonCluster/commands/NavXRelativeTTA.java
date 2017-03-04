@@ -21,6 +21,9 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 		super(map, setpoint, drive, timeout);
 	}
 
+	/**
+	 * Set up the start time and setpoint.
+	 */
 	@Override
 	protected void initialize() {
 		//Setup start time
@@ -32,7 +35,9 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 		this.getPIDController().enable();
 	}
 
-
+	/**
+	 * Log when the command ends.
+	 */
 	@Override
 	protected void end() {
 		System.out.println("NavXRelativeTurnToAngle end.");
@@ -40,6 +45,9 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 		this.getPIDController().disable();
 	}
 
+	/**
+	 * Log when the command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("NavXRelativeTurnToAngle interrupted!");

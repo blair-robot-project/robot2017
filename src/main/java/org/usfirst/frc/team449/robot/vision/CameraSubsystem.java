@@ -17,18 +17,30 @@ import java.util.List;
  */
 public class CameraSubsystem extends MappedSubsystem {
 
-	//Video server to view on SmartDashboard
+	/**
+	 * 	Video server to view on SmartDashboard
+	 */
 	public MjpegServer server;
 
-	//List of cameras used on robot
+	/**
+	 * List of cameras used on robot
+	 */
 	public List<UsbCamera> cameras;
 
-	//Total number of cameras
+	/**
+	 * Total number of cameras
+	 */
 	public int camNum;
 
-	//Instantiates a new CameraSubsystem with the map
-	public static CameraMap.Camera map;
+	/**
+	 * Instantiates a new CameraSubsystem with the map
+	 */
+	public CameraMap.Camera map;
 
+	/**
+	 * Construct a CameraSubsystem
+	 * @param map The config map
+	 */
 	public CameraSubsystem(CameraMap.Camera map) {
 		super(map);
 		this.map = map;
@@ -61,7 +73,12 @@ public class CameraSubsystem extends MappedSubsystem {
 		System.out.println("CameraSubsystem construct end");
 	}
 
-
+	/**
+	 * Initialize the default command for a subsystem. By default subsystems have
+	 * no default command, but if they do, the default command is set with this
+	 * method. It is called on all Subsystems by CommandBase in the users program
+	 * after all the Subsystems are created.
+	 */
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing!

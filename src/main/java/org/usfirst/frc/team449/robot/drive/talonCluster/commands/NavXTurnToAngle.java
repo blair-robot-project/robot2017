@@ -57,6 +57,10 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		return (theta + 180) % 360 - 180;
 	}
 
+	/**
+	 * Give output to the motors based on the output of the PID loop
+	 * @param output The output of the angle PID loop
+	 */
 	@Override
 	protected void usePIDOutput(double output) {
 		//Logging
@@ -80,6 +84,9 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		drive.setDefaultThrottle(output, -output);    //spin to the right angle
 	}
 
+	/**
+	 * Set up the start time and setpoint.
+	 */
 	@Override
 	protected void initialize() {
 		//Set up start time
@@ -89,26 +96,38 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		this.getPIDController().enable();
 	}
 
+	/**
+	 * Log data to a file and SmartDashboard.
+	 */
 	@Override
 	protected void execute() {
-		//Just logging, nothing actually gets done.
 		drive.logData();
 		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
 		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
 	}
 
+	/**
+	 * Exit when the robot reaches the setpoint or enough time has passed.
+	 * @return True if timeout seconds have passed or the robot is on target, false otherwise.
+	 */
 	@Override
 	protected boolean isFinished() {
 		//The NavX onTarget() is crap and sometimes never terminates because of floating point errors, so we have a timeout
 		return this.getPIDController().onTarget() || System.currentTimeMillis() - startTime > timeout;
 	}
 
+	/**
+	 * Log when the command ends.
+	 */
 	@Override
 	protected void end() {
 		System.out.println("NavXTurnToAngle end.");
 		this.getPIDController().disable();
 	}
 
+	/**
+	 * Log when the command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("NavXTurnToAngle interrupted!");

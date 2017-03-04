@@ -13,6 +13,10 @@ public class StopFeeder extends ReferencingCommand {
 	 */
 	private FeederSubsystem feeder;
 
+	/**
+	 * Default constructor.
+	 * @param feeder The feeder subsystem this controls.
+	 */
 	public StopFeeder(FeederSubsystem feeder) {
 		super(feeder);
 		requires(feeder);
@@ -20,27 +24,42 @@ public class StopFeeder extends ReferencingCommand {
 		System.out.println("StopFeeder constructed");
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("StopFeeder init");
 	}
 
+	/**
+	 * Stop the motor
+	 */
 	@Override
 	protected void execute() {
 		feeder.stopVictor();
 	}
 
+	/**
+	 * Runs instantaneously
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Runs instantaneously
 		return true;
 	}
 
+	/**
+	 * Log when this command ends
+	 */
 	@Override
 	protected void end() {
 		System.out.println("StopFeeder end");
 	}
 
+	/**
+	 * Stop the motor and log when this command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		feeder.stopVictor();

@@ -13,6 +13,10 @@ public class RunFeeder extends ReferencingCommand {
 	 */
 	private FeederSubsystem feeder;
 
+	/**
+	 * Default constructor.
+	 * @param feeder The feeder subsystem this controls.
+	 */
 	public RunFeeder(FeederSubsystem feeder) {
 		super(feeder);
 		requires(feeder);
@@ -20,27 +24,42 @@ public class RunFeeder extends ReferencingCommand {
 		System.out.println("RunFeeder constructed");
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("RunFeeder init");
 	}
 
+	/**
+	 * Run the motor
+	 */
 	@Override
 	protected void execute() {
 		feeder.runVictor();
 	}
 
+	/**
+	 * Runs instantaneously
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Runs instantaneously
 		return true;
 	}
 
+	/**
+	 * Log when this command ends
+	 */
 	@Override
 	protected void end() {
 		System.out.println("RunFeeder end");
 	}
 
+	/**
+	 * Stop the motor and log when this command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		feeder.stopVictor();

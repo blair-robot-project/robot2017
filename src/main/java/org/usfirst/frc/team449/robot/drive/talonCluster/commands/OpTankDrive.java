@@ -37,12 +37,17 @@ public class OpTankDrive extends ReferencingCommand {
 		System.out.println("Drive Robot bueno");
 	}
 
+	/**
+	 * Stop the drive for safety reasons.
+	 */
 	@Override
 	protected void initialize() {
-		//Start stationary.
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 	}
 
+	/**
+	 * Give output to the motors based on the stick inputs.
+	 */
 	@Override
 	protected void execute() {
 		//Get the throttle from the OI
@@ -56,17 +61,18 @@ public class OpTankDrive extends ReferencingCommand {
 		((TalonClusterDrive) subsystem).logData();
 	}
 
+	/**
+	 * Run constantly because this is a default drive
+	 * @return false
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Doesn't end because this is a default command
 		return false;
 	}
 
-	@Override
-	protected void end() {
-		//Doesn't end because this is a default command
-	}
-
+	/**
+	 * Log and brake when interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("OpTankDrive Interrupted! Stopping the robot.");

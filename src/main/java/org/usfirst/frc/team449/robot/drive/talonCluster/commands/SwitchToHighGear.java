@@ -9,30 +9,50 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
  */
 public class SwitchToHighGear extends ReferencingCommand {
 
+	/**
+	 * Default constructor
+	 * @param subsystem The subsystem to execute this command on
+	 */
 	public SwitchToHighGear(MappedSubsystem subsystem) {
 		super(subsystem);
 	}
 
+	/**
+	 * Log when this command is initialized
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("SwitchToHighGear init.");
 	}
 
+	/**
+	 * Switch to high gear
+	 */
 	@Override
 	protected void execute() {
 		((TalonClusterDrive) subsystem).setLowGear(false);
 	}
 
+	/**
+	 * Exit immediately because this is a state-change command
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
 		return true;
 	}
 
+	/**
+	 * Log when this command ends
+	 */
 	@Override
 	protected void end() {
 		System.out.println("SwitchToHighGear end.");
 	}
 
+	/**
+	 * Log when this command is interrupted.
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("SwitchToHighGear Interrupted!");

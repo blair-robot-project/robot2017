@@ -31,30 +31,43 @@ public class OverrideAutoShift extends ReferencingCommand {
 		this.switchToLowGear = switchToLowGear;
 	}
 
+	/**
+	 * Log on initialization
+	 */
 	@Override
 	protected void initialize() {
 		System.out.println("OverrideAutoShift init");
 	}
 
+	/**
+	 * Override autoshifting.
+	 */
 	@Override
 	protected void execute() {
 		//Set whether or not we're overriding
 		((TalonClusterDrive) subsystem).overrideAutoShift = override;
-		//Switch gears
-		((TalonClusterDrive) subsystem).setLowGear(switchToLowGear);
 	}
 
+	/**
+	 * Finsh instantly because this is just a state-change command.
+	 * @return true
+	 */
 	@Override
 	protected boolean isFinished() {
-		//Runs instantaneously
 		return true;
 	}
 
+	/**
+	 * Log when this command ends.
+	 */
 	@Override
 	protected void end() {
 		System.out.println("OverrideAutoShift end");
 	}
 
+	/**
+	 * Log when interrupted
+	 */
 	@Override
 	protected void interrupted() {
 		System.out.println("OverrideAutoShift Interrupted!");
