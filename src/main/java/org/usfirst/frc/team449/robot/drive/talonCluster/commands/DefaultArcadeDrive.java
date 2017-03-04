@@ -47,7 +47,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	/**
 	 * Default constructor
 	 * @param map The angle PID map containing PID and other tuning constants.
-	 * @param drive The drive this controls.
+	 * @param drive The drive to execute the command on.
 	 * @param oi The OI controlling the robot.
 	 */
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,

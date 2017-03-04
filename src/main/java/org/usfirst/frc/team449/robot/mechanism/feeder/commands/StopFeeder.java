@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 public class StopFeeder extends ReferencingCommand {
 
 	/**
-	 * The feeder subsystem this controls.
+	 * The feeder subsystem to execute the command on.
 	 */
 	private FeederSubsystem feeder;
 
 	/**
 	 * Default constructor.
-	 * @param feeder The feeder subsystem this controls.
+	 * @param feeder The feeder subsystem to execute the command on.
 	 */
 	public StopFeeder(FeederSubsystem feeder) {
 		super(feeder);

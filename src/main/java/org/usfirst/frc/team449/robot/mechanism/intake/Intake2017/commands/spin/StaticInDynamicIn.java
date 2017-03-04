@@ -15,7 +15,7 @@ public class StaticInDynamicIn extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
-	 * @param intake The intake subsystem this controls.
+	 * @param intake The intake subsystem to execute the command on.
 	 */
 	public StaticInDynamicIn(Intake2017 intake) {
 		super(intake);

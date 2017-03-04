@@ -19,7 +19,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	protected boolean minimumOutputEnabled;
 
 	/**
-	 * The subsystem this command controls.
+	 * The subsystem to execute the command on.
 	 */
 	protected NavxSubsystem subsystem;
 

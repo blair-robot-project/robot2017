@@ -12,7 +12,7 @@ public class PIDTest extends ReferencingCommandGroup {
 
 	/**
 	 * Default constructor
-	 * @param mappedSubsystem the TalonClusterDrive to control
+	 * @param mappedSubsystem the TalonClusterDrive to execute the command on
 	 */
 	public PIDTest(MappedSubsystem mappedSubsystem) {
 		super(mappedSubsystem);

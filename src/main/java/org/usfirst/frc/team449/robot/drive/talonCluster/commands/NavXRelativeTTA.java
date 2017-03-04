@@ -13,7 +13,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 *
 	 * @param map   An turnPID map with PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint    The setpoint, in degrees from 180 to -180.
-	 * @param drive The drive subsystem whose motors this is controlling.
+	 * @param drive The drive subsystem to execute the command on.
 	 * @param timeout How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
 	 */
 	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, TalonClusterDrive drive,

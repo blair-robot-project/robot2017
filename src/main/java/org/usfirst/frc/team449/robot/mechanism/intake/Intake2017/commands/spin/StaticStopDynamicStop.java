@@ -15,7 +15,7 @@ public class StaticStopDynamicStop extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
-	 * @param intake The intake subsystem this controls.
+	 * @param intake The intake subsystem to execute the command on.
 	 */
 	public StaticStopDynamicStop(Intake2017 intake) {
 		super(intake);
