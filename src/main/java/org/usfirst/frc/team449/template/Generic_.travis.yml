@@ -1,0 +1,10 @@
+sudo: required
+language: java
+
+script:
+  - ./gradlew build
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always # default: always
