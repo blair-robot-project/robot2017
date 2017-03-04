@@ -9,7 +9,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
  */
 public class DecelerateFlywheel extends ReferencingCommand {
 	/**
-	 * Flywheel subsystem to execute the command on
+	 * Flywheel subsystem to execute this command on
 	 */
 	private SingleFlywheelShooter flywheelShooter;
 
@@ -17,7 +17,7 @@ public class DecelerateFlywheel extends ReferencingCommand {
 	/**
 	 * Construct a DecelerateFLywheel command
 	 *
-	 * @param subsystem shooter to execute the command on
+	 * @param subsystem shooter to execute this command on
 	 * @param timeout   command timeout (doesn't actually work)
 	 */
 	public DecelerateFlywheel(MappedSubsystem subsystem, double timeout) {

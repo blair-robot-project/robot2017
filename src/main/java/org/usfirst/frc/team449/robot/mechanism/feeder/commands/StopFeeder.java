@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 public class StopFeeder extends ReferencingCommand {
 
 	/**
-	 * The feeder subsystem to execute the command on.
+	 * The feeder subsystem to execute this command on.
 	 */
 	private FeederSubsystem feeder;
 
 	/**
 	 * Default constructor.
-	 * @param feeder The feeder subsystem to execute the command on.
+	 * @param feeder The feeder subsystem to execute this command on.
 	 */
 	public StopFeeder(FeederSubsystem feeder) {
 		super(feeder);
@@ -41,7 +41,7 @@ public class StopFeeder extends ReferencingCommand {
 	}
 
 	/**
-	 * Runs instantaneously
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override

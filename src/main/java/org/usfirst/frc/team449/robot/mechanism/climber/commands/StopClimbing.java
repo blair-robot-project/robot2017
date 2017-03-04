@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 public class StopClimbing extends ReferencingCommand {
 
 	/**
-	 * The climber to execute the command on
+	 * The climber to execute this command on
 	 */
 	private ClimberSubsystem climber;
 
 	/**
 	 * Default constructor
-	 * @param climber The climber subsystem to execute the command on
+	 * @param climber The climber subsystem to execute this command on
 	 */
 	public StopClimbing(ClimberSubsystem climber) {
 		super(climber);
@@ -41,7 +41,7 @@ public class StopClimbing extends ReferencingCommand {
 	}
 
 	/**
-	 * Finishes instantaneously because it's just a state-change command.
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override

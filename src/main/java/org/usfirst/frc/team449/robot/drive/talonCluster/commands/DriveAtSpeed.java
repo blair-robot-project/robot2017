@@ -25,7 +25,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 
 	/**
 	 * Default constructor
-	 * @param drive The drive to execute the command on
+	 * @param drive The drive to execute this command on
 	 * @param speed How fast to go, in RPS
 	 * @param seconds How long to drive for.
 	 */

@@ -8,14 +8,14 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
  */
 public class ToggleIntaking extends ReferencingCommand {
 	/**
-	 * The intake subsystem to execute the command on
+	 * The intake subsystem to execute this command on
 	 */
 	private Intake2017 intake2017;
 
 	/**
 	 * Construct a ToggleIntakeUpDown command
 	 *
-	 * @param intake2017 intake subsytem to execute the command on
+	 * @param intake2017 intake subsytem to execute this command on
 	 */
 	public ToggleIntaking(Intake2017 intake2017) {
 		super(intake2017);
@@ -41,8 +41,7 @@ public class ToggleIntaking extends ReferencingCommand {
 	}
 
 	/**
-	 * Finish instantly as the piston is set in execute
-	 *
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override

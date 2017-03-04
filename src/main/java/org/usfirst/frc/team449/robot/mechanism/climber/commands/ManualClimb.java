@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 public class ManualClimb extends ReferencingCommand {
 
 	/**
-	 * The climber to execute the command on
+	 * The climber to execute this command on
 	 */
 	private ClimberSubsystem climber;
 
 	/**
 	 * Default constructor
-	 * @param climber The climber subsystem to execute the command on
+	 * @param climber The climber subsystem to execute this command on
 	 */
 	public ManualClimb(ClimberSubsystem climber) {
 		super(climber);

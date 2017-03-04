@@ -62,7 +62,7 @@ public class ExecuteProfile extends ReferencingCommand {
 	/**
 	 * Construct a new ExecuteProfile command
 	 *
-	 * @param subsystem drive subsystem to execute the command on
+	 * @param subsystem drive subsystem to execute this command on
 	 */
 	public ExecuteProfile(TalonClusterDrive subsystem) {
 		super(subsystem);

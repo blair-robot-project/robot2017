@@ -9,14 +9,14 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 public class ChangeCam extends ReferencingCommand {
 
 	/**
-	 * The cameraSubsystem to execute the command on
+	 * The cameraSubsystem to execute this command on
 	 */
 	private CameraSubsystem cameraSubsystem;
 
 	//TODO get rid of timeout.
 	/**
 	 * Default constructor.
-	 * @param cameraSubsystem The cameraSubsystem to execute the command on.
+	 * @param cameraSubsystem The cameraSubsystem to execute this command on.
 	 * @param timeout The timeout for this command (does nothing)
 	 */
 	public ChangeCam(CameraSubsystem cameraSubsystem, double timeout) {
@@ -56,7 +56,7 @@ public class ChangeCam extends ReferencingCommand {
 	}
 
 	/**
-	 * Finishes instantaneously.
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override

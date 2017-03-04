@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 public class ToggleFeeder extends ReferencingCommand {
 
 	/**
-	 * The feeder subsystem to execute the command on.
+	 * The feeder subsystem to execute this command on.
 	 */
 	private FeederSubsystem feeder;
 
 	/**
 	 * Default constructor.
-	 * @param feeder The feeder subsystem to execute the command on.
+	 * @param feeder The feeder subsystem to execute this command on.
 	 */
 	public ToggleFeeder(FeederSubsystem feeder) {
 		super(feeder);
@@ -45,7 +45,7 @@ public class ToggleFeeder extends ReferencingCommand {
 	}
 
 	/**
-	 * Runs instantaneously
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override

@@ -26,7 +26,7 @@ public class OpTankDrive extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
-	 * @param drive The drive to execute the command on.
+	 * @param drive The drive to execute this command on.
 	 * @param oi The OI this command gets input from.
 	 */
 	public OpTankDrive(TalonClusterDrive drive, TankOI oi) {

@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**
-	 * The drive subsystem to execute the command on and to get the gyro reading from.
+	 * The drive subsystem to execute this command on and to get the gyro reading from.
 	 */
 	protected TalonClusterDrive drive;
 
@@ -35,7 +35,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 *
 	 * @param map   An turnPID map with PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint    The setpoint, in degrees from 180 to -180.
-	 * @param drive The drive subsystem to execute the command on.
+	 * @param drive The drive subsystem to execute this command on.
 	 * @param timeout How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
 	 */
 	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, TalonClusterDrive drive,

@@ -9,13 +9,13 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 public class StaticInDynamicStop extends ReferencingCommand {
 
 	/**
-	 * The intake subsystem to execute the command on
+	 * The intake subsystem to execute this command on
 	 */
 	private Intake2017 intake;
 
 	/**
 	 * Default constructor.
-	 * @param intake The intake subsystem to execute the command on.
+	 * @param intake The intake subsystem to execute this command on.
 	 */
 	public StaticInDynamicStop(Intake2017 intake) {
 		super(intake);

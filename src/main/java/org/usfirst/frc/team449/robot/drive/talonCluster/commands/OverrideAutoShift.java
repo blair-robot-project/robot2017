@@ -20,7 +20,7 @@ public class OverrideAutoShift extends ReferencingCommand {
 
 	/**
 	 * Default constructor
-	 * @param drive The drive subsystem to execute the command on.
+	 * @param drive The drive subsystem to execute this command on.
 	 * @param override Whether or not to override autoshifting.
 	 * @param switchToLowGear Whether to switch to low gear. If false, switch to high gear.
 	 */
@@ -49,7 +49,7 @@ public class OverrideAutoShift extends ReferencingCommand {
 	}
 
 	/**
-	 * Finsh instantly because this is just a state-change command.
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override
