@@ -22,7 +22,7 @@ public class FireShooter extends CommandGroup {
 	 */
 	public FireShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
 		requires(intake);
-		addParallel(new AccelerateFlywheel(sfs, 2.5 * 60)); // TODO remove useless timeout
+		addParallel(new AccelerateFlywheel(sfs, 2.5 * 60));
 		addParallel(new StaticInDynamicStop(intake));
 		addParallel(new RunFeeder(feeder));
 	}

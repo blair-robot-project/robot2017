@@ -13,6 +13,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	 */
 	private SingleFlywheelShooter flywheelShooter;
 
+	//TODO Either implement or remove timeout.
 	/**
 	 * Construct an AccelerateFLywheel command
 	 *

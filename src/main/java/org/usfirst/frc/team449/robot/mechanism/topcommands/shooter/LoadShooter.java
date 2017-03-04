@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.DecelerateFlywheel;
 
 /**
- * Command group for loading the shooter.
+ * Command group for intaking balls from the ground.
  * Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.
  */
 public class LoadShooter extends CommandGroup {

@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 
 /**
- * Command group for racking the shooter.
+ * Command group for preparing the shooter to fire.
  * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
 public class RackShooter extends CommandGroup {
