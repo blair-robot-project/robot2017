@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 
 /**
- * Created by Justin on 1/28/2017.
+ * The subsystem that picks up balls from the ground.
  */
 public class Intake2017 extends MappedSubsystem {
 	/**
@@ -21,7 +21,7 @@ public class Intake2017 extends MappedSubsystem {
 	 */
 	private DoubleSolenoid piston;
 	/**
-	 * Whether is currently intaking
+	 * Whether this is currently intaking
 	 */
 	public boolean isIntaking;
 
@@ -43,12 +43,11 @@ public class Intake2017 extends MappedSubsystem {
 		fixedVictor.setInverted(map.getFixedVictor().getInverted());
 		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
 		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
-		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston()
-				.getReverse());
+		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
 	}
 
 	/**
-	 * Set the speed of the static intake
+	 * Set the percentage speed of the static intake
 	 *
 	 * @param speed PWM setpoint [-1, 1]
 	 */
@@ -57,7 +56,7 @@ public class Intake2017 extends MappedSubsystem {
 	}
 
 	/**
-	 * Set the speed of the dynamic intake
+	 * Set the percentage speed of the dynamic intake
 	 *
 	 * @param speed PWM setpoint [-1, 1]
 	 */

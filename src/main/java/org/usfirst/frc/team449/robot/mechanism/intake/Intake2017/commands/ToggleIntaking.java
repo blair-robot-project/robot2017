@@ -33,6 +33,7 @@ public class ToggleIntaking extends ReferencingCommand {
 			intake2017.setActuatedVictor(0);
 			intake2017.setFixedVictor(0);
 		} else {
+			//TODO Stop hardcoding these
 			intake2017.setActuatedVictor(1);
 			intake2017.setFixedVictor(-0.5);
 		}
