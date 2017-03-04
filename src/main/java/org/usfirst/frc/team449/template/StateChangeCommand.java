@@ -33,7 +33,7 @@ public class StateChangeCommand extends ReferencingCommand{
 	}
 
 	/**
-	 * Exit immediately because this is a state-change command
+	 * Finish immediately because this is a state-change command.
 	 * @return true
 	 */
 	@Override
