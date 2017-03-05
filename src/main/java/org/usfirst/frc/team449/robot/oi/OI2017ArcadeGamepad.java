@@ -1,9 +1,11 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.TriggerButton;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OverrideAutoShift;
@@ -39,9 +41,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Throttle fwdThrottle;
 	private Joystick gamepad;
 	private double deadband;
-	private JoystickButton tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
-	private JoystickButton switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
-	private JoystickButton loadShooter, rackShooter, fireShooter;
+	private Button tt0, tt30, tt180, tt330, turnaround, switchToLowGear, switchToHighGear, climb, overrideNavX;
+	private Button switchCamera, toggleIntake, toggleIntakeUpDown, tmpOverrideLow, tmpOverrideHigh, toggleOverrideHigh, toggleFeeder, shoot;
+	private Button loadShooter, rackShooter, fireShooter;
 
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//This is just to give the sticks better names and allow quickly swapping which is which according to driver preference.
@@ -82,13 +84,17 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		if (map.hasToggleOverrideLow()){
 			tmpOverrideLow = new MJButton(map.getToggleOverrideLow());
+		} else if (map.hasTriggerToggleOverrideLow()){
+			tmpOverrideLow = new TriggerButton(map.getTriggerToggleOverrideLow());
 		}
 		if (map.hasToggleOverrideHigh()){
 			tmpOverrideHigh = new MJButton(map.getToggleOverrideHigh());
+		} else if (map.hasTriggerToggleOverrideHigh()){
+			tmpOverrideHigh = new TriggerButton(map.getTriggerToggleOverrideHigh());
 		}
-		if (map.hasToggleOverrideHigh()) {     // TODO check if tmp == toggle
+		/*if (map.hasToggleOverrideHigh()) {     // TODO check if tmp == toggle
 			toggleOverrideHigh = new MJButton(map.getToggleOverrideHigh());
-		}
+		}*/
 		if (map.hasToggleFeeder()) {
 			toggleFeeder = new MJButton(map.getToggleFeeder());
 		}

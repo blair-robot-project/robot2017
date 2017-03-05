@@ -1,5 +1,6 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/oi/JButton.proto";
+import "org/usfirst/frc/team449/robot/oi/TriggerButton.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.oi";
 option java_outer_classname = "OI2017ArcadeGamepadMap";
@@ -25,6 +26,8 @@ message OI2017ArcadeGamepad {
     optional JButton toggle_intake_up_down = 14;
     optional JButton toggle_override_low = 15;
     optional JButton toggle_override_high = 16;
+    optional TriggerButton trigger_toggle_override_low = 24;
+	optional TriggerButton trigger_toggle_override_high = 25;
     optional JButton shoot = 17;
 
     optional JButton switch_camera = 23;
