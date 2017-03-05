@@ -71,7 +71,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param left  The left throttle, a number between -1 and 1 inclusive.
 	 * @param right The right throttle, a number between -1 and 1 inclusive.
 	 */
-	private void setVBusThrottle(double left, double right) {
+	public void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(right);
 	}
@@ -108,12 +108,20 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(leftTPointStatus.activePoint.position);
 			sb.append(",");
 			sb.append(rightTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.velocity);
 			sb.append("\n");
 
 			fw.write(sb.toString());
 
 			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
+			SmartDashboard.putNumber("Left Pos inches", leftMaster.nativeToRPS(leftMaster.canTalon.getEncPosition())/10*Math.PI*4);
+			SmartDashboard.putNumber("Right Pos inches", rightMaster.nativeToRPS(rightMaster.canTalon.getEncPosition())/10*Math.PI*4);
+			SmartDashboard.putNumber("Right Pos", rightMaster.canTalon.getEncPosition());
+			SmartDashboard.putNumber("Left Pos", leftMaster.canTalon.getEncPosition());
 			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Heading", navx.pidGet());
 			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
