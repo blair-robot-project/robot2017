@@ -7,8 +7,8 @@ import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
  * Created by Justin on 1/12/2017.
  */
 public class ClimberSubsystem extends MechanismSubsystem {
-	UnitlessCANTalonSRX canTalonSRX;
-	double max_current;
+	public UnitlessCANTalonSRX canTalonSRX;
+	private double max_current;
 
 	public ClimberSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.climber.ClimberMap.Climber map) {
 		super(map.getMechanism());

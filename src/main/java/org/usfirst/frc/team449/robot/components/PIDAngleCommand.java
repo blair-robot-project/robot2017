@@ -14,7 +14,6 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	protected NavxSubsystem subsystem;
 	protected double tolerance;
 	protected double deadband;
-	protected boolean deadbandEnabled;
 
 	//TODO add a timeout.
 	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
@@ -29,13 +28,13 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		this.getPIDController().setAbsoluteTolerance(tolerance);
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
 		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
-		//This caps the output we can give. One way to set this up is to make P large and then use this to prevent
-		// overshoot.
 		//this.getPIDController().setOutputRange(-0.7, 0.7);
 		//Minimum ouutput, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
 		this.minimumOutput = map.getMinimumOutput();
 		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
+		//This caps the output we can give. One way to set this up is to make P large and then use this to prevent
+		// overshoot.
 		if (map.getMaximumOutputEnabled()) {
 			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
 		}
@@ -46,6 +45,13 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		}
 		this.subsystem = subsystem;
 	}
+
+	/*
+	 NOTE: usePIDOutput() is an abstract method in PIDCommand. Any subclass of PIDAngleCommand must implement it.
+	 It is called from the PIDController in PIDCommand, which will give it the output (i.e. u(t)) of the PID loop.
+	 It's up to the programmer to decide how to use this. For any subclass of PIDAngleCommand, you can generally just
+	 use it as a throttle value, or add it the throttle. Remember that one side is positive and one side is negative!
+	 */
 
 	/**
 	 * Returns the input for the pid loop.

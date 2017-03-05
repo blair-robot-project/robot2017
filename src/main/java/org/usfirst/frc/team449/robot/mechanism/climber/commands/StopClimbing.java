@@ -4,44 +4,44 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 
 /**
- * Created by Justin on 1/12/2017.
+ * Created by Noah Gleason on 2/11/2017.
  */
-public class Climb extends ReferencingCommand {
+public class StopClimbing extends ReferencingCommand{
 
 	ClimberSubsystem climber;
 
-	public Climb(ClimberSubsystem climber) {
+	public StopClimbing (ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
 		this.climber = climber;
-		System.out.println("Climb constructed");
+		System.out.println("CurrentClimb constructed");
 	}
 
 	@Override
 	protected void initialize() {
-		System.out.println("Climb init");
+		System.out.println("CurrentClimb init");
 	}
 
 	@Override
 	protected void execute() {
-		climber.setPercentVbus(1);
+		climber.setPercentVbus(0);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return climber.reachedTop();
+		return true;
 	}
 
 	@Override
 	protected void end() {
 		climber.setPercentVbus(0);
-		System.out.println("Climb end");
+		System.out.println("CurrentClimb end");
 	}
 
 	@Override
 	protected void interrupted() {
 		climber.setPercentVbus(0);
-		System.out.println("Climb interrupted, stopping climb.");
+		System.out.println("CurrentClimb interrupted, stopping climb.");
 	}
 
 }

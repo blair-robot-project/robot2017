@@ -52,7 +52,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 			else if (output < 0 && output > -minimumOutput)
 				output = -minimumOutput;
 		}
-		if (deadbandEnabled && this.getPIDController().getError() <= deadband) {
+		if (this.getPIDController().getError() <= deadband) {
 			output = 0;
 		}
 		SmartDashboard.putNumber("Output", output);

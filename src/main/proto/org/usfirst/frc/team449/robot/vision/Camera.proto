@@ -1,0 +1,12 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/components/MjpegServer.proto";
+import "org/usfirst/frc/team449/robot/components/UsbCamera.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.vision";
+option java_outer_classname = "CameraMap";
+
+
+message Camera{
+    required MjpegServer server = 1;
+    repeated UsbCamera USB_camera = 2;
+}
