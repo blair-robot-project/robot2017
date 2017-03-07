@@ -118,12 +118,12 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
 		driveSubsystem.setVBusThrottle(0, 0);
 		driveSubsystem.leftMaster.canTalon.setEncPosition(0);
 		driveSubsystem.rightMaster.canTalon.setEncPosition(0);
 		driveSubsystem.setDefaultThrottle(0, 0);
+		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 		//Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 

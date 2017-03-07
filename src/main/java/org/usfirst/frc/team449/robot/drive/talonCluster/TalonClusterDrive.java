@@ -11,6 +11,7 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
@@ -246,7 +247,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		overrideNavX = false;
 		//		setDefaultCommand(new PIDTest(this));
 		//		setDefaultCommand(new OpArcadeDrive(this, oi));
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+//		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 //		setDefaultCommand(new ExecuteProfile(this));
 	}
 

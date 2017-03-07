@@ -64,8 +64,13 @@ public class ExecuteProfile extends ReferencingCommand {
 		System.out.println("Active Points' Positions: " + leftStatus.activePoint.position + ", " + rightStatus
 				.activePoint.position);
 		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
-		if (!leftStatus.activePointValid || !rightStatus.activePointValid) {
-			System.out.println("INVALID! YOU DONE FUCKED UP");
+		if (!leftStatus.activePointValid) {
+			System.out.println("INVALID! YOU DONE FUCKED UP LEFT SIDE");
+			System.out.println("Left active point: "+pointToString(leftStatus.activePoint));
+		}
+		if (!rightStatus.activePointValid){
+			System.out.println("INVALID! YOU DONE FUCKED UP RIGHT SIDE");
+			System.out.println("Right active point: "+pointToString(rightStatus.activePoint));
 		}
 		if (leftStatus.activePoint.isLastPoint || rightStatus.activePoint.isLastPoint) {
 			System.out.println("LAST POINT");
@@ -76,7 +81,23 @@ public class ExecuteProfile extends ReferencingCommand {
 		tcd.logData();
 	}
 
+	@Override
+	protected boolean isFinished(){
+		return false;
+	}
+
+	@Override
+	protected void end(){
+		System.out.println("ExecuteProfile end.");
+	}
+
+	@Override
+	protected void interrupted(){
+		System.out.println("ExecuteProfile interrupted!");
+	}
+
 	private void control() {
+		System.out.println("Starting control().");
 		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
 		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
 		// TODO take this out
@@ -85,11 +106,13 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		switch (_state) {
 			case 0: {
+				System.out.println("State 0.");
 				startFilling();
 				_state = 1;
 				break;
 			}
 			case 1: {
+				System.out.println("State 1");
 				mpProcessNotifier.startPeriodic(UPDATE_RATE);
 				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out
 				// what this does
@@ -106,6 +129,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 			case 2: {
+				System.out.println("State 2");
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
 						MIN_NUM_LOADED_POINTS) {
 					tcd.leftMaster.canTalon.setEncPosition(0);
@@ -120,6 +144,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				}
 			}
 			case 3: {
+				System.out.println("State 3");
 				// Do nothing
 			}
 		}
@@ -147,31 +172,40 @@ public class ExecuteProfile extends ReferencingCommand {
 		for (int i = 0; i < leftProfile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = -inchesToNative(leftProfile.data[i][0]);
-			point.velocity = -inchesToNative(leftProfile.data[i][1]);
-			point.timeDurMs = (int) leftProfile.data[i][2];
+			point.velocity = -tcd.leftMaster.RPStoNative(leftProfile.data[i][1]/60.);
+			point.timeDurMs = (int) (leftProfile.data[i][2] * 1000.);
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
 			point.isLastPoint = (i + 1) == leftProfile.data.length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
-			tcd.leftMaster.canTalon.pushMotionProfileTrajectory(point);
+			if(!tcd.leftMaster.canTalon.pushMotionProfileTrajectory(point)) {
+				System.out.println("Left buffer full!");
+				break;
+			}
+
+			System.out.println("LEFT POINT "+(i+1)+": "+pointToString(point));
 		}
 
 		for (int i = 0; i < rightProfile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = -inchesToNative(rightProfile.data[i][0]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
-			point.velocity = -inchesToNative(rightProfile.data[i][1]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
-			point.timeDurMs = (int) rightProfile.data[i][2];
+			point.velocity = -tcd.leftMaster.RPStoNative(rightProfile.data[i][1]/60.) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
+			point.timeDurMs = (int) (rightProfile.data[i][2] * 1000.);
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
 			point.isLastPoint = (i + 1) == rightProfile.data.length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
-			tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point);
+			if (!tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point)){
+				System.out.println("Right buffer full!");
+				break;
+			}
 
-			System.out.println("RIGHT POINT VEL: " + point.velocity);
+			if (i == 0)
+				System.out.println("RIGHT POINT "+(i+1)+": "+pointToString(point));
 		}
 
 
@@ -190,5 +224,9 @@ public class ExecuteProfile extends ReferencingCommand {
 	private double inchesToNative(double inches){
 		double rotations = inches / (WHEEL_DIAMETER*Math.PI);
 		return rotations * (tcd.leftMaster.encoderCPR*4);
+	}
+
+	private String pointToString(CANTalon.TrajectoryPoint point){
+		return "(pos = " + nativeToInches(point.position) + " in, vel = " + tcd.leftMaster.nativeToRPS(point.velocity) + " rps, dT = " + point.timeDurMs+" ms)";
 	}
 }
