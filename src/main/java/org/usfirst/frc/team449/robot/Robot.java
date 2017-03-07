@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
@@ -44,8 +45,8 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("Started robotInit");
 		try {
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map_only_drive.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
@@ -117,13 +118,13 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousInit() {
-//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
 		driveSubsystem.setVBusThrottle(0, 0);
 		driveSubsystem.leftMaster.canTalon.setEncPosition(0);
 		driveSubsystem.rightMaster.canTalon.setEncPosition(0);
 		driveSubsystem.setDefaultThrottle(0, 0);
-		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
+		//Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 
 	@Override
