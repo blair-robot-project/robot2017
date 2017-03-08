@@ -94,8 +94,9 @@ task convertFiles{
 }
 
 frc {
-	//deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
-	//deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+//	deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
+//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
 	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
 }

@@ -2,6 +2,8 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPUpdaterProcess;
@@ -12,13 +14,16 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  */
 public class ExecuteProfile extends ReferencingCommand {
 	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
-	private static final String IN_FILE_NAME = "/home/lvuser/449_resources/profile.csv";
+	private static final String LEFT_IN_FILE_NAME = "/home/lvuser/449_resources/leftProfile.csv";
+	private static final String RIGHT_IN_FILE_NAME = "/home/lvuser/449_resources/rightProfile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
+	private static final double WHEEL_DIAMETER = 4; //In inches
 	private int _state = 0;
 	private Notifier mpProcessNotifier;
 
 	private TalonClusterDrive tcd;
-	private MotionProfileData profile;
+	private MotionProfileData leftProfile;
+	private MotionProfileData rightProfile;
 
 	private CANTalon.MotionProfileStatus leftStatus;
 	private CANTalon.MotionProfileStatus rightStatus;
@@ -32,7 +37,9 @@ public class ExecuteProfile extends ReferencingCommand {
 		leftStatus = new CANTalon.MotionProfileStatus();
 		rightStatus = new CANTalon.MotionProfileStatus();
 
-		profile = new MotionProfileData(IN_FILE_NAME);
+		leftProfile = new MotionProfileData(LEFT_IN_FILE_NAME);
+		rightProfile = new MotionProfileData(RIGHT_IN_FILE_NAME);
+
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
 	}
 
@@ -50,6 +57,8 @@ public class ExecuteProfile extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		control();
+		SmartDashboard.putNumber("Left MP Error", tcd.leftMaster.getSpeed() - tcd.leftMaster.nativeToRPS(leftStatus.activePoint.velocity));
+		SmartDashboard.putNumber("Right MP Error", tcd.rightMaster.getSpeed() - tcd.rightMaster.nativeToRPS(rightStatus.activePoint.velocity));
 		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
 				.activePoint.velocity);
 		System.out.println("Active Points' Positions: " + leftStatus.activePoint.position + ", " + rightStatus
@@ -135,25 +144,51 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		// Fill the Talon's buffer with points
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
-		for (int i = 0; i < profile.data.length; ++i) {
+		for (int i = 0; i < leftProfile.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = profile.data[i][0] * 2048;
-			point.velocity = profile.data[i][1] * 2048;
-			point.timeDurMs = (int) profile.data[i][2];
+			point.position = -inchesToNative(leftProfile.data[i][0]);
+			point.velocity = -inchesToNative(leftProfile.data[i][1]);
+			point.timeDurMs = (int) leftProfile.data[i][2];
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
-			point.isLastPoint = (i + 1) == profile.data.length; // If its the last point, isLastPoint = true
+			point.isLastPoint = (i + 1) == leftProfile.data.length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
 			tcd.leftMaster.canTalon.pushMotionProfileTrajectory(point);
-			tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point);
 		}
+
+		for (int i = 0; i < rightProfile.data.length; ++i) {
+			// Set all the fields of the profile point
+			point.position = -inchesToNative(rightProfile.data[i][0]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
+			point.velocity = -inchesToNative(rightProfile.data[i][1]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
+			point.timeDurMs = (int) rightProfile.data[i][2];
+			point.profileSlotSelect = 1;    // gain selection
+			point.velocityOnly = false;  // true => no position servo just velocity feedforward
+			point.zeroPos = i == 0; // If its the first point, zeroPos  =  true
+			point.isLastPoint = (i + 1) == rightProfile.data.length; // If its the last point, isLastPoint = true
+
+			// Send the point to the Talon's buffer
+			tcd.rightMaster.canTalon.pushMotionProfileTrajectory(point);
+
+			System.out.println("RIGHT POINT VEL: " + point.velocity);
+		}
+
 
 		// Add the Talons to the updater thread (thread should not have started yet tho)
 		updaterProcess.addTalon(tcd.leftMaster.canTalon);
 		updaterProcess.addTalon(tcd.rightMaster.canTalon);
 		mpProcessNotifier = new Notifier(updaterProcess);
 		System.out.println("Finished loading points");
+	}
+
+	private double nativeToInches(double nativeUnits){
+		double rotations = nativeUnits / (tcd.leftMaster.encoderCPR*4);
+		return rotations * (WHEEL_DIAMETER*Math.PI);
+	}
+
+	private double inchesToNative(double inches){
+		double rotations = inches / (WHEEL_DIAMETER*Math.PI);
+		return rotations * (tcd.leftMaster.encoderCPR*4);
 	}
 }
