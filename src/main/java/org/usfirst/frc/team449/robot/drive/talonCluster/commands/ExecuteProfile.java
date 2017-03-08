@@ -105,17 +105,15 @@ public class ExecuteProfile extends ReferencingCommand {
 		tcd.rightTPointStatus = rightStatus;
 
 		switch (_state) {
-			case 0: {
+			case 0:
 				System.out.println("State 0.");
 				startFilling();
 				_state = 1;
 				break;
-			}
-			case 1: {
+			case 1:
 				System.out.println("State 1");
 				mpProcessNotifier.startPeriodic(UPDATE_RATE);
-				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out
-				// what this does
+				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out what this does
 				tcd.rightMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
 				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
 				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
@@ -127,8 +125,7 @@ public class ExecuteProfile extends ReferencingCommand {
 					System.out.println("NOT FULLY LOADED");
 				}
 				break;
-			}
-			case 2: {
+			case 2:
 				System.out.println("State 2");
 				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
 						MIN_NUM_LOADED_POINTS) {
@@ -142,11 +139,13 @@ public class ExecuteProfile extends ReferencingCommand {
 					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
 					_state = 3;
 				}
-			}
-			case 3: {
+			case 3:
 				System.out.println("State 3");
 				// Do nothing
-			}
+				break;
+			default:
+				System.out.println("Default state, something went wrong.");
+				break;
 		}
 	}
 
