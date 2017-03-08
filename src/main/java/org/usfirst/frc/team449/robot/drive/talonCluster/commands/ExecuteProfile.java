@@ -48,8 +48,17 @@ public class ExecuteProfile extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-	}
+		// Put the masters in motion profile mode
+		tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 
+		// Make sure they are disabled while they have data piped into them
+		tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+		tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+
+		tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
+		tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
+	}
 	/**
 	 * If its the first execute call, start the thread
 	 * Other than that, error check every loop call
@@ -57,6 +66,7 @@ public class ExecuteProfile extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		control();
+		/*
 		SmartDashboard.putNumber("Left MP Error", tcd.leftMaster.getSpeed() - tcd.leftMaster.nativeToRPS(leftStatus.activePoint.velocity));
 		SmartDashboard.putNumber("Right MP Error", tcd.rightMaster.getSpeed() - tcd.rightMaster.nativeToRPS(rightStatus.activePoint.velocity));
 		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
@@ -66,11 +76,11 @@ public class ExecuteProfile extends ReferencingCommand {
 		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
 		if (!leftStatus.activePointValid) {
 			System.out.println("INVALID! YOU DONE FUCKED UP LEFT SIDE");
-			System.out.println("Left active point: "+pointToString(leftStatus.activePoint));
+			System.out.println("Left active point: " + pointToString(leftStatus.activePoint));
 		}
-		if (!rightStatus.activePointValid){
+		if (!rightStatus.activePointValid) {
 			System.out.println("INVALID! YOU DONE FUCKED UP RIGHT SIDE");
-			System.out.println("Right active point: "+pointToString(rightStatus.activePoint));
+			System.out.println("Right active point: " + pointToString(rightStatus.activePoint));
 		}
 		if (leftStatus.activePoint.isLastPoint || rightStatus.activePoint.isLastPoint) {
 			System.out.println("LAST POINT");
@@ -79,6 +89,8 @@ public class ExecuteProfile extends ReferencingCommand {
 			System.out.println("FIRST POINT");
 		}
 		tcd.logData();
+		*/
+		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
 	}
 
 	@Override
@@ -88,21 +100,25 @@ public class ExecuteProfile extends ReferencingCommand {
 
 	@Override
 	protected void end(){
+		mpProcessNotifier.stop();
 		System.out.println("ExecuteProfile end.");
 	}
 
 	@Override
 	protected void interrupted(){
+		mpProcessNotifier.stop();
+		tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+		tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		System.out.println("ExecuteProfile interrupted!");
 	}
 
 	private void control() {
-		System.out.println("Starting control().");
+		//System.out.println("Starting control().");
 		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
 		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
-		// TODO take this out
-		tcd.leftTPointStatus = leftStatus;
-		tcd.rightTPointStatus = rightStatus;
+
+		if (leftStatus.isUnderrun || rightStatus.isUnderrun)
+			System.out.println("UNDERRUN! That's BAAAD!");
 
 		switch (_state) {
 			case 0:
@@ -118,7 +134,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
 				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
 
-				if (leftStatus.btmBufferCnt >= 128 || rightStatus.btmBufferCnt >= 128) {
+				if (leftStatus.btmBufferCnt >= 128 && rightStatus.btmBufferCnt >= 128) {
 					_state = 2;
 					System.out.println("LOADED");
 				} else {
@@ -127,21 +143,22 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			case 2:
 				System.out.println("State 2");
-				if (leftStatus.btmBufferCnt < MIN_NUM_LOADED_POINTS || rightStatus.btmBufferCnt <
-						MIN_NUM_LOADED_POINTS) {
-					tcd.leftMaster.canTalon.setEncPosition(0);
-					tcd.rightMaster.canTalon.setEncPosition(0);
-
-					tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
-					tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
-					System.out.println("CAN buffer loaded; clearing underrun");
-					tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
-					tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
+				System.out.println("Enabling Talons.");
+				tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+				tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+				tcd.leftMaster.canTalon.enable();
+				tcd.rightMaster.canTalon.enable();
+				tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
+				tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
+				tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
+				tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
+				if(leftStatus.outputEnable  == CANTalon.SetValueMotionProfile.Enable && rightStatus.outputEnable  == CANTalon.SetValueMotionProfile.Enable)
 					_state = 3;
-				}
+				break;
 			case 3:
 				System.out.println("State 3");
-				// Do nothing
+				tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
+				tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
 				break;
 			default:
 				System.out.println("Default state, something went wrong.");
@@ -152,19 +169,8 @@ public class ExecuteProfile extends ReferencingCommand {
 	private void startFilling() {
 		MPUpdaterProcess updaterProcess = new MPUpdaterProcess();
 
-		// Put the masters in motion profile mode
-		tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-
-		// Make sure they are disabled while they have data piped into them
-		tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
-		tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
-
-		// Clear all old motion profile settings
-		tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
-		tcd.leftMaster.canTalon.clearMotionProfileTrajectories();
-		tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
 		tcd.rightMaster.canTalon.clearMotionProfileTrajectories();
+		tcd.leftMaster.canTalon.clearMotionProfileTrajectories();
 
 		// Fill the Talon's buffer with points
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();

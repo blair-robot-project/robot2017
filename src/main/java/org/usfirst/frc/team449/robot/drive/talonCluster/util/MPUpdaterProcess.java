@@ -23,6 +23,8 @@ public class MPUpdaterProcess implements Runnable {
 	// Process the MP buffer for each Talon in the queue
 	@Override
 	public void run() {
-		talonQueue.forEach(CANTalon::processMotionProfileBuffer);
+		for (CANTalon talon : talonQueue){
+			talon.processMotionProfileBuffer();
+		}
 	}
 }
