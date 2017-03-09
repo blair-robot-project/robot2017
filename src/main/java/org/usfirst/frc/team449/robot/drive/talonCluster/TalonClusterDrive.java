@@ -68,7 +68,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 		this.map = map;
 		this.oi = oi;
-		this.navx = new AHRS(SPI.Port.kMXP);
+		//this.navx = new AHRS(SPI.Port.kMXP);
 		this.turnPID = map.getTurnPID();
 		this.straightPID = map.getStraightPID();
 		this.upTimeThresh = map.getUpTimeThresh();
@@ -176,7 +176,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
 		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Heading", navx.pidGet());
+		SmartDashboard.putNumber("Heading", getGyroOutput());
 		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
@@ -219,7 +219,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			SmartDashboard.putNumber("Right Pos", rightMaster.canTalon.getEncPosition());
 			SmartDashboard.putNumber("Left Pos", leftMaster.canTalon.getEncPosition());
 			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Heading", navx.pidGet());
+			SmartDashboard.putNumber("Heading", getGyroOutput());
 			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
@@ -252,7 +252,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	public double getGyroOutput() {
-		return navx.pidGet();
+		return 0;
+		//return navx.pidGet();
 	}
 
 	public void setLowGear(boolean setLowGear) {

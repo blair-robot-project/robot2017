@@ -72,12 +72,10 @@ public class ExecuteProfile extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		control();
+		/*
 		SmartDashboard.putNumber("Left MP Error", tcd.leftMaster.getSpeed() - tcd.leftMaster.nativeToRPS(leftStatus.activePoint.velocity));
 		SmartDashboard.putNumber("Right MP Error", tcd.rightMaster.getSpeed() - tcd.rightMaster.nativeToRPS(rightStatus.activePoint.velocity));
-		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
-				.activePoint.velocity);
-		System.out.println("Active Points' Positions: " + leftStatus.activePoint.position + ", " + rightStatus
-				.activePoint.position);
+		System.out.println("Active Point: " + pointToString(leftStatus.activePoint));
 		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
 		if (!leftStatus.activePointValid) {
 			System.out.println("INVALID! YOU DONE FUCKED UP LEFT SIDE");
@@ -93,6 +91,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		if (leftStatus.activePoint.zeroPos || rightStatus.activePoint.zeroPos) {
 			System.out.println("FIRST POINT");
 		}
+		*/
 		tcd.logData();
 	}
 
@@ -126,12 +125,12 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		switch (_state) {
 			case 0:
-				System.out.println("State 0.");
+//				System.out.println("State 0.");
 				startFilling();
 				_state = 1;
 				break;
 			case 1:
-				System.out.println("State 1");
+//				System.out.println("State 1");
 				mpProcessNotifier.startPeriodic(UPDATE_RATE);
 				tcd.leftMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));  // TODO figure out what this does
 				tcd.rightMaster.canTalon.changeMotionControlFramePeriod((int) (UPDATE_RATE * 1e3));
@@ -146,7 +145,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				}
 				break;
 			case 2:
-				System.out.println("State 2");
+//				System.out.println("State 2");
 				tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 				tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 				tcd.leftMaster.canTalon.enable();
@@ -159,7 +158,7 @@ public class ExecuteProfile extends ReferencingCommand {
 					_state = 3;
 				break;
 			case 3:
-				System.out.println("State 3");
+//				System.out.println("State 3");
 				if(leftStatus.activePoint.isLastPoint && rightStatus.activePoint.isLastPoint){
 					finished = true;
 				}
@@ -194,7 +193,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 
-			System.out.println("LEFT POINT "+(i+1)+": "+pointToString(point));
+//			System.out.println("LEFT POINT "+(i+1)+": "+pointToString(point));
 		}
 
 		for (int i = 0; i < rightProfile.data.length; ++i) {
@@ -213,8 +212,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			}
 
-			if (i == 0)
-				System.out.println("RIGHT POINT "+(i+1)+": "+pointToString(point));
+//			System.out.println("RIGHT POINT "+(i+1)+": "+pointToString(point));
 		}
 
 
