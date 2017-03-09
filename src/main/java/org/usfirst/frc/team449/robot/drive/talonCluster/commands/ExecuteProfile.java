@@ -13,7 +13,6 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
  * Load and execute a motion profile on the master Talons in the two motor clusters
  */
 public class ExecuteProfile extends ReferencingCommand {
-	private static final int MIN_NUM_LOADED_POINTS = 200; // total number of points
 	private static final String LEFT_IN_FILE_NAME = "/home/lvuser/449_resources/leftProfile.csv";
 	private static final String RIGHT_IN_FILE_NAME = "/home/lvuser/449_resources/rightProfile.csv";
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
@@ -28,6 +27,8 @@ public class ExecuteProfile extends ReferencingCommand {
 	private CANTalon.MotionProfileStatus leftStatus;
 	private CANTalon.MotionProfileStatus rightStatus;
 
+	private boolean finished;
+
 	public ExecuteProfile(TalonClusterDrive subsystem) {
 		super(subsystem);
 		requires(subsystem);
@@ -39,6 +40,8 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		leftProfile = new MotionProfileData(LEFT_IN_FILE_NAME);
 		rightProfile = new MotionProfileData(RIGHT_IN_FILE_NAME);
+
+		finished = false;
 
 		mpProcessNotifier = null;   // WARNING not assigned until after "initialize" is called
 	}
@@ -58,7 +61,10 @@ public class ExecuteProfile extends ReferencingCommand {
 
 		tcd.leftMaster.canTalon.clearMotionProfileHasUnderrun();
 		tcd.rightMaster.canTalon.clearMotionProfileHasUnderrun();
+
+		finished = false;
 	}
+
 	/**
 	 * If its the first execute call, start the thread
 	 * Other than that, error check every loop call
@@ -66,7 +72,6 @@ public class ExecuteProfile extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		control();
-		/*
 		SmartDashboard.putNumber("Left MP Error", tcd.leftMaster.getSpeed() - tcd.leftMaster.nativeToRPS(leftStatus.activePoint.velocity));
 		SmartDashboard.putNumber("Right MP Error", tcd.rightMaster.getSpeed() - tcd.rightMaster.nativeToRPS(rightStatus.activePoint.velocity));
 		System.out.println("Active Points' Velocities: " + leftStatus.activePoint.velocity + ", " + rightStatus
@@ -89,17 +94,17 @@ public class ExecuteProfile extends ReferencingCommand {
 			System.out.println("FIRST POINT");
 		}
 		tcd.logData();
-		*/
-		System.out.println("Output Enable: " + leftStatus.outputEnable + ", " + rightStatus.outputEnable);
 	}
 
 	@Override
 	protected boolean isFinished(){
-		return false;
+		return finished;
 	}
 
 	@Override
 	protected void end(){
+		tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
+		tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		mpProcessNotifier.stop();
 		System.out.println("ExecuteProfile end.");
 	}
@@ -113,7 +118,6 @@ public class ExecuteProfile extends ReferencingCommand {
 	}
 
 	private void control() {
-		//System.out.println("Starting control().");
 		tcd.leftMaster.canTalon.getMotionProfileStatus(leftStatus);
 		tcd.rightMaster.canTalon.getMotionProfileStatus(rightStatus);
 
@@ -143,7 +147,6 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			case 2:
 				System.out.println("State 2");
-				System.out.println("Enabling Talons.");
 				tcd.leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 				tcd.rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 				tcd.leftMaster.canTalon.enable();
@@ -157,8 +160,9 @@ public class ExecuteProfile extends ReferencingCommand {
 				break;
 			case 3:
 				System.out.println("State 3");
-				tcd.leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
-				tcd.rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
+				if(leftStatus.activePoint.isLastPoint && rightStatus.activePoint.isLastPoint){
+					finished = true;
+				}
 				break;
 			default:
 				System.out.println("Default state, something went wrong.");
