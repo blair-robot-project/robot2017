@@ -14,7 +14,7 @@ public abstract class ReferencingCommandGroup extends CommandGroup {
 	/**
 	 * Subsystem to reference to
 	 */
-	MappedSubsystem subsystem;
+	private MappedSubsystem subsystem;
 
 	/**
 	 * Instantiate the ReferencingCommandGroup

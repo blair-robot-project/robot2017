@@ -8,7 +8,9 @@ import java.util.stream.Stream;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
+ * @deprecated future switch to PathGenerator when MP_2_Sides branch is merged in
  */
+@Deprecated
 public class MotionProfileData {
 	public double data[][];
 

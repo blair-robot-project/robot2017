@@ -14,13 +14,13 @@ option java_outer_classname = "Robot2017Map";
 
 message Robot2017 {
 	optional OI2017Tank tank_oi = 1;
-    required OI2017ArcadeGamepad arcade_oi = 2;
+	required OI2017ArcadeGamepad arcade_oi = 2;
 	required TalonClusterDrive drive = 3;
 	optional Climber climber = 4;
 	optional SingleFlywheelShooter shooter = 5;
-    optional int32 module = 6;
-    optional Camera camera = 7;
-    optional Intake2017 intake = 8;
+	optional int32 module = 6;
+	optional Camera camera = 7;
+	optional Intake2017 intake = 8;
 	optional PneumaticSystem pneumatics = 9;
-    optional Feeder feeder = 10;
+	optional Feeder feeder = 10;
 }

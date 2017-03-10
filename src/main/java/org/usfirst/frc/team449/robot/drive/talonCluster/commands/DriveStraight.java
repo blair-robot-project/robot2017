@@ -5,8 +5,9 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
- * Program created by noah on 1/8/17.
+ * Drives straight when using a tank drive. Not updated for new OI organization.
  */
+//TODO update this to the new OI organization.
 public class DriveStraight extends ReferencingCommand {
 	public OISubsystem oi;
 

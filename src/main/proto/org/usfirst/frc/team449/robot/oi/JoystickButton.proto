@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.oi";
+option java_outer_classname = "JoystickButtonMap";
+
+message JoystickButton {
+	required int32 joystick_index = 1;
+	required int32 button_index = 2;
+}

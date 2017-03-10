@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 /**
  * Program created by noah on 1/11/17.
  */
+@Deprecated
 public class PIDTune extends ReferencingCommandGroup {
 	/**
 	 * Instantiate the ReferencingCommandGroup

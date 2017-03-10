@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
  * Created by blairrobot on 1/28/17.
  */
 @Deprecated
-public class IntakeStop  extends ReferencingCommand {
+public class IntakeStop extends ReferencingCommand {
 
 	Intake2017 intake2017;
 

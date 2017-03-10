@@ -5,13 +5,17 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
  * Created by ryant on 2017-02-18.
+ *
+ * @see StaticInDynamicIn
+ * @deprecated
  */
+@Deprecated
 public class StaticIntakeStop extends ReferencingCommand {
 	Intake2017 intake;
 
 	public StaticIntakeStop(Intake2017 intake) {
 		super(intake);
-//		requires(intake);
+		//		requires(intake);
 		this.intake = intake;
 	}
 

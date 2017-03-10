@@ -20,78 +20,118 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import java.io.IOException;
 
 /**
- * Created by BlairRobot on 2017-01-08.
+ * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
 public class Robot extends IterativeRobot {
 
+	/**
+	 * The shooter subsystem (flywheel only)
+	 */
 	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
+	/**
+	 * The intake subsystem (intake motors and pistons)
+	 */
 	public static Intake2017 intakeSubsystem;
 
+	/**
+	 *The climber
+	 */
 	public static ClimberSubsystem climberSubsystem;
 
+	/**
+	 *The pneumatics (maybe doesn't work?)
+	 */
 	public static PneumaticsSubsystem pneumaticsSubsystem;
 
+	/**
+	 *The drive
+	 */
 	public static TalonClusterDrive driveSubsystem;
 
+	/**
+	 * OI, using an Xbox-style controller and arcade drive.
+	 */
 	public static OI2017ArcadeGamepad oiSubsystem;
 
+	/**
+	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
+	 */
 	public static CameraSubsystem cameraSubsystem;
 
+	/**
+	 * The auger used to feed balls into the shooter.
+	 */
 	public static FeederSubsystem feederSubsystem;
 
-	private static maps.org.usfirst.frc.team449.robot.Robot2017Map.Robot2017 cfg;
+	/**
+	 * The object constructed directly from map.cfg.
+	 * */
+	private static Robot2017Map.Robot2017 cfg;
 
+	/**
+	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
+	 */
 	public void robotInit() {
-		System.out.println("Started robotInit");
+		System.out.println("Started robotInit.");
+
 		try {
+			//Try to construct map from the cfg file
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
+			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
 
+		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
 		System.out.println("Constructed OI");
 
+		//Construct the drive (not in a if block because you kind of need it.)
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
 		System.out.println("Constructed Drive");
 
+		//Construct camera if it's in the map.
 		if (cfg.hasCamera()) {
 			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
 		}
 
+		//Construct climber if it's in the map.
 		if (cfg.hasClimber()) {
 			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
 		}
 
+		//Construct shooter if it's in the map.
 		if (cfg.hasShooter()) {
 			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
 			System.out.println("Constructed SingleFlywheelShooter");
 		}
 
-//		pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
-// 		System.out.println("Constructed PneumaticsSubsystem");
-
+		//Construct pneumatics if it's in the map.
 		if (cfg.hasPneumatics()) {
 			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 			System.out.println("Constructed PneumaticsSubsystem");
 		}
 
+		//Construct intake if it's in the map.
 		if (cfg.hasIntake()) {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
 		}
 
-		if (cfg.hasFeeder()){
+		//Construct feeder if it's in the map.
+		if (cfg.hasFeeder()) {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
+		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
 
+		//Activate the compressor if its module number is in the map.
 		if (cfg.hasModule()) {
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
@@ -99,36 +139,45 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	/**
+	 * Run when we first enable in teleop.
+	 */
 	@Override
 	public void teleopInit() {
+		//Stop the drive for safety reasons
 		driveSubsystem.setVBusThrottle(0, 0);
-		driveSubsystem.setDefaultThrottle(0, 0);
 
-		if (driveSubsystem.shifter != null){
+		//Switch to low gear if we have gears
+		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
 	}
 
+	/**
+	 * Run every tick in teleop.
+	 */
 	@Override
 	public void teleopPeriodic() {
-		//Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
-		driveSubsystem.setVBusThrottle(0, 0);
+		//Run all commands. This is a WPILib thing you don't really have to worry about.
+		Scheduler.getInstance().run();
 	}
 
+	/**
+	 * Run when we first enable in autonomous
+	 */
 	@Override
 	public void autonomousInit() {
-		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
+		//Set throttle to 0 for safety reasons
 		driveSubsystem.setVBusThrottle(0, 0);
-		driveSubsystem.leftMaster.canTalon.setEncPosition(0);
-		driveSubsystem.rightMaster.canTalon.setEncPosition(0);
-		driveSubsystem.setDefaultThrottle(0, 0);
 		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
-		//Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 	}
 
+	/**
+	 * Runs every tick in autonomous.
+	 */
 	@Override
 	public void autonomousPeriodic() {
+		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
 	}

@@ -6,17 +6,13 @@ import org.usfirst.frc.team449.robot.ReferencingCommandGroup;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by BlairRobot on 2017-01-12.
+ * Drive forward at constant speed then stop to tune PID.
  */
 public class PIDTest extends ReferencingCommandGroup {
+
 	/**
-	 * Instantiate the ReferencingCommandGroup
-	 *
-	 * @param mappedSubsystem the {@link MappedSubsystem}
-	 *                        to feed to this
-	 *                        {@code
-	 *                        ReferencingCommandGroup}'s
-	 *                        {@link ReferencingCommand}s
+	 * Default constructor
+	 * @param mappedSubsystem the TalonClusterDrive to execute this command on
 	 */
 	public PIDTest(MappedSubsystem mappedSubsystem) {
 		super(mappedSubsystem);
@@ -24,9 +20,9 @@ public class PIDTest extends ReferencingCommandGroup {
 
 		TalonClusterDrive driveSubsystem = (TalonClusterDrive) mappedSubsystem;
 
-//		for (int i = 0; i < 5; i++) {
+		//Drive forward for a bit
 		addSequential(new DriveAtSpeed(driveSubsystem, 0.75, 1.5));
+		//Stop
 		addSequential(new DriveAtSpeed(driveSubsystem, 0, 5));
-//		}
 	}
 }

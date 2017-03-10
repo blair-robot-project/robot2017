@@ -6,7 +6,7 @@ option java_package = "maps.org.usfirst.frc.team449.robot.vision";
 option java_outer_classname = "CameraMap";
 
 
-message Camera{
-    required MjpegServer server = 1;
-    repeated UsbCamera USB_camera = 2;
+message Camera {
+	required MjpegServer server = 1;
+	repeated UsbCamera USB_camera = 2;
 }

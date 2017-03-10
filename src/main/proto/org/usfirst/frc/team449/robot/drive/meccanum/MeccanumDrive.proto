@@ -1,17 +1,17 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/drive/Drive.proto";
-import "org/usfirst/frc/team449/robot/components/UnitlessCANTalonSRX.proto";
+import "org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.proto";
 import "org/usfirst/frc/team449/robot/components/ToleranceBufferAnglePID.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.drive.meccanum";
 option java_outer_classname = "MeccanumDriveMap";
 
-message MeccanumDrive{
-    required Drive drive = 1;
-    required ToleranceBufferAnglePID turn_PID = 6;
-    required ToleranceBufferAnglePID straight_PID = 7;
-    required UnitlessCANTalonSRX front_left = 2;
-    required UnitlessCANTalonSRX front_right = 3;
-    required UnitlessCANTalonSRX back_left = 4;
-    required UnitlessCANTalonSRX back_right = 5;
+message MeccanumDrive {
+	required Drive drive = 1;
+	required ToleranceBufferAnglePID turn_PID = 6;
+	required ToleranceBufferAnglePID straight_PID = 7;
+	required RotPerSecCANTalonSRX front_left = 2;
+	required RotPerSecCANTalonSRX front_right = 3;
+	required RotPerSecCANTalonSRX back_left = 4;
+	required RotPerSecCANTalonSRX back_right = 5;
 }

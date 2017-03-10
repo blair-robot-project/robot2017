@@ -8,23 +8,23 @@ import org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDrive;
  */
 public class ToggleStrafe extends ReferencingCommand {
 
-    public ToggleStrafe(MeccanumDrive drive){
-        super(drive);
-        requires(subsystem);
-    }
+	public ToggleStrafe(MeccanumDrive drive) {
+		super(drive);
+		requires(subsystem);
+	}
 
-    @Override
-    protected void initialize(){
-        ((MeccanumDrive) subsystem).toggleStrafe();
-    }
+	@Override
+	protected void initialize() {
+		((MeccanumDrive) subsystem).toggleStrafe();
+	}
 
-    @Override
-    protected void execute() {
-        //Do nothing
-    }
+	@Override
+	protected void execute() {
+		//Do nothing
+	}
 
-    @Override
-    protected boolean isFinished(){
-        return true;
-    }
+	@Override
+	protected boolean isFinished() {
+		return true;
+	}
 }

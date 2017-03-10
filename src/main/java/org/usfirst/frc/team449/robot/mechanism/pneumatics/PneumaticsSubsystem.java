@@ -9,19 +9,20 @@ import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.RunCompressor
  * Created by sam on 1/29/17.
  */
 public class PneumaticsSubsystem extends MappedSubsystem {
-    public Compressor compressor;
-    public PressureSensor pressureSensor;
+	public Compressor compressor;
+	public PressureSensor pressureSensor;
 
-    public PneumaticsSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap.PneumaticSystem map){
-        super(map);
-        pressureSensor =new PressureSensor(map.getPressureSensor());
-        compressor = new Compressor(map.getNodeID());
+	public PneumaticsSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap
+			                           .PneumaticSystem map) {
+		super(map);
+		pressureSensor = new PressureSensor(map.getPressureSensor());
+		compressor = new Compressor(map.getNodeID());
 
-        compressor.setClosedLoopControl(true);  //turns on compressor
-    }
+		compressor.setClosedLoopControl(true);  //turns on compressor
+	}
 
-    @Override
-    public void initDefaultCommand(){
-        this.setDefaultCommand(new RunCompressor(this));
-    }
+	@Override
+	public void initDefaultCommand() {
+		this.setDefaultCommand(new RunCompressor(this));
+	}
 }

@@ -1,6 +1,6 @@
 syntax = "proto2";
-import "org/usfirst/frc/team449/robot/oi/JButton.proto";
 import "org/usfirst/frc/team449/robot/oi/TriggerButton.proto";
+import "org/usfirst/frc/team449/robot/oi/JoystickButton.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.oi";
 option java_outer_classname = "OI2017ArcadeGamepadMap";
@@ -10,59 +10,38 @@ message OI2017ArcadeGamepad {
 	required int32 gamepad_left_axis = 2;
 	required int32 gamepad_right_axis = 3;
 
-    required double deadband = 4;
-    required double dpad_shift = 5;
+	required double deadband = 4;
+	required double dpad_shift = 5;
 
-    required bool invert_fwd = 6;
-    required bool invert_rot = 7;
-    required bool invert_dpad = 18;
+	required bool invert_fwd = 6;
+	required bool invert_rot = 7;
+	required bool invert_dpad = 18;
 
-    optional JButton switch_to_low_gear = 8;
-    optional JButton switch_to_high_gear = 9;
-    optional JButton override_navX = 10;
-    optional JButton climb = 11;
-    optional JButton toggle_feeder = 12;
-    optional JButton toggle_intake = 13;
-    optional JButton toggle_intake_up_down = 14;
-    optional JButton toggle_override_low = 15;
-    optional JButton toggle_override_high = 16;
-    optional TriggerButton trigger_toggle_override_low = 24;
-	optional TriggerButton trigger_toggle_override_high = 25;
-    optional JButton shoot = 17;
+	optional JoystickButton switch_to_low_gear = 8;
+	optional JoystickButton switch_to_high_gear = 9;
+	optional JoystickButton override_navX = 10;
+	optional JoystickButton climb = 11;
+	optional JoystickButton toggle_feeder = 12;
+	optional JoystickButton toggle_intake = 13;
+	optional JoystickButton toggle_intake_up_down = 14;
+	optional JoystickButton tmp_override_low = 15;
+	optional JoystickButton tmp_override_high = 24;
+	optional JoystickButton toggle_override_high = 16;
+	optional TriggerButton trigger_toggle_override_low = 30;
+	optional TriggerButton trigger_toggle_override_high = 31;
+	optional JoystickButton shoot = 17;
 
-    optional JButton switch_camera = 23;
+	optional JoystickButton switch_camera = 23;
 
-    // The new ones
-    optional JButton loadShooter = 19;
-    optional JButton rackShooter = 20;
-    optional JButton fireShooter = 21;
-    optional JButton resetShooter = 22;
+	// The new ones
+	optional JoystickButton load_shooter = 19;
+	optional JoystickButton rack_shooter = 20;
+	optional JoystickButton fire_shooter = 21;
+	optional JoystickButton reset_shooter = 22;
 
-	/*
-	required int32 gamepad = 1;
-	required int32 gamepad_left_axis = 2;
-	required int32 gamepad_right_axis = 3;
-	optional int32 turn_to_0_button = 4;
-	optional int32 turn_to_30_button = 5;
-	optional int32 turn_to_180_button = 6;
-	optional int32 turn_to_330_button = 7;
-	optional int32 turnaround_button = 8;
-    required double deadband = 9;
-    required double dpad_shift = 10;
-    optional int32 switch_to_low_gear = 11;
-    optional int32 switch_to_high_gear = 12;
-    optional int32 climb = 13;
-	required int32 override_navX = 14;
-    required bool invert_rot = 15;
-    required bool invert_fwd = 16;
-    required bool invert_dpad = 17;
-    optional int32 switch_camera = 18;
-    optional int32 tmp_override_low = 19;
-	optional int32 tmp_override_high = 20;
-    optional int32 toggle_override_high = 21;
-    optional int32 toggle_feeder = 22;
-    optional int32 toggle_intake = 24;
-    optional int32 toggle_intake_up_down = 23;
-    optional int32 shoot = 25;
-    */
+	optional JoystickButton turn_to_0 = 25;
+	optional JoystickButton turn_to_30 = 26;
+	optional JoystickButton turn_to_180 = 27;
+	optional JoystickButton turn_to_330 = 28;
+	optional JoystickButton turnaround = 29;
 }
