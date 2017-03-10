@@ -15,6 +15,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 public class ExecuteProfile extends ReferencingCommand {
 	private static final String LEFT_IN_FILE_NAME = "/home/lvuser/449_resources/leftProfile.csv";
 	private static final String RIGHT_IN_FILE_NAME = "/home/lvuser/449_resources/rightProfile.csv";
+	private static final int MIN_NUM_POINTS_IN_BTM = 128;
 	private static final double UPDATE_RATE = 0.005;    // MP processing thread update rate copied from CTRE example
 	private static final double WHEEL_DIAMETER = 4; //In inches
 	private int _state = 0;
@@ -137,7 +138,7 @@ public class ExecuteProfile extends ReferencingCommand {
 				System.out.println("LEFT BTM BUFF CNT " + leftStatus.btmBufferCnt);
 				System.out.println("RIGHT BTM BUFF CNT " + rightStatus.btmBufferCnt);
 
-				if (leftStatus.btmBufferCnt >= 128 && rightStatus.btmBufferCnt >= 128) {
+				if (leftStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM && rightStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM) {
 					_state = 2;
 					System.out.println("LOADED");
 				} else {
@@ -180,7 +181,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		for (int i = 0; i < leftProfile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = -inchesToNative(leftProfile.data[i][0]);
-			point.velocity = -tcd.leftMaster.RPStoNative(leftProfile.data[i][1]/60.);
+			point.velocity = -tcd.leftMaster.RPStoNative(leftProfile.data[i][1]);
 			point.timeDurMs = (int) (leftProfile.data[i][2] * 1000.);
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
@@ -199,7 +200,7 @@ public class ExecuteProfile extends ReferencingCommand {
 		for (int i = 0; i < rightProfile.data.length; ++i) {
 			// Set all the fields of the profile point
 			point.position = -inchesToNative(rightProfile.data[i][0]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
-			point.velocity = -tcd.leftMaster.RPStoNative(rightProfile.data[i][1]/60.) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
+			point.velocity = -tcd.leftMaster.RPStoNative(rightProfile.data[i][1]) * ((TalonClusterDriveMap.TalonClusterDrive) tcd.map).getL2R();
 			point.timeDurMs = (int) (rightProfile.data[i][2] * 1000.);
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
