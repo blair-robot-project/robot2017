@@ -11,6 +11,7 @@ import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.UnitlessCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
@@ -117,7 +118,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param left  The left throttle, a number between -1 and 1 inclusive.
 	 * @param right The right throttle, a number between -1 and 1 inclusive.
 	 */
-	private void setVBusThrottle(double left, double right) {
+	public void setVBusThrottle(double left, double right) {
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(-right);
 	}
@@ -152,10 +153,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
+			sb.append(leftMaster.canTalon.getSpeed());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getSpeed());
 			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
-		     /*
+			 /*
 	         sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
@@ -172,7 +176,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
 		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
 		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Heading", navx.pidGet());
+		SmartDashboard.putNumber("Heading", getGyroOutput());
 		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
 		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
 		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
@@ -197,6 +201,29 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.position);
+			sb.append(",");
+			sb.append(leftTPointStatus.activePoint.velocity);
+			sb.append(",");
+			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append("\n");
+
+			fw.write(sb.toString());
+
+			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
+			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
+			SmartDashboard.putNumber("Left Pos inches", leftMaster.nativeToRPS(leftMaster.canTalon.getEncPosition()) /
+					10 * Math.PI * 4);
+			SmartDashboard.putNumber("Right Pos inches", rightMaster.nativeToRPS(rightMaster.canTalon.getEncPosition()
+			) / 10 * Math.PI * 4);
+			SmartDashboard.putNumber("Right Pos", rightMaster.canTalon.getEncPosition());
+			SmartDashboard.putNumber("Left Pos", leftMaster.canTalon.getEncPosition());
+			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+			SmartDashboard.putNumber("Heading", getGyroOutput());
+			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
+			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
+			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
+			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
 			sb.append(PID_SCALE * sp * leftMaster.getMaxSpeed());
 			sb.append(",");
 			sb.append(PID_SCALE * sp * rightMaster.getMaxSpeed());
@@ -212,30 +239,16 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		maxSpeed = Math.max(maxSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
-		SmartDashboard.putNumber("Max Speed", maxSpeed);
-		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Heading", navx.pidGet());
-		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
-		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
-		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
-		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
-		SmartDashboard.putBoolean("In low gear?", lowGear);
 	}
 
 	@Override
 	protected void initDefaultCommand() {
 		startTime = System.nanoTime();
 		overrideNavX = false;
-		//		setDefaultCommand(new PIDTest(this));
-		//		setDefaultCommand(new OpArcadeDrive(this, oi));
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+//		setDefaultCommand(new PIDTest(this));
+//		setDefaultCommand(new OpArcadeDrive(this, oi));
+//		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+//		setDefaultCommand(new ExecuteProfile(this));
 	}
 
 	public double getGyroOutput() {

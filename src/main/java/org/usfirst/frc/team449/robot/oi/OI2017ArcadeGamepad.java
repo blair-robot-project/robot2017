@@ -78,9 +78,6 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasClimb()) {
 			climb = new MJButton(map.getClimb());
 		}
-//		if (map.hasSwitchCamera()) {
-//			switchCamera = new JoystickButton(gamepad, map.getSwitchCamera());
-//		}
 
 		if (map.hasToggleOverrideLow()){
 			tmpOverrideLow = new MJButton(map.getToggleOverrideLow());
@@ -92,9 +89,6 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		} else if (map.hasTriggerToggleOverrideHigh()){
 			tmpOverrideHigh = new TriggerButton(map.getTriggerToggleOverrideHigh());
 		}
-		/*if (map.hasToggleOverrideHigh()) {     // TODO check if tmp == toggle
-			toggleOverrideHigh = new MJButton(map.getToggleOverrideHigh());
-		}*/
 		if (map.hasToggleFeeder()) {
 			toggleFeeder = new MJButton(map.getToggleFeeder());
 		}

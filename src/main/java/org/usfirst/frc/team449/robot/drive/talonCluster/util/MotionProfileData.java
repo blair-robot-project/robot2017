@@ -34,9 +34,7 @@ public class MotionProfileData {
 			data = new double[Integer.parseInt(tokens[0])][3];
 		} else {
 			// Strip the end of line comma
-			if (tokens[2].endsWith(",")) {
-				tokens[2] = tokens[2].substring(0, tokens[2].length() - 2);
-			}
+			tokens[2] = tokens[2].replace(",","");
 
 			data[dPtr] = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
 		}

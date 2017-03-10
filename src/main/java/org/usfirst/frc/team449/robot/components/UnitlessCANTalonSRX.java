@@ -21,7 +21,7 @@ public class UnitlessCANTalonSRX extends Component {
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	protected double encoderCPR;
+	public double encoderCPR;
 
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
@@ -48,7 +48,7 @@ public class UnitlessCANTalonSRX extends Component {
 
 		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
 		if (map.hasKPMp()) {
-			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
+			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), maxSpeed, 0, 0, 1);
 		}
 		canTalon.setProfile(map.getProfile());
 
@@ -95,12 +95,18 @@ public class UnitlessCANTalonSRX extends Component {
 	public void switchToHighGear(){
 		maxSpeed = map.getMaxSpeedHg();
 		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
+		if (map.hasKPMp()) {
+			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), maxSpeed, 0, 0, 1);
+		}
 	}
 
 	public void switchToLowGear(){
 		if (map.hasKPLg()) {
 			maxSpeed = map.getMaxSpeedLg();
 			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
+			if (map.hasKPMp()) {
+				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), maxSpeed, 0, 0, 1);
+			}
 		} else {
 			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear constants.");
 		}
