@@ -11,7 +11,7 @@ public class IntakeUp extends ReferencingCommand {
 	/**
 	 * The intake subsystem to execute this command on
 	 */
-	Intake2017 intake2017;
+	private Intake2017 intake2017;
 
 	/**
 	 * Construct an IntakeDown command
@@ -22,6 +22,11 @@ public class IntakeUp extends ReferencingCommand {
 		super(intake2017);
 		this.intake2017 = intake2017;
 		System.out.println("IntakeUp constructed");
+	}
+
+	@Override
+	protected void initialize(){
+		System.out.println("IntakeUp init");
 	}
 
 	/**
@@ -39,5 +44,10 @@ public class IntakeUp extends ReferencingCommand {
 	@Override
 	protected boolean isFinished() {
 		return true;
+	}
+
+	@Override
+	protected void end(){
+		System.out.println("IntakeUp end");
 	}
 }

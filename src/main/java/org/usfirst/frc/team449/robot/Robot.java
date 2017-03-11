@@ -13,6 +13,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown.IntakeUp;
+import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
@@ -156,6 +158,10 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
 
+		if (intakeSubsystem != null) {
+			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
+		}
+
 //		Scheduler.getInstance().add(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 	}
 
@@ -177,8 +183,8 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
-//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
-		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
+//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 	}
 
 	/**
