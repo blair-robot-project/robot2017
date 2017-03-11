@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
@@ -151,6 +152,8 @@ public class Robot extends IterativeRobot {
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
+
+//		Scheduler.getInstance().add(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 	}
 
 	/**
