@@ -148,6 +148,9 @@ public class Robot extends IterativeRobot {
 		//Stop the drive for safety reasons
 		driveSubsystem.setVBusThrottle(0, 0);
 
+		driveSubsystem.leftMaster.canTalon.enable();
+		driveSubsystem.rightMaster.canTalon.enable();
+
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
@@ -171,6 +174,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//Set throttle to 0 for safety reasons
+		driveSubsystem.leftMaster.canTalon.enable();
+		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
 		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 	}
@@ -183,20 +188,5 @@ public class Robot extends IterativeRobot {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
-	}
-
-	@Override
-	public void testPeriodic(){
-		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
-		driveSubsystem.setVBusThrottle(0, 0);
-	}
-
-	@Override
-	public void disabledInit() {
-		driveSubsystem.setVBusThrottle(0, 0);
-		driveSubsystem.leftMaster.canTalon.reset();
-		driveSubsystem.leftMaster.canTalon.clearMotionProfileTrajectories();
-		driveSubsystem.rightMaster.canTalon.reset();
-		driveSubsystem.rightMaster.canTalon.clearMotionProfileTrajectories();
 	}
 }
