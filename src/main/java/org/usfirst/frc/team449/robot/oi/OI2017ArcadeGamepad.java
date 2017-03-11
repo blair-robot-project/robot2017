@@ -263,8 +263,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		final double TIMEOUT = 5.;
 
 		//Map mandatory commands
-		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, true));
-		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, false));
+		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, false));
+		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, true));
 
 		//Map drive commands
 		if (turnaround != null) {
