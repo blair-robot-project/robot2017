@@ -21,8 +21,8 @@ public class PIDTest extends ReferencingCommandGroup {
 		TalonClusterDrive driveSubsystem = (TalonClusterDrive) mappedSubsystem;
 
 		//Drive forward for a bit
-		addSequential(new DriveAtSpeed(driveSubsystem, 0.75, 1.5));
+		addSequential(new DriveAtSpeed(driveSubsystem, 0.5, 3));
 		//Stop
-		addSequential(new DriveAtSpeed(driveSubsystem, 0, 5));
+		addSequential(new DriveAtSpeed(driveSubsystem, 0, 10));
 	}
 }

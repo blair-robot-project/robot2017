@@ -177,7 +177,8 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
-		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
+		//Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 	}
 
 	/**
