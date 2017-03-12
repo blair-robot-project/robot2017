@@ -180,6 +180,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//Set throttle to 0 for safety reasons
+		if (driveSubsystem.shifter != null) {
+			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+		}
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
