@@ -5,8 +5,8 @@ import "org/usfirst/frc/team449/robot/components/Motor.proto";
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.feeder";
 option java_outer_classname = "FeederMap";
 
-message Feeder{
+message Feeder {
 	required Mechanism mechanism = 1;
-    required Motor victor = 2;
-    required double speed = 3;
+	required Motor victor = 2;
+	required double speed = 3;
 }

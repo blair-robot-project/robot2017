@@ -10,6 +10,6 @@ message Intake2017 {
 	required Mechanism mechanism = 1;
 	required Motor fixed_victor = 2;
 	required Motor actuated_victor = 3;
-    required DoubleSolenoid piston = 4;
-    required int32 pistonModuleNum = 5;
+	required DoubleSolenoid piston = 4;
+	required int32 pistonModuleNum = 5;
 }

@@ -8,7 +8,9 @@ import java.util.stream.Stream;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
+ * @deprecated future switch to PathGenerator when MP_2_Sides branch is merged in
  */
+@Deprecated
 public class MotionProfileData {
 	public double data[][];
 
@@ -34,9 +36,7 @@ public class MotionProfileData {
 			data = new double[Integer.parseInt(tokens[0])][3];
 		} else {
 			// Strip the end of line comma
-			if (tokens[2].endsWith(",")) {
-				tokens[2] = tokens[2].substring(0, tokens[2].length() - 2);
-			}
+			tokens[2] = tokens[2].replace(",","");
 
 			data[dPtr] = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
 		}

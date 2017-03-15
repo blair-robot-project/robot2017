@@ -1,12 +1,12 @@
 syntax = "proto2";
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
-import "org/usfirst/frc/team449/robot/components/UnitlessCANTalonSRX.proto";
+import "org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter";
 option java_outer_classname = "SingleFlywheelShooterMap";
 
 message SingleFlywheelShooter {
 	required Mechanism mechanism = 1;
-	required UnitlessCANTalonSRX talon = 2;
-    optional double throttle = 3;
+	required RotPerSecCANTalonSRX talon = 2;
+	optional double throttle = 3;
 }

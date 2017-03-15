@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.ReferencingCommandGroup;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Created by BlairRobot on 2017-01-13.
+ * Drive back and forth to tune PID
  */
 public class PIDBackAndForth extends ReferencingCommandGroup {
 	/**
@@ -33,6 +33,7 @@ public class PIDBackAndForth extends ReferencingCommandGroup {
 			addSequential(new DriveAtSpeed(driveSubsystem, 0), time);
 		}
 		*/
+		//TODO make this actually drive back and forth
 		addSequential(new DriveAtSpeed(driveSubsystem, 1, 1), time);
 		addSequential(new DriveAtSpeed(driveSubsystem, 0, 1), 100);
 	}

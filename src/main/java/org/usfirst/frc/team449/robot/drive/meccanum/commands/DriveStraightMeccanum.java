@@ -10,26 +10,28 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
  */
 public class DriveStraightMeccanum extends ReferencingCommand {
 
-    public OISubsystem oi;
-    public double leftThrottle;
+	public OISubsystem oi;
+	public double leftThrottle;
 
-    public DriveStraightMeccanum(MeccanumDrive drive, OISubsystem oi){
-        super(drive);
-        this.oi = oi;
-        requires(subsystem);
-    }
+	public DriveStraightMeccanum(MeccanumDrive drive, OISubsystem oi) {
+		super(drive);
+		this.oi = oi;
+		requires(subsystem);
+	}
 
-    @Override
-    protected void initialize(){((MeccanumDrive) subsystem).setDefaultThrottle(0);}
+	@Override
+	protected void initialize() {
+		((MeccanumDrive) subsystem).setDefaultThrottle(0);
+	}
 
-    @Override
-    protected void execute(){
-        leftThrottle = oi.getDriveAxisLeft();
-        ((MeccanumDrive) subsystem).setDefaultThrottle(leftThrottle);
-    }
+	@Override
+	protected void execute() {
+		leftThrottle = oi.getDriveAxisLeft();
+		((MeccanumDrive) subsystem).setDefaultThrottle(leftThrottle);
+	}
 
-    @Override
-    protected boolean isFinished(){
-        return false;
-    }
+	@Override
+	protected boolean isFinished() {
+		return false;
+	}
 }

@@ -67,7 +67,7 @@ protobuf {
 			// options.  Note the braces cannot be omitted, otherwise the
 			// plugin will not be added. This is because of the implicit way
 			// NamedDomainObjectContainer binds the methods.
-			grpc { }
+			grpc {}
 		}
 	}
 }
@@ -82,7 +82,7 @@ idea {
 	}
 }
 
-task convertFiles{
+task convertFiles {
 	doLast {
 		fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
 			exec {
@@ -94,14 +94,16 @@ task convertFiles{
 }
 
 frc {
-	//deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
-	//deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+//	deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
+//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
+//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
 	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
 }
 
 wpi {
-	wpilibVersion = "+"                   // The WPILib version to use. For this version of GradleRIO, must be a 2017 version
+	wpilibVersion = "+"
+	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
 	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
 	opencvVersion = "+"                   // The OpenCV version to use
 	cscoreVersion = "+"                   // The CSCore version to use
@@ -124,7 +126,7 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task('copyResources', dependsOn: convertFiles){
+task('copyResources', dependsOn: convertFiles) {
 	doLast {
 		ssh.run {
 			session(remotes.rio) {
