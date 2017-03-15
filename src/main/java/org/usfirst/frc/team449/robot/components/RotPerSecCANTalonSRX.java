@@ -22,7 +22,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	public double encoderCPR;
+	public int encoderCPR;
 
 	/**
 	 * The type of encoder the talon uses.

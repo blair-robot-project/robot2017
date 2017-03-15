@@ -5,11 +5,14 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
+import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -21,6 +24,8 @@ import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
@@ -140,6 +145,17 @@ public class Robot extends IterativeRobot {
 			compressor.setClosedLoopControl(true);
 			compressor.start();
 		}
+
+		MotionProfileData leftProfile = new MotionProfileData("leftProfile.csv");
+		MotionProfileData rightProfile = new MotionProfileData("rightProfile.csv");
+
+		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, 4);
+		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, 4);
+
+		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
+		talons.add(driveSubsystem.leftMaster);
+		talons.add(driveSubsystem.rightMaster);
+		MPLoader.startLoadBottomLevel(talons, 0.005);
 	}
 
 	/**
