@@ -23,21 +23,28 @@ public class ExecuteProfile extends Command {
 
 	private boolean finished;
 
+	private long timeout;
+
+	private long startTime;
+
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<CANTalon> talons, Subsystem toRequire) {
+	public ExecuteProfile(Collection<CANTalon> talons, double timeout, Subsystem toRequire) {
 		if (toRequire != null){
 			requires(toRequire);
 		}
+
 		this.talons = talons;
+
+		this.timeout = (long) (timeout * 1000);
 
 		finished = false;
 		bottomLoaded = false;
 	}
 
-	public ExecuteProfile(Collection<CANTalon> talons){
-		this(talons, null);
+	public ExecuteProfile(Collection<CANTalon> talons, double timeout){
+		this(talons, timeout, null);
 	}
 
 	/**
@@ -50,6 +57,8 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 			talon.clearMotionProfileHasUnderrun();
 		}
+
+		startTime = System.currentTimeMillis();
 
 		finished = false;
 		bottomLoaded = false;
@@ -84,7 +93,7 @@ public class ExecuteProfile extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return finished;
+		return finished || (System.currentTimeMillis() - startTime > timeout);
 	}
 
 	@Override

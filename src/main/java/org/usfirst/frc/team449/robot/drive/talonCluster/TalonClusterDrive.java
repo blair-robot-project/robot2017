@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
@@ -421,7 +422,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Start overriding the NavX.
 		overrideNavX = false;
 		//Start driving
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+	}
+
+	public void setDefaultCommandManual(Command defaultCommand){
+		setDefaultCommand(defaultCommand);
 	}
 
 	/**

@@ -175,6 +175,8 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 
+		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
@@ -183,8 +185,6 @@ public class Robot extends IterativeRobot {
 		if (intakeSubsystem != null) {
 			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
 		}
-
-//		Scheduler.getInstance().add(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class Robot extends IterativeRobot {
 		List<CANTalon> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster.canTalon);
 		talons.add(driveSubsystem.rightMaster.canTalon);
-		Scheduler.getInstance().add(new ExecuteProfile(talons, driveSubsystem));
+		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 	}
 
 	/**
@@ -219,6 +219,5 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
 	}
 }
