@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.climber;
 
+import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
@@ -16,6 +17,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 * The maximum allowable current before we stop the motor.
 	 */
 	private double max_current;
+	private VictorSP victor;
 
 	/**
 	 * Construct a ClimberSubsystem
@@ -27,6 +29,8 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		this.map = map;
 		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
 		this.max_current = map.getMaxCurrent();
+		this.victor = new VictorSP(map.getVictor().getPort());
+		victor.setInverted(map.getVictor().getInverted());
 	}
 
 	/**
@@ -45,7 +49,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 * @param percentVbus The voltage to give the motor, from -1 to 1.
 	 */
 	public void setPercentVbus(double percentVbus) {
-		canTalonSRX.setPercentVbus(percentVbus);
+		canTalonSRX.setPercentVbus(percentVbus); victor.set(percentVbus);
 	}
 
 	/**
