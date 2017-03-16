@@ -29,8 +29,10 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		this.map = map;
 		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
 		this.max_current = map.getMaxCurrent();
-		this.victor = new VictorSP(map.getVictor().getPort());
-		victor.setInverted(map.getVictor().getInverted());
+		if (map.hasVictor()) {
+			this.victor = new VictorSP(map.getVictor().getPort());
+			victor.setInverted(map.getVictor().getInverted());
+		}
 	}
 
 	/**
@@ -49,7 +51,10 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 * @param percentVbus The voltage to give the motor, from -1 to 1.
 	 */
 	public void setPercentVbus(double percentVbus) {
-		canTalonSRX.setPercentVbus(percentVbus); victor.set(percentVbus);
+		canTalonSRX.setPercentVbus(percentVbus);
+		if (victor != null) {
+			victor.set(percentVbus);
+		}
 	}
 
 	/**
