@@ -1,7 +1,9 @@
 package org.usfirst.frc.team449.robot;
 
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
@@ -31,6 +33,9 @@ import java.util.List;
  * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
 public class Robot extends IterativeRobot {
+
+	private Notifier MPNotifier;
+
 
 	/**
 	 * The shooter subsystem (flywheel only)
@@ -155,7 +160,7 @@ public class Robot extends IterativeRobot {
 		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
-		MPLoader.startLoadBottomLevel(talons, 0.005);
+		MPNotifier = MPLoader.startLoadBottomLevel(talons, 0.005);
 	}
 
 	/**
@@ -164,6 +169,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		//Stop the drive for safety reasons
+		MPNotifier.stop();
 		driveSubsystem.setVBusThrottle(0, 0);
 
 		driveSubsystem.leftMaster.canTalon.enable();
@@ -199,11 +205,11 @@ public class Robot extends IterativeRobot {
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
-		driveSubsystem.leftMaster.canTalon.enable();
-		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
-		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
-//		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		List<CANTalon> talons = new ArrayList<>();
+		talons.add(driveSubsystem.leftMaster.canTalon);
+		talons.add(driveSubsystem.rightMaster.canTalon);
+		Scheduler.getInstance().add(new ExecuteProfile(talons, driveSubsystem));
 	}
 
 	/**

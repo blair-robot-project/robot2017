@@ -32,13 +32,14 @@ public class MPLoader {
 		}
 	}
 
-	public static void startLoadBottomLevel(List<RotPerSecCANTalonSRX> talons, double updateRate){
+	public static Notifier startLoadBottomLevel(List<RotPerSecCANTalonSRX> talons, double updateRate){
 		MPUpdaterProcess updater = new MPUpdaterProcess();
 		for (RotPerSecCANTalonSRX talon : talons){
 			updater.addTalon(talon.canTalon);
 		}
 		Notifier updaterNotifier = new Notifier(updater);
 		updaterNotifier.startPeriodic(updateRate);
+		return updaterNotifier;
 	}
 
 	public static double nativeToInches(double nativeUnits, int encoderCPR, double wheelDiameter){
