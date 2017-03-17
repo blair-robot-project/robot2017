@@ -1,4 +1,4 @@
-package pathfindertest;
+package org.usfirst.frc.team449.pathgen;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
