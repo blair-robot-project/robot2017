@@ -15,7 +15,7 @@ public class ExecuteProfile extends Command {
 	/**
 	 * Number of points that must be loaded to the bottom level buffer before we start executing the profile
 	 */
-	private static final int MIN_NUM_POINTS_IN_BTM = 128; // maximum number of points
+	private static final int MIN_NUM_POINTS_IN_BTM = 10; // maximum number of points
 
 	private boolean bottomLoaded;
 
@@ -76,19 +76,25 @@ public class ExecuteProfile extends Command {
 			CANTalon.MotionProfileStatus MPStatus = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(MPStatus);
 			if (!bottomLoaded) {
-				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt > MIN_NUM_POINTS_IN_BTM);
+				finished = false;
+				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM);
+				System.out.println("Bottom buffer count: "+MPStatus.btmBufferCnt);
+				System.out.println("bottomNowLoaded: "+bottomNowLoaded);
 			}
 			if (bottomLoaded) {
+				System.out.println("Bottom buffer loaded, now running the profile.");
 				finished = finished && MPStatus.activePoint.isLastPoint;
 			}
 		}
 		if (bottomNowLoaded && !bottomLoaded) {
 			bottomLoaded = true;
+			System.out.println("Enabling the talons!");
 			for (CANTalon talon : talons) {
 				talon.enable();
 				talon.set(CANTalon.SetValueMotionProfile.Enable.value);
 			}
 		}
+		Robot.driveSubsystem.logData();
 	}
 
 	@Override

@@ -34,6 +34,8 @@ import java.util.List;
  */
 public class Robot extends IterativeRobot {
 
+	private final double WHEEL_DIAMETER = 1./3.;
+
 	private Notifier MPNotifier;
 
 
@@ -90,9 +92,9 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -151,11 +153,11 @@ public class Robot extends IterativeRobot {
 			compressor.start();
 		}
 
-		MotionProfileData leftProfile = new MotionProfileData("leftProfile.csv");
-		MotionProfileData rightProfile = new MotionProfileData("rightProfile.csv");
+		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/leftMidProfile.csv");
+		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/rightMidProfile.csv");
 
-		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, 4);
-		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, 4);
+		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
+		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
 
 		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
@@ -219,5 +221,10 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+	}
+
+	@Override
+	public void disabledInit(){
+
 	}
 }

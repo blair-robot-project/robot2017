@@ -39,6 +39,7 @@ public class MotionProfileData {
 			tokens[2] = tokens[2].replace(",","");
 
 			data[dPtr] = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
+			System.out.println("Loaded a line of data!");
 		}
 		dPtr++;
 	}

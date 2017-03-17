@@ -16,8 +16,8 @@ public class MPLoader {
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < data.data.length; ++i) {
 			// Set all the fields of the profile point
-			point.position = -inchesToNative(data.data[i][0], talon.encoderCPR, wheelDiameter);
-			point.velocity = -talon.RPStoNative(data.data[i][1]);
+			point.position = feetToNative(data.data[i][0], talon.encoderCPR, wheelDiameter);
+			point.velocity = feetPerSecToNative(data.data[i][1], talon, wheelDiameter);
 			point.timeDurMs = (int) (data.data[i][2] * 1000.);
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
@@ -29,6 +29,8 @@ public class MPLoader {
 				System.out.println("Buffer full!");
 				break;
 			}
+
+			System.out.println("Line " + (i+1) + " loaded into top level buffer!");
 		}
 	}
 
@@ -39,16 +41,25 @@ public class MPLoader {
 		}
 		Notifier updaterNotifier = new Notifier(updater);
 		updaterNotifier.startPeriodic(updateRate);
+		System.out.println("Started the notifier for "+talons.size()+" talons.");
 		return updaterNotifier;
 	}
 
-	public static double nativeToInches(double nativeUnits, int encoderCPR, double wheelDiameter){
+	public static double nativeToFeet(double nativeUnits, int encoderCPR, double wheelDiameter){
 		double rotations = nativeUnits / (encoderCPR*4);
 		return rotations * (wheelDiameter*Math.PI);
 	}
 
-	public static double inchesToNative(double inches, int encoderCPR, double wheelDiameter){
-		double rotations = inches / (wheelDiameter*Math.PI);
+	public static double feetToNative(double feet, int encoderCPR, double wheelDiameter){
+		double rotations = feet / (wheelDiameter*Math.PI);
 		return rotations * (encoderCPR*4);
+	}
+
+	public static double feetPerSecToNative(double feet, RotPerSecCANTalonSRX talon, double wheelDiameter){
+		return talon.RPStoNative(feet/(wheelDiameter*Math.PI));
+	}
+
+	public static double nativeToFeetPerSec(double nativeUnits, RotPerSecCANTalonSRX talon, double wheelDiameter){
+		return talon.nativeToRPS(nativeUnits)*(wheelDiameter*Math.PI);
 	}
 }
