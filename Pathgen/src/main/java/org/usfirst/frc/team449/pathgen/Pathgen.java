@@ -18,21 +18,21 @@ public class Pathgen {
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 6, 25.125 + 1/2 * 35.5 - 36 + 6 + 3, Math.PI / 3.)
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 12, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 16, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
-				new Waypoint(121.625, -(-17.875), Math.PI / 3.)
-//				new Waypoint(70, 0, 0)
+//				new Waypoint(121.625, -(-17.875), Math.PI / 3.)
+				new Waypoint(80./12., 0, 0)
 
 		};
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config
-				.SAMPLES_HIGH, 0.05, 3.5, 0.5, 0.1);
+				.SAMPLES_HIGH, 0.05, 3.5, 1.5, 3);
 
 		Trajectory trajectory = Pathfinder.generate(points, config);
 
-		TankModifier tm = new TankModifier(trajectory).modify(28.5);
+		TankModifier tm = new TankModifier(trajectory).modify(28.5/12.);
 
-		FileWriter lfw = new FileWriter("leftProfile.csv", false);
-		FileWriter rfw = new FileWriter("rightProfile.csv", false);
-		FileWriter cfw = new FileWriter("combinedProfile.csv", false);
+		FileWriter lfw = new FileWriter("leftMidProfile.csv", false);
+		FileWriter rfw = new FileWriter("rightMidProfile.csv", false);
+		FileWriter cfw = new FileWriter("combinedMidProfile.csv", false);
 
 
 		for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
