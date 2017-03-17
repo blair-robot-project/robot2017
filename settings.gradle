@@ -1,1 +1,2 @@
+include 'RoboRIO', 'Pathgen'
 rootProject.name = 'robot2017'

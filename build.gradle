@@ -1,0 +1,12 @@
+allprojects {
+	tasks.withType(Javadoc).all { enabled = false }
+	repositories {
+		maven {
+			url 'https://jitpack.io'
+		}
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.3'
+}
