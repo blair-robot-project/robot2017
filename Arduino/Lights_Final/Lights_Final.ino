@@ -48,7 +48,7 @@ uint32_t gearPeg1 = blue;
 uint32_t gearPeg2 = lblue;
 
 
-int threshold = 230; //threshold for the analog peg-detecting sensors
+int threshold = 320; //threshold for the analog peg-detecting sensors
 int gearSensorBuffer = 15; //buffer for the gear sensors
                            //higher values make less flicker, more delay
 int gearBufferState1 = 0; //initialize both sensors' buffers
@@ -129,13 +129,18 @@ void setColor(int i, uint32_t c1, uint32_t c2) {
   if (!rippleInvert) {
     if (i < strip.numPixels()/2 - ripplePos || i > strip.numPixels()/2+ripplePos) {
       strip.setPixelColor(i,c2);
+    } else if (i == strip.numPixels()/2 - ripplePos || i == strip.numPixels()/2+ripplePos){
+      strip.setPixelColor(i,90,90,90);
     } else {
       strip.setPixelColor(i,c1);
     }
   } else {
     if (i < strip.numPixels()/2 - ripplePos || i > strip.numPixels()/2+ripplePos) {
       strip.setPixelColor(i,c1);
-    } else {
+    } else if (i == strip.numPixels()/2 - ripplePos || i == strip.numPixels()/2+ripplePos) {
+      strip.setPixelColor(i,90,90,90);
+    }
+    else {
       strip.setPixelColor(i,c2);
     }
   }
@@ -177,9 +182,9 @@ void readSensors() {
     }
   //sensorSums[1] *= 2.5;
   for (int i = 0; i < sensorCount; i++) {
-    //Serial.print(sensorSums[i]); Serial.print('\t');
+    Serial.print(sensorSums[i]); Serial.print('\t');
   }
-  //Serial.println();
+  Serial.println();
   if (maxValue(sensorSums, sensorCount) > threshold) {
     /*if(redColor < 100){
       redColor+=15;
