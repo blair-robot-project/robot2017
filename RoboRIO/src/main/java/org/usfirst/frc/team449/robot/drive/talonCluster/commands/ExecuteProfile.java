@@ -2,7 +2,6 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;

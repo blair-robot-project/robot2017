@@ -10,23 +10,6 @@ plugins {
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
 
-allprojects {
-	tasks.withType(Javadoc).all { enabled = false }
-	repositories {
-		maven {
-			url 'https://jitpack.io'
-		}
-	}
-}
-
-remotes {
-	rio {
-		host = 'roboRIO-449-frc.local'
-		user = 'lvuser'
-		knownHosts = allowAnyHosts
-	}
-}
-
 repositories {
 	mavenCentral()
 	maven {
@@ -46,6 +29,10 @@ dependencies {
 	compile talonSrx()
 	compile fileTree(dir: "lib", include: "*.jar")
 }
+
+
+
+/* Protobuf stuff */
 
 protobuf {
 	generatedFilesBaseDir = "$projectDir/gen"
@@ -72,6 +59,7 @@ protobuf {
 	}
 }
 
+/* Utils */
 clean {
 	delete protobuf.generatedFilesBaseDir
 }
@@ -81,6 +69,7 @@ idea {
 		sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
 	}
 }
+
 
 task convertFiles {
 	doLast {
@@ -93,10 +82,16 @@ task convertFiles {
 	}
 }
 
+/* GradleRIO stuff */
+remotes {
+	rio {
+		host = 'roboRIO-449-frc.local'
+		user = 'lvuser'
+		knownHosts = allowAnyHosts
+	}
+}
+
 frc {
-//	deployers += [to: "/home/lvuser/map.cfg", from: './src/main/resources/map.cfg']
-//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
-//	deployers += [to: "/home/lvuser/profile.csv", from: './src/main/resources/profile.csv']
 	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
 }
@@ -116,16 +111,6 @@ def robotManifest = {
 	attributes 'Robot-Class': frc.robotClass
 }
 
-jar {
-	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-	manifest robotManifest
-}
-
-task genJavadoc(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
-}
-
 task('copyResources', dependsOn: convertFiles) {
 	doLast {
 		ssh.run {
@@ -137,6 +122,18 @@ task('copyResources', dependsOn: convertFiles) {
 		}
 	}
 }
+
+/* Generic artifact gen stuff */
+jar {
+	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	manifest robotManifest
+}
+
+task genJavadoc(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
 
 artifacts {
 	archives genJavadoc
