@@ -82,7 +82,6 @@ public class ExecuteProfile extends Command {
 				System.out.println("bottomNowLoaded: "+bottomNowLoaded);
 			}
 			if (bottomLoaded) {
-				System.out.println("Bottom buffer loaded, now running the profile.");
 				finished = finished && MPStatus.activePoint.isLastPoint;
 			}
 		}
@@ -106,6 +105,7 @@ public class ExecuteProfile extends Command {
 	protected void end() {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
+//			talon.disable();
 		}
 		System.out.println("ExecuteProfile end.");
 	}

@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class Robot extends IterativeRobot {
 
-	private final double WHEEL_DIAMETER = 1./3.;
+	public static double WHEEL_DIAMETER;
 
 	private Notifier MPNotifier;
 
@@ -153,8 +153,10 @@ public class Robot extends IterativeRobot {
 			compressor.start();
 		}
 
-		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/leftMidProfile.csv");
-		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/rightMidProfile.csv");
+		WHEEL_DIAMETER = cfg.getWheelDiameterInches()/12.;
+
+		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile());
+		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile());
 
 		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
@@ -225,6 +227,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit(){
-
+		driveSubsystem.setVBusThrottle(0, 0);
 	}
 }

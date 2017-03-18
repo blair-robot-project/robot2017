@@ -23,4 +23,7 @@ message Robot2017 {
 	optional Intake2017 intake = 8;
 	optional PneumaticSystem pneumatics = 9;
 	optional Feeder feeder = 10;
+    required string left_motion_profile = 11;
+    required string right_motion_profile = 12;
+    required double wheel_diameter_inches = 13;
 }

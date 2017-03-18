@@ -23,3 +23,7 @@ out/
 robot2017.iml
 robot2017.ipr
 robot2017.iws
+
+# R workspace files
+*.RData
+*.Rhistory
