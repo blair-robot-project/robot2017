@@ -20,7 +20,16 @@ public class Pathgen {
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 16, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
 //				new Waypoint(121.625, -(-17.875), Math.PI / 3.)
 //				new Waypoint(80./12., 0, 0)
-				new Waypoint(106.5/12.,-24.5/12.,-Math.PI/3.)
+//				new Waypoint(106.5/12.,-24.5/12.,-Math.PI/3.)
+				new Waypoint(0.01,0,Math.PI*2/3),
+				new Waypoint(0,0,Math.PI*4/3),
+				new Waypoint(0.01,0,0),
+				new Waypoint(0,0,Math.PI*2/3),
+				new Waypoint(0.01,0,Math.PI*4/3),
+				new Waypoint(0,0,0),
+				new Waypoint(0.01,0,Math.PI*2/3),
+				new Waypoint(0,0,Math.PI*4/3),
+				new Waypoint(0.01,0,0)
 		};
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
@@ -30,9 +39,9 @@ public class Pathgen {
 
 		TankModifier tm = new TankModifier(trajectory).modify(30/12.); //Units are feet
 
-		FileWriter lfw = new FileWriter("leftLeftProfile.csv", false);
-		FileWriter rfw = new FileWriter("rightLeftProfile.csv", false);
-		FileWriter cfw = new FileWriter("combinedLeftProfile.csv", false);
+		FileWriter lfw = new FileWriter("leftSpinProfile.csv", false);
+		FileWriter rfw = new FileWriter("rightSpinProfile.csv", false);
+		FileWriter cfw = new FileWriter("combinedSpinProfile.csv", false);
 
 
 		for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
