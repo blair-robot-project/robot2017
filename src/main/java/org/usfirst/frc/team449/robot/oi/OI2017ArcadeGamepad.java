@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.oi;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -8,6 +9,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.TriggerButton;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
@@ -135,6 +137,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	private Button fireShooter;
 
+	private Button toggleGear;
+	private Button pushGear;
+
 	/**
 	 * Construct the OI2017ArcadeGamepad
 	 *
@@ -215,6 +220,12 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasSwitchCamera()) {
 			switchCamera = new MappedJoystickButton(map.getSwitchCamera());
+		}
+
+		if (map.hasToggleGear()){
+			toggleGear = new MappedJoystickButton(map.getToggleGear());
+		} else if (map.hasPushGear()){
+			pushGear = new MappedJoystickButton(map.getToggleGear());
 		}
 	}
 
@@ -345,6 +356,15 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (fireShooter != null) {
 			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
 					.feederSubsystem));
+		}
+
+		if (Robot.gearSubsystem != null){
+			if (toggleGear != null){
+				toggleGear.whenPressed(new FirePiston(Robot.gearSubsystem, Robot.gearSubsystem.contracted? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
+			} else if (pushGear != null){
+				pushGear.whenPressed(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kReverse));
+				pushGear.whenReleased(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kForward));
+			}
 		}
 	}
 }

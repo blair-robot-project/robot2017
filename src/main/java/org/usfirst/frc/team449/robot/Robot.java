@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,6 +11,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDr
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
+import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -66,6 +69,8 @@ public class Robot extends IterativeRobot {
 	 * The auger used to feed balls into the shooter.
 	 */
 	public static FeederSubsystem feederSubsystem;
+
+	public static ActiveGearSubsystem gearSubsystem;
 
 	/**
 	 * The object constructed directly from map.cfg.
@@ -130,6 +135,10 @@ public class Robot extends IterativeRobot {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
+		if(cfg.hasGear()){
+			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
+		}
+
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
@@ -162,6 +171,10 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
 		}
 
+		if(gearSubsystem != null){
+			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+		}
+
 //		Scheduler.getInstance().add(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 	}
 
@@ -186,6 +199,11 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 		driveSubsystem.setVBusThrottle(0, 0);
+
+		if(gearSubsystem != null){
+			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+		}
+
 		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 //		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
 	}
