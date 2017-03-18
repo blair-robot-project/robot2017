@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot;
 
 import com.ctre.CANTalon;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
@@ -84,6 +85,8 @@ public class Robot extends IterativeRobot {
 	 * */
 	private static Robot2017Map.Robot2017 cfg;
 
+	private Boolean mpFinished = false;
+
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
@@ -165,6 +168,7 @@ public class Robot extends IterativeRobot {
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
 		MPNotifier = MPLoader.startLoadBottomLevel(talons, 0.005);
+		mpFinished = false;
 	}
 
 	/**
@@ -213,7 +217,7 @@ public class Robot extends IterativeRobot {
 		List<CANTalon> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster.canTalon);
 		talons.add(driveSubsystem.rightMaster.canTalon);
-		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
+		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, mpFinished));
 	}
 
 	/**
@@ -223,6 +227,9 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+		if(mpFinished){
+
+		}
 	}
 
 	@Override

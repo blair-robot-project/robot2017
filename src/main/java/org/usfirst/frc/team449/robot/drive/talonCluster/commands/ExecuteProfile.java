@@ -27,10 +27,12 @@ public class ExecuteProfile extends Command {
 
 	private long startTime;
 
+	private Boolean externalFinished;
+
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<CANTalon> talons, double timeout, Subsystem toRequire) {
+	public ExecuteProfile(Collection<CANTalon> talons, double timeout, Subsystem toRequire, Boolean externalFinished) {
 		if (toRequire != null){
 			requires(toRequire);
 		}
@@ -41,10 +43,11 @@ public class ExecuteProfile extends Command {
 
 		finished = false;
 		bottomLoaded = false;
+		this.externalFinished = externalFinished;
 	}
 
 	public ExecuteProfile(Collection<CANTalon> talons, double timeout){
-		this(talons, timeout, null);
+		this(talons, timeout, null, true);
 	}
 
 	/**
@@ -107,6 +110,7 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 //			talon.disable();
 		}
+		externalFinished = true;
 		System.out.println("ExecuteProfile end.");
 	}
 
@@ -115,6 +119,7 @@ public class ExecuteProfile extends Command {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
+		externalFinished = true;
 		System.out.println("ExecuteProfile interrupted!");
 	}
 }
