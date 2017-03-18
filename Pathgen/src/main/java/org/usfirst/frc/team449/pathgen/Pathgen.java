@@ -9,11 +9,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by ryant on 2017-01-15.
+ * Generates a motion profile that hits any number of waypoints.
  */
 public class Pathgen {
 	public static void main(String[] args) throws IOException {
-		Waypoint[] points = new Waypoint[]{
+		Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
 				new Waypoint(0, 0, 0),
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 6, 25.125 + 1/2 * 35.5 - 36 + 6 + 3, Math.PI / 3.)
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 12, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
@@ -23,12 +23,12 @@ public class Pathgen {
 
 		};
 
-		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config
-				.SAMPLES_HIGH, 0.05, 3.5, 1.5, 3);
+		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
+				0.05, 3.5, 1.5, 3); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		Trajectory trajectory = Pathfinder.generate(points, config);
 
-		TankModifier tm = new TankModifier(trajectory).modify(28.5/12.);
+		TankModifier tm = new TankModifier(trajectory).modify(28.5/12.); //Units are feet
 
 		FileWriter lfw = new FileWriter("leftMidProfile.csv", false);
 		FileWriter rfw = new FileWriter("rightMidProfile.csv", false);
