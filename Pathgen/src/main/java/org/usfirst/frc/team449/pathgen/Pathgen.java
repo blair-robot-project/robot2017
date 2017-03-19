@@ -15,6 +15,13 @@ public class Pathgen {
 	public static void main(String[] args) throws IOException {
 		final double CENTER_TO_FRONT = 10;
 		final double CENTER_TO_BACK = 10;
+		final double CENTER_TO_SIDE = 10;
+		final double BACK_FROM_PEG = 3;
+		//DO NOT TOUCH THE ONES BELOW
+		final double CARRIAGE_LEN = 3.63;
+		final double WALL_TO_CENTER_PEG = 114.3;
+		final double WALL_TO_SIDE_PEG = 131.925;
+		final double BACK_CORNER_TO_SIDE_PEG = 91;
 
 		Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
 				new Waypoint(0, 0, 0),
@@ -26,36 +33,30 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(106.5/12.,-24.5/12.,-Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.
+						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.,-Math.PI/3.)
+		};
+
+		Waypoint[] right = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.
+						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] center = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(80./12., 0, 0)
-		};
-
-		Waypoint[] spin = new Waypoint[]{
-				new Waypoint(0, 0, 0),
-				new Waypoint(0.01,0,Math.PI*2/3),
-				new Waypoint(0,0,Math.PI*4/3),
-				new Waypoint(0.01,0,0),
-				new Waypoint(0,0,Math.PI*2/3),
-				new Waypoint(0.01,0,Math.PI*4/3),
-				new Waypoint(0,0,0),
-				new Waypoint(0.01,0,Math.PI*2/3),
-				new Waypoint(0,0,Math.PI*4/3),
-				new Waypoint(0.01,0,0)
+				new Waypoint((WALL_TO_CENTER_PEG - CENTER_TO_BACK - CENTER_TO_FRONT)/12., 0, 0)
 		};
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
 				0.05, 7, 1.5, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
-		Trajectory trajectory = Pathfinder.generate(spin, config);
+		Trajectory trajectory = Pathfinder.generate(center, config);
 
 		TankModifier tm = new TankModifier(trajectory).modify(30/12.); //Units are feet
 
-		FileWriter lfw = new FileWriter("leftSpinProfile.csv", false);
-		FileWriter rfw = new FileWriter("rightSpinProfile.csv", false);
+		FileWriter lfw = new FileWriter("leftMidProfile.csv", false);
+		FileWriter rfw = new FileWriter("rightMidProfile.csv", false);
 		FileWriter cfw = new FileWriter("combinedSpinProfile.csv", false);
 
 
