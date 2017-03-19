@@ -13,14 +13,29 @@ import java.io.IOException;
  */
 public class Pathgen {
 	public static void main(String[] args) throws IOException {
+		final double CENTER_TO_FRONT = 10;
+		final double CENTER_TO_BACK = 10;
+
 		Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
 				new Waypoint(0, 0, 0),
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 6, 25.125 + 1/2 * 35.5 - 36 + 6 + 3, Math.PI / 3.)
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 12, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
 //				new Waypoint(132.125 - 33.5 + 4 + 35 - 16, 25.125 + 1/2 * 35.5 - 36 + 6 + 3+2, Math.PI / 3.)
 //				new Waypoint(121.625, -(-17.875), Math.PI / 3.)
-//				new Waypoint(80./12., 0, 0)
-//				new Waypoint(106.5/12.,-24.5/12.,-Math.PI/3.)
+		};
+
+		Waypoint[] left = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(106.5/12.,-24.5/12.,-Math.PI/3.)
+		};
+
+		Waypoint[] center = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(80./12., 0, 0)
+		};
+
+		Waypoint[] spin = new Waypoint[]{
+				new Waypoint(0, 0, 0),
 				new Waypoint(0.01,0,Math.PI*2/3),
 				new Waypoint(0,0,Math.PI*4/3),
 				new Waypoint(0.01,0,0),
@@ -35,7 +50,7 @@ public class Pathgen {
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
 				0.05, 7, 1.5, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
-		Trajectory trajectory = Pathfinder.generate(points, config);
+		Trajectory trajectory = Pathfinder.generate(spin, config);
 
 		TankModifier tm = new TankModifier(trajectory).modify(30/12.); //Units are feet
 
