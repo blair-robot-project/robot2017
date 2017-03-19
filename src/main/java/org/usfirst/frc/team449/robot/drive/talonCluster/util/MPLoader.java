@@ -13,6 +13,9 @@ public class MPLoader {
 	
 	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalonSRX talon, double wheelDiameter){
 		// Fill the Talon's buffer with points
+		talon.canTalon.disable();
+		talon.canTalon.clearMotionProfileHasUnderrun();
+		talon.canTalon.clearMotionProfileTrajectories();
 		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 		for (int i = 0; i < data.data.length; ++i) {
 			// Set all the fields of the profile point

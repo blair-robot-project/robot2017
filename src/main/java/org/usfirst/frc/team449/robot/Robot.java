@@ -1,11 +1,11 @@
 package org.usfirst.frc.team449.robot;
 
-import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
+import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
@@ -32,6 +32,8 @@ import java.util.List;
 public class Robot extends IterativeRobot {
 
 	public static double WHEEL_DIAMETER;
+
+	private static final double MP_UPDATE_RATE = 0.005;
 
 	private Notifier MPNotifier;
 
@@ -89,7 +91,7 @@ public class Robot extends IterativeRobot {
 
 	private long timeToPushGear;
 
-	private MotionProfileData secondRightProfile, secondLeftProfile;
+	private List<MotionProfileData> rightProfiles, leftProfiles;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -163,20 +165,24 @@ public class Robot extends IterativeRobot {
 		WHEEL_DIAMETER = cfg.getWheelDiameterInches()/12.;
 		timeToPushGear = (long) (cfg.getTimeToPushGear()*1000);
 
-		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile(0));
-		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile(0));
-		if(cfg.getRightMotionProfileCount() > 1){
-			secondLeftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile(1));
-			secondRightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile(1));
+		leftProfiles = new ArrayList<>(cfg.getLeftMotionProfileCount());
+		rightProfiles = new ArrayList<>(cfg.getRightMotionProfileCount());
+
+		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()){
+			leftProfiles.set(profile.getNumber(), new MotionProfileData(profile.getFilename(), profile.getInverted()));
 		}
 
-		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
-		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
+		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()){
+			rightProfiles.set(profile.getNumber(), new MotionProfileData(profile.getFilename(), profile.getInverted()));
+		}
+
+		MPLoader.loadTopLevel(leftProfiles.get(0), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+		MPLoader.loadTopLevel(rightProfiles.get(0), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 
 		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
-		MPNotifier = MPLoader.startLoadBottomLevel(talons, 0.005);
+		MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
 		commandFinished = false;
 		completedCommands = 0;
 	}
@@ -246,13 +252,15 @@ public class Robot extends IterativeRobot {
 			if(completedCommands == 1){
 				//Push the gear HERE
 				startedGearPush = System.currentTimeMillis();
-			} else if (completedCommands == 2 && secondRightProfile != null){
+			} else if (completedCommands == 2 && leftProfiles.size() >= 2){
+				MPNotifier.stop();
 				List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 				talons.add(driveSubsystem.leftMaster);
 				talons.add(driveSubsystem.rightMaster);
-				MPLoader.loadTopLevel(secondLeftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
-				MPLoader.loadTopLevel(secondRightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
-				Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, commandFinished));
+				MPLoader.loadTopLevel(leftProfiles.get(1), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(rightProfiles.get(1), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+				MPNotifier.startPeriodic(MP_UPDATE_RATE);
+				Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
 			}
 		}
 	}
