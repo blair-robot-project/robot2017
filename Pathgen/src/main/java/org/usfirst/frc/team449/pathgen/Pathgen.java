@@ -22,6 +22,10 @@ public class Pathgen {
 		final double WALL_TO_CENTER_PEG = 114.3;
 		final double WALL_TO_SIDE_PEG = 131.925;
 		final double BACK_CORNER_TO_SIDE_PEG = 91;
+		final double HALF_KEY_LENGTH = 0;
+		final double KEY_CORNER_TO_SIDE_PEG = 0;
+
+		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
 		Waypoint[] points = new Waypoint[]{ //Units are feet and radians.
 				new Waypoint(0, 0, 0),
@@ -33,19 +37,27 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.
-						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.,-Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
+						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER)/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] right = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.
-						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*(CENTER_TO_FRONT + BACK_FROM_PEG + CARRIAGE_LEN))/12.,Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
+						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER)/12.,Math.PI/3.)
 		};
 
 		Waypoint[] center = new Waypoint[]{
 				new Waypoint(0, 0, 0),
 				new Waypoint((WALL_TO_CENTER_PEG - CENTER_TO_BACK - CENTER_TO_FRONT)/12., 0, 0)
+		};
+
+		Waypoint[] pegToKey = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(-PEG_BASE_TO_CENTER + WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(60)) + KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(30))
+				+ HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) - CENTER_TO_BACK*Math.cos(Math.toRadians(15)),
+						WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(60)) - KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30)) - HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) - CENTER_TO_BACK*Math.sin(Math.toRadians(15)),
+						Math.PI/12)
 		};
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
