@@ -19,6 +19,8 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown.IntakeUp;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
+import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
@@ -92,6 +94,8 @@ public class Robot extends IterativeRobot {
 	private long timeToPushGear;
 
 	private List<MotionProfileData> rightProfiles, leftProfiles;
+
+	private List<RotPerSecCANTalonSRX> talons;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -179,7 +183,6 @@ public class Robot extends IterativeRobot {
 		MPLoader.loadTopLevel(leftProfiles.get(0), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfiles.get(0), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 
-		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
 		MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
@@ -229,6 +232,9 @@ public class Robot extends IterativeRobot {
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
+		if (singleFlywheelShooterSubsystem != null){
+			Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
+		}
 		driveSubsystem.setVBusThrottle(0, 0);
 		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
@@ -253,14 +259,15 @@ public class Robot extends IterativeRobot {
 				//Push the gear HERE
 				startedGearPush = System.currentTimeMillis();
 			} else if (completedCommands == 2 && leftProfiles.size() >= 2){
-				MPNotifier.stop();
-				List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
-				talons.add(driveSubsystem.leftMaster);
-				talons.add(driveSubsystem.rightMaster);
-				MPLoader.loadTopLevel(leftProfiles.get(1), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-				MPLoader.loadTopLevel(rightProfiles.get(1), driveSubsystem.rightMaster, WHEEL_DIAMETER);
-				MPNotifier.startPeriodic(MP_UPDATE_RATE);
+				loadProfile(1);
 				Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+			} else if (completedCommands == 3){
+				if (leftProfiles.size() >= 3){
+					loadProfile(2);
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+				} else {
+					Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
+				}
 			}
 		}
 	}
@@ -268,5 +275,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit(){
 		driveSubsystem.setVBusThrottle(0, 0);
+	}
+
+	private void loadProfile(int index){
+		MPNotifier.stop();
+		MPLoader.loadTopLevel(leftProfiles.get(index), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+		MPLoader.loadTopLevel(rightProfiles.get(index), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 }
