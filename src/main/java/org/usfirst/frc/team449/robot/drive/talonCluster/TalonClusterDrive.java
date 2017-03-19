@@ -228,6 +228,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
 		// Initialize slave talons.
+
 		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getRightSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
