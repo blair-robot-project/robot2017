@@ -145,9 +145,11 @@ public class Robot extends IterativeRobot {
 
 		//Activate the compressor if its module number is in the map.
 		if (cfg.hasModule()) {
+			System.out.println("Setting up a compressor at module number "+cfg.getModule());
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
+			System.out.println(compressor.enabled());
 		}
 	}
 
