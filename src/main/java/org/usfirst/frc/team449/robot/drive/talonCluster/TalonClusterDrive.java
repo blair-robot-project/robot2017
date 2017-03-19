@@ -228,7 +228,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
 		// Initialize slave talons.
-
 		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getRightSlaveList()) {
 			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
@@ -287,7 +286,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public void setDefaultThrottle(double left, double right) {
 		//Clip to one to avoid anything strange.
 		setPIDThrottle(clipToOne(left), clipToOne(right));
-		//setVBusThrottle(left, right);
+//		setVBusThrottle(left, right);
 	}
 
 	/**
@@ -302,10 +301,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
-			sb.append(",");
-			sb.append(leftMaster.canTalon.getSpeed());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getSpeed());
 			sb.append(",");
 			sb.append(leftMaster.getError());
 			sb.append(",");
@@ -361,11 +356,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
+			sb.append(sp);
 			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.velocity);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append(sp);
 			sb.append("\n");
 
 			fw.write(sb.toString());

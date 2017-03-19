@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -37,6 +38,8 @@ public class ExecuteProfile extends Command {
 		if (toRequire != null){
 			requires(toRequire);
 		}
+
+		this.talons = new ArrayList<>();
 
 		for (RotPerSecCANTalonSRX talon : talons){
 			this.talons.add(talon.canTalon);

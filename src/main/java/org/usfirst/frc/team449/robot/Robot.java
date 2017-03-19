@@ -12,6 +12,9 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
@@ -218,8 +221,9 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 
-		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+//		driveSubsystem.setDefaultCommandManual(new OpArcadeDrive(driveSubsystem, oiSubsystem));
 
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
@@ -280,7 +284,9 @@ public class Robot extends IterativeRobot {
 			completedCommands++;
 			commandFinished = false;
 			if(completedCommands == 1){
-				Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
+				if(gearSubsystem != null) {
+					Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
+				}
 				startedGearPush = System.currentTimeMillis();
 			} else if (completedCommands == 2){
 				if(leftProfiles.size() >= 2) {
