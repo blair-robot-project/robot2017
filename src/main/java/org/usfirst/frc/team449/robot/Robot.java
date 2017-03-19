@@ -1,18 +1,15 @@
 package org.usfirst.frc.team449.robot;
 
 import com.ctre.CANTalon;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
@@ -20,7 +17,6 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown.IntakeUp;
-import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
@@ -85,7 +81,15 @@ public class Robot extends IterativeRobot {
 	 * */
 	private static Robot2017Map.Robot2017 cfg;
 
-	private Boolean mpFinished = false;
+	private Boolean commandFinished = false;
+
+	private int completedCommands = 0;
+
+	private long startedGearPush = 0;
+
+	private long timeToPushGear;
+
+	private MotionProfileData secondRightProfile, secondLeftProfile;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -157,9 +161,14 @@ public class Robot extends IterativeRobot {
 		}
 
 		WHEEL_DIAMETER = cfg.getWheelDiameterInches()/12.;
+		timeToPushGear = (long) (cfg.getTimeToPushGear()*1000);
 
-		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile());
-		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile());
+		MotionProfileData leftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile(0));
+		MotionProfileData rightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile(0));
+		if(cfg.getRightMotionProfileCount() > 1){
+			secondLeftProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getLeftMotionProfile(1));
+			secondRightProfile = new MotionProfileData("/home/lvuser/449_resources/"+cfg.getRightMotionProfile(1));
+		}
 
 		MPLoader.loadTopLevel(leftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
@@ -168,7 +177,8 @@ public class Robot extends IterativeRobot {
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
 		MPNotifier = MPLoader.startLoadBottomLevel(talons, 0.005);
-		mpFinished = false;
+		commandFinished = false;
+		completedCommands = 0;
 	}
 
 	/**
@@ -214,10 +224,10 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 		}
 		driveSubsystem.setVBusThrottle(0, 0);
-		List<CANTalon> talons = new ArrayList<>();
-		talons.add(driveSubsystem.leftMaster.canTalon);
-		talons.add(driveSubsystem.rightMaster.canTalon);
-		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, mpFinished));
+		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
+		talons.add(driveSubsystem.leftMaster);
+		talons.add(driveSubsystem.rightMaster);
+		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, commandFinished));
 	}
 
 	/**
@@ -227,8 +237,23 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
-		if(mpFinished){
-
+		if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1){
+			commandFinished = true;
+		}
+		if(commandFinished){
+			completedCommands++;
+			commandFinished = false;
+			if(completedCommands == 1){
+				//Push the gear HERE
+				startedGearPush = System.currentTimeMillis();
+			} else if (completedCommands == 2 && secondRightProfile != null){
+				List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
+				talons.add(driveSubsystem.leftMaster);
+				talons.add(driveSubsystem.rightMaster);
+				MPLoader.loadTopLevel(secondLeftProfile, driveSubsystem.leftMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(secondRightProfile, driveSubsystem.rightMaster, WHEEL_DIAMETER);
+				Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, commandFinished));
+			}
 		}
 	}
 

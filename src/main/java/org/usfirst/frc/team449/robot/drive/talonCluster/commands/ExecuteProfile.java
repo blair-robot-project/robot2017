@@ -4,6 +4,7 @@ import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
 import java.util.Collection;
 
@@ -32,12 +33,14 @@ public class ExecuteProfile extends Command {
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<CANTalon> talons, double timeout, Subsystem toRequire, Boolean externalFinished) {
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, Subsystem toRequire, Boolean externalFinished) {
 		if (toRequire != null){
 			requires(toRequire);
 		}
 
-		this.talons = talons;
+		for (RotPerSecCANTalonSRX talon : talons){
+			this.talons.add(talon.canTalon);
+		}
 
 		this.timeout = (long) (timeout * 1000);
 
@@ -46,7 +49,7 @@ public class ExecuteProfile extends Command {
 		this.externalFinished = externalFinished;
 	}
 
-	public ExecuteProfile(Collection<CANTalon> talons, double timeout){
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout){
 		this(talons, timeout, null, true);
 	}
 
