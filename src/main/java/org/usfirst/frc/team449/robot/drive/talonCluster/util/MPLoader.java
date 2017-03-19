@@ -32,8 +32,6 @@ public class MPLoader {
 				System.out.println("Buffer full!");
 				break;
 			}
-
-			System.out.println("Line " + (i+1) + " loaded into top level buffer!");
 		}
 	}
 

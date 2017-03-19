@@ -111,9 +111,8 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -182,19 +181,24 @@ public class Robot extends IterativeRobot {
 		timeToPushGear = (long) (cfg.getTimeToPushGear()*1000);
 
 		leftProfiles = new ArrayList<>(cfg.getLeftMotionProfileCount());
+		for (int i = 0; i < cfg.getLeftMotionProfileCount(); i++)
+			leftProfiles.add(null);
 		rightProfiles = new ArrayList<>(cfg.getRightMotionProfileCount());
+		for (int i = 0; i < cfg.getRightMotionProfileCount(); i++)
+			rightProfiles.add(null);
 
 		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()){
-			leftProfiles.set(profile.getNumber(), new MotionProfileData(profile.getFilename(), profile.getInverted()));
+			leftProfiles.set(profile.getNumber(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
 		}
 
 		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()){
-			rightProfiles.set(profile.getNumber(), new MotionProfileData(profile.getFilename(), profile.getInverted()));
+			rightProfiles.set(profile.getNumber(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
 		}
 
 		MPLoader.loadTopLevel(leftProfiles.get(0), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfiles.get(0), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 
+		talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
 		talons.add(driveSubsystem.rightMaster);
 		MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);

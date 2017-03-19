@@ -22,10 +22,15 @@ public class LoadShooter extends CommandGroup {
 	 * @param feeder feeder subsystem
 	 */
 	public LoadShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
-		requires(intake);
-		addParallel(new DecelerateFlywheel(sfs, 5));
-		addParallel(new IntakeDown(intake));
-		addParallel(new StaticInDynamicIn(intake));
-		addParallel(new StopFeeder(feeder));
+		if (sfs != null) {
+			addParallel(new DecelerateFlywheel(sfs, 5));
+		}
+		if (intake != null) {
+			addParallel(new IntakeDown(intake));
+			addParallel(new StaticInDynamicIn(intake));
+		}
+		if (feeder != null) {
+			addParallel(new StopFeeder(feeder));
+		}
 	}
 }
