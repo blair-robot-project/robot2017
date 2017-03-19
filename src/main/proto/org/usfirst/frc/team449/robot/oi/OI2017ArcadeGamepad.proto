@@ -44,4 +44,7 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton turn_to_180 = 27;
 	optional JoystickButton turn_to_330 = 28;
 	optional JoystickButton turnaround = 29;
+
+    optional JoystickButton toggle_gear = 32;
+    optional JoystickButton push_gear = 33;
 }

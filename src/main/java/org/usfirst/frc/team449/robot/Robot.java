@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -14,6 +15,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -80,6 +83,8 @@ public class Robot extends IterativeRobot {
 	 * The auger used to feed balls into the shooter.
 	 */
 	public static FeederSubsystem feederSubsystem;
+
+	public static ActiveGearSubsystem gearSubsystem;
 
 	/**
 	 * The object constructed directly from map.cfg.
@@ -156,15 +161,21 @@ public class Robot extends IterativeRobot {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
+		if(cfg.hasGear()){
+			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
+		}
+
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
 
 		//Activate the compressor if its module number is in the map.
 		if (cfg.hasModule()) {
+			System.out.println("Setting up a compressor at module number "+cfg.getModule());
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
+			System.out.println(compressor.enabled());
 		}
 
 		WHEEL_DIAMETER = cfg.getWheelDiameterInches()/12.;
@@ -213,6 +224,10 @@ public class Robot extends IterativeRobot {
 		if (intakeSubsystem != null) {
 			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
 		}
+
+		if(gearSubsystem != null){
+			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+		}
 	}
 
 	/**
@@ -236,6 +251,10 @@ public class Robot extends IterativeRobot {
 		if (singleFlywheelShooterSubsystem != null){
 			Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
 		}
+		if(gearSubsystem != null){
+			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+		}
+
 		driveSubsystem.setVBusThrottle(0, 0);
 		List<RotPerSecCANTalonSRX> talons = new ArrayList<>();
 		talons.add(driveSubsystem.leftMaster);
@@ -257,7 +276,7 @@ public class Robot extends IterativeRobot {
 			completedCommands++;
 			commandFinished = false;
 			if(completedCommands == 1){
-				//Push the gear HERE
+				Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
 				startedGearPush = System.currentTimeMillis();
 			} else if (completedCommands == 2){
 				if(leftProfiles.size() >= 2) {
