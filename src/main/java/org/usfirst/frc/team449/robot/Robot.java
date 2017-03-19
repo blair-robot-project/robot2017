@@ -9,6 +9,7 @@ import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
@@ -258,9 +259,13 @@ public class Robot extends IterativeRobot {
 			if(completedCommands == 1){
 				//Push the gear HERE
 				startedGearPush = System.currentTimeMillis();
-			} else if (completedCommands == 2 && leftProfiles.size() >= 2){
-				loadProfile(1);
-				Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+			} else if (completedCommands == 2){
+				if(leftProfiles.size() >= 2) {
+					loadProfile(1);
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+				} else {
+					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, .5));
+				}
 			} else if (completedCommands == 3){
 				if (leftProfiles.size() >= 3){
 					loadProfile(2);
