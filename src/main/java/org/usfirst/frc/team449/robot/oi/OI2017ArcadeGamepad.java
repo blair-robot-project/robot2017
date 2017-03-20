@@ -225,7 +225,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasToggleGear()){
 			toggleGear = new MappedJoystickButton(map.getToggleGear());
 		} else if (map.hasPushGear()){
-			pushGear = new MappedJoystickButton(map.getPushGear());
+			pushGear = new TriggerButton(map.getPushGear());
 		}
 	}
 

@@ -114,8 +114,8 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -221,9 +221,9 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 
-//		driveSubsystem.setDefaultCommandManual(new OpArcadeDrive(driveSubsystem, oiSubsystem));
+		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 
-		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
+//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));

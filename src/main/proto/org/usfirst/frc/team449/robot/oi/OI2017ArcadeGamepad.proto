@@ -46,5 +46,5 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton turnaround = 29;
 
     optional JoystickButton toggle_gear = 32;
-    optional JoystickButton push_gear = 33;
+    optional TriggerButton push_gear = 33;
 }
