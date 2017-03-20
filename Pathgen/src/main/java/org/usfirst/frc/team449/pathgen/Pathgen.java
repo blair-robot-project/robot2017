@@ -49,7 +49,7 @@ public class Pathgen {
 
 		Waypoint[] center = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_CENTER_PEG - CENTER_TO_BACK - CENTER_TO_FRONT)/12., 0, 0)
+				new Waypoint((WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER)/12., 0, 0)
 		};
 
 		Waypoint[] pegToKey = new Waypoint[]{
