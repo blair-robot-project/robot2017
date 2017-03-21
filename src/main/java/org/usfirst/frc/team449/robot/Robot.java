@@ -305,7 +305,7 @@ public class Robot extends IterativeRobot {
 				startedGearPush = System.currentTimeMillis();
 			} else if (completedCommands == 2){
 				if(position.equals("center")) {
-					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
+					//Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))
 					loadProfile("shoot");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));

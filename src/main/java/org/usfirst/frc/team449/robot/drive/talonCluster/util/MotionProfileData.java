@@ -19,8 +19,8 @@ public class MotionProfileData {
 	private boolean inverted;
 
 	public MotionProfileData(String filename, boolean inverted){
-		readFile(filename);
 		this.inverted = inverted;
+		readFile(filename);
 	}
 
 	public MotionProfileData(String filename) {
