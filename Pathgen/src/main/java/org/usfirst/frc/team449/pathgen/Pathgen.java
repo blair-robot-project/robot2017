@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class Pathgen {
 	public static void main(String[] args) throws IOException {
-		final double CENTER_TO_FRONT = 10;
-		final double CENTER_TO_BACK = 10;
-		final double CENTER_TO_SIDE = 10;
+		final double CENTER_TO_FRONT = 27./2.;
+		final double CENTER_TO_BACK = 27./2.;
+		final double CENTER_TO_SIDE = 29./2;
 		final double BACK_FROM_PEG = 3;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
@@ -65,11 +65,12 @@ public class Pathgen {
 
 		Trajectory trajectory = Pathfinder.generate(center, config);
 
-		TankModifier tm = new TankModifier(trajectory).modify(30/12.); //Units are feet
+		double balbasaurWheelbase = 30/12.;
 
-		FileWriter lfw = new FileWriter("leftMidProfile.csv", false);
-		FileWriter rfw = new FileWriter("rightMidProfile.csv", false);
-		FileWriter cfw = new FileWriter("combinedSpinProfile.csv", false);
+		TankModifier tm = new TankModifier(trajectory).modify(balbasaurWheelbase); //Units are feet
+
+		FileWriter lfw = new FileWriter("balbasaurLeftMidProfile.csv", false);
+		FileWriter rfw = new FileWriter("balbasaurRightMidProfile.csv", false);
 
 
 		for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
@@ -83,17 +84,10 @@ public class Pathgen {
 					"\t" + tm.getRightTrajectory().get(i).dt + ",");
 			rfw.write("\n");
 		}
-		for (int i = 0; i < trajectory.length(); i++) {
-			cfw.write(trajectory.get(i).position + ",\t" + trajectory.get(i).velocity + "," +
-					"\t" + trajectory.get(i).dt + ",");
-			cfw.write("\n");
-		}
 
 		lfw.flush();
 		lfw.close();
 		rfw.flush();
 		rfw.close();
-		cfw.flush();
-		cfw.close();
 	}
 }
