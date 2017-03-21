@@ -46,6 +46,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 		startTime = System.nanoTime();
 		//Reset drive speed (for safety reasons)
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		System.out.println("DriveAtSpeed init");
 	}
 
 	/**
@@ -77,6 +78,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 		((TalonClusterDrive) subsystem).logData();
 		//Brake on exit.
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0, 0);
+		System.out.println("DriveAtSpeed end.");
 	}
 
 	/**

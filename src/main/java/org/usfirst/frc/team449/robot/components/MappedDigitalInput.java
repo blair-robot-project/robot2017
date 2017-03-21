@@ -29,7 +29,7 @@ public class MappedDigitalInput {
     public List<Boolean> getStatus(){
         List<Boolean> digitalValues = new ArrayList<>();
         for (int i = 0; i < digitalInputs.size(); i++) {
-            digitalValues.add(digitalInputs.get(i).get());
+            digitalValues.add(!digitalInputs.get(i).get());
         }
         return digitalValues;
     }

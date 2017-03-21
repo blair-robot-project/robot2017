@@ -94,7 +94,7 @@ public class Robot extends IterativeRobot {
 	 * */
 	private static Robot2017Map.Robot2017 cfg;
 
-	private Boolean commandFinished = false;
+	public static boolean commandFinished = false;
 
 	private int completedCommands = 0;
 
@@ -184,6 +184,10 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
+		System.out.println("redAlliance: "+redAlliance);
+		System.out.println("dropGear: "+dropGear);
+		System.out.println("positon: "+position);
+
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
@@ -204,11 +208,11 @@ public class Robot extends IterativeRobot {
 		rightProfiles = new HashMap<>();
 
 		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()){
-			leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/profiles/"+profile.getFilename(), profile.getInverted()));
+			leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
 		}
 
 		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()){
-			rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/profiles/"+profile.getFilename(), profile.getInverted()));
+			rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
 		}
 
 		MPLoader.loadTopLevel(leftProfiles.get(position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
@@ -277,7 +281,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		driveSubsystem.setVBusThrottle(0, 0);
-		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem, commandFinished));
+		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 	}
 
 	/**
@@ -291,6 +295,7 @@ public class Robot extends IterativeRobot {
 			commandFinished = true;
 		}
 		if(commandFinished){
+			System.out.println("A command finished!");
 			completedCommands++;
 			commandFinished = false;
 			if(completedCommands == 1){
@@ -300,20 +305,20 @@ public class Robot extends IterativeRobot {
 				startedGearPush = System.currentTimeMillis();
 			} else if (completedCommands == 2){
 				if(position.equals("center")) {
-					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, .5));
+					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))
 					loadProfile("shoot");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				} else {
 					loadProfile("backup");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				}
 			} else if (completedCommands == 3){
 				if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
 					Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
 				} else {
 					loadProfile("forward");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem, commandFinished));
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				}
 			}
 		}

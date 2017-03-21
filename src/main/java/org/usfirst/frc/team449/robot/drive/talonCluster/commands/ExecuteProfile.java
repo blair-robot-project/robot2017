@@ -29,12 +29,11 @@ public class ExecuteProfile extends Command {
 
 	private long startTime;
 
-	private Boolean externalFinished;
 
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, Subsystem toRequire, Boolean externalFinished) {
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, Subsystem toRequire) {
 		if (toRequire != null){
 			requires(toRequire);
 		}
@@ -49,11 +48,10 @@ public class ExecuteProfile extends Command {
 
 		finished = false;
 		bottomLoaded = false;
-		this.externalFinished = externalFinished;
 	}
 
 	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout){
-		this(talons, timeout, null, true);
+		this(talons, timeout, null);
 	}
 
 	/**
@@ -87,8 +85,6 @@ public class ExecuteProfile extends Command {
 			if (!bottomLoaded) {
 				finished = false;
 				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM);
-				System.out.println("Bottom buffer count: "+MPStatus.btmBufferCnt);
-				System.out.println("bottomNowLoaded: "+bottomNowLoaded);
 			}
 			if (bottomLoaded) {
 				finished = finished && MPStatus.activePoint.isLastPoint;
@@ -116,7 +112,7 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 //			talon.disable();
 		}
-		externalFinished = true;
+		Robot.commandFinished = true;
 		System.out.println("ExecuteProfile end.");
 	}
 
@@ -125,7 +121,7 @@ public class ExecuteProfile extends Command {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
-		externalFinished = true;
+		Robot.commandFinished = true;
 		System.out.println("ExecuteProfile interrupted!");
 	}
 }
