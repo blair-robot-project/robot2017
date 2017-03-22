@@ -280,6 +280,8 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
 
+		commandFinished = false;
+
 		driveSubsystem.setVBusThrottle(0, 0);
 		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 	}
@@ -291,37 +293,44 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
-		if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1){
+		if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
 			commandFinished = true;
 		}
-		if(commandFinished){
+		if (commandFinished) {
 			System.out.println("A command finished!");
 			completedCommands++;
 			commandFinished = false;
-			if(completedCommands == 1){
-				if(gearSubsystem != null && dropGear) {
+			if (completedCommands == 1) {
+				if (gearSubsystem != null && dropGear) {
 					Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
 				}
 				startedGearPush = System.currentTimeMillis();
-			} else if (completedCommands == 2){
-				if(position.equals("center")) {
-					//Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
-				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))
-					loadProfile("shoot");
+			} else if (completedCommands == 2) {
+				if (position.equals("center")) {
+					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
+				} else if (position.equals("right") && redAlliance) {
+					loadProfile("red_shoot");
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+				} else if (position.equals("left") && !redAlliance) {
+					loadProfile("blue_shoot");
+					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+				} else if (redAlliance){
+					loadProfile("red_backup");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				} else {
-					loadProfile("backup");
+					loadProfile("blue_backup");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				}
-			} else if (completedCommands == 3){
-				if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
+			} else if (completedCommands == 3) {
+				if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
 					Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
-				} else {
+				} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
 					loadProfile("forward");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				}
 			}
 		}
+	}
 
 	@Override
 	public void disabledInit(){
