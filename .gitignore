@@ -24,3 +24,10 @@ build
 *.iml
 *.ipr
 *.iws
+
+# R files
+.RData
+.Rhistory
+
+# Generated profiles.
+*Profile.csv
