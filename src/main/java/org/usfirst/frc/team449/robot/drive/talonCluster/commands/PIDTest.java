@@ -14,14 +14,14 @@ public class PIDTest extends ReferencingCommandGroup {
 	 * Default constructor
 	 * @param mappedSubsystem the TalonClusterDrive to execute this command on
 	 */
-	public PIDTest(MappedSubsystem mappedSubsystem) {
+	public PIDTest(MappedSubsystem mappedSubsystem, double driveTime) {
 		super(mappedSubsystem);
 		requires(mappedSubsystem);
 
 		TalonClusterDrive driveSubsystem = (TalonClusterDrive) mappedSubsystem;
 
 		//Drive forward for a bit
-		addSequential(new DriveAtSpeed(driveSubsystem, 0.7, 2));
+		addSequential(new DriveAtSpeed(driveSubsystem, 0.7, driveTime));
 		//Stop
 		addSequential(new DriveAtSpeed(driveSubsystem, 0, 100));
 	}

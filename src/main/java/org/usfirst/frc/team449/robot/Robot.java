@@ -7,10 +7,7 @@ import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveAtSpeed;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
@@ -117,8 +114,8 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -204,29 +201,36 @@ public class Robot extends IterativeRobot {
 			System.out.println(compressor.enabled());
 		}
 
-		WHEEL_DIAMETER = cfg.getWheelDiameterInches()/12.;
-		timeToPushGear = (long) (cfg.getTimeToPushGear()*1000);
+		if(cfg.getDoMP()) {
+			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
+			timeToPushGear = (long) (cfg.getTimeToPushGear() * 1000);
 
-		leftProfiles = new HashMap<>();
-		rightProfiles = new HashMap<>();
+			leftProfiles = new HashMap<>();
+			rightProfiles = new HashMap<>();
 
-		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()){
-			leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
+			for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
+				leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+			}
+
+			for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
+				rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+			}
+
+			if(cfg.getTestMP()){
+				MPLoader.loadTopLevel(leftProfiles.get("test"), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(rightProfiles.get("test"), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+			}else {
+				MPLoader.loadTopLevel(leftProfiles.get(position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(rightProfiles.get(position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+			}
+
+			talons = new ArrayList<>();
+			talons.add(driveSubsystem.leftMaster);
+			talons.add(driveSubsystem.rightMaster);
+			MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
+			commandFinished = false;
+			completedCommands = 0;
 		}
-
-		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()){
-			rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/"+profile.getFilename(), profile.getInverted()));
-		}
-
-		MPLoader.loadTopLevel(leftProfiles.get(position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-		MPLoader.loadTopLevel(rightProfiles.get(position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
-
-		talons = new ArrayList<>();
-		talons.add(driveSubsystem.leftMaster);
-		talons.add(driveSubsystem.rightMaster);
-		MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
-		commandFinished = false;
-		completedCommands = 0;
 	}
 
 	/**
@@ -306,25 +310,29 @@ public class Robot extends IterativeRobot {
 		commandFinished = false;
 
 		driveSubsystem.setVBusThrottle(0, 0);
-		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
+		Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
+		if (cfg.getDoMP()) {
+			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 
-		if (robotInfo != null) {
-			if (redAlliance) {
-				String WriteString = "red_auto";
-				char[] CharArray = WriteString.toCharArray();
-				byte[] WriteData = new byte[CharArray.length];
-				for (int i = 0; i < CharArray.length; i++) {
-					WriteData[i] = (byte) CharArray[i];
+			if (robotInfo != null) {
+				if (redAlliance) {
+					String WriteString = "red_auto";
+					char[] CharArray = WriteString.toCharArray();
+					byte[] WriteData = new byte[CharArray.length];
+					for (int i = 0; i < CharArray.length; i++) {
+						WriteData[i] = (byte) CharArray[i];
+					}
+					robotInfo.transaction(WriteData, WriteData.length, null, 0);
+				} else {
+					String WriteString = "blue_auto";
+					char[] CharArray = WriteString.toCharArray();
+					byte[] WriteData = new byte[CharArray.length];
+					for (int i = 0; i < CharArray.length; i++) {
+						WriteData[i] = (byte) CharArray[i];
+					}
+					robotInfo.transaction(WriteData, WriteData.length, null, 0);
 				}
-				robotInfo.transaction(WriteData, WriteData.length, null, 0);
-			} else {
-				String WriteString = "blue_auto";
-				char[] CharArray = WriteString.toCharArray();
-				byte[] WriteData = new byte[CharArray.length];
-				for (int i = 0; i < CharArray.length; i++) {
-					WriteData[i] = (byte) CharArray[i];
-				}
-				robotInfo.transaction(WriteData, WriteData.length, null, 0);
+
 			}
 		}
 	}
@@ -336,42 +344,44 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
-		if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
-			commandFinished = true;
-		}
-		if (commandFinished) {
-			System.out.println("A command finished!");
-			completedCommands++;
-			commandFinished = false;
-			if (completedCommands == 1) {
-				if (gearSubsystem != null && dropGear) {
-					Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
-				}
-				startedGearPush = System.currentTimeMillis();
-			} else if (completedCommands == 2) {
-				if (position.equals("center")) {
-					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
-				} else if (position.equals("right") && redAlliance) {
-					loadProfile("red_shoot");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-				} else if (position.equals("left") && !redAlliance) {
-					loadProfile("blue_shoot");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-				} else {
-					Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
-				}/*else if (redAlliance){
+		if (cfg.getDoMP() && !cfg.getTestMP()) {
+			if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
+				commandFinished = true;
+			}
+			if (commandFinished) {
+				System.out.println("A command finished!");
+				completedCommands++;
+				commandFinished = false;
+				if (completedCommands == 1) {
+					if (gearSubsystem != null && dropGear) {
+						Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
+					}
+					startedGearPush = System.currentTimeMillis();
+				} else if (completedCommands == 2) {
+					if (position.equals("center")) {
+						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
+					} else if (position.equals("right") && redAlliance) {
+						loadProfile("red_shoot");
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+					} else if (position.equals("left") && !redAlliance) {
+						loadProfile("blue_shoot");
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+					} else {
+						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
+					}/*else if (redAlliance){
 					loadProfile("red_backup");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				} else {
 					loadProfile("blue_backup");
 					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 				}*/
-			} else if (completedCommands == 3) {
-				if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
-					Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
-				} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
-					loadProfile("forward");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+				} else if (completedCommands == 3) {
+					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
+						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
+					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
+						loadProfile("forward");
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+					}
 				}
 			}
 		}

@@ -36,4 +36,6 @@ message Robot2017 {
     optional DigitalInput location = 18;
     optional double drive_back_time = 19;
 	optional int32 rioduino_port = 20;
+    optional bool do_MP = 21 [default = true];
+    optional bool test_MP = 22 [default = false];
 }
