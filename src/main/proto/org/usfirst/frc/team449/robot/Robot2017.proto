@@ -35,5 +35,5 @@ message Robot2017 {
     optional DigitalInput drop_gear = 17;
     optional DigitalInput location = 18;
     optional double drive_back_time = 19;
-	optional int32 portNum = 20;
+	optional int32 rioduino_port = 20;
 }
