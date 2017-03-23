@@ -1,9 +1,6 @@
 package org.usfirst.frc.team449.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
@@ -110,6 +107,8 @@ public class Robot extends IterativeRobot {
 
 	private String position;
 
+	private static I2C robotInfo;
+
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
@@ -126,6 +125,8 @@ public class Robot extends IterativeRobot {
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
+
+        robotInfo = new I2C(I2C.Port.kOnboard, 4);
 
 		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
@@ -253,6 +254,25 @@ public class Robot extends IterativeRobot {
 		if(gearSubsystem != null){
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
+
+		if (redAlliance){
+            String WriteString = "red_teleop";
+            char[] CharArray = WriteString.toCharArray();
+            byte[] WriteData = new byte[CharArray.length];
+            for (int i = 0; i < CharArray.length; i++) {
+                WriteData[i] = (byte) CharArray[i];
+            }
+            robotInfo.transaction(WriteData, WriteData.length, null, 0);
+        }
+        else {
+            String WriteString = "blue_teleop";
+            char[] CharArray = WriteString.toCharArray();
+            byte[] WriteData = new byte[CharArray.length];
+            for (int i = 0; i < CharArray.length; i++) {
+                WriteData[i] = (byte) CharArray[i];
+            }
+            robotInfo.transaction(WriteData, WriteData.length, null, 0);
+        }
 	}
 
 	/**
@@ -284,6 +304,25 @@ public class Robot extends IterativeRobot {
 
 		driveSubsystem.setVBusThrottle(0, 0);
 		Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
+
+        if (redAlliance){
+            String WriteString = "red_auto";
+            char[] CharArray = WriteString.toCharArray();
+            byte[] WriteData = new byte[CharArray.length];
+            for (int i = 0; i < CharArray.length; i++) {
+                WriteData[i] = (byte) CharArray[i];
+            }
+            robotInfo.transaction(WriteData, WriteData.length, null, 0);
+        }
+        else {
+            String WriteString = "blue_auto";
+            char[] CharArray = WriteString.toCharArray();
+            byte[] WriteData = new byte[CharArray.length];
+            for (int i = 0; i < CharArray.length; i++) {
+                WriteData[i] = (byte) CharArray[i];
+            }
+            robotInfo.transaction(WriteData, WriteData.length, null, 0);
+        }
 	}
 
 	/**
