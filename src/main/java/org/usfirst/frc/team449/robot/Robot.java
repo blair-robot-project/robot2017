@@ -333,10 +333,11 @@ public class Robot extends IterativeRobot {
 					robotInfo.transaction(WriteData, WriteData.length, null, 0);
 				}
 
-			} else {
-			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 			}
+		}else {
+			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 		}
+	}
 
 	/**
 	 * Runs every tick in autonomous.
