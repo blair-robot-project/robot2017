@@ -310,9 +310,8 @@ public class Robot extends IterativeRobot {
 		commandFinished = false;
 
 		driveSubsystem.setVBusThrottle(0, 0);
-		if (!cfg.getDoMP){		
-			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
-		} else {
+		
+		if (cfg.getDoMP()) {
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 
 			if (robotInfo != null) {
@@ -334,9 +333,10 @@ public class Robot extends IterativeRobot {
 					robotInfo.transaction(WriteData, WriteData.length, null, 0);
 				}
 
+			} else {
+			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 			}
 		}
-	}
 
 	/**
 	 * Runs every tick in autonomous.
