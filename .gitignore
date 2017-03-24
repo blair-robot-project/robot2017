@@ -27,3 +27,7 @@ robot2017.iws
 # R workspace files
 *.RData
 *.Rhistory
+
+#Other
+.metadata/
+.DS_Store

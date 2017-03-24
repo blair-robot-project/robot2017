@@ -250,7 +250,11 @@ public class Robot extends IterativeRobot {
 //		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+			if (cfg.getStartLowGear()){
+				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+			} else {
+				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+			}
 		}
 
 		if (intakeSubsystem != null) {
@@ -297,9 +301,15 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//Set throttle to 0 for safety reasons
+		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+			if (cfg.getStartLowGear()){
+				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+			} else {
+				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+			}
 		}
+
 		if (singleFlywheelShooterSubsystem != null){
 			Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
 		}
@@ -310,7 +320,7 @@ public class Robot extends IterativeRobot {
 		commandFinished = false;
 
 		driveSubsystem.setVBusThrottle(0, 0);
-		
+
 		if (cfg.getDoMP()) {
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 
