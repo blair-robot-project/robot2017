@@ -311,8 +311,8 @@ public class Robot extends IterativeRobot {
 
 		driveSubsystem.setVBusThrottle(0, 0);
 		if (!cfg.getDoMP){		
-Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
-		} else (cfg.getDoMP()) {
+			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
+		} else {
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 
 			if (robotInfo != null) {
