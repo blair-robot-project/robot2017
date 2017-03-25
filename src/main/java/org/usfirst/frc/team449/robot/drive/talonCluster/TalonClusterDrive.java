@@ -101,7 +101,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
 	 * loop space to compensate.
 	 */
-	private final double PID_SCALE = 0.45;
+	private final double PID_SCALE = 0.9;
 
 	/**
 	 * Upshift timeout.

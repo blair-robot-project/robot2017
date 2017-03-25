@@ -219,7 +219,7 @@ public class Robot extends IterativeRobot {
 			if(cfg.getTestMP()){
 				MPLoader.loadTopLevel(leftProfiles.get("test"), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 				MPLoader.loadTopLevel(rightProfiles.get("test"), driveSubsystem.rightMaster, WHEEL_DIAMETER);
-			}else {
+			} else {
 				MPLoader.loadTopLevel(leftProfiles.get(position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 				MPLoader.loadTopLevel(rightProfiles.get(position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 			}
@@ -239,7 +239,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		//Stop the drive for safety reasons
-		MPNotifier.stop();
+		if (MPNotifier != null) {
+			MPNotifier.stop();
+		}
 		driveSubsystem.setVBusThrottle(0, 0);
 
 		driveSubsystem.leftMaster.canTalon.enable();
@@ -310,9 +312,6 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
-		if (singleFlywheelShooterSubsystem != null){
-			Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
-		}
 		if(gearSubsystem != null){
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
@@ -322,6 +321,9 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setVBusThrottle(0, 0);
 
 		if (cfg.getDoMP()) {
+			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()){
+				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
+			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
 
 			if (robotInfo != null) {
