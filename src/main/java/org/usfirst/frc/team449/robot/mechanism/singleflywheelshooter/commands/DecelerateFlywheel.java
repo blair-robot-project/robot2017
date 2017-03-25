@@ -42,6 +42,7 @@ public class DecelerateFlywheel extends ReferencingCommand {
 		flywheelShooter.logData(0.0);
 		flywheelShooter.setDefaultSpeed(0.0);
 		flywheelShooter.spinning = false;
+		flywheelShooter.talon.canTalon.disable();
 		System.out.println("DecelerateFlywheel executed");
 	}
 

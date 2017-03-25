@@ -135,6 +135,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//Log data and stuff
 		driveSubsystem.logData();
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
+		SmartDashboard.putBoolean("Override Navx", driveSubsystem.overrideNavX);
 		SmartDashboard.putNumber("Vel Axis", vel);
 		SmartDashboard.putNumber("Rot axis", rot);
 	}

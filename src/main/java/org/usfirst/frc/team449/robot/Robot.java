@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
@@ -295,6 +296,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
+		SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
+		SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
 		Scheduler.getInstance().run();
 	}
 

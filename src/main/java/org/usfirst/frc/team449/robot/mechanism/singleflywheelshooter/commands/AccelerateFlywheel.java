@@ -39,6 +39,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
+		flywheelShooter.talon.canTalon.enable();
 		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.spinning = true;
