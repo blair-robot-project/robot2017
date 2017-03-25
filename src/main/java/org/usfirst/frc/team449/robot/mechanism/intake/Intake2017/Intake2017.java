@@ -41,9 +41,13 @@ public class Intake2017 extends MappedSubsystem {
 		this.map = map;
 		this.fixedVictor = new VictorSP(map.getFixedVictor().getPort());
 		fixedVictor.setInverted(map.getFixedVictor().getInverted());
-		this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
-		actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
-		this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
+		if (map.hasActuatedVictor()) {
+			this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
+			actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
+		}
+		if (map.hasPiston()) {
+			this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
+		}
 	}
 
 	/**
@@ -61,7 +65,9 @@ public class Intake2017 extends MappedSubsystem {
 	 * @param speed PWM setpoint [-1, 1]
 	 */
 	public void setActuatedVictor(double speed) {
-		actuatedVictor.set(speed);
+		if (actuatedVictor != null) {
+			actuatedVictor.set(speed);
+		}
 	}
 
 	/**
@@ -70,9 +76,11 @@ public class Intake2017 extends MappedSubsystem {
 	 * @param value direction to fire
 	 */
 	public void setPiston(DoubleSolenoid.Value value) {
-		piston.set(value);
-		System.out.println("Set Piston");
-		intakeUp = (value == DoubleSolenoid.Value.kReverse);
+		if (piston != null) {
+			piston.set(value);
+			System.out.println("Set Piston");
+			intakeUp = (value == DoubleSolenoid.Value.kReverse);
+		}
 	}
 
 	/**

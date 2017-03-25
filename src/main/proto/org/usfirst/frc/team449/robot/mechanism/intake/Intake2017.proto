@@ -9,7 +9,7 @@ option java_outer_classname = "Intake2017Map";
 message Intake2017 {
 	required Mechanism mechanism = 1;
 	required Motor fixed_victor = 2;
-	required Motor actuated_victor = 3;
-	required DoubleSolenoid piston = 4;
-	required int32 pistonModuleNum = 5;
+	optional Motor actuated_victor = 3;
+	optional DoubleSolenoid piston = 4;
+	optional int32 pistonModuleNum = 5;
 }
