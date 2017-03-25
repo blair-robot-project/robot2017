@@ -17,9 +17,11 @@ message OI2017ArcadeGamepad {
 	required bool invert_rot = 7;
 	required bool invert_dpad = 18;
 
+	required JoystickButton override_navX = 10;
+    required bool override_navX_while_held = 34;
+
 	optional JoystickButton switch_to_low_gear = 8;
 	optional JoystickButton switch_to_high_gear = 9;
-	optional JoystickButton override_navX = 10;
 	optional JoystickButton climb = 11;
 	optional JoystickButton toggle_feeder = 12;
 	optional JoystickButton toggle_intake = 13;

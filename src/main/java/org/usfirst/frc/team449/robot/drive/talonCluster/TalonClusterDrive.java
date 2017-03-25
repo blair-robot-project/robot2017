@@ -418,8 +418,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	protected void initDefaultCommand() {
 		//Set the start time to current time
 		startTime = System.nanoTime();
-		//Start overriding the NavX.
-		overrideNavX = true;
 		//Start driving
 		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}

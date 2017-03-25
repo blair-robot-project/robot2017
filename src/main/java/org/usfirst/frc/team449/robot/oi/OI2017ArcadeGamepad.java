@@ -140,6 +140,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Button toggleGear;
 	private Button pushGear;
 
+	private boolean overrideNavXWhileHeld;
+
 	/**
 	 * Construct the OI2017ArcadeGamepad
 	 *
@@ -157,6 +159,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Instantiate mandatory buttons.
 		toggleOverrideNavX = new MappedJoystickButton(map.getOverrideNavX());
+		overrideNavXWhileHeld = map.getOverrideNavXWhileHeld();
 
 		//Instantiate optional buttons.
 		if (map.hasTurnTo0()) {
@@ -274,8 +277,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		final double TIMEOUT = 5.;
 
 		//Map mandatory commands
-		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, false));
-		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, true));
+		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, overrideNavXWhileHeld));
+		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, !overrideNavXWhileHeld));
 
 		//Map drive commands
 		if (turnaround != null) {

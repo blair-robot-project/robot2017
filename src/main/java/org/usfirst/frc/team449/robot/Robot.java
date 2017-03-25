@@ -243,6 +243,7 @@ public class Robot extends IterativeRobot {
 			MPNotifier.stop();
 		}
 		driveSubsystem.setVBusThrottle(0, 0);
+		driveSubsystem.overrideNavX = !cfg.getArcadeOi().getOverrideNavXWhileHeld();
 
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
