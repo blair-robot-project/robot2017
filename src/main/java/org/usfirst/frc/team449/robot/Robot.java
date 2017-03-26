@@ -296,8 +296,12 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
-		SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
-		SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
+		if (singleFlywheelShooterSubsystem != null) {
+			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
+		}
+		if(gearSubsystem != null) {
+			SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
+		}
 		Scheduler.getInstance().run();
 	}
 

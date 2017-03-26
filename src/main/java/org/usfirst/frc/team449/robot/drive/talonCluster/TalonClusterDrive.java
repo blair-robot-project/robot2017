@@ -186,7 +186,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
 				".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
+			writer.println("time,left,right,left error,right error,left current,right current,left voltage,right voltage");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -242,6 +242,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Weird MP shit
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
 		rightTPointStatus = new CANTalon.MotionProfileStatus();
+
+		rightMaster.canTalon.setCloseLoopRampRate(100);
+		leftMaster.canTalon.setCloseLoopRampRate(100);
 	}
 
 	/**
@@ -305,6 +308,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputVoltage());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputVoltage());
 			 /*
 			 sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);

@@ -11,6 +11,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
 import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.ManualClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
@@ -145,6 +146,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	private Button toggleGear;
 	private List<Button> pushGear;
+	private Button manualClimb;
 
 	private boolean overrideNavXWhileHeld;
 
@@ -236,6 +238,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		if (map.hasToggleGear()) {
 			toggleGear = new MappedJoystickButton(map.getToggleGear());
+		}
+		if (map.hasManualClimb()){
+			manualClimb = new MappedJoystickButton(map.getManualClimb());
 		}
 		pushGear = new ArrayList<>();
 		for (TriggerButtonMap.TriggerButton triggerButton : map.getPushGearList()) {
@@ -376,7 +381,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			resetShooter.whenPressed(new ResetShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem,
 					Robot.feederSubsystem));
 		}
-
+		if (Robot.climberSubsystem != null && manualClimb != null){
+			manualClimb.whenPressed(new ManualClimb(Robot.climberSubsystem));
+			manualClimb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		}
 		if (Robot.gearSubsystem != null) {
 			if (toggleGear != null) {
 				toggleGear.whenPressed(new FirePiston(Robot.gearSubsystem, Robot.gearSubsystem.contracted ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
