@@ -516,6 +516,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
 		//Or if we're just turning in place.
 		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
+		//Or commanding a low speed.
+		okToShift = okToShift || (Math.abs(oi.getFwd()) < upshiftFwdDeadband);
 		//But there's no need to downshift if we're already in low gear.
 		okToShift = okToShift && !lowGear;
 		//And we don't want to shift if autoshifting is turned off.
