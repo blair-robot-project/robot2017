@@ -513,7 +513,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldDownshift() {
 		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
 		//Or if we're just turning in place.
 		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
 		//Or commanding a low speed.
@@ -546,7 +546,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldUpshift() {
 		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift;
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift;
 		//AND the driver's trying to go forward fast.
 		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
 		//But there's no need to upshift if we're already in high gear.
