@@ -240,4 +240,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	public double getMaxSpeedHG() {
 		return map.getMaxSpeedHg();
 	}
+
+	public double getPower() {
+		return canTalon.getOutputVoltage()*canTalon.getOutputCurrent();
+	}
 }

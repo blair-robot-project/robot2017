@@ -5,7 +5,7 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
 /**
- * The climber, with current monitoring to stop.
+ * The climber, with power monitoring to stop.
  */
 public class ClimberSubsystem extends MechanismSubsystem {
 	/**
@@ -14,9 +14,9 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	public RotPerSecCANTalonSRX canTalonSRX;
 
 	/**
-	 * The maximum allowable current before we stop the motor.
+	 * The maximum allowable power before we stop the motor.
 	 */
-	private double max_current;
+	private double max_power;
 	private VictorSP victor;
 
 	/**
@@ -28,7 +28,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		//Instantiate things
 		this.map = map;
 		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
-		this.max_current = map.getMaxCurrent();
+		this.max_power = map.getMaxPower();
 		if (map.hasVictor()) {
 			this.victor = new VictorSP(map.getVictor().getPort());
 			victor.setInverted(map.getVictor().getInverted());
@@ -58,10 +58,10 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	}
 
 	/**
-	 * Whether or not the current limit has been reached.
-	 * @return If the output current is greater than the max allowable current.
+	 * Whether or not the power limit has been reached.
+	 * @return If the output power is greater than the max allowable power.
 	 */
 	public boolean reachedTop() {
-		return canTalonSRX.canTalon.getOutputCurrent() > max_current;
+		return Math.abs(canTalonSRX.getPower()) > max_power;
 	}
 }

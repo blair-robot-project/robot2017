@@ -2,13 +2,12 @@ package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.TriggerButton;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
@@ -304,7 +303,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Map climber commands
 		if (Robot.climberSubsystem != null && climb != null) {
-			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
+			climb.whenPressed(new PowerClimb(Robot.climberSubsystem));
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
 
