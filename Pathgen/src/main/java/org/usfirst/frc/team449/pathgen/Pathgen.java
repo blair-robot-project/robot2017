@@ -16,8 +16,8 @@ import java.util.Map;
 public class Pathgen {
 	public static void main(String[] args) throws IOException {
 		final double CENTER_TO_FRONT = 27./2.;
-		final double CENTER_TO_BACK = 27./2. + 3.;
-		final double CENTER_TO_SIDE = 29./2. + 3.5;
+		final double CENTER_TO_BACK = 27./2. + 3.25;
+		final double CENTER_TO_SIDE = 29./2. + 3.25;
 		final double BACK_FROM_PEG = 1;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
