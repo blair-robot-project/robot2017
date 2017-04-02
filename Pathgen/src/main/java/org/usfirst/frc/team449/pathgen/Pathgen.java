@@ -18,7 +18,7 @@ public class Pathgen {
 		final double CENTER_TO_FRONT = 27./2.;
 		final double CENTER_TO_BACK = 27./2. + 3.;
 		final double CENTER_TO_SIDE = 29./2. + 3.5;
-		final double BACK_FROM_PEG = 3;
+		final double BACK_FROM_PEG = 1;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
 		final double WALL_TO_CENTER_PEG = 114.3;
@@ -36,14 +36,14 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
-						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER)/12.,-Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER - 6 + 2*Math.cos(5*Math.PI/6))/12.
+						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] right = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
-						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER)/12.,Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER - 6 + 2*Math.cos(5*Math.PI/6))/12.
+						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] center = new Waypoint[]{
@@ -102,7 +102,8 @@ public class Pathgen {
 		//200 in: 29.96
 		//50 in: 34.2
 
-		double calciferWheelbase = 35.3/12.;
+		//433.415
+		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
 				0.05, 5., 1.5, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
