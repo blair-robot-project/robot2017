@@ -36,13 +36,13 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER - 6 + 2*Math.cos(5*Math.PI/6))/12.
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
 						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] right = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER - 6 + 2*Math.cos(5*Math.PI/6))/12.
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
 						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,Math.PI/3.)
 		};
 
