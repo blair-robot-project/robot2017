@@ -4,7 +4,7 @@ wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-startingCenter <- c(91./12.-centerToSide,centerToBack)
+startingCenter <- c(10.0833-centerToSide,centerToBack)
 left$V1[1] <- 0
 left$V2[1] <- 0
 left$V3[1] <- left$V3[2]
@@ -43,12 +43,18 @@ for(i in 2:length(left$V4)){
 }
 leftFront <- c(out[length(left$V4),2]+(centerToFront*cos(atan(slope))),out[length(left$V4),3]+(centerToFront*sin(atan(slope))))
 rightFront <- c(out[length(left$V4),4]+(centerToFront*cos(atan(slope))),out[length(left$V4),5]+(centerToFront*sin(atan(slope))))
+leftBack <- c(out[length(left$V4),2]-(centerToBack*cos(atan(slope))),out[length(left$V4),3]-(centerToBack*sin(atan(slope))))
+rightBack <- c(out[length(left$V4),4]-(centerToBack*cos(atan(slope))),out[length(left$V4),5]-(centerToBack*sin(atan(slope))))
 plot(out[,2],out[,3],type="l", col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
 lines(out[,4],out[,5],col="Red")
 lines(c(out[length(left$V4),2],leftFront[1]),c(out[length(left$V4),3],leftFront[2]), col="Blue")
 lines(c(out[length(left$V4),4],rightFront[1]),c(out[length(left$V4),5],rightFront[2]), col="Blue")
+lines(c(out[length(left$V4),2],leftBack[1]),c(out[length(left$V4),3],leftBack[2]), col="Blue")
+lines(c(out[length(left$V4),4],rightBack[1]),c(out[length(left$V4),5],rightBack[2]), col="Blue")
 endCenter <- c((out[length(out[,2]),2]+out[length(out[,4]),4])/2.,(out[length(out[,3]),3]+out[length(out[,5]),5])/2.)
 field <- read.csv("field.csv")
+#Strings are read as factors by default, so we need to do this to make it read them as strings
+field$col <- as.character(field$col)
 for (i in 1:length(field$x1)){
   lines(c(field$x1[i], field$x2[i]), c(field$y1[i], field$y2[i]), col=field$col[i])
 }

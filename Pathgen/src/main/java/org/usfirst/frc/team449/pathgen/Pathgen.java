@@ -23,9 +23,9 @@ public class Pathgen {
 		final double CARRIAGE_LEN = 3.63;
 		final double WALL_TO_CENTER_PEG = 114.3;
 		final double WALL_TO_SIDE_PEG = 131.925;
-		final double BACK_CORNER_TO_SIDE_PEG = 91;
-		final double HALF_KEY_LENGTH = 156./2.;
-		final double KEY_CORNER_TO_SIDE_PEG = 19.8;
+		final double BACK_CORNER_TO_SIDE_PEG = 94.139;
+		final double HALF_KEY_LENGTH = 158.9/2.;
+		final double KEY_CORNER_TO_SIDE_PEG = 18.89;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
