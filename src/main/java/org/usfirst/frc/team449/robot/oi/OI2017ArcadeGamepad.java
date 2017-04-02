@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import maps.org.usfirst.frc.team449.robot.oi.TriggerButtonMap;
 import org.usfirst.frc.team449.robot.Robot;
@@ -166,85 +167,79 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		deadband = map.getDeadband();
 
 		//Instantiate mandatory buttons.
-		toggleOverrideNavX = new MappedJoystickButton(map.getOverrideNavX());
+		toggleOverrideNavX = MappedJoystickButton.constructButton(map.getOverrideNavX());
 		overrideNavXWhileHeld = map.getOverrideNavXWhileHeld();
 
 		//Instantiate optional buttons.
 		if (map.hasTurnTo0()) {
-			turnTo0 = new MappedJoystickButton(map.getTurnTo0());
+			turnTo0 = MappedJoystickButton.constructButton(map.getTurnTo0());
 		}
 		if (map.hasTurnTo30()) {
-			turnTo30 = new MappedJoystickButton(map.getTurnTo30());
+			turnTo30 = MappedJoystickButton.constructButton(map.getTurnTo30());
 		}
 		if (map.hasTurnTo180()) {
-			turnTo180 = new MappedJoystickButton(map.getTurnTo180());
+			turnTo180 = MappedJoystickButton.constructButton(map.getTurnTo180());
 		}
 		if (map.hasTurnTo330()) {
-			turnTo330 = new MappedJoystickButton(map.getTurnTo330());
+			turnTo330 = MappedJoystickButton.constructButton(map.getTurnTo330());
 		}
 		if (map.hasTurnaround()) {
-			turnaround = new MappedJoystickButton(map.getTurnaround());
+			turnaround = MappedJoystickButton.constructButton(map.getTurnaround());
 		}
 		if (map.hasSwitchToLowGear()) {
-			switchToLowGear = new MappedJoystickButton(map.getSwitchToLowGear());
-			switchToHighGear = new MappedJoystickButton(map.getSwitchToHighGear());
+			switchToLowGear = MappedJoystickButton.constructButton(map.getSwitchToLowGear());
+			switchToHighGear = MappedJoystickButton.constructButton(map.getSwitchToHighGear());
 		}
 		if (map.hasClimb()) {
-			climb = new MappedJoystickButton(map.getClimb());
+			climb = MappedJoystickButton.constructButton(map.getClimb());
 		}
 
 		if (map.hasTmpOverrideLow()) {
-			tmpOverrideLow = new MappedJoystickButton(map.getTmpOverrideLow());
-		} else if (map.hasTriggerToggleOverrideLow()) {
-			tmpOverrideLow = new TriggerButton(map.getTriggerToggleOverrideLow());
+			tmpOverrideLow = MappedJoystickButton.constructButton(map.getTmpOverrideLow());
 		}
-
 		if (map.hasTmpOverrideHigh()) {
-			tmpOverrideHigh = new MappedJoystickButton(map.getTmpOverrideHigh());
-		} else if (map.hasTriggerToggleOverrideHigh()) {
-			tmpOverrideHigh = new TriggerButton(map.getTriggerToggleOverrideHigh());
+			tmpOverrideHigh = MappedJoystickButton.constructButton(map.getTmpOverrideHigh());
 		}
-
 		if (map.hasToggleOverrideHigh()) {
-			toggleOverrideHigh = new MappedJoystickButton(map.getToggleOverrideHigh());
+			toggleOverrideHigh = MappedJoystickButton.constructButton(map.getToggleOverrideHigh());
 		}
 		if (map.hasToggleFeeder()) {
-			toggleFeeder = new MappedJoystickButton(map.getToggleFeeder());
+			toggleFeeder = MappedJoystickButton.constructButton(map.getToggleFeeder());
 		}
 		if (map.hasToggleIntake()) {
-			toggleIntake = new MappedJoystickButton(map.getToggleIntake());
+			toggleIntake = MappedJoystickButton.constructButton(map.getToggleIntake());
 		}
 		if (map.hasToggleIntakeUpDown()) {
-			toggleIntakeUpDown = new MappedJoystickButton(map.getToggleIntakeUpDown());
+			toggleIntakeUpDown = MappedJoystickButton.constructButton(map.getToggleIntakeUpDown());
 		}
 		if (map.hasShoot()) {
-			toggleShooter = new MappedJoystickButton(map.getShoot());
+			toggleShooter = MappedJoystickButton.constructButton(map.getShoot());
 		}
 		if (map.hasLoadShooter()) {
-			loadShooter = new MappedJoystickButton(map.getLoadShooter());
+			loadShooter = MappedJoystickButton.constructButton(map.getLoadShooter());
 		}
 		if (map.hasRackShooter()) {
-			rackShooter = new MappedJoystickButton(map.getRackShooter());
+			rackShooter = MappedJoystickButton.constructButton(map.getRackShooter());
 		}
 		if (map.hasFireShooter()) {
-			fireShooter = new MappedJoystickButton(map.getFireShooter());
+			fireShooter = MappedJoystickButton.constructButton(map.getFireShooter());
 		}
 		if (map.hasResetShooter()) {
-			resetShooter = new MappedJoystickButton(map.getResetShooter());
+			resetShooter = MappedJoystickButton.constructButton(map.getResetShooter());
 		}
 		if (map.hasSwitchCamera()) {
-			switchCamera = new MappedJoystickButton(map.getSwitchCamera());
+			switchCamera = MappedJoystickButton.constructButton(map.getSwitchCamera());
 		}
 
 		if (map.hasToggleGear()) {
-			toggleGear = new MappedJoystickButton(map.getToggleGear());
+			toggleGear = MappedJoystickButton.constructButton(map.getToggleGear());
 		}
 		if (map.hasManualClimb()){
-			manualClimb = new MappedJoystickButton(map.getManualClimb());
+			manualClimb = MappedJoystickButton.constructButton(map.getManualClimb());
 		}
 		pushGear = new ArrayList<>();
-		for (TriggerButtonMap.TriggerButton triggerButton : map.getPushGearList()) {
-			TriggerButton tmp = new TriggerButton(triggerButton);
+		for (JoystickButtonMap.JoystickButton button : map.getPushGearList()) {
+			Button tmp = MappedJoystickButton.constructButton(button);
 			pushGear.add(tmp);
 		}
 	}

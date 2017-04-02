@@ -46,7 +46,6 @@ public class AccelerateFlywheel extends ReferencingCommand {
 		System.out.println("AccelerateFlywheel executed");
 	}
 
-	//TODO make AccelerateFlywheel and DecelerateFlywheel consistent here.
 	/**
 	 * Finish immediately because this is a state-change command.
 	 * @return true

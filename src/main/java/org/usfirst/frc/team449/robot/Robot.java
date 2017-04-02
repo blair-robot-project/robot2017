@@ -298,6 +298,8 @@ public class Robot extends IterativeRobot {
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		if (singleFlywheelShooterSubsystem != null) {
 			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
+			SmartDashboard.putNumber("Shooter Speed", singleFlywheelShooterSubsystem.talon.getSpeed());
+			SmartDashboard.putNumber("Shooter Error", singleFlywheelShooterSubsystem.talon.getError());
 		}
 		if(gearSubsystem != null) {
 			SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);

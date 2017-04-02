@@ -242,9 +242,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Weird MP shit
 		leftTPointStatus = new CANTalon.MotionProfileStatus();
 		rightTPointStatus = new CANTalon.MotionProfileStatus();
-
-		rightMaster.canTalon.setCloseLoopRampRate(100);
-		leftMaster.canTalon.setCloseLoopRampRate(100);
 	}
 
 	/**

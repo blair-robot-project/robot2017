@@ -80,6 +80,10 @@ public class RotPerSecCANTalonSRX extends Component {
 
 		//Choose which profile to use, regular driving or MP.
 		canTalon.setProfile(map.getProfile());
+
+		if (map.hasClosedLoopRampRate()){
+			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
+		}
 	}
 
 	/**

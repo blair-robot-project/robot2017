@@ -46,15 +46,13 @@ public class DecelerateFlywheel extends ReferencingCommand {
 		System.out.println("DecelerateFlywheel executed");
 	}
 
-	//TODO make AccelerateFlywheel and DecelerateFlywheel consistent here.
 	/**
-	 * Runs constantly in order to log data.
-	 *
-	 * @return false
+	 * Finish immediately because this is a state-change command.
+	 * @return true
 	 */
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return true;
 	}
 
 	/**

@@ -29,8 +29,6 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton tmp_override_low = 15;
 	optional JoystickButton tmp_override_high = 24;
 	optional JoystickButton toggle_override_high = 16;
-	optional TriggerButton trigger_toggle_override_low = 30;
-	optional TriggerButton trigger_toggle_override_high = 31;
 	optional JoystickButton shoot = 17;
 
 	optional JoystickButton switch_camera = 23;
@@ -48,6 +46,6 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton turnaround = 29;
 
     optional JoystickButton toggle_gear = 32;
-    repeated TriggerButton push_gear = 33;
+    repeated JoystickButton push_gear = 33;
     optional JoystickButton manual_climb = 44;
 }
