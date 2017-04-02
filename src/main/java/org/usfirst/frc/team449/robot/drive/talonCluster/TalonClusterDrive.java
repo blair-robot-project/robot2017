@@ -4,14 +4,17 @@ import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
@@ -183,7 +186,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
 				".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,left error,right error,left setpoint,right setpoint");
+			writer.println("time,left,right,left error,right error,left current,right current,left voltage,right voltage");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -283,7 +286,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public void setDefaultThrottle(double left, double right) {
 		//Clip to one to avoid anything strange.
 		setPIDThrottle(clipToOne(left), clipToOne(right));
-		//setVBusThrottle(left, right);
+//		setVBusThrottle(left, right);
 	}
 
 	/**
@@ -299,12 +302,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getSpeed());
 			sb.append(",");
-			sb.append(leftMaster.canTalon.getSpeed());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getSpeed());
 			sb.append(leftMaster.getError());
 			sb.append(",");
 			sb.append(rightMaster.getError());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputVoltage());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputVoltage());
 			 /*
 			 sb.append(",");
 	         sb.append(leftTPointStatus.activePoint.position);
@@ -333,6 +341,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
 		SmartDashboard.putBoolean("In low gear?", lowGear);
+		SmartDashboard.putNumber("Right pos", MPLoader.nativeToFeet(rightMaster.canTalon.getEncPosition(), rightMaster.encoderCPR, Robot.WHEEL_DIAMETER));
+		SmartDashboard.putNumber("Left pos", MPLoader.nativeToFeet(leftMaster.canTalon.getEncPosition(), leftMaster.encoderCPR, Robot.WHEEL_DIAMETER));
 	}
 
 	/**
@@ -354,11 +364,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			sb.append(",");
 			sb.append(rightMaster.getError());
 			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.position);
+			sb.append(sp);
 			sb.append(",");
-			sb.append(leftTPointStatus.activePoint.velocity);
-			sb.append(",");
-			sb.append(rightTPointStatus.activePoint.velocity);
+			sb.append(sp);
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -418,10 +426,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	protected void initDefaultCommand() {
 		//Set the start time to current time
 		startTime = System.nanoTime();
-		//Start overriding the NavX.
-		overrideNavX = false;
 		//Start driving
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+	}
+
+	public void setDefaultCommandManual(Command defaultCommand){
+		setDefaultCommand(defaultCommand);
 	}
 
 	/**
@@ -500,9 +510,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldDownshift() {
 		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
+		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshift;
 		//Or if we're just turning in place.
 		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
+		//Or commanding a low speed.
+		okToShift = okToShift || (Math.abs(oi.getFwd()) < upshiftFwdDeadband);
 		//But there's no need to downshift if we're already in low gear.
 		okToShift = okToShift && !lowGear;
 		//And we don't want to shift if autoshifting is turned off.
@@ -531,7 +543,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldUpshift() {
 		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift;
+		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshift;
 		//AND the driver's trying to go forward fast.
 		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdDeadband;
 		//But there's no need to upshift if we're already in high gear.

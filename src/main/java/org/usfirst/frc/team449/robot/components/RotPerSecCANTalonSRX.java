@@ -22,7 +22,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	public double encoderCPR;
+	public int encoderCPR;
 
 	/**
 	 * The type of encoder the talon uses.
@@ -80,6 +80,10 @@ public class RotPerSecCANTalonSRX extends Component {
 
 		//Choose which profile to use, regular driving or MP.
 		canTalon.setProfile(map.getProfile());
+
+		if (map.hasClosedLoopRampRate()){
+			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
+		}
 	}
 
 	/**
@@ -239,5 +243,9 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	public double getMaxSpeedHG() {
 		return map.getMaxSpeedHg();
+	}
+
+	public double getPower() {
+		return canTalon.getOutputVoltage()*canTalon.getOutputCurrent();
 	}
 }
