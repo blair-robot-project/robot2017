@@ -21,7 +21,7 @@ public class ManualClimb extends ReferencingCommand {
 		super(climber);
 		requires(climber);
 		this.climber = climber;
-		System.out.println("CurrentClimb constructed");
+		System.out.println("PowerClimb constructed");
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class ManualClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("CurrentClimb init");
+		System.out.println("PowerClimb init");
 	}
 
 	/**
