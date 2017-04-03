@@ -1,7 +1,7 @@
-plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startPos = c(-1,-1,-1,-1,-1)){
+plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1)){
   left <- read.csv(paste("../../../../calciferLeft",profileName,"Profile.csv",sep=""), header=FALSE)
   right <- read.csv(paste("../../../../calciferRight",profileName,"Profile.csv",sep=""), header=FALSE)
-  startingCenter <- c(10.3449-centerToSide,centerToBack)
+  startingCenter <- c(startY, centerToBack)
   left$V1[1] <- 0
   left$V2[1] <- 0
   left$V3[1] <- left$V3[2]
@@ -12,7 +12,7 @@ plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront,
   left$V4 <- (0:(length(left$V1)-1))*left$V3[1]
   right$V4 <- (0:(length(right$V1)-1))*right$V3[1]
   #Time, Left X, Left Y, Right X, Right Y
-  out <- array(dim=c(length(left$V1)+1,5))
+  out <- array(dim=c(length(left$V1),5))
   if(identical(startPos, c(-1,-1,-1,-1,-1))){
     out[1,]<-c(0, startingCenter[2], (startingCenter[1]+wheelbaseDiameter/2.), startingCenter[2], (startingCenter[1]-wheelbaseDiameter/2.))
   } else {
@@ -59,19 +59,20 @@ plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront,
 }
 
 drawProfile <- function (coords, centerToFront, centerToBack, clear=TRUE){
-  if(identical(out[(length(coords[,1])-1),2]-out[(length(coords[,1])-1),4],0)){
+  robotPos <- coords[length(coords[,1]),]
+  if(identical(robotPos[2]-robotPos[4],0)){
     slope <- 0
   } else{ 
-    if(identical(out[(length(coords[,1])-1),3]-out[(length(coords[,1])-1),5],0)){
+    if(identical(robotPos[3]-robotPos[5],0)){
       slope <- 1
     } else {
-      slope <- -1/((out[(length(coords[,1])-1),3]-out[(length(coords[,1])-1),5])/(out[(length(coords[,1])-1),2]-out[(length(coords[,1])-1),4]))
+      slope <- -1/((robotPos[3]-robotPos[5])/(robotPos[2]-robotPos[4]))
     }
   }
-  leftFront <- c(coords[(length(coords[,1])-1),2]+(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),3]+(centerToFront*sin(atan(slope))))
-  rightFront <- c(coords[(length(coords[,1])-1),4]+(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),5]+(centerToFront*sin(atan(slope))))
-  leftBack <- c(coords[(length(coords[,1])-1),2]-(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),3]-(centerToBack*sin(atan(slope))))
-  rightBack <- c(coords[(length(coords[,1])-1),4]-(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),5]-(centerToBack*sin(atan(slope))))
+  leftFront <- c(robotPos[2]+(centerToFront*cos(atan(slope))),robotPos[3]+(centerToFront*sin(atan(slope))))
+  rightFront <- c(robotPos[4]+(centerToFront*cos(atan(slope))),robotPos[5]+(centerToFront*sin(atan(slope))))
+  leftBack <- c(robotPos[2]-(centerToBack*cos(atan(slope))),robotPos[3]-(centerToBack*sin(atan(slope))))
+  rightBack <- c(robotPos[4]-(centerToBack*cos(atan(slope))),robotPos[5]-(centerToBack*sin(atan(slope))))
   if (clear){
     plot(coords[,2],coords[,3],type="l", col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
     field <- read.csv("field.csv")
@@ -84,22 +85,21 @@ drawProfile <- function (coords, centerToFront, centerToBack, clear=TRUE){
     lines (coords[,2],coords[,3],col="Green")
   }
   lines(coords[,4],coords[,5],col="Red")
-  lines(c(coords[(length(coords[,1])-1),2],leftFront[1]),c(coords[(length(coords[,1])-1),3],leftFront[2]), col="Blue")
-  lines(c(coords[(length(coords[,1])-1),4],rightFront[1]),c(coords[(length(coords[,1])-1),5],rightFront[2]), col="Blue")
-  lines(c(coords[(length(coords[,1])-1),2],leftBack[1]),c(coords[(length(coords[,1])-1),3],leftBack[2]), col="Blue")
-  lines(c(coords[(length(coords[,1])-1),4],rightBack[1]),c(coords[(length(coords[,1])-1),5],rightBack[2]), col="Blue")
+  lines(c(robotPos[2],leftFront[1]),c(robotPos[3],leftFront[2]), col="Blue")
+  lines(c(robotPos[4],rightFront[1]),c(robotPos[5],rightFront[2]), col="Blue")
+  lines(c(robotPos[2],leftBack[1]),c(robotPos[3],leftBack[2]), col="Blue")
+  lines(c(robotPos[4],rightBack[1]),c(robotPos[5],rightBack[2]), col="Blue")
   lines(c(leftFront[1],rightFront[1]),c(leftFront[2],rightFront[2]),col="Blue")
   lines(c(leftBack[1],rightBack[1]),c(leftBack[2],rightBack[2]),col="Blue")
-  endCenter <- c((coords[length(coords[,1]),2]+coords[length(coords[,1]),4])/2.,(coords[length(coords[,1]),3]+coords[length(coords[,1]),5])/2.)
+  endCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
 }
 
 wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-out <- plotProfile("Left",FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide)
-outBlah <- (length(out[,1])-1)
+out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY=10.3449-centerToSide)
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack)
-tmp <- out[length(out[,1])-1,]
-out2 <- plotProfile("BlueShoot",TRUE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide,tmp)
-drawProfile(out2, centerToFront, centerToBack, FALSE)
+tmp <- out[length(out[,1]),]
+out2 <- plotProfile(profileName = "BlueShoot",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, clear = FALSE)
