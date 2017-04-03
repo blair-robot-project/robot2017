@@ -32,34 +32,46 @@ plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront,
         slope <- -1/((out[i-1,3]-out[i-1,5])/(out[i-1,2]-out[i-1,4]))
       }
     }
-    out[i,1] <- left$V4[i]
+    out[i,1] <- out[i-1,1]+left$V3[i]
     #left$V2[i]
     #out[i-1,2]
     #out[i-1,2]+left$V2[i]*sin(atan(slope))
-    deltaLeft <- left$V1[i] - left$V1[i-1]
-    deltaRight <- right$V1[i] - right$V1[i-1]
-    out[i, 2] <- out[i-1,2]+inverted*(deltaLeft*cos(atan(slope)))
-    out[i, 3] <- out[i-1,3]+inverted*(deltaLeft*sin(atan(slope)))
-    out[i, 4] <- out[i-1,4]+inverted*(deltaRight*cos(atan(slope)))
-    out[i, 5] <- out[i-1,5]+inverted*(deltaRight*sin(atan(slope)))
+    if (inverted){
+      deltaLeft <- -left$V1[i] - -left$V1[i-1]
+      deltaRight <- -right$V1[i] - -right$V1[i-1]
+    } else {
+      deltaLeft <- left$V1[i] - left$V1[i-1]
+      deltaRight <- right$V1[i] - right$V1[i-1]
+    }
+    if(inverted){
+      out[i, 2] <- out[i-1,2]+(deltaRight*cos(atan(slope)))
+      out[i, 3] <- out[i-1,3]+(deltaRight*sin(atan(slope)))
+      out[i, 4] <- out[i-1,4]+(deltaLeft*cos(atan(slope)))
+      out[i, 5] <- out[i-1,5]+(deltaLeft*sin(atan(slope)))
+    } else {
+      out[i, 2] <- out[i-1,2]+(deltaLeft*cos(atan(slope)))
+      out[i, 3] <- out[i-1,3]+(deltaLeft*sin(atan(slope)))
+      out[i, 4] <- out[i-1,4]+(deltaRight*cos(atan(slope)))
+      out[i, 5] <- out[i-1,5]+(deltaRight*sin(atan(slope)))
+    }
   }
   return(out)
 }
-drawProfile <- function (coords, inverted, centerToFront, centerToBack, clear=TRUE){
+
+drawProfile <- function (coords, centerToFront, centerToBack, clear=TRUE){
   if(identical(out[(length(coords[,1])-1),2]-out[(length(coords[,1])-1),4],0)){
     slope <- 0
-    forward <- -forward
   } else{ 
     if(identical(out[(length(coords[,1])-1),3]-out[(length(coords[,1])-1),5],0)){
-      slope <- forward
+      slope <- 1
     } else {
       slope <- -1/((out[(length(coords[,1])-1),3]-out[(length(coords[,1])-1),5])/(out[(length(coords[,1])-1),2]-out[(length(coords[,1])-1),4]))
     }
   }
-  leftFront <- c(coords[(length(coords[,1])-1),2]+inverted*(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),3]+inverted*(centerToFront*sin(atan(slope))))
-  rightFront <- c(coords[(length(coords[,1])-1),4]+inverted*(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),5]+inverted*(centerToFront*sin(atan(slope))))
-  leftBack <- c(coords[(length(coords[,1])-1),2]-inverted*(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),3]-inverted*(centerToBack*sin(atan(slope))))
-  rightBack <- c(coords[(length(coords[,1])-1),4]-inverted*(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),5]-inverted*(centerToBack*sin(atan(slope))))
+  leftFront <- c(coords[(length(coords[,1])-1),2]+(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),3]+(centerToFront*sin(atan(slope))))
+  rightFront <- c(coords[(length(coords[,1])-1),4]+(centerToFront*cos(atan(slope))),coords[(length(coords[,1])-1),5]+(centerToFront*sin(atan(slope))))
+  leftBack <- c(coords[(length(coords[,1])-1),2]-(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),3]-(centerToBack*sin(atan(slope))))
+  rightBack <- c(coords[(length(coords[,1])-1),4]-(centerToBack*cos(atan(slope))),coords[(length(coords[,1])-1),5]-(centerToBack*sin(atan(slope))))
   if (clear){
     plot(coords[,2],coords[,3],type="l", col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
     field <- read.csv("field.csv")
@@ -80,13 +92,14 @@ drawProfile <- function (coords, inverted, centerToFront, centerToBack, clear=TR
   lines(c(leftBack[1],rightBack[1]),c(leftBack[2],rightBack[2]),col="Blue")
   endCenter <- c((coords[length(coords[,1]),2]+coords[length(coords[,1]),4])/2.,(coords[length(coords[,1]),3]+coords[length(coords[,1]),5])/2.)
 }
+
 wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-out <- plotProfile("Left",1, wheelbaseDiameter, centerToFront, centerToBack, centerToSide)
+out <- plotProfile("Left",FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide)
 outBlah <- (length(out[,1])-1)
-drawProfile(coords=out, inverted=1, centerToFront=centerToFront, centerToBack=centerToBack)
+drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack)
 tmp <- out[length(out[,1])-1,]
-out2 <- plotProfile("RedShoot",-1, wheelbaseDiameter, centerToFront, centerToBack, centerToSide,tmp)
-drawProfile(out2, -1, centerToFront, centerToBack, FALSE)
+out2 <- plotProfile("BlueShoot",TRUE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide,tmp)
+drawProfile(out2, centerToFront, centerToBack, FALSE)
