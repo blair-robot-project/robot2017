@@ -71,12 +71,12 @@ public class Pathgen {
 
 		Waypoint[] backupRed = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(3, 3, 60)
+				new Waypoint(1.5, 1.5, Math.PI/3)
 		};
 
 		Waypoint[] backupBlue = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(3, 3, -60)
+				new Waypoint(1.5, 1.5, -Math.PI/3)
 		};
 
 		Waypoint[] forward = new Waypoint[]{

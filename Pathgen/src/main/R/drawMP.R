@@ -1,4 +1,4 @@
-plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1)){
+plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1), usePosition = TRUE){
   left <- read.csv(paste("../../../../calciferLeft",profileName,"Profile.csv",sep=""), header=FALSE)
   right <- read.csv(paste("../../../../calciferRight",profileName,"Profile.csv",sep=""), header=FALSE)
   startingCenter <- c(startY, centerToBack)
@@ -18,61 +18,59 @@ plotProfile <- function(profileName, inverted, wheelbaseDiameter, centerToFront,
   } else {
     out[1,]<-startPos
   }
-  #out[1,]<-c(0,0,0,0,0)
-  #out[1,] <- c (5.50,10.583184,4.343607,8.696782,3.244063)
-  forward <- 1
+  
   for(i in 2:length(left$V4)){
-    if(identical(out[i-1,2]-out[i-1,4],0)){
-      slope <- 0
-      forward <- -forward
-    } else{ 
-      if(identical(out[i-1,3]-out[i-1,5],0)){
-        slope <- forward
-      } else {
-        slope <- -1/((out[i-1,3]-out[i-1,5])/(out[i-1,2]-out[i-1,4]))
-      }
-    }
+    theta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
+    
     out[i,1] <- out[i-1,1]+left$V3[i]
-    #left$V2[i]
-    #out[i-1,2]
-    #out[i-1,2]+left$V2[i]*sin(atan(slope))
-    if (inverted){
-      deltaLeft <- -left$V1[i] - -left$V1[i-1]
-      deltaRight <- -right$V1[i] - -right$V1[i-1]
-    } else {
+
+    if (usePosition){
       deltaLeft <- left$V1[i] - left$V1[i-1]
       deltaRight <- right$V1[i] - right$V1[i-1]
-    }
-    if(inverted){
-      out[i, 2] <- out[i-1,2]+(deltaRight*cos(atan(slope)))
-      out[i, 3] <- out[i-1,3]+(deltaRight*sin(atan(slope)))
-      out[i, 4] <- out[i-1,4]+(deltaLeft*cos(atan(slope)))
-      out[i, 5] <- out[i-1,5]+(deltaLeft*sin(atan(slope)))
     } else {
-      out[i, 2] <- out[i-1,2]+(deltaLeft*cos(atan(slope)))
-      out[i, 3] <- out[i-1,3]+(deltaLeft*sin(atan(slope)))
-      out[i, 4] <- out[i-1,4]+(deltaRight*cos(atan(slope)))
-      out[i, 5] <- out[i-1,5]+(deltaRight*sin(atan(slope)))
+      deltaLeft <- left$V2[i]*left$V3[i]
+      deltaRight <- right$V2[i]*left$V3[i]
+    }
+    
+    if (inverted){
+      deltaLeft <- -deltaLeft
+      deltaRight <- -deltaRight
+    }
+    
+    perpendicular <- theta - pi/2
+    
+    if(inverted){
+      out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
+      out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
+      out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
+      out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
+    } else {
+      out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
+      out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
+      out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
+      out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
     }
   }
   return(out)
 }
 
-drawProfile <- function (coords, centerToFront, centerToBack, clear=TRUE){
+drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter, clear=TRUE){
   robotPos <- coords[length(coords[,1]),]
-  if(identical(robotPos[2]-robotPos[4],0)){
-    slope <- 0
-  } else{ 
-    if(identical(robotPos[3]-robotPos[5],0)){
-      slope <- 1
-    } else {
-      slope <- -1/((robotPos[3]-robotPos[5])/(robotPos[2]-robotPos[4]))
-    }
-  }
-  leftFront <- c(robotPos[2]+(centerToFront*cos(atan(slope))),robotPos[3]+(centerToFront*sin(atan(slope))))
-  rightFront <- c(robotPos[4]+(centerToFront*cos(atan(slope))),robotPos[5]+(centerToFront*sin(atan(slope))))
-  leftBack <- c(robotPos[2]-(centerToBack*cos(atan(slope))),robotPos[3]-(centerToBack*sin(atan(slope))))
-  rightBack <- c(robotPos[4]-(centerToBack*cos(atan(slope))),robotPos[5]-(centerToBack*sin(atan(slope))))
+  theta <- angleBetween(leftX = robotPos[2], leftY = robotPos[3], rightX = robotPos[4], rightY = robotPos[5])
+  
+  perpendicular <- theta - pi/2
+  wheelToEdge <- centerToSide - wheelbaseDiameter/2.
+  print(c("wheelToEdge", wheelToEdge))
+  leftEdge <- c(robotPos[2] + wheelToEdge*cos(theta), robotPos[3] + wheelToEdge*sin(theta))
+  rightEdge <- c(robotPos[4] + wheelToEdge*cos(theta+pi), robotPos[5] + wheelToEdge*sin(theta+pi))
+  edgeToFront <- c(centerToFront*cos(perpendicular), centerToFront*sin(perpendicular))
+  edgeToBack <- c(centerToBack*cos(perpendicular+pi), centerToFront*sin(perpendicular+pi))
+  
+  leftFront <- leftEdge + edgeToFront
+  rightFront <- rightEdge + edgeToFront
+  leftBack <- leftEdge + edgeToBack
+  rightBack <- rightEdge + edgeToBack
+  
   if (clear){
     plot(coords[,2],coords[,3],type="l", col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
     field <- read.csv("field.csv")
@@ -85,21 +83,49 @@ drawProfile <- function (coords, centerToFront, centerToBack, clear=TRUE){
     lines (coords[,2],coords[,3],col="Green")
   }
   lines(coords[,4],coords[,5],col="Red")
-  lines(c(robotPos[2],leftFront[1]),c(robotPos[3],leftFront[2]), col="Blue")
-  lines(c(robotPos[4],rightFront[1]),c(robotPos[5],rightFront[2]), col="Blue")
-  lines(c(robotPos[2],leftBack[1]),c(robotPos[3],leftBack[2]), col="Blue")
-  lines(c(robotPos[4],rightBack[1]),c(robotPos[5],rightBack[2]), col="Blue")
-  lines(c(leftFront[1],rightFront[1]),c(leftFront[2],rightFront[2]),col="Blue")
-  lines(c(leftBack[1],rightBack[1]),c(leftBack[2],rightBack[2]),col="Blue")
+  lines(c(rightFront[1],leftFront[1]),c(rightFront[2],leftFront[2]), col="Blue")
+  lines(c(rightBack[1],rightFront[1]),c(rightBack[2],rightFront[2]), col="Blue")
+  lines(c(leftFront[1],leftBack[1]),c(leftFront[2],leftBack[2]), col="Blue")
+  lines(c(leftBack[1],rightBack[1]),c(leftBack[2],rightBack[2]), col="Blue")
   endCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
+}
+
+angleBetween <- function(leftX, leftY, rightX, rightY){
+  deltaX <- leftX-rightX
+  deltaY <- leftY-rightY
+  if (identical(deltaX, 0)){
+    ans <- pi/2
+  } else {
+    #Pretend it's first quadrant because we manually determine quadrants
+    ans <- atan(abs(deltaY/deltaX))
+  }
+  if (deltaY > 0){
+    if (deltaX > 0){
+      #If it's actually quadrant 1
+      return(ans)
+    }else {
+      #quadrant 2
+      return(pi - ans)
+    }
+    return(ans)
+  } else {
+    if (deltaX > 0){
+      #quadrant 4
+      return(-ans)
+    }else {
+      #quadrant 3
+      return(-(pi - ans))
+    }
+  }
 }
 
 wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY=10.3449-centerToSide)
-drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack)
+out <- plotProfile(profileName = "Right", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY=-(10.3449-centerToSide))
+#out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= 10.3449-centerToSide, usePosition = TRUE)
+drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter)
 tmp <- out[length(out[,1]),]
-out2 <- plotProfile(profileName = "BlueShoot",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, clear = FALSE)
+out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
