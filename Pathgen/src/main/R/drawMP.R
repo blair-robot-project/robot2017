@@ -133,14 +133,16 @@ angleBetween <- function(leftX, leftY, rightX, rightY){
 
 drawRobot <- function(robotFile, robotPos){
   theta <- angleBetween(leftX = robotPos[2], leftY = robotPos[3], rightX = robotPos[4], rightY = robotPos[5])
+  perp <- theta - pi/2
   robotCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
   robot <- read.csv(robotFile)
+  rotMatrix <- matrix(c(cos(perp), -sin(perp), sin(perp), cos(perp)), nrow=2, ncol=2, byrow=TRUE)
   for (i in 1:length(robot$x1)){
-    x1 <- robot$x1[i]+robotCenter[1]
-    x2 <- robot$x2[i]+robotCenter[1]
-    y1 <- robot$y1[i]+robotCenter[2]
-    y2 <- robot$y2[i]+robotCenter[2]
-    lines(c(x1, x2), c(y1, y2), col="Blue")
+    point1 <- rotMatrix%*%matrix(c(robot$x1[i], robot$y1[i]), nrow=2, ncol=1, byrow=TRUE)
+    point1 <- c(point1[1,1]+robotCenter[1], point1[2,1]+robotCenter[2])
+    point2 <- rotMatrix%*%matrix(c(robot$x2[i], robot$y2[i]), nrow=2, ncol=1, byrow=TRUE)
+    point2 <- c(point2[1,1]+robotCenter[1], point2[2,1]+robotCenter[2])
+    lines(c(point1[1], point2[1]), c(point1[2], point2[2]), col="Blue")
   }
 }
 
