@@ -73,7 +73,7 @@ drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter,
   
   if (clear){
     if (linePlot){
-      plot(coords[,2],coords[,3], type="l", col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
+      plot(coords[,2],coords[,3], type="l", col="Green", ylim=c(-16, 16),xlim = c(0,54), asp=1)
     } else {
       plot(coords[,2],coords[,3], col="Green", ylim=c(-13.5, 13.5),xlim = c(0,54), asp=1)
     }
@@ -81,7 +81,7 @@ drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter,
     #Strings are read as factors by default, so we need to do this to make it read them as strings
     field$col <- as.character(field$col)
     for (i in 1:length(field$x1)){
-      lines(c(field$x1[i], field$x2[i]), c(field$y1[i], field$y2[i]), col=field$col[i])
+      lines(c(field$x1[i], field$x2[i]), c(field$y1[i], field$y2[i]), col="Black")
     }
   } else {
     if (linePlot){
