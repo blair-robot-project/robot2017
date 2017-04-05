@@ -48,4 +48,5 @@ message OI2017ArcadeGamepad {
     optional JoystickButton toggle_gear = 32;
     repeated JoystickButton push_gear = 33;
     optional JoystickButton manual_climb = 44;
+    optional JoystickButton log_error = 45;
 }

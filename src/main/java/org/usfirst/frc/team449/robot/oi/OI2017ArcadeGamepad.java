@@ -143,6 +143,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Button toggleGear;
 	private List<Button> pushGear;
 	private Button manualClimb;
+	private Button logError;
 
 	private boolean overrideNavXWhileHeld;
 
@@ -231,6 +232,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasManualClimb()){
 			manualClimb = MappedJoystickButton.constructButton(map.getManualClimb());
+		}
+		if (map.hasLogError()){
+			logError = MappedJoystickButton.constructButton(map.getLogError());
 		}
 		pushGear = new ArrayList<>();
 		for (JoystickButtonMap.JoystickButton button : map.getPushGearList()) {
@@ -383,6 +387,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 				button.whenPressed(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kReverse));
 				button.whenReleased(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kForward));
 			}
+		}
+		if (logError != null){
+			logError.whenPressed(new LogError(Robot.driveSubsystem, "Driver-Reported"));
 		}
 	}
 }

@@ -74,7 +74,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public CANTalon.MotionProfileStatus rightTPointStatus;
 
 	/**
-	 * The time (nanoseconds) when the robot was enabled (for use in logging)
+	 * The time (milliseconds) when the robot was enabled (for use in logging)
 	 */
 	private long startTime;
 
@@ -82,6 +82,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * The name of the file to log to
 	 */
 	private String logFN;
+
+	private String errorFN;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -183,10 +185,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 		// Write the headers for the logfile.
 		// TODO externalize this shit
-		logFN = "/home/lvuser/logs/driveLog-" + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "" +
-				".csv";
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+		logFN = "/home/lvuser/logs/drivePowerLog-" + timeStamp + ".csv";
+		errorFN = "/home/lvuser/logs/driveErrorLog-" + timeStamp + ".csv";
 		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left,right,left error,right error,left current,right current,left voltage,right voltage");
+			writer.println("time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage");
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try (PrintWriter writer = new PrintWriter(errorFN)) {
+			writer.println("time,message");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -289,14 +298,53 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 //		setVBusThrottle(left, right);
 	}
 
+	public void logPower(){
+		//time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage
+		try (FileWriter fw = new FileWriter(logFN, true)) {
+			StringBuilder sb = new StringBuilder();
+			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
+			sb.append(",");
+			sb.append(leftMaster.getSpeed());
+			sb.append(",");
+			sb.append(rightMaster.getSpeed());
+			sb.append(",");
+			sb.append(leftMaster.getSetpoint());
+			sb.append(",");
+			sb.append(rightMaster.getSetpoint());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputCurrent());
+			sb.append(",");
+			sb.append(leftMaster.canTalon.getOutputVoltage());
+			sb.append(",");
+			sb.append(rightMaster.canTalon.getOutputVoltage());
+			sb.append("\n");
+			fw.write(sb.toString());
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void logError(String error){
+		try (FileWriter fw = new FileWriter(errorFN, true)) {
+			fw.write(((double)(System.currentTimeMillis() - startTime) / 1000.)+","+error+"\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Log stuff to file
 	 */
 	public void logData() {
+		logPower();
+		/*
 		//Print stuff to the log file for in-depth analysis or tuning.
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
+			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -318,7 +366,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
 	         sb.append(rightTPointStatus.activePoint.position);
-	         */
+	         */ /*
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -343,6 +391,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putBoolean("In low gear?", lowGear);
 		SmartDashboard.putNumber("Right pos", MPLoader.nativeToFeet(rightMaster.canTalon.getEncPosition(), rightMaster.encoderCPR, Robot.WHEEL_DIAMETER));
 		SmartDashboard.putNumber("Left pos", MPLoader.nativeToFeet(leftMaster.canTalon.getEncPosition(), leftMaster.encoderCPR, Robot.WHEEL_DIAMETER));
+		*/
 	}
 
 	/**
@@ -351,10 +400,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * @param sp velocity setpoint
 	 */
 	public void logData(double sp) {
+		logPower();
+		/*
 		//Print stuff to the log file for in-depth analysis or tuning.
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / Math.pow(10, 9));
+			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -393,7 +444,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	         sb.append(leftTPointStatus.activePoint.position);
 	         sb.append(",");
 	         sb.append(rightTPointStatus.activePoint.position);
-	         */
+	         */ /*
 			sb.append("\n");
 
 			fw.write(sb.toString());
@@ -416,6 +467,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
 		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
 		SmartDashboard.putBoolean("In low gear?", lowGear);
+		*/
 	}
 
 	/**
@@ -425,7 +477,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	@Override
 	protected void initDefaultCommand() {
 		//Set the start time to current time
-		startTime = System.nanoTime();
+		startTime = System.currentTimeMillis();
 		//Start driving
 		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}

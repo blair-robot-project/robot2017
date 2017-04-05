@@ -236,6 +236,10 @@ public class RotPerSecCANTalonSRX extends Component {
 		return nativeToRPS(canTalon.getError());
 	}
 
+	public double getSetpoint(){
+		return nativeToRPS(canTalon.getSetpoint());
+	}
+
 	/**
 	 * Get the high gear max speed. Sometimes useful for scaling joystick output.
 	 *
