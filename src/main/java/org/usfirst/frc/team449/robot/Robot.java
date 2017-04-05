@@ -390,15 +390,15 @@ public class Robot extends IterativeRobot {
 					} else if (position.equals("left") && !redAlliance) {
 						loadProfile("blue_shoot");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-					} else {
+					} /*else {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
-					}/*else if (redAlliance){
-					loadProfile("red_backup");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-				} else {
-					loadProfile("blue_backup");
-					Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-				}*/
+					}*/else if (redAlliance){
+						loadProfile("red_backup");
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+					} else {
+						loadProfile("blue_backup");
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+					}
 				} else if (completedCommands == 3) {
 					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
 						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
