@@ -14,6 +14,10 @@ public class PowerClimb extends ReferencingCommand {
 	 */
 	private ClimberSubsystem climber;
 
+	private long startTime;
+
+	private long spinupTime = 250;
+
 	/**
 	 * Default constructor
 	 * @param climber The climber subsystem to execute this command on
@@ -31,6 +35,7 @@ public class PowerClimb extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		System.out.println("PowerClimb init");
+		startTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -50,7 +55,7 @@ public class PowerClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return climber.reachedTop();
+		return climber.reachedTop() && System.currentTimeMillis() - startTime > spinupTime;
 	}
 
 	/**

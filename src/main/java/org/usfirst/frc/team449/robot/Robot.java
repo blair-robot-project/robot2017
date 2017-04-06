@@ -300,6 +300,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
 			SmartDashboard.putNumber("Shooter Speed", singleFlywheelShooterSubsystem.talon.getSpeed());
 			SmartDashboard.putNumber("Shooter Error", singleFlywheelShooterSubsystem.talon.getError());
+			SmartDashboard.putNumber("Shooter Current", singleFlywheelShooterSubsystem.talon.canTalon.getOutputCurrent());
 		}
 		if(gearSubsystem != null) {
 			SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
