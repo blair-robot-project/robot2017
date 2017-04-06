@@ -130,11 +130,12 @@ wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos = c(0, 54-centerToBack, -10.3449+centerToSide-wheelbaseDiameter/2., 54-centerToBack, -10.3449+centerToSide+wheelbaseDiameter/2.))
+#out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos = c(0, 54-centerToBack, -(10.3449-centerToSide)-wheelbaseDiameter/2., 54-centerToBack, -(10.3449-centerToSide)+wheelbaseDiameter/2.))
 #out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= 10.3449-centerToSide, usePosition = TRUE)
+out <- plotProfile(profileName = "Mid", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos = c(0, 54-centerToBack, -wheelbaseDiameter/2., 54-centerToBack, wheelbaseDiameter/2.))
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, linePlot = TRUE)
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
 out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-drawRobot("robot.csv", out2[length(out2[,1]),])
+#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
+#drawRobot("robot.csv", out2[length(out2[,1]),])

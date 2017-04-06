@@ -36,14 +36,14 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
-						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,-Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + 1.5*Math.cos(5.*Math.PI/6.))/12.
+						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 1.5*Math.sin(5*Math.PI/6))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] right = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER)/12.
-						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 2*Math.sin(5*Math.PI/6))/12.,Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + 1.75*Math.cos(5.*Math.PI/6.))/12.
+						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 1.75*Math.sin(5*Math.PI/6))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] center = new Waypoint[]{
@@ -106,7 +106,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 5., 1.5, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 5., 3, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
