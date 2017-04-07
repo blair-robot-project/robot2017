@@ -18,14 +18,15 @@ public class Pathgen {
 		final double CENTER_TO_FRONT = 27./2.;
 		final double CENTER_TO_BACK = 27./2. + 3.25;
 		final double CENTER_TO_SIDE = 29./2. + 3.25;
-		final double BACK_FROM_PEG = 1;
+		final double BACK_FROM_PEG = 0;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
-		final double WALL_TO_CENTER_PEG = 114.3;
+		final double WALL_TO_CENTER_PEG = 114.;
 		final double WALL_TO_SIDE_PEG = 131.925;
 		final double BACK_CORNER_TO_SIDE_PEG = 94.139;
 		final double HALF_KEY_LENGTH = 158.9/2.;
 		final double KEY_CORNER_TO_SIDE_PEG = 18.89;
+		final double AIRSHIP_PARALLEL_OFFSET = 6.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
@@ -36,14 +37,14 @@ public class Pathgen {
 
 		Waypoint[] left = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + 1.5*Math.cos(5.*Math.PI/6.))/12.
-						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 1.5*Math.sin(5*Math.PI/6))/12.,-Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] right = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + 1.75*Math.cos(5.*Math.PI/6.))/12.
-						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3)/2)*PEG_BASE_TO_CENTER + 1.75*Math.sin(5*Math.PI/6))/12.,Math.PI/3.)
+				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] center = new Waypoint[]{
@@ -57,7 +58,7 @@ public class Pathgen {
 				+ HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(165)))/12.,
 						(WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(-60)) + KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30))
 								+ HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(165)))/12.,
-						-Math.PI/12)
+						-Math.toRadians(16))
 		};
 
 		Waypoint[] bluePegToKey = new Waypoint[]{
@@ -66,7 +67,7 @@ public class Pathgen {
 						+ HALF_KEY_LENGTH*Math.cos(Math.toRadians(-75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(-165)))/12.,
 						(WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(60)) + KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(-30))
 								+ HALF_KEY_LENGTH*Math.sin(Math.toRadians(-75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(-165)))/12.,
-						Math.PI/12)
+						Math.toRadians(16))
 		};
 
 		Waypoint[] backupRed = new Waypoint[]{
