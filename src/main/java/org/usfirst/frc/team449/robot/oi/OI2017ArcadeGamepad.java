@@ -144,6 +144,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private List<Button> pushGear;
 	private Button manualClimb;
 	private Button logError;
+	private Button jiggleRobot;
 
 	private boolean overrideNavXWhileHeld;
 
@@ -235,6 +236,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasLogError()){
 			logError = MappedJoystickButton.constructButton(map.getLogError());
+		}
+		if (map.hasJiggleRobot()){
+			jiggleRobot = MappedJoystickButton.constructButton(map.getJiggleRobot());
 		}
 		pushGear = new ArrayList<>();
 		for (JoystickButtonMap.JoystickButton button : map.getPushGearList()) {
@@ -390,6 +394,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (logError != null){
 			logError.whenPressed(new LogError(Robot.driveSubsystem, "Driver-Reported"));
+		}
+		if (jiggleRobot != null){
+			jiggleRobot.whenPressed(new JiggleRobot(Robot.driveSubsystem));
 		}
 	}
 }

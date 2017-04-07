@@ -300,6 +300,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public void logPower(){
 		//time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage
+		/*
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
@@ -324,7 +325,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
+		SmartDashboard.putNumber("Left Speed", leftMaster.getSpeed());
+		SmartDashboard.putNumber("Left Setpoint", leftMaster.getSetpoint());
+		SmartDashboard.putNumber("Left Current", leftMaster.canTalon.getOutputCurrent());
+		SmartDashboard.putNumber("Left Voltage", leftMaster.canTalon.getOutputVoltage());
+		SmartDashboard.putNumber("Right Speed", rightMaster.getSpeed());
+		SmartDashboard.putNumber("Right Setpoint", rightMaster.getSetpoint());
+		SmartDashboard.putNumber("Right Current", rightMaster.canTalon.getOutputCurrent());
+		SmartDashboard.putNumber("Right Voltage", rightMaster.canTalon.getOutputVoltage());
 	}
 
 	public void logError(String error){
