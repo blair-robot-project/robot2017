@@ -15,7 +15,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	/**
 	 * The flywheel's Talon
 	 */
-	private RotPerSecCANTalonSRX talon;
+	public RotPerSecCANTalonSRX talon;
 
 	/**
 	 * Whether the flywheel is currently commanded to spin

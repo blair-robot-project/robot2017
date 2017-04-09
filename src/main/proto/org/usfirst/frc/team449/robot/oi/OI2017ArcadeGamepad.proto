@@ -17,9 +17,11 @@ message OI2017ArcadeGamepad {
 	required bool invert_rot = 7;
 	required bool invert_dpad = 18;
 
+	required JoystickButton override_navX = 10;
+    required bool override_navX_while_held = 34;
+
 	optional JoystickButton switch_to_low_gear = 8;
 	optional JoystickButton switch_to_high_gear = 9;
-	optional JoystickButton override_navX = 10;
 	optional JoystickButton climb = 11;
 	optional JoystickButton toggle_feeder = 12;
 	optional JoystickButton toggle_intake = 13;
@@ -27,8 +29,6 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton tmp_override_low = 15;
 	optional JoystickButton tmp_override_high = 24;
 	optional JoystickButton toggle_override_high = 16;
-	optional TriggerButton trigger_toggle_override_low = 30;
-	optional TriggerButton trigger_toggle_override_high = 31;
 	optional JoystickButton shoot = 17;
 
 	optional JoystickButton switch_camera = 23;
@@ -44,4 +44,10 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton turn_to_180 = 27;
 	optional JoystickButton turn_to_330 = 28;
 	optional JoystickButton turnaround = 29;
+
+    optional JoystickButton toggle_gear = 32;
+    repeated JoystickButton push_gear = 33;
+    optional JoystickButton manual_climb = 44;
+    optional JoystickButton log_error = 45;
+    optional JoystickButton jiggle_robot = 46;
 }
