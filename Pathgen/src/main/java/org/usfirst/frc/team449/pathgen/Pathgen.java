@@ -21,12 +21,18 @@ public class Pathgen {
 		final double BACK_FROM_PEG = 0;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
-		final double WALL_TO_CENTER_PEG = 114.;
-		final double WALL_TO_SIDE_PEG = 131.925;
-		final double BACK_CORNER_TO_SIDE_PEG = 94.139;
-		final double HALF_KEY_LENGTH = 158.9/2.;
-		final double KEY_CORNER_TO_SIDE_PEG = 18.89;
-		final double AIRSHIP_PARALLEL_OFFSET = 6.-2.5;
+		final double BLUE_WALL_TO_CENTER_PEG = 114.;
+		final double BLUE_WALL_TO_SIDE_PEG = 131.;
+		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 94.139;
+		final double BLUE_HALF_KEY_LENGTH = 155./2.;
+		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 23.;
+		final double RED_WALL_TO_CENTER_PEG = 114.5;
+		final double RED_WALL_TO_SIDE_PEG = 131.;
+		final double RED_BACK_CORNER_TO_SIDE_PEG = 95.;
+		final double RED_HALF_KEY_LENGTH = 154.5/2.;
+		final double RED_KEY_CORNER_TO_SIDE_PEG = 23.;
+		//final double AIRSHIP_PARALLEL_OFFSET = 6.-2.5;
+		final double AIRSHIP_PARALLEL_OFFSET = 0;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
@@ -35,38 +41,55 @@ public class Pathgen {
 				new Waypoint(100./12., 0, 0)
 		};
 
-		Waypoint[] left = new Waypoint[]{
+		Waypoint[] blueLeft = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,-(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
+				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,-(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
 		};
 
-		Waypoint[] right = new Waypoint[]{
+		Waypoint[] blueRight = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,(BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
+				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
 		};
 
-		Waypoint[] center = new Waypoint[]{
+		Waypoint[] blueCenter = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER)/12., 0, 0)
+				new Waypoint((BLUE_WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER)/12., 0, 0)
+		};
+
+		Waypoint[] redLeft = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,-(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
+		};
+
+		Waypoint[] redRight = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
+						,(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
+		};
+
+		Waypoint[] redCenter = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint((RED_WALL_TO_CENTER_PEG - CENTER_TO_BACK - PEG_BASE_TO_CENTER)/12., 0, 0)
 		};
 
 		Waypoint[] redPegToKey = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(-60)) + KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(30))
-				+ HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(165)))/12.,
-						(WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(-60)) + KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30))
-								+ HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(165)))/12.,
+				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + RED_WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(30))
+				+ RED_HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(165)))/12.,
+						(RED_WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30))
+								+ RED_HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(165)))/12.,
 						-Math.toRadians(16))
 		};
 
 		Waypoint[] bluePegToKey = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(60)) + KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(-30))
-						+ HALF_KEY_LENGTH*Math.cos(Math.toRadians(-75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(-165)))/12.,
-						(WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(60)) + KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(-30))
-								+ HALF_KEY_LENGTH*Math.sin(Math.toRadians(-75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(-165)))/12.,
+				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + BLUE_WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(60)) + BLUE_KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(-30))
+						+ BLUE_HALF_KEY_LENGTH*Math.cos(Math.toRadians(-75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(-165)))/12.,
+						(BLUE_WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(60)) + BLUE_KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(-30))
+								+ BLUE_HALF_KEY_LENGTH*Math.sin(Math.toRadians(-75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(-165)))/12.,
 						Math.toRadians(16))
 		};
 
@@ -86,9 +109,12 @@ public class Pathgen {
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
-		profiles.put("Left", left);
-		profiles.put("Right", right);
-		profiles.put("Mid", center);
+		profiles.put("RedLeft", redLeft);
+		profiles.put("RedRight", redRight);
+		profiles.put("RedMid", redCenter);
+		profiles.put("BlueLeft", blueLeft);
+		profiles.put("BlueRight", blueRight);
+		profiles.put("BlueMid", blueCenter);
 		profiles.put("RedShoot", redPegToKey);
 		profiles.put("BlueShoot", bluePegToKey);
 		profiles.put("RedBackup", backupRed);
