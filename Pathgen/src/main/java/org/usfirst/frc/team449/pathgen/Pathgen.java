@@ -32,7 +32,7 @@ public class Pathgen {
 		final double RED_HALF_KEY_LENGTH = 154.5/2.;
 		final double RED_KEY_CORNER_TO_SIDE_PEG = 23.;
 		//final double AIRSHIP_PARALLEL_OFFSET = 6.-2.5;
-		final double AIRSHIP_PARALLEL_OFFSET = 0;
+		final double AIRSHIP_PARALLEL_OFFSET = 6.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
