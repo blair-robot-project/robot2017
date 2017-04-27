@@ -102,6 +102,7 @@ public class Robot extends IterativeRobot {
 	private List<RotPerSecCANTalonSRX> talons;
 
 	private boolean redAlliance, dropGear;
+	private String allianceString;
 
 	private String position;
 
@@ -174,6 +175,11 @@ public class Robot extends IterativeRobot {
 
 		if(cfg.hasBlueRed()){
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
+			if(redAlliance){
+				allianceString = "red";
+			} else {
+				allianceString = "blue";
+			}
 			dropGear = new MappedDigitalInput(cfg.getDropGear()).getStatus().get(0);
 			List<Boolean> tmp = new MappedDigitalInput(cfg.getLocation()).getStatus();
 			if (!tmp.get(0) && !tmp.get(1)){
@@ -221,8 +227,8 @@ public class Robot extends IterativeRobot {
 				MPLoader.loadTopLevel(leftProfiles.get("test"), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 				MPLoader.loadTopLevel(rightProfiles.get("test"), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 			} else {
-				MPLoader.loadTopLevel(leftProfiles.get(position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-				MPLoader.loadTopLevel(rightProfiles.get(position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(leftProfiles.get(allianceString+"_"+position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
+				MPLoader.loadTopLevel(rightProfiles.get(allianceString+"_"+position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 			}
 
 			talons = new ArrayList<>();
