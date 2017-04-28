@@ -47,4 +47,5 @@ message RotPerSecCANTalonSRX {
 	required bool brake_mode = 21;
 	required int32 encoder_CPR = 23;
     optional double closed_loop_ramp_rate = 31;
+    optional int32 current_limit = 32;
 }

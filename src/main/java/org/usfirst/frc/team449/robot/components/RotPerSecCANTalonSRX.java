@@ -84,6 +84,13 @@ public class RotPerSecCANTalonSRX extends Component {
 		if (map.hasClosedLoopRampRate()){
 			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
 		}
+
+		if (map.hasCurrentLimit()){
+			canTalon.setCurrentLimit(map.getCurrentLimit());
+			canTalon.EnableCurrentLimit(true);
+		} else {
+			canTalon.EnableCurrentLimit(false);
+		}
 	}
 
 	/**
