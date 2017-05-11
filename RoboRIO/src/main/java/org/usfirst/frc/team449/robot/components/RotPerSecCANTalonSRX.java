@@ -70,9 +70,12 @@ public class RotPerSecCANTalonSRX extends Component {
 		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
 
 		//If we have motion profile PID constants, put them in slot 1.
-		//TODO stop hard-coding in which gear's max speed to use.
 		if (map.hasKPMp()) {
-			setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedLg(), 0, 0, 1);
+			if(map.hasMaxSpeedLg() && map.getMpUseLowGear()) {
+				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedLg(), 0, 0, 1);
+			} else {
+				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
+			}
 		}
 
 		//Choose which profile to use, regular driving or MP.

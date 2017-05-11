@@ -38,7 +38,7 @@ public class Robot extends IterativeRobot {
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
 	private static final double MP_UPDATE_RATE = 0.005;
-	private double WHEEL_DIAMETER;
+	public double WHEEL_DIAMETER;
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
@@ -96,6 +96,8 @@ public class Robot extends IterativeRobot {
 
 	private I2C robotInfo;
 
+	private boolean startLowGear;
+
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
@@ -115,6 +117,8 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
+		startLowGear = cfg.getStartLowGear();
+
 		if (cfg.hasRioduinoPort()) {
 			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
 		}
@@ -124,7 +128,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Constructed OI");
 
 		//Construct the drive (not in a if block because you kind of need it.)
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startLowGear);
 		System.out.println("Constructed Drive");
 
 		//Construct camera if it's in the map.
@@ -250,7 +254,7 @@ public class Robot extends IterativeRobot {
 //		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (cfg.getStartLowGear()) {
+			if (startLowGear) {
 				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 			} else {
 				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
@@ -295,7 +299,7 @@ public class Robot extends IterativeRobot {
 
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (cfg.getStartLowGear()) {
+			if (startLowGear) {
 				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 			} else {
 				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));

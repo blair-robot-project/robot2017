@@ -18,10 +18,13 @@ message TalonClusterDrive {
 	required RotPerSecCANTalonSRX left_master = 4;
 	repeated RotPerSecCANTalonSRX left_slave = 5;
 	optional double wheel_diameter = 10;
-	optional double upshift = 11;
-	optional double downshift = 12;
-	optional double up_time_thresh = 13 [default = 0];
-	optional double down_time_thresh = 14 [default = 0];
-	optional double shift_delay = 15;
-	optional double upshift_fwd_deadband = 16 [default = 0];
+	optional double upshift_speed = 11;
+	optional double downshift_speed = 12;
+	optional double delay_after_upshift_conditions_met = 13 [default = 0];
+	optional double delay_after_downshift_conditions_met = 14 [default = 0];
+    optional double cooldown_after_upshift = 15 [default = 0];
+    optional double cooldown_after_downshift = 16 [default = 0];
+	optional double upshift_fwd_threshold = 17 [default = 0];
+    required string log_filename = 18;
+    required double PID_scale = 19;
 }
