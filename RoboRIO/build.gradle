@@ -1,10 +1,10 @@
 plugins {
-	id 'org.hidetake.ssh' version "2.7.2"
+	id 'org.hidetake.ssh' version "2.9.0"
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.1"
-	id "com.google.protobuf" version "0.8.0"
+	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
+	id "com.google.protobuf" version "0.8.1"
 }
 
 group 'org.usfirst.frc.team449.robot2017'
