@@ -22,6 +22,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
+import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
@@ -35,46 +36,49 @@ import java.util.Map;
  */
 public class Robot extends IterativeRobot {
 
+	public static Robot instance;
+
 	private static final double MP_UPDATE_RATE = 0.005;
-	public static double WHEEL_DIAMETER;
+	private double WHEEL_DIAMETER;
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
-	public static SingleFlywheelShooter singleFlywheelShooterSubsystem;
+	public SingleFlywheelShooter singleFlywheelShooterSubsystem;
 	/**
 	 * The intake subsystem (intake motors and pistons)
 	 */
-	public static Intake2017 intakeSubsystem;
+	public Intake2017 intakeSubsystem;
 	/**
 	 * The climber
 	 */
-	public static ClimberSubsystem climberSubsystem;
+	public ClimberSubsystem climberSubsystem;
 	/**
 	 * The pneumatics (maybe doesn't work?)
 	 */
-	public static PneumaticsSubsystem pneumaticsSubsystem;
+	public PneumaticsSubsystem pneumaticsSubsystem;
 	/**
 	 * The drive
 	 */
-	public static TalonClusterDrive driveSubsystem;
+	public TalonClusterDrive driveSubsystem;
 	/**
 	 * OI, using an Xbox-style controller and arcade drive.
 	 */
-	public static OI2017ArcadeGamepad oiSubsystem;
+	public OI2017ArcadeGamepad oiSubsystem;
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
-	public static CameraSubsystem cameraSubsystem;
+	public CameraSubsystem cameraSubsystem;
 	/**
 	 * The auger used to feed balls into the shooter.
 	 */
-	public static FeederSubsystem feederSubsystem;
-	public static ActiveGearSubsystem gearSubsystem;
-	public static boolean commandFinished = false;
+	public FeederSubsystem feederSubsystem;
+	public ActiveGearSubsystem gearSubsystem;
+
+	public BooleanWrapper commandFinished;
 	/**
 	 * The object constructed directly from map.cfg.
 	 */
-	private static Robot2017Map.Robot2017 cfg;
+	private Robot2017Map.Robot2017 cfg;
 	private Notifier MPNotifier;
 	private int completedCommands = 0;
 
@@ -98,6 +102,8 @@ public class Robot extends IterativeRobot {
 	 */
 	public void robotInit() {
 		System.out.println("Started robotInit.");
+
+		instance = this;
 
 		try {
 			//Try to construct map from the cfg file
@@ -220,7 +226,7 @@ public class Robot extends IterativeRobot {
 			talons.add(driveSubsystem.leftMaster);
 			talons.add(driveSubsystem.rightMaster);
 			MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
-			commandFinished = false;
+			commandFinished = new BooleanWrapper(false);
 			completedCommands = 0;
 		}
 	}
@@ -318,7 +324,7 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
 
-		commandFinished = false;
+		commandFinished.set(false);
 
 		driveSubsystem.setVBusThrottle(0, 0);
 
@@ -326,7 +332,7 @@ public class Robot extends IterativeRobot {
 			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()) {
 				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
 			}
-			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
+			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, commandFinished, driveSubsystem));
 
 			if (robotInfo != null) {
 				if (redAlliance) {
@@ -362,12 +368,12 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 		if (cfg.getDoMP() && !cfg.getTestMP()) {
 			if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
-				commandFinished = true;
+				commandFinished.set(true);
 			}
-			if (commandFinished) {
+			if (commandFinished.get()) {
 				System.out.println("A command finished!");
 				completedCommands++;
-				commandFinished = false;
+				commandFinished.set(false);
 				if (completedCommands == 1) {
 					if (gearSubsystem != null && dropGear) {
 						Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
@@ -378,23 +384,23 @@ public class Robot extends IterativeRobot {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 					} else if (position.equals("right") && redAlliance) {
 						loadProfile("red_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
 					} else if (position.equals("left") && !redAlliance) {
 						loadProfile("blue_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
 					} else if (redAlliance) {
 						loadProfile("red_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
 					} else {
 						loadProfile("blue_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
 					}
 				} else if (completedCommands == 3) {
 					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
 						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
 					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
 						loadProfile("forward");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
 					}
 				}
 			}

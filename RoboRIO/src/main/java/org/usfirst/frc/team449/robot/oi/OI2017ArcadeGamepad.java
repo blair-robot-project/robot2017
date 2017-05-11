@@ -295,111 +295,108 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		final double TIMEOUT = 5.;
 
 		//Map mandatory commands
-		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, overrideNavXWhileHeld));
-		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, !overrideNavXWhileHeld));
+		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.instance.driveSubsystem, overrideNavXWhileHeld));
+		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.instance.driveSubsystem, !overrideNavXWhileHeld));
 
 		//Map drive commands
 		if (turnaround != null) {
-			turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem,
+			turnaround.whenPressed(new NavXRelativeTTA(Robot.instance.driveSubsystem.turnPID, 180, Robot.instance.driveSubsystem,
 					TIMEOUT));
 		}
 		if (turnTo0 != null) {
-			turnTo0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, TIMEOUT));
+			turnTo0.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 0, Robot.instance.driveSubsystem, TIMEOUT));
 		}
 		if (turnTo30 != null) {
-			turnTo30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, TIMEOUT));
+			turnTo30.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 30, Robot.instance.driveSubsystem, TIMEOUT));
 		}
 		if (turnTo180 != null) {
-			turnTo180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem,
+			turnTo180.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 180, Robot.instance.driveSubsystem,
 					TIMEOUT));
 		}
 		if (turnTo330 != null) {
-			turnTo330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem,
+			turnTo330.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, -30, Robot.instance.driveSubsystem,
 					TIMEOUT));
 		}
-		if (Robot.driveSubsystem.shifter != null && switchToHighGear != null && switchToLowGear != null) {
-			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.driveSubsystem));
-			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.driveSubsystem));
+		if (Robot.instance.driveSubsystem.shifter != null && switchToHighGear != null && switchToLowGear != null) {
+			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.instance.driveSubsystem));
+			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.instance.driveSubsystem));
 		}
 		if (tmpOverrideHigh != null) {
-			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, false));
-			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, false));
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true, false));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false, false));
 		}
 		if (tmpOverrideLow != null) {
-			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, true, true));
-			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.driveSubsystem, false, true));
+			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true, true));
+			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false, true));
 		}
 		if (toggleOverrideHigh != null) {
-			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.driveSubsystem, !Robot.driveSubsystem
+			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, !Robot.instance.driveSubsystem
 					.overrideAutoShift, false));
 		}
 
 		//Map climber commands
-		if (Robot.climberSubsystem != null && climb != null) {
-			climb.whenPressed(new PowerClimb(Robot.climberSubsystem));
-			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		if (Robot.instance.climberSubsystem != null && climb != null) {
+			climb.whenPressed(new PowerClimb(Robot.instance.climberSubsystem));
+			climb.whenReleased(new StopClimbing(Robot.instance.climberSubsystem));
 		}
 
 		//Map camera commands
-		if (Robot.cameraSubsystem != null && switchCamera != null) {
-			switchCamera.whenPressed(new ChangeCam(Robot.cameraSubsystem, TIMEOUT));
+		if (Robot.instance.cameraSubsystem != null && switchCamera != null) {
+			switchCamera.whenPressed(new ChangeCam(Robot.instance.cameraSubsystem, TIMEOUT));
 		}
 
 		//Map intake commands
-		if (Robot.intakeSubsystem != null) {
+		if (Robot.instance.intakeSubsystem != null) {
 			if (toggleIntakeUpDown != null) {
-				toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
+				toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.instance.intakeSubsystem));
 			}
 			if (toggleIntake != null) {
-				toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
+				toggleIntake.whenPressed(new ToggleIntaking(Robot.instance.intakeSubsystem));
 			}
 		}
 
 		//Map feeder commands
-		if (toggleFeeder != null && Robot.feederSubsystem != null) {
-			toggleFeeder.whenPressed(new ToggleFeeder(Robot.feederSubsystem));
+		if (toggleFeeder != null && Robot.instance.feederSubsystem != null) {
+			toggleFeeder.whenPressed(new ToggleFeeder(Robot.instance.feederSubsystem));
 		}
 
 		//Map shooter commands
-		if (toggleShooter != null && Robot.singleFlywheelShooterSubsystem != null) {
-			toggleShooter.whenPressed(new ToggleShooter(Robot.singleFlywheelShooterSubsystem));
+		if (toggleShooter != null && Robot.instance.singleFlywheelShooterSubsystem != null) {
+			toggleShooter.whenPressed(new ToggleShooter(Robot.instance.singleFlywheelShooterSubsystem));
 		}
 
 		//Map group commands
 		if (loadShooter != null) {
-			loadShooter.whenPressed(new LoadShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
-					.feederSubsystem));
+			loadShooter.whenPressed(new LoadShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
 		}
 		if (rackShooter != null) {
-			rackShooter.whenPressed(new RackShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
-					.feederSubsystem));
+			rackShooter.whenPressed(new RackShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
 		}
 		if (fireShooter != null) {
-			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
-					.feederSubsystem));
+			fireShooter.whenPressed(new FireShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
 		}
 		if (resetShooter != null) {
-			resetShooter.whenPressed(new ResetShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem,
-					Robot.feederSubsystem));
+			resetShooter.whenPressed(new ResetShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem,
+					Robot.instance.feederSubsystem));
 		}
-		if (Robot.climberSubsystem != null && manualClimb != null) {
-			manualClimb.whenPressed(new ManualClimb(Robot.climberSubsystem));
-			manualClimb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		if (Robot.instance.climberSubsystem != null && manualClimb != null) {
+			manualClimb.whenPressed(new ManualClimb(Robot.instance.climberSubsystem));
+			manualClimb.whenReleased(new StopClimbing(Robot.instance.climberSubsystem));
 		}
-		if (Robot.gearSubsystem != null) {
+		if (Robot.instance.gearSubsystem != null) {
 			if (toggleGear != null) {
-				toggleGear.whenPressed(new FirePiston(Robot.gearSubsystem, Robot.gearSubsystem.contracted ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
+				toggleGear.whenPressed(new FirePiston(Robot.instance.gearSubsystem, Robot.instance.gearSubsystem.contracted ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
 			}
 			for (Button button : pushGear) {
-				button.whenPressed(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kReverse));
-				button.whenReleased(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kForward));
+				button.whenPressed(new FirePiston(Robot.instance.gearSubsystem, DoubleSolenoid.Value.kReverse));
+				button.whenReleased(new FirePiston(Robot.instance.gearSubsystem, DoubleSolenoid.Value.kForward));
 			}
 		}
 		if (logError != null) {
-			logError.whenPressed(new LogError(Robot.driveSubsystem, "Driver-Reported"));
+			logError.whenPressed(new LogError(Robot.instance.driveSubsystem, "Driver-Reported"));
 		}
 		if (jiggleRobot != null) {
-			jiggleRobot.whenPressed(new JiggleRobot(Robot.driveSubsystem));
+			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem));
 		}
 	}
 }

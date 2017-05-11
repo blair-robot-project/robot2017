@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,11 +30,13 @@ public class ExecuteProfile extends Command {
 
 	private long startTime;
 
+	private BooleanWrapper finishFlag;
+
 
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, Subsystem toRequire) {
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, BooleanWrapper finishFlag, Subsystem toRequire) {
 		if (toRequire != null) {
 			requires(toRequire);
 		}
@@ -48,10 +51,11 @@ public class ExecuteProfile extends Command {
 
 		finished = false;
 		bottomLoaded = false;
+		this.finishFlag = finishFlag;
 	}
 
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout) {
-		this(talons, timeout, null);
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, BooleanWrapper finishFlag) {
+		this(talons, timeout, finishFlag, null);
 	}
 
 	/**
@@ -98,7 +102,7 @@ public class ExecuteProfile extends Command {
 				talon.set(CANTalon.SetValueMotionProfile.Enable.value);
 			}
 		}
-		Robot.driveSubsystem.logData();
+		Robot.instance.driveSubsystem.logData();
 	}
 
 	@Override
@@ -112,7 +116,7 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 //			talon.disable();
 		}
-		Robot.commandFinished = true;
+		finishFlag.set(true);
 		System.out.println("ExecuteProfile end.");
 	}
 
@@ -121,7 +125,7 @@ public class ExecuteProfile extends Command {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
-		Robot.commandFinished = true;
+		finishFlag.set(true);
 		System.out.println("ExecuteProfile interrupted!");
 	}
 }

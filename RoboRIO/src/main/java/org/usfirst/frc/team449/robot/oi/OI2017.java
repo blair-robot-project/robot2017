@@ -67,19 +67,19 @@ public class OI2017 extends OISubsystem {
 	}
 
 	public void mapButtons() {
-		turnaround.whenPressed(new NavXRelativeTTA(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt0.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 0, Robot.driveSubsystem, 2.5));
-		tt30.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 30, Robot.driveSubsystem, 2.5));
-		tt180.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, 180, Robot.driveSubsystem, 2.5));
-		tt330.whenPressed(new NavXTurnToAngle(Robot.driveSubsystem.turnPID, -30, Robot.driveSubsystem, 2.5));
-		driveStraight.whileHeld(new NavXDriveStraight(Robot.driveSubsystem.straightPID, Robot.driveSubsystem, this));
-		//		climbButton.whileHeld(new PowerClimb(Robot.climberSubsystem));
-		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.doubleflywheelshooter.commands
-		// .ToggleFlywheel(Robot.doubleFlywheelShooterSubsystem));
-		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands
-		// .ToggleFlywheel(Robot.singleFlywheelShooterSubsystem));
-		//		toggleIntake.whenPressed(new ToggleIntaking(Robot.intakeSubsystem));
-		//		toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.intakeSubsystem));
+		turnaround.whenPressed(new NavXRelativeTTA(Robot.instance.driveSubsystem.turnPID, 180, Robot.instance.driveSubsystem, 2.5));
+		tt0.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 0, Robot.instance.driveSubsystem, 2.5));
+		tt30.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 30, Robot.instance.driveSubsystem, 2.5));
+		tt180.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, 180, Robot.instance.driveSubsystem, 2.5));
+		tt330.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, -30, Robot.instance.driveSubsystem, 2.5));
+		driveStraight.whileHeld(new NavXDriveStraight(Robot.instance.driveSubsystem.straightPID, Robot.instance.driveSubsystem, this));
+		//		climbButton.whileHeld(new PowerClimb(Robot.instance.climberSubsystem));
+		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.Robot.instance.mechanism.doubleflywheelshooter.commands
+		// .ToggleFlywheel(Robot.instance.doubleFlywheelShooterSubsystem));
+		//		toggleFlywheel.whenPressed(new org.usfirst.frc.team449.Robot.instance.mechanism.singleflywheelshooter.commands
+		// .ToggleFlywheel(Robot.instance.singleFlywheelShooterSubsystem));
+		//		toggleIntake.whenPressed(new ToggleIntaking(Robot.instance.intakeSubsystem));
+		//		toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.instance.intakeSubsystem));
 	}
 
 	@Override
