@@ -15,7 +15,7 @@ import java.util.List;
 public class CameraSubsystem extends MappedSubsystem {
 
 	/**
-	 * 	Video server to view on SmartDashboard
+	 * Video server to view on SmartDashboard
 	 */
 	public MjpegServer server;
 
@@ -36,6 +36,7 @@ public class CameraSubsystem extends MappedSubsystem {
 
 	/**
 	 * Construct a CameraSubsystem
+	 *
 	 * @param map The config map
 	 */
 	public CameraSubsystem(CameraMap.Camera map) {

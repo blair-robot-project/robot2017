@@ -10,8 +10,8 @@ import java.util.List;
  * Created by BlairRobot on 2017-03-15.
  */
 public class MPLoader {
-	
-	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalonSRX talon, double wheelDiameter){
+
+	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalonSRX talon, double wheelDiameter) {
 		// Fill the Talon's buffer with points
 		talon.canTalon.disable();
 		talon.canTalon.clearMotionProfileHasUnderrun();
@@ -28,39 +28,39 @@ public class MPLoader {
 			point.isLastPoint = (i + 1) == data.data.length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
-			if(!talon.canTalon.pushMotionProfileTrajectory(point)) {
+			if (!talon.canTalon.pushMotionProfileTrajectory(point)) {
 				System.out.println("Buffer full!");
 				break;
 			}
 		}
 	}
 
-	public static Notifier startLoadBottomLevel(List<RotPerSecCANTalonSRX> talons, double updateRate){
+	public static Notifier startLoadBottomLevel(List<RotPerSecCANTalonSRX> talons, double updateRate) {
 		MPUpdaterProcess updater = new MPUpdaterProcess();
-		for (RotPerSecCANTalonSRX talon : talons){
+		for (RotPerSecCANTalonSRX talon : talons) {
 			updater.addTalon(talon.canTalon);
 		}
 		Notifier updaterNotifier = new Notifier(updater);
 		updaterNotifier.startPeriodic(updateRate);
-		System.out.println("Started the notifier for "+talons.size()+" talons.");
+		System.out.println("Started the notifier for " + talons.size() + " talons.");
 		return updaterNotifier;
 	}
 
-	public static double nativeToFeet(double nativeUnits, int encoderCPR, double wheelDiameter){
-		double rotations = nativeUnits / (encoderCPR*4);
-		return rotations * (wheelDiameter*Math.PI);
+	public static double nativeToFeet(double nativeUnits, int encoderCPR, double wheelDiameter) {
+		double rotations = nativeUnits / (encoderCPR * 4);
+		return rotations * (wheelDiameter * Math.PI);
 	}
 
-	public static double feetToNative(double feet, int encoderCPR, double wheelDiameter){
-		double rotations = feet / (wheelDiameter*Math.PI);
-		return rotations * (encoderCPR*4);
+	public static double feetToNative(double feet, int encoderCPR, double wheelDiameter) {
+		double rotations = feet / (wheelDiameter * Math.PI);
+		return rotations * (encoderCPR * 4);
 	}
 
-	public static double feetPerSecToNative(double feet, RotPerSecCANTalonSRX talon, double wheelDiameter){
-		return talon.RPStoNative(feet/(wheelDiameter*Math.PI));
+	public static double feetPerSecToNative(double feet, RotPerSecCANTalonSRX talon, double wheelDiameter) {
+		return talon.RPStoNative(feet / (wheelDiameter * Math.PI));
 	}
 
-	public static double nativeToFeetPerSec(double nativeUnits, RotPerSecCANTalonSRX talon, double wheelDiameter){
-		return talon.nativeToRPS(nativeUnits)*(wheelDiameter*Math.PI);
+	public static double nativeToFeetPerSec(double nativeUnits, RotPerSecCANTalonSRX talon, double wheelDiameter) {
+		return talon.nativeToRPS(nativeUnits) * (wheelDiameter * Math.PI);
 	}
 }

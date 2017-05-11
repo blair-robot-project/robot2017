@@ -35,7 +35,7 @@ public class MPUpdaterProcess implements Runnable {
 	 */
 	@Override
 	public void run() {
-		for (CANTalon talon : talonQueue){
+		for (CANTalon talon : talonQueue) {
 			talon.processMotionProfileBuffer();
 		}
 	}

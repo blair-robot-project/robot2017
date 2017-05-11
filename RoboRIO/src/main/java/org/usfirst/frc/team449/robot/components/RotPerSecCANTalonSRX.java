@@ -13,24 +13,21 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
 	 */
 	public CANTalon canTalon;
-
-	/**
-	 * The maximum speed of the motor, in RPS.
-	 */
-	protected double maxSpeed;
-
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
 	public int encoderCPR;
-
+	/**
+	 * The maximum speed of the motor, in RPS.
+	 */
+	protected double maxSpeed;
 	/**
 	 * The type of encoder the talon uses.
 	 */
 	protected CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
-	 * 	The map used to construct this object.
+	 * The map used to construct this object.
 	 */
 	private RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map;
 
@@ -81,7 +78,7 @@ public class RotPerSecCANTalonSRX extends Component {
 		//Choose which profile to use, regular driving or MP.
 		canTalon.setProfile(map.getProfile());
 
-		if (map.hasClosedLoopRampRate()){
+		if (map.hasClosedLoopRampRate()) {
 			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
 		}
 	}
@@ -113,7 +110,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param d                 The derivative gain term of the loop
 	 * @param maxSpeed          The max speed of this motor, in RPS
 	 * @param iZone             Integration zone -- prevents accumulation of integration error with large errors.
-	 *                             Setting this to zero will ignore any izone stuff.
+	 *                          Setting this to zero will ignore any izone stuff.
 	 * @param closeLoopRampRate Closed loop ramp rate. Maximum change in voltage, in volts / sec.
 	 * @param profile           The profile to use (must be 0 or 1).
 	 */
@@ -151,6 +148,7 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	/**
 	 * Get the max speed of the gear the talon is currently in.
+	 *
 	 * @return max speed, in RPS, as given in the map.
 	 */
 	public double getMaxSpeed() {
@@ -236,7 +234,7 @@ public class RotPerSecCANTalonSRX extends Component {
 		return nativeToRPS(canTalon.getError());
 	}
 
-	public double getSetpoint(){
+	public double getSetpoint() {
 		return nativeToRPS(canTalon.getSetpoint());
 	}
 
@@ -250,6 +248,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	}
 
 	public double getPower() {
-		return canTalon.getOutputVoltage()*canTalon.getOutputCurrent();
+		return canTalon.getOutputVoltage() * canTalon.getOutputCurrent();
 	}
 }

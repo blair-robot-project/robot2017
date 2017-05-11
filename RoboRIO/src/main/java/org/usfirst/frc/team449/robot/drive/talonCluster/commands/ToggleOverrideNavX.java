@@ -11,6 +11,7 @@ public class ToggleOverrideNavX extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param drive The drive subsystem to execute this command on
 	 */
 	public ToggleOverrideNavX(TalonClusterDrive drive) {
@@ -36,6 +37,7 @@ public class ToggleOverrideNavX extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

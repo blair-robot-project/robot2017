@@ -13,6 +13,7 @@ public class OverrideNavX extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param drive The drive subsystem to execute this command on
 	 */
 	public OverrideNavX(TalonClusterDrive drive, boolean override) {
@@ -39,6 +40,7 @@ public class OverrideNavX extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

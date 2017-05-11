@@ -13,6 +13,7 @@ public class LogError extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	public LogError(MappedSubsystem subsystem, String error) {
@@ -38,6 +39,7 @@ public class LogError extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

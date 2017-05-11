@@ -26,6 +26,11 @@ import java.util.Date;
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	/**
+	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
+	 * loop space to compensate.
+	 */
+	private final double PID_SCALE = 0.9;
+	/**
 	 * Right master Talon
 	 */
 	public RotPerSecCANTalonSRX rightMaster;
@@ -33,33 +38,28 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * Left master Talon
 	 */
 	public RotPerSecCANTalonSRX leftMaster;
-
 	/**
 	 * The NavX gyro
 	 */
 	public AHRS navx;
-
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
-
 	/**
 	 * The PIDAngleCommand constants for using the NavX to drive straight
 	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-
 	/**
 	 * The oi used to drive the robot
 	 */
 	public OI2017ArcadeGamepad oi;
 
+	// TODO take these out after testing
 	/**
 	 * The solenoid that shifts between gears
 	 */
 	public DoubleSolenoid shifter;
-
-	// TODO take these out after testing
 	/**
 	 * Current status of the left side MP
 	 */
@@ -68,24 +68,25 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * Current status of the right side MP
 	 */
 	public CANTalon.MotionProfileStatus rightTPointStatus;
-
+	/**
+	 * Whether or not to use the NavX for driving straight
+	 */
+	public boolean overrideNavX;
+	/**
+	 * Whether not to override auto shifting
+	 */
+	public boolean overrideAutoShift;
 	/**
 	 * The time (milliseconds) when the robot was enabled (for use in logging)
 	 */
 	private long startTime;
-
 	/**
 	 * The name of the file to log to
 	 */
 	private String logFN;
 
+	// TODO externalize
 	private String errorFN;
-
-	/**
-	 * Whether or not to use the NavX for driving straight
-	 */
-	public boolean overrideNavX;
-
 	/**
 	 * Measured max speed of robot reached in a run. Used for testing and tuning. NOT max_speed tuning constant
 	 *
@@ -93,14 +94,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	@Deprecated
 	private double maxSpeed;
-
-	// TODO externalize
-	/**
-	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
-	 * loop space to compensate.
-	 */
-	private final double PID_SCALE = 0.9;
-
 	/**
 	 * Upshift timeout.
 	 * The robot will wait for this this number of milliseconds before upshifting after a downshift
@@ -111,22 +104,20 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * The robot will wait for this this number of milliseconds before downshifting after an upshift
 	 */
 	private double downTimeThresh;
-
 	/**
 	 * Whether we can up shift, used as a flag for the delay
 	 */
 	private boolean okToUpshift;
+
+	// TODO refactor; THIS IS NOT A DEADBAND
 	/**
 	 * Whether we can down shift, used as a flag for the delay
 	 */
 	private boolean okToDownshift;
-
-	// TODO refactor; THIS IS NOT A DEADBAND
 	/**
 	 * The setpoint (on a 0-1 scale) below which we stay in low gear
 	 */
 	private double upshiftFwdDeadband;
-
 	/**
 	 * The last time (in milliseconds) at which we upshifted
 	 */
@@ -136,21 +127,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	private long timeBelowShift;
 
+	// TODO simplify shifting and make this a primitive
 	/**
 	 * The time we last shifted (milliseconds)
 	 */
 	private long timeLastShifted;
-
-	// TODO simplify shifting and make this a primitive
 	/**
 	 * The minimum time between shifting in either direction
 	 */
 	private Double shiftDelay;
-
-	/**
-	 * Whether not to override auto shifting
-	 */
-	public boolean overrideAutoShift;
 
 	// TODO set this when we shift
 	// TODO make this an enum instead of a boolean
@@ -250,6 +235,18 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	/**
+	 * Simple helper function for clipping output to the -1 to 1 scale.
+	 *
+	 * @param in The number to be processed.
+	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
+	 */
+	private static double clipToOne(double in) {
+		return Math.min(Math.max(in, -1), 1);
+	}
+
+	// TODO refactor to specifiy PID VELOCITY setpoint
+
+	/**
 	 * Sets the left and right wheel speeds as a percent of max voltage, not nearly as precise as PID.
 	 *
 	 * @param left  The left voltage throttle, [-1, 1]
@@ -260,8 +257,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(-right); //This is negative so PID doesn't have to be. Future people, if your robot goes in circles in voltage mode, this may be why.
 	}
-
-	// TODO refactor to specifiy PID VELOCITY setpoint
 
 	/**
 	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint
@@ -294,7 +289,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 //		setVBusThrottle(left, right);
 	}
 
-	public void logPower(){
+	public void logPower() {
 		//time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage
 		/*
 		try (FileWriter fw = new FileWriter(logFN, true)) {
@@ -332,9 +327,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		SmartDashboard.putNumber("Right Voltage", rightMaster.canTalon.getOutputVoltage());
 	}
 
-	public void logError(String error){
+	public void logError(String error) {
 		try (FileWriter fw = new FileWriter(errorFN, true)) {
-			fw.write(((double)(System.currentTimeMillis() - startTime) / 1000.)+","+error+"\n");
+			fw.write(((double) (System.currentTimeMillis() - startTime) / 1000.) + "," + error + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -487,9 +482,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
 
-	public void setDefaultCommandManual(Command defaultCommand){
+	public void setDefaultCommandManual(Command defaultCommand) {
 		setDefaultCommand(defaultCommand);
 	}
+
+	// TODO generalize up-down with an enum
 
 	/**
 	 * Get the robot's heading using the navX
@@ -500,7 +497,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return navx.pidGet();
 	}
 
-	// TODO generalize up-down with an enum
+	//TODO get rid of this because it's a reaaaaaally dumb wrapper.
 
 	/**
 	 * Shift as appropriate
@@ -536,6 +533,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	//TODO get rid of this because it's a reaaaaaally dumb wrapper.
+
 	/**
 	 * @return left cluster measured velocity
 	 */
@@ -544,7 +542,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return leftMaster.getSpeed();
 	}
 
-	//TODO get rid of this because it's a reaaaaaally dumb wrapper.
 	/**
 	 * @return right cluster measured velocity
 	 */
@@ -553,14 +550,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return rightMaster.getSpeed();
 	}
 
+	// TODO simplify the should-shift logic, especially by moving repeated code into separate functions.
+
 	/**
 	 * @return whether the robot is in low gear
 	 */
 	public boolean inLowGear() {
 		return lowGear;
 	}
-
-	// TODO simplify the should-shift logic, especially by moving repeated code into separate functions.
 
 	/**
 	 * @return whether the robot should downshift
@@ -637,15 +634,5 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			//Downshift if we should
 			setLowGear(true);
 		}
-	}
-
-	/**
-	 * Simple helper function for clipping output to the -1 to 1 scale.
-	 *
-	 * @param in The number to be processed.
-	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
-	 */
-	private static double clipToOne(double in) {
-		return Math.min(Math.max(in, -1), 1);
 	}
 }

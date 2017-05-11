@@ -34,13 +34,13 @@ public class ExecuteProfile extends Command {
 	 * Construct a new ExecuteProfile command
 	 */
 	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, Subsystem toRequire) {
-		if (toRequire != null){
+		if (toRequire != null) {
 			requires(toRequire);
 		}
 
 		this.talons = new ArrayList<>();
 
-		for (RotPerSecCANTalonSRX talon : talons){
+		for (RotPerSecCANTalonSRX talon : talons) {
 			this.talons.add(talon.canTalon);
 		}
 
@@ -50,7 +50,7 @@ public class ExecuteProfile extends Command {
 		bottomLoaded = false;
 	}
 
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout){
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout) {
 		this(talons, timeout, null);
 	}
 

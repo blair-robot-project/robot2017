@@ -15,6 +15,7 @@ public class StaticStopDynamicStop extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param intake The intake subsystem to execute this command on.
 	 */
 	public StaticStopDynamicStop(Intake2017 intake) {
@@ -33,6 +34,7 @@ public class StaticStopDynamicStop extends ReferencingCommand {
 
 	/**
 	 * Runs instantaneously.
+	 *
 	 * @return true
 	 */
 	@Override

@@ -21,6 +21,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 
 	/**
 	 * Construct a ClimberSubsystem
+	 *
 	 * @param map the config map
 	 */
 	public ClimberSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.climber.ClimberMap.Climber map) {
@@ -48,6 +49,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 
 	/**
 	 * Set the percent voltage to be given to the motor.
+	 *
 	 * @param percentVbus The voltage to give the motor, from -1 to 1.
 	 */
 	public void setPercentVbus(double percentVbus) {
@@ -59,6 +61,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 
 	/**
 	 * Whether or not the power limit has been reached.
+	 *
 	 * @return If the output power is greater than the max allowable power.
 	 */
 	public boolean reachedTop() {

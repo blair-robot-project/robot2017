@@ -20,8 +20,9 @@ public class OverrideAutoShift extends ReferencingCommand {
 
 	/**
 	 * Default constructor
-	 * @param drive The drive subsystem to execute this command on.
-	 * @param override Whether or not to override autoshifting.
+	 *
+	 * @param drive           The drive subsystem to execute this command on.
+	 * @param override        Whether or not to override autoshifting.
 	 * @param switchToLowGear Whether to switch to low gear. If false, switch to high gear.
 	 */
 	public OverrideAutoShift(TalonClusterDrive drive, boolean override, boolean switchToLowGear) {
@@ -50,6 +51,7 @@ public class OverrideAutoShift extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

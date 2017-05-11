@@ -14,10 +14,12 @@ public class ChangeCam extends ReferencingCommand {
 	private CameraSubsystem cameraSubsystem;
 
 	//TODO get rid of timeout.
+
 	/**
 	 * Default constructor.
+	 *
 	 * @param cameraSubsystem The cameraSubsystem to execute this command on.
-	 * @param timeout The timeout for this command (does nothing)
+	 * @param timeout         The timeout for this command (does nothing)
 	 */
 	public ChangeCam(CameraSubsystem cameraSubsystem, double timeout) {
 		super(cameraSubsystem, timeout);
@@ -57,6 +59,7 @@ public class ChangeCam extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

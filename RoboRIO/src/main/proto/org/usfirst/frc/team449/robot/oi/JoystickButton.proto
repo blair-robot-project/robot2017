@@ -6,6 +6,6 @@ option java_outer_classname = "JoystickButtonMap";
 message JoystickButton {
 	required int32 port = 1;
 	optional int32 button_index = 2;
-    optional double trigger_at = 3;
-    optional int32 angle = 4;
+	optional double trigger_at = 3;
+	optional int32 angle = 4;
 }

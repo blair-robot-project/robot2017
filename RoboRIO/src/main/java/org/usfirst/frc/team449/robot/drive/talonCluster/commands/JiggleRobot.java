@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 /**
  * Created by Noah Gleason on 4/6/2017.
  */
-public class JiggleRobot extends ReferencingCommandGroup{
+public class JiggleRobot extends ReferencingCommandGroup {
 	/**
 	 * Instantiate the ReferencingCommandGroup
 	 *

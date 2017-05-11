@@ -11,6 +11,7 @@ public class SwitchToHighGear extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	public SwitchToHighGear(MappedSubsystem subsystem) {
@@ -35,6 +36,7 @@ public class SwitchToHighGear extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

@@ -9,6 +9,14 @@ import org.usfirst.frc.team449.robot.MappedSubsystem;
  */
 public class Intake2017 extends MappedSubsystem {
 	/**
+	 * Whether this is currently intaking
+	 */
+	public boolean isIntaking;
+	/**
+	 * Whether intake is currently up
+	 */
+	public boolean intakeUp;
+	/**
 	 * VictorSP for the static intake
 	 */
 	private VictorSP fixedVictor;
@@ -16,20 +24,12 @@ public class Intake2017 extends MappedSubsystem {
 	 * VictorSP for the dynamic intake
 	 */
 	private VictorSP actuatedVictor;
+
+	//TODO make an enum
 	/**
 	 * Piston for raising and lowering the intake
 	 */
 	private DoubleSolenoid piston;
-	/**
-	 * Whether this is currently intaking
-	 */
-	public boolean isIntaking;
-
-	//TODO make an enum
-	/**
-	 * Whether intake is currently up
-	 */
-	public boolean intakeUp;
 
 	/**
 	 * Creates a mapped subsystem and sets its map

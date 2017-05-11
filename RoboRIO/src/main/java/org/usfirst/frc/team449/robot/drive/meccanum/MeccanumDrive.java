@@ -18,9 +18,8 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	public OI2017 oi;
-	private long startTime;
-
 	boolean strafe = false;
+	private long startTime;
 
 	public MeccanumDrive(maps.org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDriveMap.MeccanumDrive map, OI2017
 			oi) {

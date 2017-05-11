@@ -15,6 +15,7 @@ public class StopFeeder extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param feeder The feeder subsystem to execute this command on.
 	 */
 	public StopFeeder(FeederSubsystem feeder) {
@@ -42,6 +43,7 @@ public class StopFeeder extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

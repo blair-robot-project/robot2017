@@ -15,6 +15,7 @@ public class ManualClimb extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param climber The climber subsystem to execute this command on
 	 */
 	public ManualClimb(ClimberSubsystem climber) {
@@ -43,6 +44,7 @@ public class ManualClimb extends ReferencingCommand {
 
 	/**
 	 * Does not stop, another command like {@link StopClimbing} needs to be run to stop it.
+	 *
 	 * @return false
 	 */
 	@Override

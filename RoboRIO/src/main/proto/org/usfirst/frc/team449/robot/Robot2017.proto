@@ -26,17 +26,17 @@ message Robot2017 {
 	optional Intake2017 intake = 8;
 	optional PneumaticSystem pneumatics = 9;
 	optional Feeder feeder = 10;
-    repeated MotionProfile left_motion_profile = 11;
-    repeated MotionProfile right_motion_profile = 12;
-    required double wheel_diameter_inches = 13;
-    required double time_to_push_gear = 14;
-    optional ActiveGear gear = 15;
-    optional DigitalInput blue_red = 16;
-    optional DigitalInput drop_gear = 17;
-    optional DigitalInput location = 18;
-    optional double drive_back_time = 19;
+	repeated MotionProfile left_motion_profile = 11;
+	repeated MotionProfile right_motion_profile = 12;
+	required double wheel_diameter_inches = 13;
+	required double time_to_push_gear = 14;
+	optional ActiveGear gear = 15;
+	optional DigitalInput blue_red = 16;
+	optional DigitalInput drop_gear = 17;
+	optional DigitalInput location = 18;
+	optional double drive_back_time = 19;
 	optional int32 rioduino_port = 20;
-    optional bool do_MP = 21 [default = true];
-    optional bool test_MP = 22 [default = false];
+	optional bool do_MP = 21 [default = true];
+	optional bool test_MP = 22 [default = false];
 	optional bool start_low_gear = 23 [default = true];
 }

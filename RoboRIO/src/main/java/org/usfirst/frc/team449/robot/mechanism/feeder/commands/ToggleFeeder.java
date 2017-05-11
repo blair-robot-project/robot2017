@@ -15,6 +15,7 @@ public class ToggleFeeder extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param feeder The feeder subsystem to execute this command on.
 	 */
 	public ToggleFeeder(FeederSubsystem feeder) {
@@ -46,6 +47,7 @@ public class ToggleFeeder extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

@@ -15,6 +15,7 @@ public class StaticInDynamicIn extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param intake The intake subsystem to execute this command on.
 	 */
 	public StaticInDynamicIn(Intake2017 intake) {
@@ -34,6 +35,7 @@ public class StaticInDynamicIn extends ReferencingCommand {
 
 	/**
 	 * Runs instantaneously.
+	 *
 	 * @return true
 	 */
 	@Override

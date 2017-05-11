@@ -26,8 +26,9 @@ public class OpArcadeDrive extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param drive The drive to execute this command on
-	 * @param oi The OI that gives the input to this command.
+	 * @param oi    The OI that gives the input to this command.
 	 */
 	public OpArcadeDrive(TalonClusterDrive drive, ArcadeOI oi) {
 		super(drive);
@@ -60,6 +61,7 @@ public class OpArcadeDrive extends ReferencingCommand {
 
 	/**
 	 * Run constantly because this is a default drive
+	 *
 	 * @return false
 	 */
 	@Override

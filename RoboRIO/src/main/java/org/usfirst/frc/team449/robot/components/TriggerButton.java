@@ -10,21 +10,21 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 /**
  * Created by Noah Gleason on 3/5/2017.
  */
-public class TriggerButton extends Button{
+public class TriggerButton extends Button {
 
 	private Throttle throttle;
 	private double triggerAt;
 
-	public TriggerButton(int port, int axis, double triggerAt){
+	public TriggerButton(int port, int axis, double triggerAt) {
 		throttle = new SmoothedThrottle(new Joystick(port), axis);
 		this.triggerAt = triggerAt;
 	}
 
-	public TriggerButton(TriggerButtonMap.TriggerButton map){
+	public TriggerButton(TriggerButtonMap.TriggerButton map) {
 		this(map.getPort(), map.getAxis(), map.getTriggerAt());
 	}
 
-	public TriggerButton(JoystickButtonMap.JoystickButton map){
+	public TriggerButton(JoystickButtonMap.JoystickButton map) {
 		this(map.getPort(), map.getButtonIndex(), map.getTriggerAt());
 	}
 

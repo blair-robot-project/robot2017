@@ -12,17 +12,17 @@ public class dPadButton extends Button {
 	private int angle;
 	private Joystick joystick;
 
-	public dPadButton(int port, int angle){
+	public dPadButton(int port, int angle) {
 		this.angle = angle;
 		this.joystick = new Joystick(port);
+	}
+
+	public dPadButton(JoystickButtonMap.JoystickButton map) {
+		this(map.getPort(), map.getAngle());
 	}
 
 	@Override
 	public boolean get() {
 		return joystick.getPOV() == angle;
-	}
-
-	public dPadButton(JoystickButtonMap.JoystickButton map){
-		this(map.getPort(), map.getAngle());
 	}
 }

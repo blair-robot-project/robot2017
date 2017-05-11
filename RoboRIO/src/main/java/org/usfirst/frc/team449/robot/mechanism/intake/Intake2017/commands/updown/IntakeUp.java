@@ -25,7 +25,7 @@ public class IntakeUp extends ReferencingCommand {
 	}
 
 	@Override
-	protected void initialize(){
+	protected void initialize() {
 		System.out.println("IntakeUp init");
 	}
 
@@ -39,6 +39,7 @@ public class IntakeUp extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override
@@ -47,7 +48,7 @@ public class IntakeUp extends ReferencingCommand {
 	}
 
 	@Override
-	protected void end(){
+	protected void end() {
 		System.out.println("IntakeUp end");
 	}
 }

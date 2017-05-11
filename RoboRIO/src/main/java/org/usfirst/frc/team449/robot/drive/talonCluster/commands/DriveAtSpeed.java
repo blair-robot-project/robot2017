@@ -25,8 +25,9 @@ public class DriveAtSpeed extends ReferencingCommand {
 
 	/**
 	 * Default constructor
-	 * @param drive The drive to execute this command on
-	 * @param speed How fast to go, in RPS
+	 *
+	 * @param drive   The drive to execute this command on
+	 * @param speed   How fast to go, in RPS
 	 * @param seconds How long to drive for.
 	 */
 	public DriveAtSpeed(TalonClusterDrive drive, double speed, double seconds) {
@@ -62,6 +63,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 
 	/**
 	 * Exit after the command's been running for long enough
+	 *
 	 * @return True if timeout has been reached, false otherwise
 	 */
 	@Override

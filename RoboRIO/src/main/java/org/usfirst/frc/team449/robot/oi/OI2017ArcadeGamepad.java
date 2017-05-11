@@ -16,7 +16,10 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.*;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.ResetShooter;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
@@ -231,13 +234,13 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (map.hasToggleGear()) {
 			toggleGear = MappedJoystickButton.constructButton(map.getToggleGear());
 		}
-		if (map.hasManualClimb()){
+		if (map.hasManualClimb()) {
 			manualClimb = MappedJoystickButton.constructButton(map.getManualClimb());
 		}
-		if (map.hasLogError()){
+		if (map.hasLogError()) {
 			logError = MappedJoystickButton.constructButton(map.getLogError());
 		}
-		if (map.hasJiggleRobot()){
+		if (map.hasJiggleRobot()) {
 			jiggleRobot = MappedJoystickButton.constructButton(map.getJiggleRobot());
 		}
 		pushGear = new ArrayList<>();
@@ -379,7 +382,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 			resetShooter.whenPressed(new ResetShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem,
 					Robot.feederSubsystem));
 		}
-		if (Robot.climberSubsystem != null && manualClimb != null){
+		if (Robot.climberSubsystem != null && manualClimb != null) {
 			manualClimb.whenPressed(new ManualClimb(Robot.climberSubsystem));
 			manualClimb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
@@ -392,10 +395,10 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 				button.whenReleased(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kForward));
 			}
 		}
-		if (logError != null){
+		if (logError != null) {
 			logError.whenPressed(new LogError(Robot.driveSubsystem, "Driver-Reported"));
 		}
-		if (jiggleRobot != null){
+		if (jiggleRobot != null) {
 			jiggleRobot.whenPressed(new JiggleRobot(Robot.driveSubsystem));
 		}
 	}

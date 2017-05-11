@@ -14,6 +14,7 @@ public class DecelerateFlywheel extends ReferencingCommand {
 	private SingleFlywheelShooter flywheelShooter;
 
 	//TODO Either implement or remove timeout.
+
 	/**
 	 * Construct a DecelerateFLywheel command
 	 *
@@ -48,6 +49,7 @@ public class DecelerateFlywheel extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

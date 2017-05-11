@@ -14,48 +14,40 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * The OI giving the vel and turn stick values.
 	 */
 	public ArcadeOI oi;
-
-	/**
-	 * Whether or not we should be using the NavX to drive straight stably.
-	 */
-	private boolean drivingStraight;
-
-	/**
-	 * The velocity input from OI. Should be between -1 and 1.
-	 */
-	private double vel;
-
-	/**
-	 * The rotation input from OI. Should be between -1 and 1.
-	 */
-	private double rot;
-
-	/**
-	 * The talonClusterDrive this command is controlling.
-	 */
-	private TalonClusterDrive driveSubsystem;
-
-	/**
-	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
-	 */
-	private double maxAngularVel;
-
-	private long driveStraightDelay;
-
-	private long timeAbleToDriveStraight;
-
-	private boolean delayedDriveStraight;
-
 	/**
 	 * The map of values
 	 */
 	ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map;
+	/**
+	 * Whether or not we should be using the NavX to drive straight stably.
+	 */
+	private boolean drivingStraight;
+	/**
+	 * The velocity input from OI. Should be between -1 and 1.
+	 */
+	private double vel;
+	/**
+	 * The rotation input from OI. Should be between -1 and 1.
+	 */
+	private double rot;
+	/**
+	 * The talonClusterDrive this command is controlling.
+	 */
+	private TalonClusterDrive driveSubsystem;
+	/**
+	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
+	 */
+	private double maxAngularVel;
+	private long driveStraightDelay;
+	private long timeAbleToDriveStraight;
+	private boolean delayedDriveStraight;
 
 	/**
 	 * Default constructor
-	 * @param map The angle PID map containing PID and other tuning constants.
+	 *
+	 * @param map   The angle PID map containing PID and other tuning constants.
 	 * @param drive The drive to execute this command on.
-	 * @param oi The OI controlling the robot.
+	 * @param oi    The OI controlling the robot.
 	 */
 	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
 	                          ArcadeOI oi) {
@@ -121,7 +113,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			timeAbleToDriveStraight = System.currentTimeMillis();
 		}
 
-		if(delayedDriveStraight && System.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay){
+		if (delayedDriveStraight && System.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay) {
 			//Switch to driving straight
 			drivingStraight = true;
 			delayedDriveStraight = false;
@@ -142,6 +134,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 
 	/**
 	 * Run constantly because this is a defaultDrive
+	 *
 	 * @return false
 	 */
 	@Override
@@ -168,6 +161,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 
 	/**
 	 * Give the correct output to the motors based on whether we're in free drive or drive straight.
+	 *
 	 * @param output The output of the angular PID loop.
 	 */
 	@Override

@@ -5,6 +5,6 @@ option java_outer_classname = "TriggerButtonMap";
 
 message TriggerButton {
 	required int32 port = 1;
-    required int32 axis = 2;
-    required double trigger_at = 3;
+	required int32 axis = 2;
+	required double trigger_at = 3;
 }

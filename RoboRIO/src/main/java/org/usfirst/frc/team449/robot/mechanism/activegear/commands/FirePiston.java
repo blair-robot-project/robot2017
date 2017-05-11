@@ -19,7 +19,7 @@ public class FirePiston extends ReferencingCommand {
 	 * Construct a FirePiston command
 	 *
 	 * @param activeGearSubsystem active gear subsystem to execute this command on
-	 * @param position The direction to set the piston to be in
+	 * @param position            The direction to set the piston to be in
 	 */
 	public FirePiston(ActiveGearSubsystem activeGearSubsystem, DoubleSolenoid.Value position) {
 		super(activeGearSubsystem);
@@ -29,7 +29,7 @@ public class FirePiston extends ReferencingCommand {
 	}
 
 	@Override
-	protected void initialize(){
+	protected void initialize() {
 		System.out.println("FirePiston init");
 	}
 
@@ -43,6 +43,7 @@ public class FirePiston extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override
@@ -51,7 +52,7 @@ public class FirePiston extends ReferencingCommand {
 	}
 
 	@Override
-	protected void end(){
+	protected void end() {
 		System.out.println("FirePiston end");
 	}
 }

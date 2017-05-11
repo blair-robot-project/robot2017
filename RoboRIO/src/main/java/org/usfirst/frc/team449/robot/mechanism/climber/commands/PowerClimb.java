@@ -20,6 +20,7 @@ public class PowerClimb extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param climber The climber subsystem to execute this command on
 	 */
 	public PowerClimb(ClimberSubsystem climber) {
@@ -51,6 +52,7 @@ public class PowerClimb extends ReferencingCommand {
 
 	/**
 	 * Stop when the power limit is exceeded.
+	 *
 	 * @return true when the power limit is exceed, false otherwise.
 	 */
 	@Override

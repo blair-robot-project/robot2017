@@ -15,6 +15,7 @@ public class StopClimbing extends ReferencingCommand {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param climber The climber subsystem to execute this command on
 	 */
 	public StopClimbing(ClimberSubsystem climber) {
@@ -42,6 +43,7 @@ public class StopClimbing extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

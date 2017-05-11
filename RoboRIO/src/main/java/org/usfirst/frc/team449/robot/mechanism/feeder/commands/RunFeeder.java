@@ -15,6 +15,7 @@ public class RunFeeder extends ReferencingCommand {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param feeder The feeder subsystem to execute this command on.
 	 */
 	public RunFeeder(FeederSubsystem feeder) {
@@ -42,6 +43,7 @@ public class RunFeeder extends ReferencingCommand {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

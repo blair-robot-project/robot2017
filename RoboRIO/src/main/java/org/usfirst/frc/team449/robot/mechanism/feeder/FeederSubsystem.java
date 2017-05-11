@@ -10,22 +10,21 @@ import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 public class FeederSubsystem extends MechanismSubsystem {
 
 	/**
+	 * Whether or not the motor is currently running.
+	 */
+	public boolean running;
+	/**
 	 * The Victor motor that runs the auger
 	 */
 	private VictorSP victor;
-
 	/**
 	 * The percentage speed for the motor to run at, from -1 to 1.
 	 */
 	private double speed;
 
 	/**
-	 * Whether or not the motor is currently running.
-	 */
-	public boolean running;
-
-	/**
 	 * Construct a FeederSubsystem
+	 *
 	 * @param map The config map
 	 */
 	public FeederSubsystem(FeederMap.Feeder map) {

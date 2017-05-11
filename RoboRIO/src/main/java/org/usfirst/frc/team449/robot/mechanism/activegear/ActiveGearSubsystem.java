@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.activegear;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 
 /**
@@ -9,13 +8,13 @@ import org.usfirst.frc.team449.robot.MappedSubsystem;
  */
 public class ActiveGearSubsystem extends MappedSubsystem {
 	/**
-	 * Piston for pushing gears
-	 */
-	private DoubleSolenoid piston;
-	/**
 	 * Whether piston is currently contracted
 	 */
 	public boolean contracted;
+	/**
+	 * Piston for pushing gears
+	 */
+	private DoubleSolenoid piston;
 
 	/**
 	 * Creates a mapped subsystem and sets its map

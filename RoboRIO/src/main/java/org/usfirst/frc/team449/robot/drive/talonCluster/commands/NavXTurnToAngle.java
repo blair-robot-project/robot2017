@@ -33,10 +33,10 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map   An turnPID map with PID values, an absolute tolerance, and minimum output.
-	 * @param setpoint    The setpoint, in degrees from 180 to -180.
-	 * @param drive The drive subsystem to execute this command on.
-	 * @param timeout How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
+	 * @param map      An turnPID map with PID values, an absolute tolerance, and minimum output.
+	 * @param setpoint The setpoint, in degrees from 180 to -180.
+	 * @param drive    The drive subsystem to execute this command on.
+	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
 	 */
 	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, TalonClusterDrive drive,
 	                       double timeout) {
@@ -50,6 +50,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**
 	 * Clip a degree number to the NavX's -180 to 180 system.
+	 *
 	 * @param theta The angle to clip, in degrees.
 	 * @return The equivalent of that number, clipped to be between -180 and 180.
 	 */
@@ -59,6 +60,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**
 	 * Give output to the motors based on the output of the PID loop
+	 *
 	 * @param output The output of the angle PID loop
 	 */
 	@Override
@@ -108,6 +110,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**
 	 * Exit when the robot reaches the setpoint or enough time has passed.
+	 *
 	 * @return True if timeout seconds have passed or the robot is on target, false otherwise.
 	 */
 	@Override

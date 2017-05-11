@@ -14,16 +14,17 @@ public class MappedJoystickButton extends JoystickButton {
 
 	/**
 	 * Construct a MappedJoystickButton
+	 *
 	 * @param map config map
 	 */
 	public MappedJoystickButton(JoystickButtonMap.JoystickButton map) {
 		super(new Joystick(map.getPort()), map.getButtonIndex());
 	}
 
-	public static Button constructButton(JoystickButtonMap.JoystickButton map){
-		if (map.hasTriggerAt()){
+	public static Button constructButton(JoystickButtonMap.JoystickButton map) {
+		if (map.hasTriggerAt()) {
 			return new TriggerButton(map);
-		} else if(map.hasAngle()) {
+		} else if (map.hasAngle()) {
 			return new dPadButton(map);
 		} else {
 			return new MappedJoystickButton(map);
