@@ -1,5 +1,9 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.util;
+package org.usfirst.frc.team449.robot.util;
 
+import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
+import org.usfirst.frc.team449.robot.Robot;
+
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -8,24 +12,22 @@ import java.util.stream.Stream;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
- *
- * @deprecated future switch to PathGenerator when MP_2_Sides branch is merged in
  */
-@Deprecated
-public class MotionProfileData {
+public class MotionProfileData{
 	public double data[][];
 
 	private int dPtr = -1;
 
 	private boolean inverted;
 
+	public MotionProfileData(MotionProfileMap.MotionProfile map){
+		inverted = map.getInverted();
+		readFile(Robot.RESOURCES_PATH+map.getFilename());
+	}
+
 	public MotionProfileData(String filename, boolean inverted) {
 		this.inverted = inverted;
 		readFile(filename);
-	}
-
-	public MotionProfileData(String filename) {
-		this(filename, false);
 	}
 
 	private void readFile(String filename) {

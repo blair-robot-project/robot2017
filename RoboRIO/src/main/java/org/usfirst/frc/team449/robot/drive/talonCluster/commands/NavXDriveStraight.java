@@ -2,7 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.components.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.util.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 

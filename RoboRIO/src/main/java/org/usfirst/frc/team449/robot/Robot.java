@@ -9,8 +9,8 @@ import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
-import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
-import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.MPLoader;
+import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
@@ -26,10 +26,7 @@ import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
@@ -37,6 +34,8 @@ import java.util.Map;
 public class Robot extends IterativeRobot {
 
 	public static Robot instance;
+
+	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
 	private static final double MP_UPDATE_RATE = 0.005;
 	private double WHEEL_DIAMETER;
@@ -107,8 +106,8 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH+"balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH+"fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -207,11 +206,11 @@ public class Robot extends IterativeRobot {
 			rightProfiles = new HashMap<>();
 
 			for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-				leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+				leftProfiles.put(profile.getName(), new MotionProfileData(profile));
 			}
 
 			for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-				rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+				rightProfiles.put(profile.getName(), new MotionProfileData(profile));
 			}
 
 			if (cfg.getTestMP()) {
@@ -266,25 +265,7 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
 
-		if (robotInfo != null) {
-			if (redAlliance) {
-				String WriteString = "red_teleop";
-				char[] CharArray = WriteString.toCharArray();
-				byte[] WriteData = new byte[CharArray.length];
-				for (int i = 0; i < CharArray.length; i++) {
-					WriteData[i] = (byte) CharArray[i];
-				}
-				robotInfo.transaction(WriteData, WriteData.length, null, 0);
-			} else {
-				String WriteString = "blue_teleop";
-				char[] CharArray = WriteString.toCharArray();
-				byte[] WriteData = new byte[CharArray.length];
-				for (int i = 0; i < CharArray.length; i++) {
-					WriteData[i] = (byte) CharArray[i];
-				}
-				robotInfo.transaction(WriteData, WriteData.length, null, 0);
-			}
-		}
+		sendModeOverI2C(robotInfo, "teleop");
 	}
 
 	/**
@@ -310,7 +291,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//Set throttle to 0 for safety reasons
+		sendModeOverI2C(robotInfo, "auto");
+
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
 			if (cfg.getStartLowGear()) {
@@ -334,26 +316,6 @@ public class Robot extends IterativeRobot {
 			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, commandFinished, driveSubsystem));
 
-			if (robotInfo != null) {
-				if (redAlliance) {
-					String WriteString = "red_auto";
-					char[] CharArray = WriteString.toCharArray();
-					byte[] WriteData = new byte[CharArray.length];
-					for (int i = 0; i < CharArray.length; i++) {
-						WriteData[i] = (byte) CharArray[i];
-					}
-					robotInfo.transaction(WriteData, WriteData.length, null, 0);
-				} else {
-					String WriteString = "blue_auto";
-					char[] CharArray = WriteString.toCharArray();
-					byte[] WriteData = new byte[CharArray.length];
-					for (int i = 0; i < CharArray.length; i++) {
-						WriteData[i] = (byte) CharArray[i];
-					}
-					robotInfo.transaction(WriteData, WriteData.length, null, 0);
-				}
-
-			}
 		} else {
 			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 		}
@@ -410,6 +372,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledInit() {
 		driveSubsystem.setVBusThrottle(0, 0);
+		sendModeOverI2C(robotInfo, "disabled");
 	}
 
 	private void loadProfile(String name) {
@@ -417,5 +380,16 @@ public class Robot extends IterativeRobot {
 		MPLoader.loadTopLevel(leftProfiles.get(name), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfiles.get(name), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
+	}
+
+	private void sendModeOverI2C(I2C i2C, String mode){
+		if (i2C != null) {
+			char[] CharArray = (allianceString+"_"+mode).toCharArray();
+			byte[] WriteData = new byte[CharArray.length];
+			for (int i = 0; i < CharArray.length; i++) {
+				WriteData[i] = (byte) CharArray[i];
+			}
+			i2C.transaction(WriteData, WriteData.length, null, 0);
+		}
 	}
 }

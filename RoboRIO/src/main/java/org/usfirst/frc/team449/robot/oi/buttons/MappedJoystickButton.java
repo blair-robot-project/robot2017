@@ -1,11 +1,9 @@
-package org.usfirst.frc.team449.robot.oi;
+package org.usfirst.frc.team449.robot.oi.buttons;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
-import org.usfirst.frc.team449.robot.components.TriggerButton;
-import org.usfirst.frc.team449.robot.components.dPadButton;
 
 /**
  * A button with a port and joystick that can be constructed from a map object.

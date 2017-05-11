@@ -1,8 +1,9 @@
-package org.usfirst.frc.team449.robot.components;
+package org.usfirst.frc.team449.robot.util;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 
 /**
  * A command that uses a NavX to turn to a certain angle.

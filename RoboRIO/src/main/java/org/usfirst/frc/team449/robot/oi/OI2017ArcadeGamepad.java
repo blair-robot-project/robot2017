@@ -20,6 +20,7 @@ import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.ResetShooter;
+import org.usfirst.frc.team449.robot.oi.buttons.MappedJoystickButton;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;

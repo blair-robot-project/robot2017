@@ -8,7 +8,7 @@ import "org/usfirst/frc/team449/robot/mechanism/intake/Intake2017.proto";
 import "org/usfirst/frc/team449/robot/mechanism/pneumatics/PneumaticSystem.proto";
 import "org/usfirst/frc/team449/robot/vision/Camera.proto";
 import "org/usfirst/frc/team449/robot/mechanism/feeder/Feeder.proto";
-import "org/usfirst/frc/team449/robot/components/MotionProfile.proto";
+import "org/usfirst/frc/team449/robot/util/MotionProfile.proto";
 import "org/usfirst/frc/team449/robot/mechanism/activegear/ActiveGear.proto";
 import "org/usfirst/frc/team449/robot/components/DigitalInput.proto";
 
