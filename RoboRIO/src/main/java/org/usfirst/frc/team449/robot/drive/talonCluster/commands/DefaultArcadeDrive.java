@@ -105,7 +105,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			//Switch to free drive
 			drivingStraight = false;
 			delayedDriveStraight = false;
-			System.out.println("Switching to free drive.");
+			//System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
 		else if (!(driveSubsystem.overrideNavX) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
@@ -121,7 +121,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-			System.out.println("Switching to DriveStraight.");
+			//System.out.println("Switching to DriveStraight.");
 		}
 
 		//Log data and stuff
