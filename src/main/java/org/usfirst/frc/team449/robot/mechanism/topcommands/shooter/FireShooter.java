@@ -21,9 +21,14 @@ public class FireShooter extends CommandGroup {
 	 * @param feeder feeder subsystem
 	 */
 	public FireShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
-		requires(intake);
-		addParallel(new AccelerateFlywheel(sfs, 2.5 * 60));
-		addParallel(new StaticInDynamicStop(intake));
-		addParallel(new RunFeeder(feeder));
+		if (sfs != null) {
+			addParallel(new AccelerateFlywheel(sfs, 2.5 * 60));
+		}
+		if (intake != null) {
+			addParallel(new StaticInDynamicStop(intake));
+		}
+		if (feeder != null) {
+			addParallel(new RunFeeder(feeder));
+		}
 	}
 }

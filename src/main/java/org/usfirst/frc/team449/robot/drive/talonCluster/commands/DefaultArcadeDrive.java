@@ -39,6 +39,13 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
 	private double maxAngularVel;
+
+	private long driveStraightDelay;
+
+	private long timeAbleToDriveStraight;
+
+	private boolean delayedDriveStraight;
+
 	/**
 	 * The map of values
 	 */
@@ -58,6 +65,10 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.oi = oi;
 		this.map = map;
 		driveSubsystem = drive;
+
+		timeAbleToDriveStraight = 0;
+		driveStraightDelay = (long) (map.getDriveStraightDelay() * 1000);
+		delayedDriveStraight = false;
 
 		//Needs a requires because it's a default command.
 		requires(drive);
@@ -98,25 +109,33 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		rot = oi.getRot();
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
-		if ((drivingStraight && rot != 0) || driveSubsystem.overrideNavX) {
+		if (drivingStraight && (rot != 0 || driveSubsystem.overrideNavX)) {
 			//Switch to free drive
 			drivingStraight = false;
-			System.out.println("Switching to free drive.");
+			delayedDriveStraight = false;
+			//System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
+		else if (!(driveSubsystem.overrideNavX) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
+			delayedDriveStraight = true;
+			timeAbleToDriveStraight = System.currentTimeMillis();
+		}
+
+		if(delayedDriveStraight && System.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay){
 			//Switch to driving straight
 			drivingStraight = true;
+			delayedDriveStraight = false;
 			//Set the setpoint to the current heading and reset the NavX
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-			System.out.println("Switching to DriveStraight.");
+			//System.out.println("Switching to DriveStraight.");
 		}
 
 		//Log data and stuff
 		driveSubsystem.logData();
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
+		SmartDashboard.putBoolean("Override Navx", driveSubsystem.overrideNavX);
 		SmartDashboard.putNumber("Vel Axis", vel);
 		SmartDashboard.putNumber("Rot axis", rot);
 	}

@@ -22,11 +22,16 @@ public class ResetShooter extends CommandGroup {
 	 * @param feeder feeder subsystem
 	 */
 	public ResetShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
-		requires(intake);
-		addParallel(new DecelerateFlywheel(sfs, 5));
+		if (sfs != null) {
+			addParallel(new DecelerateFlywheel(sfs, 5));
+		}
 		//TODO Possibly have this raise intake instead because we'll mostly use this right before climbing.
-		addParallel(new IntakeDown(intake));
-		addParallel(new StaticStopDynamicStop(intake));
-		addParallel(new StopFeeder(feeder));
+		if (intake != null) {
+			addParallel(new IntakeDown(intake));
+			addParallel(new StaticStopDynamicStop(intake));
+		}
+		if (feeder != null) {
+			addParallel(new StopFeeder(feeder));
+		}
 	}
 }

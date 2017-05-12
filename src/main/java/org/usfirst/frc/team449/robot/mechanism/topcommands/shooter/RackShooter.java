@@ -22,10 +22,15 @@ public class RackShooter extends CommandGroup {
 	 * @param feeder feeder subsystem
 	 */
 	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
-		requires(intake);
-		addParallel(new AccelerateFlywheel(sfs, 5));
-		addParallel(new IntakeUp(intake));
-		addParallel(new StaticInDynamicStop(intake));
-		addParallel(new StopFeeder(feeder));
+		if (sfs != null) {
+			addParallel(new AccelerateFlywheel(sfs, 5));
+		}
+		if (intake != null) {
+			addParallel(new IntakeUp(intake));
+			addParallel(new StaticInDynamicStop(intake));
+		}
+		if (feeder != null) {
+			addParallel(new StopFeeder(feeder));
+		}
 	}
 }

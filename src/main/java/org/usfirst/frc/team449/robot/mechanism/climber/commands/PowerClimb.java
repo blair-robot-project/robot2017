@@ -5,24 +5,28 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 
 /**
- * Climb the rope and stop when the current limit is exceeded.
+ * Climb the rope and stop when the power limit is exceeded.
  */
-public class CurrentClimb extends ReferencingCommand {
+public class PowerClimb extends ReferencingCommand {
 
 	/**
 	 * The climber to execute this command on
 	 */
 	private ClimberSubsystem climber;
 
+	private long startTime;
+
+	private long spinupTime = 250;
+
 	/**
 	 * Default constructor
 	 * @param climber The climber subsystem to execute this command on
 	 */
-	public CurrentClimb(ClimberSubsystem climber) {
+	public PowerClimb(ClimberSubsystem climber) {
 		super(climber);
 		requires(climber);
 		this.climber = climber;
-		System.out.println("CurrentClimb constructed");
+		System.out.println("PowerClimb constructed");
 	}
 
 	/**
@@ -30,27 +34,28 @@ public class CurrentClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("CurrentClimb init");
+		System.out.println("PowerClimb init");
+		startTime = System.currentTimeMillis();
 	}
 
 	/**
-	 * Climb at full speed and log the current
+	 * Climb at full speed and log the power
 	 */
 	@Override
 	protected void execute() {
 		//Climb as fast as we can
 		climber.setPercentVbus(1);
-		//Log current to SmartDashboard
-		SmartDashboard.putNumber("Current", climber.canTalonSRX.canTalon.getOutputCurrent());
+		//Log power to SmartDashboard
+		SmartDashboard.putNumber("Power", climber.canTalonSRX.getPower());
 	}
 
 	/**
-	 * Stop when the current limit is exceeded.
-	 * @return true when the current limit is exceed, false otherwise.
+	 * Stop when the power limit is exceeded.
+	 * @return true when the power limit is exceed, false otherwise.
 	 */
 	@Override
 	protected boolean isFinished() {
-		return climber.reachedTop();
+		return climber.reachedTop() && System.currentTimeMillis() - startTime > spinupTime;
 	}
 
 	/**
@@ -60,7 +65,7 @@ public class CurrentClimb extends ReferencingCommand {
 	protected void end() {
 		//Stop the motor when we reach the top.
 		climber.setPercentVbus(0);
-		System.out.println("CurrentClimb end");
+		System.out.println("PowerClimb end");
 	}
 
 	/**
@@ -70,7 +75,7 @@ public class CurrentClimb extends ReferencingCommand {
 	protected void interrupted() {
 		//Stop climbing if we're for some reason interrupted.
 		climber.setPercentVbus(0);
-		System.out.println("CurrentClimb interrupted, stopping climb.");
+		System.out.println("PowerClimb interrupted, stopping climb.");
 	}
 
 }
