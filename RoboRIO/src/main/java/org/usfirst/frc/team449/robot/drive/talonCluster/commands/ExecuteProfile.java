@@ -18,7 +18,7 @@ public class ExecuteProfile extends Command {
 	/**
 	 * Number of points that must be loaded to the bottom level buffer before we start executing the profile
 	 */
-	private static final int MIN_NUM_POINTS_IN_BTM = 10; // maximum number of points
+	private static final int MIN_NUM_POINTS_IN_BTM = 10;
 
 	private boolean bottomLoaded;
 
@@ -75,10 +75,6 @@ public class ExecuteProfile extends Command {
 		bottomLoaded = false;
 	}
 
-	/**
-	 * If its the first execute call, start the thread. Otherwise, error check every loop call. Note that the real
-	 * logic is executed in the control method for black-magic Scheduler timing reasons.
-	 */
 	@Override
 	protected void execute() {
 		finished = true;
@@ -114,7 +110,6 @@ public class ExecuteProfile extends Command {
 	protected void end() {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
-//			talon.disable();
 		}
 		finishFlag.set(true);
 		System.out.println("ExecuteProfile end.");

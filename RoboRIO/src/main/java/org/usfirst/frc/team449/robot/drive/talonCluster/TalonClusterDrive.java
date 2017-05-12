@@ -229,8 +229,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return Math.min(Math.max(in, -1), 1);
 	}
 
-	// TODO refactor to specifiy PID VELOCITY setpoint
-
 	/**
 	 * Sets the left and right wheel speeds as a percent of max voltage, not nearly as precise as PID.
 	 *
@@ -466,8 +464,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		setDefaultCommand(defaultCommand);
 	}
 
-	// TODO generalize up-down with an enum
-
 	/**
 	 * Get the robot's heading using the navX
 	 *
@@ -476,8 +472,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	public double getGyroOutput() {
 		return navx.pidGet();
 	}
-
-	//TODO get rid of this because it's a reaaaaaally dumb wrapper.
 
 	/**
 	 * Shift as appropriate
@@ -511,26 +505,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		}
 	}
 
-	//TODO get rid of this because it's a reaaaaaally dumb wrapper.
-
-	/**
-	 * @return left cluster measured velocity
-	 */
-	@Deprecated
-	public double getLeftSpeed() {
-		return leftMaster.getSpeed();
-	}
-
-	/**
-	 * @return right cluster measured velocity
-	 */
-	@Deprecated
-	public double getRightSpeed() {
-		return rightMaster.getSpeed();
-	}
-
-	// TODO simplify the should-shift logic, especially by moving repeated code into separate functions.
-
 	/**
 	 * @return whether the robot is in low gear
 	 */
@@ -543,7 +517,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldDownshift() {
 		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.max(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) < downshiftSpeed;
+		boolean okToShift = Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) < downshiftSpeed;
 		//Or if we're just turning in place.
 		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
 		//Or commanding a low speed.
@@ -573,7 +547,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public boolean shouldUpshift() {
 		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.min(Math.abs(getLeftSpeed()), Math.abs(getRightSpeed())) > upshiftSpeed;
+		boolean okToShift = Math.min(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
 		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.

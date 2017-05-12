@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
@@ -9,14 +10,16 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
  */
 //TODO update this to the new OI organization.
 public class DriveStraight extends ReferencingCommand {
-	public OISubsystem oi;
+	private TankOI oi;
 
-	double leftThrottle;
-	double rightThrottle;
+	private boolean useLeft;
 
-	public DriveStraight(TalonClusterDrive drive, OISubsystem oi) {
+	private double throttle;
+
+	public DriveStraight(TalonClusterDrive drive, TankOI oi, boolean useLeft) {
 		super(drive);
 		this.oi = oi;
+		this.useLeft = useLeft;
 		requires(subsystem);
 		System.out.println("Drive Robot bueno");
 	}
@@ -28,8 +31,12 @@ public class DriveStraight extends ReferencingCommand {
 
 	@Override
 	protected void execute() {
-		leftThrottle = oi.getDriveAxisLeft();
-		((TalonClusterDrive) subsystem).setDefaultThrottle(leftThrottle, leftThrottle);
+		if(useLeft){
+			throttle = oi.getLeftThrottle();
+		} else {
+			throttle = oi.getRightThrottle();
+		}
+		((TalonClusterDrive) subsystem).setDefaultThrottle(throttle, throttle);
 		((TalonClusterDrive) subsystem).logData();
 	}
 
