@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.RunFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.StaticInDynamicStop;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.FixedInActuatedStop;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 
@@ -25,7 +25,7 @@ public class FireShooter extends CommandGroup {
 			addParallel(new AccelerateFlywheel(sfs, 2.5 * 60));
 		}
 		if (intake != null) {
-			addParallel(new StaticInDynamicStop(intake));
+			addParallel(new FixedInActuatedStop(intake));
 		}
 		if (feeder != null) {
 			addParallel(new RunFeeder(feeder));

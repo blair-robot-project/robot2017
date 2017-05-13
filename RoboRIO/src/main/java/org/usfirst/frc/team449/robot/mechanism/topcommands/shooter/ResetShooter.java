@@ -5,7 +5,7 @@ import org.usfirst.frc.team449.robot.components.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.StopFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.StaticStopDynamicStop;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.FixedStopActuatedStop;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.DecelerateFlywheel;
 
@@ -27,7 +27,7 @@ public class ResetShooter extends CommandGroup {
 		}
 		if (intake != null) {
 			addParallel(new SolenoidReverse(intake));
-			addParallel(new StaticStopDynamicStop(intake));
+			addParallel(new FixedStopActuatedStop(intake));
 		}
 		if (feeder != null) {
 			addParallel(new StopFeeder(feeder));

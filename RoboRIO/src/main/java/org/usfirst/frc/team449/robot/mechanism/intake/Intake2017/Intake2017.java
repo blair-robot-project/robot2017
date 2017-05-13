@@ -32,6 +32,12 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	 */
 	private DoubleSolenoid piston;
 
+	private double fixedIntakeSpeed;
+
+	private double fixedAgitateSpeed;
+
+	private double actuatedSpeed;
+
 	/**
 	 * Creates a mapped subsystem and sets its map
 	 *
@@ -47,25 +53,38 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 		if (map.hasPiston()) {
 			this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
 		}
+		fixedAgitateSpeed = map.getFixedAgitateSpeed();
+		fixedIntakeSpeed = map.getFixedIntakeSpeed();
+		actuatedSpeed = map.getActuatedSpeed();
 	}
 
 	/**
-	 * Set the percentage speed of the static intake
+	 * Set the speed of the static intake
 	 *
-	 * @param speed PWM setpoint [-1, 1]
+	 * @param mode the mode to set the victor to.
 	 */
-	public void setFixedVictor(double speed) {
-		fixedVictor.set(speed);
+	public void setFixedVictor(FixedIntakeMode mode) {
+		if (mode == FixedIntakeMode.OFF){
+			fixedVictor.set(0);
+		} else if (mode == FixedIntakeMode.AGITATING){
+			fixedVictor.set(fixedAgitateSpeed);
+		} else {
+			fixedVictor.set(fixedIntakeSpeed);
+		}
 	}
 
 	/**
-	 * Set the percentage speed of the dynamic intake
+	 * Set whether the actuated intake is on
 	 *
-	 * @param speed PWM setpoint [-1, 1]
+	 * @param on set the motor to the speed in the config if true, 0 otherwise.
 	 */
-	public void setActuatedVictor(double speed) {
+	public void setActuatedVictor(boolean on) {
 		if (actuatedVictor != null) {
-			actuatedVictor.set(speed);
+			if (on){
+				actuatedVictor.set(actuatedSpeed);
+			} else {
+				actuatedVictor.set(0);
+			}
 		}
 	}
 
@@ -104,5 +123,9 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing!
+	}
+
+	public enum FixedIntakeMode{
+		INTAKING, AGITATING, OFF
 	}
 }

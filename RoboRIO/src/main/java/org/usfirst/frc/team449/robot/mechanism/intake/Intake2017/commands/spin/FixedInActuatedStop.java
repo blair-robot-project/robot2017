@@ -4,9 +4,9 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
- * Stop both intake motors.
+ * Run the fixed motor but not the actuated. This is used to agitate balls in the bin.
  */
-public class StaticStopDynamicStop extends ReferencingCommand {
+public class FixedInActuatedStop extends ReferencingCommand {
 
 	/**
 	 * The intake subsystem to execute this command on
@@ -18,18 +18,18 @@ public class StaticStopDynamicStop extends ReferencingCommand {
 	 *
 	 * @param intake The intake subsystem to execute this command on.
 	 */
-	public StaticStopDynamicStop(Intake2017 intake) {
+	public FixedInActuatedStop(Intake2017 intake) {
 		super(intake);
 		this.intake = intake;
 	}
 
 	/**
-	 * Set the fixed and actuated motors to stop.
+	 * Set the fixed motor to go in slowly and the actuated motor to stop.
 	 */
 	@Override
 	protected void execute() {
-		intake.setActuatedVictor(0);
-		intake.setFixedVictor(0);
+		intake.setFixedVictor(Intake2017.FixedIntakeMode.AGITATING);
+		intake.setActuatedVictor(false);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import org.usfirst.frc.team449.robot.components.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.StopFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.StaticInDynamicIn;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.FixedInActuatedIn;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.DecelerateFlywheel;
 
@@ -27,7 +27,7 @@ public class LoadShooter extends CommandGroup {
 		}
 		if (intake != null) {
 			addParallel(new SolenoidReverse(intake));
-			addParallel(new StaticInDynamicIn(intake));
+			addParallel(new FixedInActuatedIn(intake));
 		}
 		if (feeder != null) {
 			addParallel(new StopFeeder(feeder));

@@ -4,9 +4,9 @@ import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 
 /**
- * Run both intake motors. Used to pick up balls from the ground.
+ * Stop both intake motors.
  */
-public class StaticInDynamicIn extends ReferencingCommand {
+public class FixedStopActuatedStop extends ReferencingCommand {
 
 	/**
 	 * The intake subsystem to execute this command on
@@ -18,19 +18,18 @@ public class StaticInDynamicIn extends ReferencingCommand {
 	 *
 	 * @param intake The intake subsystem to execute this command on.
 	 */
-	public StaticInDynamicIn(Intake2017 intake) {
+	public FixedStopActuatedStop(Intake2017 intake) {
 		super(intake);
 		this.intake = intake;
 	}
 
 	/**
-	 * Set the fixed and actuated motors to go in.
+	 * Set the fixed and actuated motors to stop.
 	 */
 	@Override
 	protected void execute() {
-		//TODO Stop hardcoding these
-		intake.setFixedVictor(-0.7);
-		intake.setActuatedVictor(1);
+		intake.setActuatedVictor(false);
+		intake.setFixedVictor(Intake2017.FixedIntakeMode.OFF);
 	}
 
 	/**

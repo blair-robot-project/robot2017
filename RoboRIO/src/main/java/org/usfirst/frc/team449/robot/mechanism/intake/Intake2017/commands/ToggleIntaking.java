@@ -30,12 +30,11 @@ public class ToggleIntaking extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		if (intake2017.isIntaking) {
-			intake2017.setActuatedVictor(0);
-			intake2017.setFixedVictor(0);
+			intake2017.setActuatedVictor(false);
+			intake2017.setFixedVictor(Intake2017.FixedIntakeMode.OFF);
 		} else {
-			//TODO Stop hardcoding these
-			intake2017.setActuatedVictor(1);
-			intake2017.setFixedVictor(-0.5);
+			intake2017.setActuatedVictor(true);
+			intake2017.setFixedVictor(Intake2017.FixedIntakeMode.INTAKING);
 		}
 		intake2017.setIntaking(!intake2017.isIntaking);
 	}
@@ -55,8 +54,8 @@ public class ToggleIntaking extends ReferencingCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		intake2017.setActuatedVictor(0);
-		intake2017.setFixedVictor(0);
+		intake2017.setActuatedVictor(false);
+		intake2017.setFixedVictor(Intake2017.FixedIntakeMode.OFF);
 		System.out.println("ToggleIntaking interrupted, stopping intake2017.");
 	}
 }
