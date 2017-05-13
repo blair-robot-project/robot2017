@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.components;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 

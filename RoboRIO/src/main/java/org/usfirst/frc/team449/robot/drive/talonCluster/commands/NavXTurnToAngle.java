@@ -2,7 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.util.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
@@ -67,23 +67,14 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	protected void usePIDOutput(double output) {
 		//Logging
 		SmartDashboard.putNumber("Preprocessed output", output);
-		SmartDashboard.putNumber("NavX Turn To Angle Setpoint", this.getSetpoint());
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput)
-				output = minimumOutput;
-			else if (output < 0 && output > -minimumOutput)
-				output = -minimumOutput;
-		}
-		//If we're within deadband degrees of the setpoint, we stop moving to avoid "dancing" around the setpoint.
-		if (Math.abs(this.getPIDController().getError()) < deadband) {
-			output = 0;
-		}
-		//More logging
-		SmartDashboard.putNumber("Processed output", output);
+		SmartDashboard.putNumber("NavX Turn To Angle Setpoint", getSetpoint());
 
-		//Which one of these is negative may be different from robot to robot, we don't know.
-		drive.setDefaultThrottle(output, -output);    //spin to the right angle
+		output = processPIDOutput(output);
+
+		//More logging
+		SmartDashboard.putNumber("NavXTurnToAngle PID loop output", output);
+
+		drive.setDefaultThrottle(-output, output);    //spin to the right angle
 	}
 
 	/**

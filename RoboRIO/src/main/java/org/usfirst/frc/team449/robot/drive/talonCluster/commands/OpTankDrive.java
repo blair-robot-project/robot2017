@@ -2,7 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 
 /**
  * Very simple tank drive control.

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.topcommands.shooter;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team449.robot.components.SolenoidReverse;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.StopFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;

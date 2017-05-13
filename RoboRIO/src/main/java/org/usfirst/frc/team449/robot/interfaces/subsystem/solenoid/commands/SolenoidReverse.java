@@ -1,7 +1,8 @@
-package org.usfirst.frc.team449.robot.components;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 
 /**
  * A command that contracts a piston.

@@ -4,7 +4,7 @@ import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
- * Turn a ceetain number of degrees from the current heading.
+ * Turn a certain number of degrees from the current heading.
  */
 public class NavXRelativeTTA extends NavXTurnToAngle {
 

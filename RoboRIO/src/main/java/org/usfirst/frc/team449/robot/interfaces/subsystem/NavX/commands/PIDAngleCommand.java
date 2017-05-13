@@ -1,9 +1,9 @@
-package org.usfirst.frc.team449.robot.util;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.components.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
  * A command that uses a NavX to turn to a certain angle.
@@ -25,14 +25,11 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	protected NavxSubsystem subsystem;
 
 	/**
-	 * How close to the target we have to be to be considered on target.
-	 */
-	protected double tolerance;
-
-	/**
 	 * The range in which output is turned off to prevent "dancing" around the setpoint.
 	 */
 	protected double deadband;
+
+	protected boolean inverted;
 
 	/**
 	 * Default constructor.
@@ -50,17 +47,15 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		//It's a circle, so it's continuous
 		this.getPIDController().setContinuous(true);
 
-		//Tolerance should be a variable so we can scale the deadband later.
-		tolerance = map.getAbsoluteTolerance();
-		this.getPIDController().setAbsoluteTolerance(tolerance);
+		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
 
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
 		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
 
 		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
-		this.minimumOutput = map.getMinimumOutput();
-		this.minimumOutputEnabled = map.getMinimumOutputEnabled();
+		minimumOutput = map.getMinimumOutput();
+		minimumOutputEnabled = map.getMinimumOutputEnabled();
 
 		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
 		// prevent overshoot.
@@ -70,12 +65,35 @@ public abstract class PIDAngleCommand extends PIDCommand {
 
 		//Set a deadband around the setpoint, in degrees, within which don't move, to avoid "dancing"
 		if (map.getDeadbandEnabled()) {
-			this.deadband = map.getDeadband();
+			deadband = map.getDeadband();
 		} else {
-			this.deadband = 0;
+			deadband = 0;
 		}
 
+		inverted = map.getInverted();
+
 		this.subsystem = subsystem;
+	}
+
+	protected double processPIDOutput(double output){
+		//If we're using minimumOutput..
+		if (minimumOutputEnabled) {
+			//Set the output to the minimum if it's too small.
+			if (output > 0 && output < minimumOutput) {
+				output = minimumOutput;
+			} else if (output < 0 && output > -minimumOutput) {
+				output = -minimumOutput;
+			}
+		}
+		//Set the output to 0 if we're within the deadband.
+		if (Math.abs(this.getPIDController().getError()) < deadband) {
+			output = 0;
+		}
+		if (inverted){
+			output *= -1;
+		}
+
+		return output;
 	}
 
 	/*

@@ -2,10 +2,9 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
-import org.usfirst.frc.team449.robot.util.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.oi.OISubsystem;
 
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
@@ -15,7 +14,6 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	private TankOI oi;
 	private TalonClusterDrive drive;
 	private boolean useLeft;
-	private boolean inverted;
 
 	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
 	                         TankOI oi, boolean useLeft) {
@@ -23,7 +21,6 @@ public class NavXDriveStraight extends PIDAngleCommand {
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;
-		this.inverted = map.getInverted();
 		requires(drive);
 	}
 
@@ -34,20 +31,8 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		//If we're using minimumOutput..
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput) {
-				output = minimumOutput;
-			} else if (output < 0 && output > -minimumOutput) {
-				output = -minimumOutput;
-			}
-		}
-		//Set the output to 0 if we're within the deadband. Whether or not the deadband is enabled is dealt with
-		// in PIDAngleCommand.
-		if (Math.abs(this.getPIDController().getError()) < deadband) {
-			output = 0;
-		}
+		output = processPIDOutput(output);
+
 		SmartDashboard.putNumber("NavXDriveStraight PID output", output);
 		double throttle;
 		if (useLeft){

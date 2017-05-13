@@ -2,7 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.activegear;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
-import org.usfirst.frc.team449.robot.components.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 
 /**
  * The subsystem that carries and pushes gears.

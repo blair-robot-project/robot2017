@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team449.robot.components.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
  * Set whether or not to use the NavX to drive straight.
