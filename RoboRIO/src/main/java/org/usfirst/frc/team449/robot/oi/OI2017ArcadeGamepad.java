@@ -1,19 +1,19 @@
 package org.usfirst.frc.team449.robot.oi;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.SolenoidForward;
+import org.usfirst.frc.team449.robot.components.SolenoidReverse;
+import org.usfirst.frc.team449.robot.components.ToggleSolenoid;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
-import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.ManualClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
@@ -349,7 +349,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		//Map intake commands
 		if (Robot.instance.intakeSubsystem != null) {
 			if (toggleIntakeUpDown != null) {
-				toggleIntakeUpDown.whenPressed(new ToggleIntakeUpDown(Robot.instance.intakeSubsystem));
+				toggleIntakeUpDown.whenPressed(new ToggleSolenoid(Robot.instance.intakeSubsystem));
 			}
 			if (toggleIntake != null) {
 				toggleIntake.whenPressed(new ToggleIntaking(Robot.instance.intakeSubsystem));
@@ -386,11 +386,11 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (Robot.instance.gearSubsystem != null) {
 			if (toggleGear != null) {
-				toggleGear.whenPressed(new FirePiston(Robot.instance.gearSubsystem, Robot.instance.gearSubsystem.contracted ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
+				toggleGear.whenPressed(new ToggleSolenoid(Robot.instance.gearSubsystem));
 			}
 			for (Button button : pushGear) {
-				button.whenPressed(new FirePiston(Robot.instance.gearSubsystem, DoubleSolenoid.Value.kReverse));
-				button.whenReleased(new FirePiston(Robot.instance.gearSubsystem, DoubleSolenoid.Value.kForward));
+				button.whenPressed(new SolenoidReverse(Robot.instance.gearSubsystem));
+				button.whenReleased(new SolenoidForward(Robot.instance.gearSubsystem));
 			}
 		}
 		if (logError != null) {

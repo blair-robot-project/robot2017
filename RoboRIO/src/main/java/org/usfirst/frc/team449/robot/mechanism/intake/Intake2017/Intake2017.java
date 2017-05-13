@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
+import org.usfirst.frc.team449.robot.components.SolenoidSubsystem;
 
 /**
  * The subsystem that picks up balls from the ground.
  */
-public class Intake2017 extends MappedSubsystem {
+public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	/**
 	 * Whether this is currently intaking
 	 */
@@ -26,7 +27,6 @@ public class Intake2017 extends MappedSubsystem {
 	 */
 	private VictorSP actuatedVictor;
 
-	//TODO make an enum
 	/**
 	 * Piston for raising and lowering the intake
 	 */
@@ -74,12 +74,16 @@ public class Intake2017 extends MappedSubsystem {
 	 *
 	 * @param value direction to fire
 	 */
-	public void setPiston(DoubleSolenoid.Value value) {
+	public void setSolenoid(DoubleSolenoid.Value value) {
 		if (piston != null) {
 			piston.set(value);
 			System.out.println("Set Piston");
 			intakeUp = (value == DoubleSolenoid.Value.kReverse);
 		}
+	}
+
+	public DoubleSolenoid.Value getSolenoidPosition(){
+		return intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
 
 	/**

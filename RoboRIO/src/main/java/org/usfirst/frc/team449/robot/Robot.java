@@ -1,32 +1,38 @@
 package org.usfirst.frc.team449.robot;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.components.SolenoidForward;
+import org.usfirst.frc.team449.robot.components.SolenoidReverse;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
-import org.usfirst.frc.team449.robot.util.MPLoader;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown.IntakeUp;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.BooleanWrapper;
+import org.usfirst.frc.team449.robot.util.MPLoader;
+import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
@@ -264,11 +270,11 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (intakeSubsystem != null) {
-			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
+			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
 		}
 
 		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
 		}
 
 		sendModeOverI2C(robotInfo, "teleop");
@@ -309,7 +315,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
+			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
 		}
 
 		commandFinished.set(false);
@@ -344,7 +350,7 @@ public class Robot extends IterativeRobot {
 				commandFinished.set(false);
 				if (completedCommands == 1) {
 					if (gearSubsystem != null && dropGear) {
-						Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kReverse));
+						Scheduler.getInstance().add(new SolenoidReverse(gearSubsystem));
 					}
 					startedGearPush = System.currentTimeMillis();
 				} else if (completedCommands == 2) {

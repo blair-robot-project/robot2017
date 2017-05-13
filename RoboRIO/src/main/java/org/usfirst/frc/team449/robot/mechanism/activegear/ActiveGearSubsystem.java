@@ -2,11 +2,12 @@ package org.usfirst.frc.team449.robot.mechanism.activegear;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.components.SolenoidSubsystem;
 
 /**
  * The subsystem that carries and pushes gears.
  */
-public class ActiveGearSubsystem extends MappedSubsystem {
+public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubsystem{
 	/**
 	 * Whether piston is currently contracted
 	 */
@@ -32,10 +33,15 @@ public class ActiveGearSubsystem extends MappedSubsystem {
 	 *
 	 * @param value direction to fire
 	 */
-	public void setPiston(DoubleSolenoid.Value value) {
+	public void setSolenoid(DoubleSolenoid.Value value) {
 		piston.set(value);
 		System.out.println("Set Piston");
 		contracted = (value == DoubleSolenoid.Value.kReverse);
+	}
+
+	@Override
+	public DoubleSolenoid.Value getSolenoidPosition() {
+		return contracted? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
 
 	/**
