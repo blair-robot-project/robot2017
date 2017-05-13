@@ -13,16 +13,14 @@ public class DecelerateFlywheel extends ReferencingCommand {
 	 */
 	private SingleFlywheelShooter flywheelShooter;
 
-	//TODO Either implement or remove timeout.
 
 	/**
-	 * Construct a DecelerateFLywheel command
+	 * Construct a DecelerateFlywheel command
 	 *
 	 * @param subsystem shooter to execute this command on
-	 * @param timeout   command timeout (doesn't actually work)
 	 */
-	public DecelerateFlywheel(MappedSubsystem subsystem, double timeout) {
-		super(subsystem, timeout);
+	public DecelerateFlywheel(MappedSubsystem subsystem) {
+		super(subsystem);
 		flywheelShooter = (SingleFlywheelShooter) subsystem;
 		requires(subsystem);
 	}

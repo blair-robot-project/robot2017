@@ -7,6 +7,8 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class for the flywheel
@@ -22,11 +24,10 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	 */
 	public boolean spinning;
 
-	// TODO externalize
 	/**
 	 * Throttle at which to run the shooter, defaults to 0.5
 	 */
-	public double throttle = 0.5;
+	public double throttle;
 
 	/**
 	 * Measured start time in nanoseconds (for logging)
@@ -36,6 +37,8 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	 * Measured max PID error so far (for testing purposes)
 	 */
 	private double maxError = 0;
+
+	private String logFilename;
 
 	/**
 	 * Construct a SingleFlywheelShooter
@@ -47,11 +50,11 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		super(map.getMechanism());
 		this.map = map;
 		this.talon = new RotPerSecCANTalonSRX(map.getTalon());
+		// Write the headers for the logfile.
+		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+		logFilename = map.getLogFilename() + timeStamp + ".csv";
 
-		//If we have a throttle in the map, use that instead of 0.5
-		if (map.hasThrottle()) {
-			this.throttle = map.getThrottle();
-		}
+		this.throttle = map.getThrottle();
 		System.out.println("Shooter F: " + talon.canTalon.getF());
 	}
 
@@ -92,7 +95,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		SmartDashboard.putNumber("max error", maxError);
 		SmartDashboard.putNumber("speed", talon.canTalon.getPulseWidthVelocity());
 
-		try (FileWriter fw = new FileWriter("/home/lvuser/logs/shooterLog.csv", true)) {
+		try (FileWriter fw = new FileWriter(logFilename, true)) {
 			StringBuilder sb = new StringBuilder();
 			sb.append((System.nanoTime() - startTime) / 100);
 			sb.append(",");
@@ -117,8 +120,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	 */
 	@Override
 	protected void initDefaultCommand() {
-		//TODO Externalize filepath.
-		try (PrintWriter writer = new PrintWriter("/home/lvuser/logs/shooterLog.csv")) {
+		try (PrintWriter writer = new PrintWriter(logFilename)) {
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

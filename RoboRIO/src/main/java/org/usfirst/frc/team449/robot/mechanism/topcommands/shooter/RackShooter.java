@@ -23,7 +23,7 @@ public class RackShooter extends CommandGroup {
 	 */
 	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
 		if (sfs != null) {
-			addParallel(new AccelerateFlywheel(sfs, 5));
+			addParallel(new AccelerateFlywheel(sfs));
 		}
 		if (intake != null) {
 			addParallel(new SolenoidReverse(intake));

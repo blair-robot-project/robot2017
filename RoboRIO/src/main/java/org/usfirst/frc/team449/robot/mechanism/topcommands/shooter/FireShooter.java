@@ -22,7 +22,7 @@ public class FireShooter extends CommandGroup {
 	 */
 	public FireShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
 		if (sfs != null) {
-			addParallel(new AccelerateFlywheel(sfs, 2.5 * 60));
+			addParallel(new AccelerateFlywheel(sfs));
 		}
 		if (intake != null) {
 			addParallel(new FixedInActuatedStop(intake));

@@ -324,7 +324,7 @@ public class Robot extends IterativeRobot {
 
 		if (cfg.getDoMP()) {
 			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()) {
-				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
+				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem));
 			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 

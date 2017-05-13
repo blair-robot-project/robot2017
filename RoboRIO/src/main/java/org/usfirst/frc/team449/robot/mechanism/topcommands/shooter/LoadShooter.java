@@ -23,7 +23,7 @@ public class LoadShooter extends CommandGroup {
 	 */
 	public LoadShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
 		if (sfs != null) {
-			addParallel(new DecelerateFlywheel(sfs, 5));
+			addParallel(new DecelerateFlywheel(sfs));
 		}
 		if (intake != null) {
 			addParallel(new SolenoidReverse(intake));
