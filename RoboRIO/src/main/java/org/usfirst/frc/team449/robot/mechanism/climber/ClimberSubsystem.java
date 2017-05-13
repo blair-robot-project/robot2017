@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.mechanism.climber;
 
 import edu.wpi.first.wpilibj.VictorSP;
+import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
@@ -31,8 +32,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
 		this.max_power = map.getMaxPower();
 		if (map.hasVictor()) {
-			this.victor = new VictorSP(map.getVictor().getPort());
-			victor.setInverted(map.getVictor().getInverted());
+			this.victor = new MappedVictor(map.getVictor());
 		}
 	}
 

@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.components.MappedVictor;
 
 /**
  * The subsystem that picks up balls from the ground.
@@ -39,11 +40,9 @@ public class Intake2017 extends MappedSubsystem {
 	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
 		super(map.getMechanism());
 		this.map = map;
-		this.fixedVictor = new VictorSP(map.getFixedVictor().getPort());
-		fixedVictor.setInverted(map.getFixedVictor().getInverted());
+		this.fixedVictor = new MappedVictor(map.getFixedVictor());
 		if (map.hasActuatedVictor()) {
-			this.actuatedVictor = new VictorSP(map.getActuatedVictor().getPort());
-			actuatedVictor.setInverted(map.getActuatedVictor().getInverted());
+			this.actuatedVictor = new MappedVictor(map.getActuatedVictor());
 		}
 		if (map.hasPiston()) {
 			this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());

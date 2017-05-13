@@ -101,14 +101,14 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		rot = oi.getRot();
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
-		if (drivingStraight && (rot != 0 || driveSubsystem.overrideNavX)) {
+		if (drivingStraight && (rot != 0 || driveSubsystem.getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
 			delayedDriveStraight = false;
 			//System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(driveSubsystem.overrideNavX) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
+		else if (!(driveSubsystem.getOverrideNavX()) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
 			delayedDriveStraight = true;
 			timeAbleToDriveStraight = System.currentTimeMillis();
 		}
@@ -127,7 +127,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//Log data and stuff
 		driveSubsystem.logData();
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
-		SmartDashboard.putBoolean("Override Navx", driveSubsystem.overrideNavX);
+		SmartDashboard.putBoolean("Override Navx", driveSubsystem.getOverrideNavX());
 		SmartDashboard.putNumber("Vel Axis", vel);
 		SmartDashboard.putNumber("Rot axis", rot);
 	}

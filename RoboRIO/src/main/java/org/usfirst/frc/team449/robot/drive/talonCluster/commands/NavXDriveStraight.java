@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 import org.usfirst.frc.team449.robot.util.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.oi.OISubsystem;
@@ -9,18 +10,20 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
-//TODO update this to the new OI organization.
 public class NavXDriveStraight extends PIDAngleCommand {
 
-	private OISubsystem oi;
+	private TankOI oi;
 	private TalonClusterDrive drive;
-	private double sp;
+	private boolean useLeft;
+	private boolean inverted;
 
 	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
-	                         OISubsystem oi) {
+	                         TankOI oi, boolean useLeft) {
 		super(map, drive);
 		this.oi = oi;
 		this.drive = drive;
+		this.useLeft = useLeft;
+		this.inverted = map.getInverted();
 		requires(drive);
 	}
 
@@ -31,19 +34,33 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		if (minimumOutputEnabled && this.getPIDController().getError() * 3 / 4 > tolerance) {
+		//If we're using minimumOutput..
+		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput)
+			if (output > 0 && output < minimumOutput) {
 				output = minimumOutput;
-			else if (output < 0 && output > -minimumOutput)
+			} else if (output < 0 && output > -minimumOutput) {
 				output = -minimumOutput;
+			}
 		}
-		if (this.getPIDController().getError() <= deadband) {
+		//Set the output to 0 if we're within the deadband. Whether or not the deadband is enabled is dealt with
+		// in PIDAngleCommand.
+		if (Math.abs(this.getPIDController().getError()) < deadband) {
 			output = 0;
 		}
-		SmartDashboard.putNumber("Output", output);
-		drive.setDefaultThrottle(oi.getDriveAxisRight() + output, oi.getDriveAxisRight() - output); //Yes these should
-		// both be right, it's driveStraight
+		SmartDashboard.putNumber("NavXDriveStraight PID output", output);
+		double throttle;
+		if (useLeft){
+			throttle = oi.getLeftThrottle();
+		} else {
+			throttle = oi.getRightThrottle();
+		}
+
+		if (inverted){
+			drive.setDefaultThrottle(throttle + output, throttle - output);
+		} else {
+			drive.setDefaultThrottle(throttle - output, throttle + output);
+		}
 	}
 
 	/**

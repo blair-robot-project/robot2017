@@ -38,7 +38,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
 	 * much of the way
 	 */
-	private static double SHIFT;
+	private double shift;
 
 	/**
 	 * The throttle wrapper for the stick controlling turning velocity
@@ -151,6 +151,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	private Button jiggleRobot;
 
 	private boolean overrideNavXWhileHeld;
+	private double rotScale;
 
 	/**
 	 * Construct the OI2017ArcadeGamepad
@@ -164,8 +165,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 
 		//Set up other map constants
-		SHIFT = (map.getInvertDpad() ? -map.getDpadShift() : map.getDpadShift());
+		shift = (map.getInvertDpad() ? -map.getDpadShift() : map.getDpadShift());
 		deadband = map.getDeadband();
+		rotScale = map.getScaleFwdByRotCoefficient();
 
 		//Instantiate mandatory buttons.
 		toggleOverrideNavX = MappedJoystickButton.constructButton(map.getOverrideNavX());
@@ -260,10 +262,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	public double getFwd() {
 		//If the value is outside of the deadband
 		if (Math.abs(fwdThrottle.getValue()) > deadband) {
-			//TODO put this number in the map
-			final double ROT_SCALE = 0.2;
 			//Scale based on rotational throttle for more responsive turning at high speed
-			return fwdThrottle.getValue() * (1 - ROT_SCALE * rotThrottle.getValue());
+			return fwdThrottle.getValue() * (1 - rotScale * rotThrottle.getValue());
 		} else {
 			return 0;
 		}
@@ -279,7 +279,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		//If the gamepad is being pushed to the left or right
 		if (!(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
 			//Output the shift value
-			return gamepad.getPOV() < 180 ? SHIFT : -SHIFT;
+			return gamepad.getPOV() < 180 ? shift : -shift;
 		} else if (Math.abs(rotThrottle.getValue()) > deadband) {
 			//Return the throttle value if it's outside of the deadband.
 			return rotThrottle.getValue();
@@ -343,7 +343,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Map camera commands
 		if (Robot.instance.cameraSubsystem != null && switchCamera != null) {
-			switchCamera.whenPressed(new ChangeCam(Robot.instance.cameraSubsystem, TIMEOUT));
+			switchCamera.whenPressed(new ChangeCam(Robot.instance.cameraSubsystem));
 		}
 
 		//Map intake commands

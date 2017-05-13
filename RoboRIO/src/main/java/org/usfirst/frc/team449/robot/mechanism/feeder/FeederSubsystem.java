@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.feeder;
 
 import edu.wpi.first.wpilibj.VictorSP;
 import maps.org.usfirst.frc.team449.robot.mechanism.feeder.FeederMap;
+import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
 /**
@@ -31,10 +32,8 @@ public class FeederSubsystem extends MechanismSubsystem {
 		super(map.getMechanism());
 		speed = map.getSpeed();
 
-		//TODO make a MappedVictor class that we can directly give a motor map.
 		//Initialize the Victor
-		this.victor = new VictorSP(map.getVictor().getPort());
-		victor.setInverted(map.getVictor().getInverted());
+		this.victor = new MappedVictor(map.getVictor());
 
 		//Starts off
 		running = false;

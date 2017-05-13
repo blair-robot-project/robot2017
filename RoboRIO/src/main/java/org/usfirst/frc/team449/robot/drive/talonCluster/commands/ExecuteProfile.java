@@ -14,11 +14,10 @@ import java.util.Collection;
  * ReferencingCommand to load and execute a motion profile on the master Talons in the two motor clusters
  */
 public class ExecuteProfile extends Command {
-	//TODO Externalize all this shit
 	/**
 	 * Number of points that must be loaded to the bottom level buffer before we start executing the profile
 	 */
-	private static final int MIN_NUM_POINTS_IN_BTM = 10;
+	private static int MIN_NUM_POINTS_IN_BTM;
 
 	private boolean bottomLoaded;
 
@@ -36,7 +35,7 @@ public class ExecuteProfile extends Command {
 	/**
 	 * Construct a new ExecuteProfile command
 	 */
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, BooleanWrapper finishFlag, Subsystem toRequire) {
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, int minPointsInBtm, BooleanWrapper finishFlag, Subsystem toRequire) {
 		if (toRequire != null) {
 			requires(toRequire);
 		}
@@ -51,11 +50,12 @@ public class ExecuteProfile extends Command {
 
 		finished = false;
 		bottomLoaded = false;
+		MIN_NUM_POINTS_IN_BTM = minPointsInBtm;
 		this.finishFlag = finishFlag;
 	}
 
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, BooleanWrapper finishFlag) {
-		this(talons, timeout, finishFlag, null);
+	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, int minPointsinBtm, BooleanWrapper finishFlag) {
+		this(talons, timeout, minPointsinBtm, finishFlag, null);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class ExecuteProfile extends Command {
 			talon.getMotionProfileStatus(MPStatus);
 			if (!bottomLoaded) {
 				finished = false;
-				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM);
+				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM || MPStatus.topBufferCnt == 0);
 			}
 			if (bottomLoaded) {
 				finished = finished && MPStatus.activePoint.isLastPoint;

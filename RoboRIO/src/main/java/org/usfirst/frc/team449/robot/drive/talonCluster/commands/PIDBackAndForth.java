@@ -25,16 +25,7 @@ public class PIDBackAndForth extends ReferencingCommandGroup {
 		TalonClusterDrive driveSubsystem = (TalonClusterDrive) mappedSubsystem;
 		double time = 1.5;
 
-		/*
-		for (int i = 0; i < 5; i++){
-			addSequential(new DriveAtSpeed(driveSubsystem, 1), time);
-			addSequential(new DriveAtSpeed(driveSubsystem, 0), time);
-			addSequential(new DriveAtSpeed(driveSubsystem, -1), time);
-			addSequential(new DriveAtSpeed(driveSubsystem, 0), time);
-		}
-		*/
-		//TODO make this actually drive back and forth
 		addSequential(new DriveAtSpeed(driveSubsystem, 1, 1), time);
-		addSequential(new DriveAtSpeed(driveSubsystem, 0, 1), 100);
+		addSequential(new DriveAtSpeed(driveSubsystem, -1, 1), time);
 	}
 }

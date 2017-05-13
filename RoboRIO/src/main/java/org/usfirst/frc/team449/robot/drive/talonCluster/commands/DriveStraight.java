@@ -8,7 +8,6 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
 /**
  * Drives straight when using a tank drive. Not updated for new OI organization.
  */
-//TODO update this to the new OI organization.
 public class DriveStraight extends ReferencingCommand {
 	private TankOI oi;
 

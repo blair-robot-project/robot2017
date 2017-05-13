@@ -64,7 +64,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	/**
 	 * Whether or not to use the NavX for driving straight
 	 */
-	public boolean overrideNavX;
+	private boolean overrideNavX;
 	/**
 	 * Whether not to override auto shifting
 	 */
@@ -473,6 +473,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		return navx.pidGet();
 	}
 
+	@Override
+	public void setOverrideNavX(boolean override) {
+		overrideNavX = override;
+	}
+
 	/**
 	 * Shift as appropriate
 	 *
@@ -581,5 +586,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 			//Downshift if we should
 			setLowGear(true);
 		}
+	}
+
+	public boolean getOverrideNavX(){
+		return overrideNavX;
 	}
 }

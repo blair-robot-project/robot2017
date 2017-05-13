@@ -1,25 +1,24 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 
 /**
  * Set whether or not to use the NavX to drive straight.
  */
-//TODO Make this take a NavxSubsystem instead.
-public class OverrideNavX extends ReferencingCommand {
+public class OverrideNavX extends Command {
 
 	private boolean override;
+	private NavxSubsystem subsystem;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param drive The drive subsystem to execute this command on
+	 * @param subsystem The subsystem to execute this command on
 	 */
-	public OverrideNavX(TalonClusterDrive drive, boolean override) {
-		super(drive);
-		requires(subsystem);
+	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
 		this.override = override;
+		this.subsystem = subsystem;
 	}
 
 	/**
@@ -35,7 +34,7 @@ public class OverrideNavX extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
-		((TalonClusterDrive) subsystem).overrideNavX = override;
+		subsystem.setOverrideNavX(override);
 	}
 
 	/**

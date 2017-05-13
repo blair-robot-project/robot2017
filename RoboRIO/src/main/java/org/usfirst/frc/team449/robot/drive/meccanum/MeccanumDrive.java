@@ -6,7 +6,7 @@ import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.components.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.oi.OI2017;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.TankOI;
 
 /**
  * Created by sam on 1/26/17.
@@ -17,11 +17,12 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 	public RotPerSecCANTalonSRX frontLeft, frontRight, backLeft, backRight;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-	public OI2017 oi;
+	public TankOI oi;
 	boolean strafe = false;
 	private long startTime;
+	private boolean overrideNavX;
 
-	public MeccanumDrive(maps.org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDriveMap.MeccanumDrive map, OI2017
+	public MeccanumDrive(maps.org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDriveMap.MeccanumDrive map, TankOI
 			oi) {
 		super(map.getDrive());
 		this.map = map;
@@ -79,6 +80,16 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 	@Override
 	public double getGyroOutput() {
 		return navx.pidGet();
+	}
+
+	@Override
+	public void setOverrideNavX(boolean override) {
+		overrideNavX = override;
+	}
+
+	@Override
+	public boolean getOverrideNavX() {
+		return overrideNavX;
 	}
 
 	@Override

@@ -97,6 +97,7 @@ public class Robot extends IterativeRobot {
 	private I2C robotInfo;
 
 	private boolean startLowGear;
+	private int minPointsInBtmMPBuffer;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -118,6 +119,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		startLowGear = cfg.getStartLowGear();
+		minPointsInBtmMPBuffer = cfg.getMinPointsInBottomMPBuffer();
 
 		if (cfg.hasRioduinoPort()) {
 			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
@@ -153,6 +155,15 @@ public class Robot extends IterativeRobot {
 			System.out.println("Constructed PneumaticsSubsystem");
 		}
 
+		//Activate the compressor if its module number is in the map.
+		if (cfg.hasModule()) {
+			System.out.println("Setting up a compressor at module number " + cfg.getModule());
+			Compressor compressor = new Compressor(cfg.getModule());
+			compressor.setClosedLoopControl(true);
+			compressor.start();
+			System.out.println(compressor.enabled());
+		}
+
 		//Construct intake if it's in the map.
 		if (cfg.hasIntake()) {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
@@ -166,6 +177,10 @@ public class Robot extends IterativeRobot {
 		if (cfg.hasGear()) {
 			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
 		}
+
+		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
+		oiSubsystem.mapButtons();
+		System.out.println("Mapped buttons");
 
 		if (cfg.hasBlueRed()) {
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
@@ -188,19 +203,6 @@ public class Robot extends IterativeRobot {
 		System.out.println("redAlliance: " + redAlliance);
 		System.out.println("dropGear: " + dropGear);
 		System.out.println("positon: " + position);
-
-		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
-		oiSubsystem.mapButtons();
-		System.out.println("Mapped buttons");
-
-		//Activate the compressor if its module number is in the map.
-		if (cfg.hasModule()) {
-			System.out.println("Setting up a compressor at module number " + cfg.getModule());
-			Compressor compressor = new Compressor(cfg.getModule());
-			compressor.setClosedLoopControl(true);
-			compressor.start();
-			System.out.println(compressor.enabled());
-		}
 
 		if (cfg.getDoMP()) {
 			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
@@ -244,7 +246,7 @@ public class Robot extends IterativeRobot {
 			MPNotifier.stop();
 		}
 		driveSubsystem.setVBusThrottle(0, 0);
-		driveSubsystem.overrideNavX = !cfg.getArcadeOi().getOverrideNavXWhileHeld();
+		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
@@ -318,7 +320,7 @@ public class Robot extends IterativeRobot {
 			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()) {
 				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
 			}
-			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, commandFinished, driveSubsystem));
+			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 
 		} else {
 			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
@@ -350,23 +352,23 @@ public class Robot extends IterativeRobot {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 					} else if (position.equals("right") && redAlliance) {
 						loadProfile("red_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					} else if (position.equals("left") && !redAlliance) {
 						loadProfile("blue_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					} else if (redAlliance) {
 						loadProfile("red_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					} else {
 						loadProfile("blue_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					}
 				} else if (completedCommands == 3) {
 					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
 						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
 					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
 						loadProfile("forward");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					}
 				}
 			}

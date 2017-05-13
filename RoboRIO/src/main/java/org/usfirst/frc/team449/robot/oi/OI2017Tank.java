@@ -19,10 +19,7 @@ public class OI2017Tank extends BaseOI implements TankOI {
 	 */
 	private Throttle rightThrottle;
 
-	/**
-	 * Config map
-	 */
-	private OI2017TankMap.OI2017Tank map;
+	private double deadband;
 
 	/**
 	 * Construct OI2017Map
@@ -30,13 +27,12 @@ public class OI2017Tank extends BaseOI implements TankOI {
 	 * @param map config map
 	 */
 	public OI2017Tank(maps.org.usfirst.frc.team449.robot.oi.OI2017TankMap.OI2017Tank map) {
-		this.map = map;
-
 		//Instantiate the sticks.
-		Joystick _leftStick = new Joystick(map.getLeftStick());
-		Joystick _rightStick = new Joystick(map.getRightStick());
-		this.leftThrottle = new SmoothedThrottle(_leftStick, 1);
-		this.rightThrottle = new SmoothedThrottle(_rightStick, 1);
+		Joystick leftStick = new Joystick(map.getLeftStick());
+		Joystick rightStick = new Joystick(map.getRightStick());
+		leftThrottle = new SmoothedThrottle(leftStick, 1);
+		rightThrottle = new SmoothedThrottle(rightStick, 1);
+		deadband = map.getDeadband();
 	}
 
 	/**
@@ -52,8 +48,11 @@ public class OI2017Tank extends BaseOI implements TankOI {
 	 */
 	@Override
 	public double getLeftThrottle() {
-		// TODO put a deadband
-		return leftThrottle.getValue();
+		double value = leftThrottle.getValue();
+		if(value <= deadband){
+			value = 0;
+		}
+		return value;
 	}
 
 	/**
@@ -61,7 +60,10 @@ public class OI2017Tank extends BaseOI implements TankOI {
 	 */
 	@Override
 	public double getRightThrottle() {
-		// TODO put a deadband
-		return rightThrottle.getValue();
+		double value = rightThrottle.getValue();
+		if(value <= deadband){
+			value = 0;
+		}
+		return value;
 	}
 }
