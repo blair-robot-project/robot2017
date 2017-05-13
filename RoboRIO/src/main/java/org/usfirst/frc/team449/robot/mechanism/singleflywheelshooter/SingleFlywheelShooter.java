@@ -30,7 +30,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 	public double throttle;
 
 	/**
-	 * Measured start time in nanoseconds (for logging)
+	 * Measured start time in milliseconds (for logging)
 	 */
 	private long startTime;
 	/**
@@ -97,7 +97,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 
 		try (FileWriter fw = new FileWriter(logFilename, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.nanoTime() - startTime) / 100);
+			sb.append((System.currentTimeMillis() - startTime) / 1000);
 			sb.append(",");
 			sb.append(talon.getSpeed());
 			sb.append(",");
@@ -125,7 +125,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		startTime = System.nanoTime();
+		startTime = System.currentTimeMillis();
 		//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}

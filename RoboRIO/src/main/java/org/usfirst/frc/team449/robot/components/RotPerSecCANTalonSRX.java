@@ -31,6 +31,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	private RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map;
 
+	private double postEncoderGearing;
+
 	/**
 	 * Construct the CANTalonSRX from its map object
 	 *
@@ -91,6 +93,8 @@ public class RotPerSecCANTalonSRX extends Component {
 		} else {
 			canTalon.EnableCurrentLimit(false);
 		}
+
+		postEncoderGearing = map.getPostEncoderGearing();
 	}
 
 	/**
@@ -126,7 +130,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	private void setPIDF(double p, double i, double d, double maxSpeed, int iZone, double closeLoopRampRate, int
 			profile) {
-		this.canTalon.setPID(p, i, d, 1023 / RPStoNative(maxSpeed), iZone, closeLoopRampRate, profile);
+		this.canTalon.setPID(p, i, d, 1023 / RPSToNative(maxSpeed), iZone, closeLoopRampRate, profile);
 	}
 
 	/**
@@ -171,8 +175,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param RPS The RPS velocity you want to convert
 	 * @return That velocity in CANTalon native units
 	 */
-	public double RPStoNative(double RPS) {
-		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
+	public double RPSToNative(double RPS) {
+		return (RPS / 10) * (encoderCPR * 4) / postEncoderGearing; //4 edges per count, and 10 100ms per second.
 	}
 
 	/**
@@ -182,7 +186,15 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @return That velocity in RPS
 	 */
 	public double nativeToRPS(double nat) {
-		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
+		return (nat / (encoderCPR * 4)) * 10 * postEncoderGearing; //4 edges per count, and 10 100ms per second.
+	}
+
+	public double RPMToRPS(double rpm){
+		return rpm / 60. * postEncoderGearing;
+	}
+
+	public double RPSToRPM(double rps){
+		return rps * 60. / postEncoderGearing;
 	}
 
 	/**
@@ -197,7 +209,7 @@ public class RotPerSecCANTalonSRX extends Component {
 		//If we use a CTRE encoder, it returns in rotations per minute
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
 				.FeedbackDevice.CtreMagEncoder_Absolute) {
-			return canTalon.getSpeed() / 60;
+			return RPMToRPS(canTalon.getSpeed());
 		}
 		//Otherwise, convert from natives.
 		return nativeToRPS(canTalon.getSpeed());
@@ -217,22 +229,11 @@ public class RotPerSecCANTalonSRX extends Component {
 		//If we use a CTRE encoder, it takes rotations per minute
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative || feedbackDevice == CANTalon
 				.FeedbackDevice.CtreMagEncoder_Absolute) {
-			canTalon.set(velocitySp * 60);
+			canTalon.set(RPSToRPM(velocitySp));
 		} else {
 			//Otherwise, convert to natives.
-			canTalon.set(RPStoNative(velocitySp));
+			canTalon.set(RPSToNative(velocitySp));
 		}
-	}
-
-	/**
-	 * Set which slot the Talon reads the PID gains from
-	 *
-	 * @param slot gains slot (0 or 1)
-	 * @throws IllegalArgumentException if the specified slot isn't 0 or 1
-	 */
-	@Deprecated
-	public void setPSlot(int slot) throws IllegalArgumentException {
-		canTalon.setProfile(slot);
 	}
 
 	/**

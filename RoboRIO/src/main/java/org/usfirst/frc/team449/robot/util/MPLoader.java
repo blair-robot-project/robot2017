@@ -57,7 +57,7 @@ public class MPLoader {
 	}
 
 	public static double feetPerSecToNative(double feet, RotPerSecCANTalonSRX talon, double wheelDiameter) {
-		return talon.RPStoNative(feet / (wheelDiameter * Math.PI));
+		return talon.RPSToNative(feet / (wheelDiameter * Math.PI));
 	}
 
 	public static double nativeToFeetPerSec(double nativeUnits, RotPerSecCANTalonSRX talon, double wheelDiameter) {

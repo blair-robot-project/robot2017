@@ -49,4 +49,5 @@ message RotPerSecCANTalonSRX {
 	optional double closed_loop_ramp_rate = 31;
     optional bool mp_use_low_gear = 32 [default=true];
     optional int32 current_limit = 33;
+    optional double post_encoder_gearing = 34 [default = 1];
 }
