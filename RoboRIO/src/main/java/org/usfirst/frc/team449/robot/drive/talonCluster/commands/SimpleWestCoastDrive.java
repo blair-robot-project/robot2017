@@ -2,8 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
-import org.usfirst.frc.team449.robot.interfaces.oi.WestCoastOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 
 /**
  * Very simple arcade drive control.
@@ -13,7 +12,7 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	/**
 	 * The OI used for input.
 	 */
-	public WestCoastOI oi;
+	public UnidirectionalOI oi;
 	
 	private TalonClusterDrive subsystem;
 
@@ -23,7 +22,7 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	 * @param drive The drive to execute this command on
 	 * @param oi    The OI that gives the input to this command.
 	 */
-	public SimpleWestCoastDrive(TalonClusterDrive drive, WestCoastOI oi) {
+	public SimpleWestCoastDrive(TalonClusterDrive drive, UnidirectionalOI oi) {
 		super(drive);
 		this.oi = oi;
 		this.subsystem = drive;

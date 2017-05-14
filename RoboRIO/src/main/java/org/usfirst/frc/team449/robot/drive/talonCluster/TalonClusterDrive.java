@@ -13,6 +13,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
+import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.MPLoader;
 
 import java.io.FileWriter;
@@ -84,33 +85,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	private double maxMeasuredSpeed;
 	/**
-	 * The robot must meet the conditions to upshift for this many consecutive milliseconds in order to upshift.
-	 */
-	private long delayAfterUpshiftConditionsMet;
-	/**
-	 * The robot must meet the conditions to downshift for this many consecutive milliseconds in order to downshift.
-	 */
-	private long delayAfterDownshiftConditionsMet;
-	/**
-	 * Whether we can up shift, used as a flag for the delay
-	 */
-	private boolean okToUpshift;
-	/**
-	 * Whether we can down shift, used as a flag for the delay
-	 */
-	private boolean okToDownshift;
-	/**
 	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
 	 */
 	private double upshiftFwdThresh;
-	/**
-	 * The last time (in milliseconds) at which we met all the conditions to upshift.
-	 */
-	private long timeUpshiftConditionsMet;
-	/**
-	 * The last time (in milliseconds) at which we met all the conditions to downshift.
-	 */
-	private long timeDownshiftConditionsMet;
 	/**
 	 * The time we last upshifted (milliseconds)
 	 */
@@ -143,6 +120,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
 	 */
 	private long cooldownAfterDownshift;
+
+	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
 	/**
 	 * Construct a TalonClusterDrive
@@ -177,8 +156,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		navx = new AHRS(SPI.Port.kMXP);
 		turnPID = map.getTurnPID();
 		straightPID = map.getStraightPID();
-		delayAfterUpshiftConditionsMet = (long) (map.getDelayAfterUpshiftConditionsMet()*1000.);
-		delayAfterDownshiftConditionsMet = (long) (map.getDelayAfterDownshiftConditionsMet()*1000.);
+		upshiftBufferTimer = new BufferTimer(map.getDelayAfterUpshiftConditionsMet());
+		downshiftBufferTimer = new BufferTimer(map.getDelayAfterDownshiftConditionsMet());
 		cooldownAfterDownshift = (long) (map.getCooldownAfterDownshift()*1000.);
 		cooldownAfterUpshift = (long) (map.getCooldownAfterUpshift()*1000.);
 		upshiftFwdThresh = map.getUpshiftFwdThreshold();
@@ -187,8 +166,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		lowGear = startLowGear;
 
 		// Initialize shifting constants, assuming robot is stationary.
-		okToUpshift = false;
-		okToDownshift = true;
 		overrideAutoShift = false;
 		timeLastUpshifted = 0;
 		timeLastDownshifted = 0;
@@ -520,7 +497,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	/**
 	 * @return whether the robot should downshift
 	 */
-	public boolean shouldDownshift() {
+	private boolean shouldDownshift() {
 		//We should shift if we're going slower than the downshift speed
 		boolean okToShift = Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) < downshiftSpeed;
 		//Or if we're just turning in place.
@@ -534,23 +511,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//And we don't want to shift if autoshifting is turned off.
 		okToShift = okToShift && !overrideAutoShift;
 
-		//We use a "delay" system that waits to shift until the robot has met the conditions for delayAfterDownshiftConditionsMet seconds.
-		if (okToShift && !okToDownshift) {
-			//This block is a "flag" that triggers when we first meet the conditions to shift.
-			okToDownshift = true;
-			timeDownshiftConditionsMet = Robot.currentTimeMillis();
-		} else if (!okToShift && okToDownshift) {
-			//This resets the flag if we no longer meet the conditions to shift.
-			okToDownshift = false;
-		}
-		//Return if we've been eligible to shift for delayAfterDownshiftConditionsMet seconds and are also currently eligible.
-		return (Robot.currentTimeMillis() - timeDownshiftConditionsMet > delayAfterDownshiftConditionsMet && okToShift);
+		return downshiftBufferTimer.get(okToShift);
 	}
 
 	/**
 	 * @return whether the robot should upshift
 	 */
-	public boolean shouldUpshift() {
+	private boolean shouldUpshift() {
 		//We should shift if we're going faster than the upshift speed...
 		boolean okToShift = Math.min(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
@@ -562,17 +529,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//And we don't want to shift if autoshifting is turned off.
 		okToShift = okToShift && !overrideAutoShift;
 
-		//Otherwise, we use a "delay" system that waits to shift until the robot has met the conditions for delayAfterUpshiftConditionsMet seconds.
-		if (okToShift && !okToUpshift) {
-			//This block is a "flag" that triggers when we first meet the conditions to shift.
-			okToUpshift = true;
-			timeUpshiftConditionsMet = Robot.currentTimeMillis();
-		} else if (!okToShift && okToUpshift) {
-			//This resets the flag if we no longer meet the conditions to shift.
-			okToUpshift = false;
-		}
-		//Return if we've been eligible to shift for delayAfterUpshiftConditionsMet seconds and are also currently eligible.
-		return (Robot.currentTimeMillis() - timeUpshiftConditionsMet > delayAfterUpshiftConditionsMet && okToShift);
+		return upshiftBufferTimer.get(okToShift);
 	}
 
 	/**

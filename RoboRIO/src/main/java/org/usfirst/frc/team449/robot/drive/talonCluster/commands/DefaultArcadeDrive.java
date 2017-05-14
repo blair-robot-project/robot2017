@@ -6,6 +6,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.util.BufferTimer;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -35,10 +36,8 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
 	private double maxAngularVel;
-	private long driveStraightDelay;
-	private long timeAbleToDriveStraight;
-	private boolean delayedDriveStraight;
 
+	private BufferTimer driveStraightTimer;
 	/**
 	 * Default constructor
 	 *
@@ -54,9 +53,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		this.oi = oi;
 		driveSubsystem = drive;
 
-		timeAbleToDriveStraight = 0;
-		driveStraightDelay = (long) (map.getDriveStraightDelay() * 1000);
-		delayedDriveStraight = false;
+		driveStraightTimer = new BufferTimer(map.getDriveStraightDelay());
 
 		//Needs a requires because it's a default command.
 		requires(drive);
@@ -97,19 +94,12 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		if (drivingStraight && (rot != 0 || driveSubsystem.getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
-			delayedDriveStraight = false;
 			//System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (!(driveSubsystem.getOverrideNavX()) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
-			delayedDriveStraight = true;
-			timeAbleToDriveStraight = Robot.currentTimeMillis();
-		}
-
-		if (delayedDriveStraight && Robot.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay) {
+		else if (driveStraightTimer.get(!(driveSubsystem.getOverrideNavX()) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel)) {
 			//Switch to driving straight
 			drivingStraight = true;
-			delayedDriveStraight = false;
 			//Set the setpoint to the current heading and reset the NavX
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());

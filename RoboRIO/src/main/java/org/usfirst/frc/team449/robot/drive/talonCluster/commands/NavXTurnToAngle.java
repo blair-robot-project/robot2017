@@ -107,7 +107,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 */
 	@Override
 	protected boolean isFinished() {
-		//The NavX onTarget() is crap and sometimes never terminates because of floating point errors, so we have a timeout
+		//The PIDController onTarget() is crap and sometimes never terminates because of floating point errors, so we have a timeout
 		return this.getPIDController().onTarget() || Robot.currentTimeMillis() - startTime > timeout;
 	}
 

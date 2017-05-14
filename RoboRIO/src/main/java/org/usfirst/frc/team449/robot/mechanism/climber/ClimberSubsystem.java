@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
+import org.usfirst.frc.team449.robot.util.BufferTimer;
 
 /**
  * The climber, with power monitoring to stop.
@@ -20,6 +21,8 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	private double max_power;
 	private VictorSP victor;
 
+	private BufferTimer currentLimitTimer;
+
 	/**
 	 * Construct a ClimberSubsystem
 	 *
@@ -34,6 +37,7 @@ public class ClimberSubsystem extends MechanismSubsystem {
 		if (map.hasVictor()) {
 			this.victor = new MappedVictor(map.getVictor());
 		}
+		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
 	}
 
 	/**
@@ -65,6 +69,6 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 * @return If the output power is greater than the max allowable power.
 	 */
 	public boolean reachedTop() {
-		return Math.abs(canTalonSRX.getPower()) > max_power;
+		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
 	}
 }

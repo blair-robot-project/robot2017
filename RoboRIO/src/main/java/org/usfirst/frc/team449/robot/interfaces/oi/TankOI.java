@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.interfaces.oi;
 /**
  * A tank-style dual joystick OI.
  */
-public abstract class TankOI implements WestCoastOI{
+public abstract class TankOI implements UnidirectionalOI {
 	/**
 	 * @return percent of max speed for left motor cluster from [-1.0, 1.0]
 	 */
