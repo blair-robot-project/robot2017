@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * ReferencingCommand for running the flywheel
@@ -29,7 +30,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("AccelerateFlywheel init");
+		Logger.addEvent("AccelerateFlywheel init", this.getClass());
 	}
 
 	/**
@@ -41,7 +42,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 		flywheelShooter.logData(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.setDefaultSpeed(((SingleFlywheelShooter) subsystem).throttle);
 		flywheelShooter.spinning = true;
-		System.out.println("AccelerateFlywheel executed");
+		Logger.addEvent("AccelerateFlywheel executed", this.getClass());
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("AccelerateFlywheel end");
+		Logger.addEvent("AccelerateFlywheel end", this.getClass());
 	}
 
 	/**
@@ -68,6 +69,6 @@ public class AccelerateFlywheel extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		flywheelShooter.setDefaultSpeed(0);
-		System.out.println("AccelerateFlywheel interrupted, stopping flywheel.");
+		Logger.addEvent("AccelerateFlywheel interrupted, stopping flywheel.", this.getClass());
 	}
 }

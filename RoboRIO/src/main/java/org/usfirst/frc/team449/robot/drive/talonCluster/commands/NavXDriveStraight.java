@@ -2,12 +2,13 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
@@ -79,7 +80,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("NavXDriveStraight end");
+		Logger.addEvent("NavXDriveStraight end", this.getClass());
 		this.getPIDController().disable();
 	}
 
@@ -88,7 +89,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("NavXDriveStraight interrupted!");
+		Logger.addEvent("NavXDriveStraight interrupted!", this.getClass());
 		this.getPIDController().disable();
 	}
 }

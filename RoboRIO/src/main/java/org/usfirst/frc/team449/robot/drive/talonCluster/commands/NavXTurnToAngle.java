@@ -2,11 +2,12 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
@@ -117,7 +118,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("NavXTurnToAngle end.");
+		Logger.addEvent("NavXTurnToAngle end.", this.getClass());
 		this.getPIDController().disable();
 	}
 
@@ -126,7 +127,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("NavXTurnToAngle interrupted!");
+		Logger.addEvent("NavXTurnToAngle interrupted!", this.getClass());
 		this.getPIDController().disable();
 	}
 }

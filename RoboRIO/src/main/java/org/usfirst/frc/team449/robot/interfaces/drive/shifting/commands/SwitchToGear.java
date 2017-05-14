@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * A wrapper command that switches to high gear.
@@ -26,7 +27,7 @@ public class SwitchToGear extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("SwitchToGear init.");
+		Logger.addEvent("SwitchToGear init.", this.getClass());
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class SwitchToGear extends Command {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("SwitchToGear end.");
+		Logger.addEvent("SwitchToGear end.", this.getClass());
 	}
 
 	/**
@@ -60,6 +61,6 @@ public class SwitchToGear extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("SwitchToGear Interrupted!");
+		Logger.addEvent("SwitchToGear Interrupted!", this.getClass());
 	}
 }

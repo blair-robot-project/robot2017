@@ -11,6 +11,7 @@ import "org/usfirst/frc/team449/robot/mechanism/feeder/Feeder.proto";
 import "org/usfirst/frc/team449/robot/util/MotionProfile.proto";
 import "org/usfirst/frc/team449/robot/mechanism/activegear/ActiveGear.proto";
 import "org/usfirst/frc/team449/robot/components/DigitalInput.proto";
+import "org/usfirst/frc/team449/robot/util/Logger.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot";
 option java_outer_classname = "Robot2017Map";
@@ -40,4 +41,5 @@ message Robot2017 {
 	optional bool test_MP = 22 [default = false];
 	optional bool start_low_gear = 23 [default = true];
     required int32 min_points_in_bottom_MP_buffer = 24;
+    optional Logger logger = 25;
 }

@@ -29,7 +29,7 @@ public class MPLoader {
 
 			// Send the point to the Talon's buffer
 			if (!talon.canTalon.pushMotionProfileTrajectory(point)) {
-				System.out.println("Buffer full!");
+				Logger.addEvent("Buffer full!", MPLoader.class);
 				break;
 			}
 		}
@@ -42,7 +42,7 @@ public class MPLoader {
 		}
 		Notifier updaterNotifier = new Notifier(updater);
 		updaterNotifier.startPeriodic(updateRate);
-		System.out.println("Started the notifier for " + talons.size() + " talons.");
+		Logger.addEvent("Started the notifier for " + talons.size() + " talons.", MPLoader.class);
 		return updaterNotifier;
 	}
 

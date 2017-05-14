@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Very simple arcade drive control.
@@ -62,7 +63,7 @@ public class SimpleUnidirectionalDrive extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("SimpleUnidirectionalDrive Interrupted! Stopping the robot.");
+		Logger.addEvent("SimpleUnidirectionalDrive Interrupted! Stopping the robot.", this.getClass());
 		//Brake for safety!
 		subsystem.fullStop();
 	}

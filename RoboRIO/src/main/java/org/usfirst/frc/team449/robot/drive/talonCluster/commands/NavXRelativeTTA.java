@@ -1,9 +1,10 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Turn a certain number of degrees from the current heading.
@@ -30,7 +31,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	protected void initialize() {
 		//Setup start time
 		this.startTime = Robot.currentTimeMillis();
-		System.out.println("NavXRelativeTurnToAngle init.");
+		Logger.addEvent("NavXRelativeTurnToAngle init.", this.getClass());
 		//Do math to setup the setpoint.
 		this.setSetpoint(clipTo180(((NavxSubsystem) drive).getGyroOutput() + setpoint));
 		//Make sure to enable the controller!
@@ -42,7 +43,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("NavXRelativeTurnToAngle end.");
+		Logger.addEvent("NavXRelativeTurnToAngle end.", this.getClass());
 		//Stop the controller
 		this.getPIDController().disable();
 	}
@@ -52,7 +53,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("NavXRelativeTurnToAngle interrupted!");
+		Logger.addEvent("NavXRelativeTurnToAngle interrupted!", this.getClass());
 		//Stop the controller
 		this.getPIDController().disable();
 	}

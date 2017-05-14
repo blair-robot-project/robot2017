@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -16,6 +16,8 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
+import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MPLoader;
 
 import java.io.FileWriter;
@@ -28,7 +30,7 @@ import java.util.Date;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive {
+public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable {
 
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
@@ -267,182 +269,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		setVBusThrottle(0, 0);
 	}
 
-	public void logPower() {
-		//time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage
-		/*
-		try (FileWriter fw = new FileWriter(logFN, true)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
-			sb.append(",");
-			sb.append(leftMaster.getSpeed());
-			sb.append(",");
-			sb.append(rightMaster.getSpeed());
-			sb.append(",");
-			sb.append(leftMaster.getSetpoint());
-			sb.append(",");
-			sb.append(rightMaster.getSetpoint());
-			sb.append(",");
-			sb.append(leftMaster.canTalon.getOutputCurrent());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getOutputCurrent());
-			sb.append(",");
-			sb.append(leftMaster.canTalon.getOutputVoltage());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getOutputVoltage());
-			sb.append("\n");
-			fw.write(sb.toString());
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
-		SmartDashboard.putNumber("Left Speed", leftMaster.getSpeed());
-		SmartDashboard.putNumber("Left Setpoint", leftMaster.getSetpoint());
-		SmartDashboard.putNumber("Left Current", leftMaster.canTalon.getOutputCurrent());
-		SmartDashboard.putNumber("Left Voltage", leftMaster.canTalon.getOutputVoltage());
-		SmartDashboard.putNumber("Right Speed", rightMaster.getSpeed());
-		SmartDashboard.putNumber("Right Setpoint", rightMaster.getSetpoint());
-		SmartDashboard.putNumber("Right Current", rightMaster.canTalon.getOutputCurrent());
-		SmartDashboard.putNumber("Right Voltage", rightMaster.canTalon.getOutputVoltage());
-	}
-
-	public void logError(String error) {
-		try (FileWriter fw = new FileWriter(errorFN, true)) {
-			fw.write(((double) (Robot.currentTimeMillis() - startTime) / 1000.) + "," + error + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Log stuff to file
-	 */
-	public void logData() {
-		//Print stuff to the log file for in-depth analysis or tuning.
-		try (FileWriter fw = new FileWriter(logFN, true)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
-			sb.append(",");
-			sb.append(leftMaster.getSpeed());
-			sb.append(",");
-			sb.append(rightMaster.getSpeed());
-			sb.append(",");
-			sb.append(leftMaster.getError());
-			sb.append(",");
-			sb.append(rightMaster.getError());
-			sb.append(",");
-			sb.append(leftMaster.canTalon.getOutputCurrent());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getOutputCurrent());
-			sb.append(",");
-			sb.append(leftMaster.canTalon.getOutputVoltage());
-			sb.append(",");
-			sb.append(rightMaster.canTalon.getOutputVoltage());
-			 /*
-			 sb.append(",");
-	         sb.append(leftTPointStatus.activePoint.position);
-	         sb.append(",");
-	         sb.append(rightTPointStatus.activePoint.position);
-	         */
-			sb.append("\n");
-
-			fw.write(sb.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//Log to SmartDashboard for quick viewing
-		maxMeasuredSpeed = Math.max(maxMeasuredSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
-		SmartDashboard.putNumber("Max Speed", maxMeasuredSpeed);
-		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Heading", getGyroOutput());
-		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
-		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
-		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
-		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
-		SmartDashboard.putString("Current gear", currentGear.toString());
-		SmartDashboard.putNumber("Right pos", MPLoader.nativeToFeet(rightMaster.canTalon.getEncPosition(), rightMaster.encoderCPR, Robot.instance.WHEEL_DIAMETER));
-		SmartDashboard.putNumber("Left pos", MPLoader.nativeToFeet(leftMaster.canTalon.getEncPosition(), leftMaster.encoderCPR, Robot.instance.WHEEL_DIAMETER));
-	}
-
-	/**
-	 * Log stuff to file, with a given velocity setpoint to log
-	 *
-	 * @param sp velocity setpoint
-	 */
-	public void logData(double sp) {
-		logPower();
-		//Print stuff to the log file for in-depth analysis or tuning.
-		try (FileWriter fw = new FileWriter(logFN, true)) {
-			StringBuilder sb = new StringBuilder();
-			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
-			sb.append(",");
-			sb.append(leftMaster.getSpeed());
-			sb.append(",");
-			sb.append(rightMaster.getSpeed());
-			sb.append(",");
-			sb.append(leftMaster.getError());
-			sb.append(",");
-			sb.append(rightMaster.getError());
-			sb.append(",");
-			sb.append(sp);
-			sb.append(",");
-			sb.append(sp);
-			sb.append("\n");
-
-			fw.write(sb.toString());
-
-			SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-			SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-			SmartDashboard.putNumber("Left Pos inches", leftMaster.nativeToRPS(leftMaster.canTalon.getEncPosition()) /
-					10 * Math.PI * 4);
-			SmartDashboard.putNumber("Right Pos inches", rightMaster.nativeToRPS(rightMaster.canTalon.getEncPosition()
-			) / 10 * Math.PI * 4);
-			SmartDashboard.putNumber("Right Pos", rightMaster.canTalon.getEncPosition());
-			SmartDashboard.putNumber("Left Pos", leftMaster.canTalon.getEncPosition());
-			SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Heading", getGyroOutput());
-			SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-			SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-			SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
-			sb.append(PID_SCALE * sp * leftMaster.getMaxSpeed());
-			sb.append(",");
-			sb.append(PID_SCALE * sp * rightMaster.getMaxSpeed());
-			 /*
-			 sb.append(",");
-	         sb.append(leftTPointStatus.activePoint.position);
-	         sb.append(",");
-	         sb.append(rightTPointStatus.activePoint.position);
-	         */
-			sb.append("\n");
-
-			fw.write(sb.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//Log to SmartDashboard for quick viewing
-		maxMeasuredSpeed = Math.max(maxMeasuredSpeed, Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())));
-		SmartDashboard.putNumber("Max Speed", maxMeasuredSpeed);
-		SmartDashboard.putNumber("Left", leftMaster.getSpeed());
-		SmartDashboard.putNumber("Right", rightMaster.getSpeed());
-		SmartDashboard.putNumber("Throttle", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Heading", navx.pidGet());
-		SmartDashboard.putNumber("Left Setpoint", leftMaster.nativeToRPS(leftMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Left Error", leftMaster.nativeToRPS(leftMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Right Setpoint", rightMaster.nativeToRPS(rightMaster.canTalon.getSetpoint()));
-		SmartDashboard.putNumber("Right Error", rightMaster.nativeToRPS(rightMaster.canTalon.getError()));
-		SmartDashboard.putNumber("Left F", leftMaster.canTalon.getF());
-		SmartDashboard.putNumber("Right F", rightMaster.canTalon.getF());
-		SmartDashboard.putNumber("Left P", leftMaster.canTalon.getP());
-		SmartDashboard.putNumber("Right P", rightMaster.canTalon.getP());
-		SmartDashboard.putString("Current gear", currentGear.toString());
-	}
-
 	/**
 	 * Stuff run on first enable
 	 * Reset startTime, turn on navX control, and start DefaultArcadeDrive
@@ -501,7 +327,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			currentGear = gear;
 		} else {
 			//Warn the user if they try to shift but didn't define a shifting piston.
-			System.out.println("You're trying to shift gears, but your drive doesn't have a shifter.");
+			Logger.addEvent("You're trying to shift gears, but your drive doesn't have a shifter.", this.getClass());
 		}
 	}
 
@@ -570,5 +396,22 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	@Override
 	public AHRS getNavX() {
 		return navx;
+	}
+
+	@Override
+	public String getHeader() {
+		return "left_vel,right_vel,left_setpoint,right_setpoint,left_current,right_current,left_voltage,right_voltage";
+	}
+
+	@Override
+	public Object[] getData() {
+		return new Object[]{leftMaster.getSpeed(), rightMaster.getSpeed(), leftMaster.getSetpoint(), rightMaster.getSetpoint(),
+				leftMaster.canTalon.getOutputCurrent(), rightMaster.canTalon.getOutputCurrent(),
+				leftMaster.canTalon.getOutputVoltage(), rightMaster.canTalon.getOutputVoltage()};
+	}
+
+	@Override
+	public String getName(){
+		return "Drive";
 	}
 }

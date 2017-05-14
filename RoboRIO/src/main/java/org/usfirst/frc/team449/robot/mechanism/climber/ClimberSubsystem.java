@@ -5,11 +5,12 @@ import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
+import org.usfirst.frc.team449.robot.util.Loggable;
 
 /**
  * The climber, with power monitoring to stop.
  */
-public class ClimberSubsystem extends MechanismSubsystem {
+public class ClimberSubsystem extends MechanismSubsystem implements Loggable{
 	/**
 	 * The CANTalon controlling the climber.
 	 */
@@ -70,5 +71,20 @@ public class ClimberSubsystem extends MechanismSubsystem {
 	 */
 	public boolean reachedTop() {
 		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
+	}
+
+	@Override
+	public String getHeader() {
+		return "current,voltage,power";
+	}
+
+	@Override
+	public Object[] getData() {
+		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),canTalonSRX.canTalon.getOutputVoltage(),canTalonSRX.getPower()};
+	}
+
+	@Override
+	public String getName(){
+		return "climber";
 	}
 }

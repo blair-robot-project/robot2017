@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Drives straight when using a tank drive. Not updated for new OI organization.
@@ -22,7 +23,7 @@ public class DriveStraight extends Command {
 		this.oi = oi;
 		this.useLeft = useLeft;
 		requires((Subsystem) subsystem);
-		System.out.println("Drive Robot bueno");
+		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class DriveStraight extends Command {
 
 	@Override
 	protected void interrupted() {
-		System.out.println("DriveStraight Interrupted! Stopping the robot.");
+		Logger.addEvent("DriveStraight Interrupted! Stopping the robot.", this.getClass());
 		subsystem.fullStop();
 	}
 }

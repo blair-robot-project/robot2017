@@ -2,7 +2,7 @@ package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**

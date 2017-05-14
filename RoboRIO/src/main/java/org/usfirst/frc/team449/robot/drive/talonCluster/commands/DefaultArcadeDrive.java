@@ -2,13 +2,14 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -61,7 +62,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		requires((Subsystem) drive);
 
 		//Logging, but in Spanish.
-		System.out.println("Drive Robot bueno");
+		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//Reset all values of the PIDController and enable it.
 		this.getPIDController().reset();
 		this.getPIDController().enable();
-		System.out.println("DefaultArcadeDrive init.");
+		Logger.addEvent("DefaultArcadeDrive init.", this.getClass());
 
 		//Initial assignment
 		drivingStraight = false;
@@ -90,6 +91,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			((ShiftingDrive) driveSubsystem).autoshift();
 		} catch (ClassCastException e){
 			System.out.println("Attempted to shift in DefaultArcadeDrive, but the subsystem isn't a ShiftingDrive!");
+			Logger.addEvent("Attempted to shift in DefaultArcadeDrive, but the subsystem isn't a ShiftingDrive!", this.getClass());
 		}
 
 
@@ -101,7 +103,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		if (drivingStraight && (rot != 0 || ((NavxSubsystem) driveSubsystem).getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
-			//System.out.println("Switching to free drive.");
+			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver lets go of the turn stick:
 		else if (driveStraightTimer.get(!(((NavxSubsystem) driveSubsystem).getOverrideNavX()) && !(drivingStraight) && rot == 0 && Math.abs(((NavxSubsystem) driveSubsystem).getNavX().getRate()) <= maxAngularVel)) {
@@ -111,7 +113,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-			//System.out.println("Switching to DriveStraight.");
+			Logger.addEvent("Switching to DriveStraight.", this.getClass());
 		}
 
 		//Log data and stuff
@@ -136,7 +138,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("DefaultArcadeDrive End.");
+		Logger.addEvent("DefaultArcadeDrive End.", this.getClass());
 	}
 
 	/**
@@ -144,7 +146,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("DefaultArcadeDrive Interrupted! Stopping the robot.");
+		Logger.addEvent("DefaultArcadeDrive Interrupted! Stopping the robot.", this.getClass());
 		driveSubsystem.setOutput(0.0, 0.0);
 	}
 

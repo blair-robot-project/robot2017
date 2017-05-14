@@ -7,17 +7,18 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
+import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
@@ -27,9 +28,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.util.BooleanWrapper;
-import org.usfirst.frc.team449.robot.util.MPLoader;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.*;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
@@ -43,11 +42,10 @@ import java.util.Map;
  */
 public class Robot extends IterativeRobot {
 
-	public static Robot instance;
-
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
-
 	private static final double MP_UPDATE_RATE = 0.005;
+	public static Robot instance;
+	private static long currentTimeMillis;
 	public double WHEEL_DIAMETER;
 	/**
 	 * The shooter subsystem (flywheel only)
@@ -82,33 +80,25 @@ public class Robot extends IterativeRobot {
 	 */
 	public FeederSubsystem feederSubsystem;
 	public ActiveGearSubsystem gearSubsystem;
-
 	public BooleanWrapper commandFinished;
 	/**
 	 * The object constructed directly from map.cfg.
 	 */
 	private Robot2017Map.Robot2017 cfg;
 	private Notifier MPNotifier;
+	private Notifier loggerNotifier;
 	private int completedCommands = 0;
-
 	private long startedGearPush = 0;
-
 	private long timeToPushGear;
-
 	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
-
 	private List<RotPerSecCANTalonSRX> talons;
-
 	private boolean redAlliance, dropGear;
 	private String allianceString;
-
 	private String position;
-
 	private I2C robotInfo;
-
 	private ShiftingDrive.gear startingGear;
 	private int minPointsInBtmMPBuffer;
-	private static long currentTimeMillis;
+	private Logger logger;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -122,7 +112,7 @@ public class Robot extends IterativeRobot {
 		try {
 			//Try to construct map from the cfg file
 //			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH+"balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH+"fancy_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH + "fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -130,7 +120,9 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		startingGear = cfg.getStartLowGear()? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
+		List<Loggable> loggables = new ArrayList<>();
+
+		startingGear = cfg.getStartLowGear() ? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
 		minPointsInBtmMPBuffer = cfg.getMinPointsInBottomMPBuffer();
 
 		if (cfg.hasRioduinoPort()) {
@@ -139,11 +131,12 @@ public class Robot extends IterativeRobot {
 
 		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
-		System.out.println("Constructed OI");
+		Logger.addEvent("Constructed OI", this.getClass());
 
 		//Construct the drive (not in a if block because you kind of need it.)
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startingGear);
-		System.out.println("Constructed Drive");
+		Logger.addEvent("Constructed Drive", this.getClass());
+		loggables.add(driveSubsystem);
 
 		//Construct camera if it's in the map.
 		if (cfg.hasCamera()) {
@@ -153,27 +146,30 @@ public class Robot extends IterativeRobot {
 		//Construct climber if it's in the map.
 		if (cfg.hasClimber()) {
 			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
+			loggables.add(climberSubsystem);
 		}
 
 		//Construct shooter if it's in the map.
 		if (cfg.hasShooter()) {
 			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-			System.out.println("Constructed SingleFlywheelShooter");
+			loggables.add(singleFlywheelShooterSubsystem);
+			Logger.addEvent("Constructed SingleFlywheelShooter", this.getClass());
 		}
 
 		//Construct pneumatics if it's in the map.
 		if (cfg.hasPneumatics()) {
 			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
-			System.out.println("Constructed PneumaticsSubsystem");
+			loggables.add(pneumaticsSubsystem);
+			Logger.addEvent("Constructed PneumaticsSubsystem", this.getClass());
 		}
 
 		//Activate the compressor if its module number is in the map.
 		if (cfg.hasModule()) {
-			System.out.println("Setting up a compressor at module number " + cfg.getModule());
+			Logger.addEvent("Setting up a compressor at module number " + cfg.getModule(), this.getClass());
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
-			System.out.println(compressor.enabled());
+			Logger.addEvent("Compressor enabled: "+compressor.enabled(), this.getClass());
 		}
 
 		//Construct intake if it's in the map.
@@ -190,9 +186,17 @@ public class Robot extends IterativeRobot {
 			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
 		}
 
+		try {
+			logger = new Logger(cfg.getLogger(), loggables);
+		} catch (IOException e) {
+			System.out.println("Instantiating logger failed!");
+			e.printStackTrace();
+		}
+		loggerNotifier = new Notifier(logger);
+
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
-		System.out.println("Mapped buttons");
+		Logger.addEvent("Mapped buttons", this.getClass());
 
 		if (cfg.hasBlueRed()) {
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
@@ -212,9 +216,9 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
-		System.out.println("redAlliance: " + redAlliance);
-		System.out.println("dropGear: " + dropGear);
-		System.out.println("positon: " + position);
+		Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
+		Logger.addEvent("dropGear: " + dropGear, this.getClass());
+		Logger.addEvent("positon: " + position, this.getClass());
 
 		if (cfg.getDoMP()) {
 			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
@@ -246,6 +250,7 @@ public class Robot extends IterativeRobot {
 			commandFinished = new BooleanWrapper(false);
 			completedCommands = 0;
 		}
+		logger.run();
 	}
 
 	/**
@@ -253,6 +258,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
 		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		if (MPNotifier != null) {
@@ -307,6 +313,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
 		currentTimeMillis = System.currentTimeMillis();
 		sendModeOverI2C(robotInfo, "auto");
 
@@ -347,7 +354,7 @@ public class Robot extends IterativeRobot {
 				commandFinished.set(true);
 			}
 			if (commandFinished.get()) {
-				System.out.println("A command finished!");
+				Logger.addEvent("A command finished!", this.getClass());
 				completedCommands++;
 				commandFinished.set(false);
 				if (completedCommands == 1) {
@@ -396,9 +403,9 @@ public class Robot extends IterativeRobot {
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 
-	private void sendModeOverI2C(I2C i2C, String mode){
+	private void sendModeOverI2C(I2C i2C, String mode) {
 		if (i2C != null) {
-			char[] CharArray = (allianceString+"_"+mode).toCharArray();
+			char[] CharArray = (allianceString + "_" + mode).toCharArray();
 			byte[] WriteData = new byte[CharArray.length];
 			for (int i = 0; i < CharArray.length; i++) {
 				WriteData[i] = (byte) CharArray[i];
@@ -407,7 +414,7 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
-	public static long currentTimeMillis(){
+	public static long currentTimeMillis() {
 		return currentTimeMillis;
 	}
 }

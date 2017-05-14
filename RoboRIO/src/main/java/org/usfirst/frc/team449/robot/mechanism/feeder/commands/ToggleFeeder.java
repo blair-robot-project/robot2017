@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.feeder.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Toggle the feeder.
@@ -22,7 +23,7 @@ public class ToggleFeeder extends ReferencingCommand {
 		super(feeder);
 		requires(feeder);
 		this.feeder = feeder;
-		System.out.println("ToggleFeeder constructed");
+		Logger.addEvent("ToggleFeeder constructed", this.getClass());
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class ToggleFeeder extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("ToggleFeeder init");
+		Logger.addEvent("ToggleFeeder init", this.getClass());
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class ToggleFeeder extends ReferencingCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("ToggleFeeder end");
+		Logger.addEvent("ToggleFeeder end", this.getClass());
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class ToggleFeeder extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		feeder.stopVictor();
-		System.out.println("ToggleFeeder interrupted, stopping feeder.");
+		Logger.addEvent("ToggleFeeder interrupted, stopping feeder.", this.getClass());
 	}
 
 }

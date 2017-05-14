@@ -17,7 +17,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	/**
 	 * Whether intake is currently up
 	 */
-	public boolean intakeUp;
+	private boolean intakeUp;
 	/**
 	 * VictorSP for the static intake
 	 */
@@ -96,7 +96,6 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	public void setSolenoid(DoubleSolenoid.Value value) {
 		if (piston != null) {
 			piston.set(value);
-			System.out.println("Set Piston");
 			intakeUp = (value == DoubleSolenoid.Value.kReverse);
 		}
 	}

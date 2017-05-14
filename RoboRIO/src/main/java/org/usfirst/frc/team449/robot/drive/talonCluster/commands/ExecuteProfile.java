@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.util.BooleanWrapper;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,13 +93,12 @@ public class ExecuteProfile extends Command {
 		}
 		if (bottomNowLoaded && !bottomLoaded) {
 			bottomLoaded = true;
-			System.out.println("Enabling the talons!");
+			Logger.addEvent("Enabling the talons!", this.getClass());
 			for (CANTalon talon : talons) {
 				talon.enable();
 				talon.set(CANTalon.SetValueMotionProfile.Enable.value);
 			}
 		}
-		Robot.instance.driveSubsystem.logData();
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		}
 		finishFlag.set(true);
-		System.out.println("ExecuteProfile end.");
+		Logger.addEvent("ExecuteProfile end.", this.getClass());
 	}
 
 	@Override
@@ -121,6 +121,6 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
 		finishFlag.set(true);
-		System.out.println("ExecuteProfile interrupted!");
+		Logger.addEvent("ExecuteProfile interrupted!", this.getClass());
 	}
 }

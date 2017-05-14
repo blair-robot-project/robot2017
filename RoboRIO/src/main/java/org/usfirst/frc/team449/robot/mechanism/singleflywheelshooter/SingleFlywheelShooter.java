@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.util.Date;
 /**
  * Class for the flywheel
  */
-public class SingleFlywheelShooter extends MappedSubsystem {
+public class SingleFlywheelShooter extends MappedSubsystem implements Loggable{
 	/**
 	 * The flywheel's Talon
 	 */
@@ -56,7 +58,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		logFilename = map.getLogFilename() + timeStamp + ".csv";
 
 		this.throttle = map.getThrottle();
-		System.out.println("Shooter F: " + talon.canTalon.getF());
+		Logger.addEvent("Shooter F: " + talon.canTalon.getF(), this.getClass());
 	}
 
 	/**
@@ -128,6 +130,21 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		}
 		startTime = Robot.currentTimeMillis();
 		//		setDefaultCommand(new PIDTune(this));
-		System.out.println("Finished init default command");
+		Logger.addEvent("Finished init default command", this.getClass());
+	}
+
+	@Override
+	public String getHeader() {
+		return "speed,setpoint,error,voltage,current";
+	}
+
+	@Override
+	public Object[] getData() {
+		return new Object[]{talon.getSpeed(),talon.getSetpoint(),talon.getError(),talon.canTalon.getOutputVoltage(),talon.canTalon.getOutputCurrent()};
+	}
+
+	@Override
+	public String getName(){
+		return "shooter";
 	}
 }

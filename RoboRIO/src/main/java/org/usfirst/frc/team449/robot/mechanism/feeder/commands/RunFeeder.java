@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.feeder.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Activate the feeder.
@@ -22,7 +23,7 @@ public class RunFeeder extends ReferencingCommand {
 		super(feeder);
 		requires(feeder);
 		this.feeder = feeder;
-		System.out.println("RunFeeder constructed");
+		Logger.addEvent("RunFeeder constructed", this.getClass());
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class RunFeeder extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("RunFeeder init");
+		Logger.addEvent("RunFeeder init", this.getClass());
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class RunFeeder extends ReferencingCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("RunFeeder end");
+		Logger.addEvent("RunFeeder end", this.getClass());
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class RunFeeder extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		feeder.stopVictor();
-		System.out.println("RunFeeder interrupted, stopping feeder.");
+		Logger.addEvent("RunFeeder interrupted, stopping feeder.", this.getClass());
 	}
 
 }

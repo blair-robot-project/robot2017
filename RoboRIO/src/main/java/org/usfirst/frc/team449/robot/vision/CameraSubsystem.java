@@ -5,6 +5,7 @@ import edu.wpi.cscore.UsbCamera;
 import maps.org.usfirst.frc.team449.robot.components.UsbCameraMap;
 import maps.org.usfirst.frc.team449.robot.vision.CameraMap;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,9 +45,9 @@ public class CameraSubsystem extends MappedSubsystem {
 		this.map = map;
 
 		//Logging to SmartDashboard
-		System.out.println("CameraSubsystem construct start");
-		System.out.println("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + map.getServer().getPort() +
-				"/stream.mjpg\"");
+		Logger.addEvent("CameraSubsystem construct start", this.getClass());
+		Logger.addEvent("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + map.getServer().getPort() +
+				"/stream.mjpg\"", this.getClass());
 
 		//Instantiates server
 		server = new MjpegServer(map.getServer().getName(), map.getServer().getPort());
@@ -60,7 +61,7 @@ public class CameraSubsystem extends MappedSubsystem {
 			tmp.setResolution(camera.getWidth(), camera.getHeight());
 			tmp.setFPS(camera.getFps());
 			tmp.setExposureAuto();
-			System.out.println("Added " + camera.getName() + " to camera list.");
+			Logger.addEvent("Added " + camera.getName() + " to camera list.", this.getClass());
 			cameras.add(tmp);
 		}
 
@@ -69,7 +70,7 @@ public class CameraSubsystem extends MappedSubsystem {
 		camNum = 0;
 
 		//Logging to console
-		System.out.println("CameraSubsystem construct end");
+		Logger.addEvent("CameraSubsystem construct end", this.getClass());
 	}
 
 	/**

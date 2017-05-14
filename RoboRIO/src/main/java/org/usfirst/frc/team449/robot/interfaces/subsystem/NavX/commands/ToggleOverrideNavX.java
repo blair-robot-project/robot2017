@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Toggle whether or not to use the NavX to drive straight.
@@ -24,7 +25,7 @@ public class ToggleOverrideNavX extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("OverrideNavX init");
+		Logger.addEvent("OverrideNavX init", this.getClass());
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class ToggleOverrideNavX extends Command {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("OverrideNavX end");
+		Logger.addEvent("OverrideNavX end", this.getClass());
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class ToggleOverrideNavX extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("OverrideNavX Interrupted!");
+		Logger.addEvent("OverrideNavX Interrupted!", this.getClass());
 	}
 }
 

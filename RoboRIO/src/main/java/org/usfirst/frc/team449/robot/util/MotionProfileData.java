@@ -1,9 +1,8 @@
 package org.usfirst.frc.team449.robot.util;
 
-import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
+import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.Robot;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

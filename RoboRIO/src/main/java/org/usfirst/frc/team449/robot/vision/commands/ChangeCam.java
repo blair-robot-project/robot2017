@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.vision.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 /**
@@ -29,7 +30,7 @@ public class ChangeCam extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("ChangeCam init");
+		Logger.addEvent("ChangeCam init", this.getClass());
 	}
 
 	/**
@@ -38,11 +39,11 @@ public class ChangeCam extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		//Logging to console
-		System.out.println("ChangeCam exec start");
+		Logger.addEvent("ChangeCam exec start", this.getClass());
 
 		//Switches camNum to next camera, if applicable
 		if (cameraSubsystem.cameras.size() == 1) {
-			System.out.println("You're trying to switch cameras, but your robot only has one camera!");
+			Logger.addEvent("You're trying to switch cameras, but your robot only has one camera!", this.getClass());
 		} else {
 			cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
 		}
@@ -51,7 +52,7 @@ public class ChangeCam extends ReferencingCommand {
 		cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
 
 		//Logging to camera
-		System.out.println("ChangeCam exec end");
+		Logger.addEvent("ChangeCam exec end", this.getClass());
 	}
 
 	/**
@@ -69,7 +70,7 @@ public class ChangeCam extends ReferencingCommand {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("ChangeCam end");
+		Logger.addEvent("ChangeCam end", this.getClass());
 	}
 
 	/**
@@ -77,6 +78,6 @@ public class ChangeCam extends ReferencingCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("ChangeCam interrupted!");
+		Logger.addEvent("ChangeCam interrupted!", this.getClass());
 	}
 }

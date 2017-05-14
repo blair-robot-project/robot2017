@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.Compressor;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.components.PressureSensor;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.RunCompressor;
+import org.usfirst.frc.team449.robot.util.Loggable;
 
 /**
  * Created by sam on 1/29/17.
  */
-public class PneumaticsSubsystem extends MappedSubsystem {
+public class PneumaticsSubsystem extends MappedSubsystem implements Loggable{
 	public Compressor compressor;
 	public PressureSensor pressureSensor;
 
@@ -24,5 +25,20 @@ public class PneumaticsSubsystem extends MappedSubsystem {
 	@Override
 	public void initDefaultCommand() {
 		this.setDefaultCommand(new RunCompressor(this));
+	}
+
+	@Override
+	public String getHeader() {
+		return "pressure";
+	}
+
+	@Override
+	public Object[] getData() {
+		return new Object[]{pressureSensor.getPressure()};
+	}
+
+	@Override
+	public String getName(){
+		return "pneumatics";
 	}
 }

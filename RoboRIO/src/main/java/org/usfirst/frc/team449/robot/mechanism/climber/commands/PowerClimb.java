@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Climb the rope and stop when the power limit is exceeded.
@@ -17,6 +18,7 @@ public class PowerClimb extends ReferencingCommand {
 
 	private long startTime;
 
+	//TODO externalize
 	private long spinupTime = 250;
 
 	/**
@@ -28,7 +30,7 @@ public class PowerClimb extends ReferencingCommand {
 		super(climber);
 		requires(climber);
 		this.climber = climber;
-		System.out.println("PowerClimb constructed");
+		Logger.addEvent("PowerClimb constructed", this.getClass());
 	}
 
 	/**
@@ -36,7 +38,7 @@ public class PowerClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("PowerClimb init");
+		Logger.addEvent("PowerClimb init", this.getClass());
 		startTime = Robot.currentTimeMillis();
 	}
 
@@ -68,7 +70,7 @@ public class PowerClimb extends ReferencingCommand {
 	protected void end() {
 		//Stop the motor when we reach the top.
 		climber.setPercentVbus(0);
-		System.out.println("PowerClimb end");
+		Logger.addEvent("PowerClimb end", this.getClass());
 	}
 
 	/**
@@ -78,7 +80,7 @@ public class PowerClimb extends ReferencingCommand {
 	protected void interrupted() {
 		//Stop climbing if we're for some reason interrupted.
 		climber.setPercentVbus(0);
-		System.out.println("PowerClimb interrupted, stopping climb.");
+		Logger.addEvent("PowerClimb interrupted, stopping climb.", this.getClass());
 	}
 
 }

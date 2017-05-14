@@ -5,6 +5,7 @@ import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * A wrapper command that switches to high gear.
@@ -27,7 +28,7 @@ public class SwitchToHighGear extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("SwitchToHighGear init.");
+		Logger.addEvent("SwitchToHighGear init.", this.getClass());
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class SwitchToHighGear extends Command {
 	 */
 	@Override
 	protected void end() {
-		System.out.println("SwitchToHighGear end.");
+		Logger.addEvent("SwitchToHighGear end.", this.getClass());
 	}
 
 	/**
@@ -61,6 +62,6 @@ public class SwitchToHighGear extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("SwitchToHighGear Interrupted!");
+		Logger.addEvent("SwitchToHighGear Interrupted!", this.getClass());
 	}
 }

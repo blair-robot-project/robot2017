@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * A command that contracts a piston.
@@ -24,7 +25,7 @@ public class SolenoidReverse extends Command{
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("SolenoidForward init.");
+		Logger.addEvent("SolenoidForward init.", this.getClass());
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class SolenoidReverse extends Command{
 	 */
 	@Override
 	protected void end() {
-		System.out.println("SolenoidForward end.");
+		Logger.addEvent("SolenoidForward end.", this.getClass());
 	}
 
 	/**
@@ -57,6 +58,6 @@ public class SolenoidReverse extends Command{
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("SolenoidForward Interrupted!");
+		Logger.addEvent("SolenoidForward Interrupted!", this.getClass());
 	}
 }

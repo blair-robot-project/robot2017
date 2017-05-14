@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Go at a certain speed for a set number of seconds
@@ -38,7 +39,7 @@ public class DriveAtSpeed extends Command {
 		this.subsystem = drive;
 		this.speed = speed;
 		this.seconds = seconds;
-		System.out.println("Drive Robot bueno");
+		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class DriveAtSpeed extends Command {
 		startTime = Robot.currentTimeMillis();
 		//Reset drive speed (for safety reasons)
 		subsystem.fullStop();
-		System.out.println("DriveAtSpeed init");
+		Logger.addEvent("DriveAtSpeed init", this.getClass());
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class DriveAtSpeed extends Command {
 	protected void end() {
 		//Brake on exit.
 		subsystem.setOutput(0, 0);
-		System.out.println("DriveAtSpeed end.");
+		Logger.addEvent("DriveAtSpeed end.", this.getClass());
 	}
 
 	/**
@@ -88,7 +89,7 @@ public class DriveAtSpeed extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("DriveAtSpeed Interrupted! Stopping the robot.");
+		Logger.addEvent("DriveAtSpeed Interrupted! Stopping the robot.", this.getClass());
 		//Brake if we're interrupted
 		subsystem.fullStop();
 	}

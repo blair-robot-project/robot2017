@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.climber.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Climb the rope until this command is interrupted. WARNING: May damage stuff because of the torque.
@@ -22,7 +23,7 @@ public class ManualClimb extends ReferencingCommand {
 		super(climber);
 		requires(climber);
 		this.climber = climber;
-		System.out.println("PowerClimb constructed");
+		Logger.addEvent("PowerClimb constructed", this.getClass());
 	}
 
 	/**
@@ -30,7 +31,7 @@ public class ManualClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("PowerClimb init");
+		Logger.addEvent("PowerClimb init", this.getClass());
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class ManualClimb extends ReferencingCommand {
 	protected void end() {
 		//Stop climbing for safety
 		climber.setPercentVbus(0);
-		System.out.println("ManualClimb end");
+		Logger.addEvent("ManualClimb end", this.getClass());
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class ManualClimb extends ReferencingCommand {
 	protected void interrupted() {
 		//Stop climbing for safety
 		climber.setPercentVbus(0);
-		System.out.println("ManualClimb interrupted, stopping climb.");
+		Logger.addEvent("ManualClimb interrupted, stopping climb.", this.getClass());
 	}
 
 }

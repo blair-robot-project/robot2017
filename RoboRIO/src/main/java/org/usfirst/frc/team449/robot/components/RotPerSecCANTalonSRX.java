@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.components;
 
 import com.ctre.CANTalon;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in. Every
@@ -105,7 +106,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	public void setPercentVbus(double percentVbus) {
 		//Warn the user if they're setting Vbus to a number that's outside the range of values.
 		if (Math.abs(percentVbus) > 1.0) {
-			System.out.println("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVbus);
+			Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVbus, this.getClass());
 			percentVbus = Math.signum(percentVbus);
 		}
 
@@ -155,8 +156,8 @@ public class RotPerSecCANTalonSRX extends Component {
 			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
 		} else {
 			//Warn the user if they're trying to do this but don't have the low gear constants in the map.
-			System.out.println("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +
-					"constants.");
+			Logger.addEvent("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +
+					"constants.", this.getClass());
 		}
 	}
 
