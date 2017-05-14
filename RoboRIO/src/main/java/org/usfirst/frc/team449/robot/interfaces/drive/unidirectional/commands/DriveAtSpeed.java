@@ -1,13 +1,13 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
  * Go at a certain speed for a set number of seconds
  */
-public class DriveAtSpeed extends ReferencingCommand {
+public class DriveAtSpeed extends Command {
 
 	/**
 	 * Speed to go at
@@ -24,6 +24,8 @@ public class DriveAtSpeed extends ReferencingCommand {
 	 */
 	private long startTime;
 
+	private UnidirectionalDrive subsystem;
+
 	/**
 	 * Default constructor
 	 *
@@ -31,9 +33,9 @@ public class DriveAtSpeed extends ReferencingCommand {
 	 * @param speed   How fast to go, in RPS
 	 * @param seconds How long to drive for.
 	 */
-	public DriveAtSpeed(TalonClusterDrive drive, double speed, double seconds) {
+	public DriveAtSpeed(UnidirectionalDrive drive, double speed, double seconds) {
 		//Initialize stuff
-		super(drive);
+		this.subsystem = drive;
 		this.speed = speed;
 		this.seconds = seconds;
 		System.out.println("Drive Robot bueno");
@@ -47,7 +49,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 		//Set up start time
 		startTime = Robot.currentTimeMillis();
 		//Reset drive speed (for safety reasons)
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		subsystem.fullStop();
 		System.out.println("DriveAtSpeed init");
 	}
 
@@ -57,9 +59,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		//Set the speed
-		((TalonClusterDrive) subsystem).setDefaultThrottle(speed, speed);
-		//Log data
-		((TalonClusterDrive) subsystem).logData(speed);
+		subsystem.setOutput(speed, speed);
 	}
 
 	/**
@@ -78,9 +78,8 @@ public class DriveAtSpeed extends ReferencingCommand {
 	 */
 	@Override
 	protected void end() {
-		((TalonClusterDrive) subsystem).logData();
 		//Brake on exit.
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0, 0);
+		subsystem.setOutput(0, 0);
 		System.out.println("DriveAtSpeed end.");
 	}
 
@@ -90,8 +89,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		System.out.println("DriveAtSpeed Interrupted! Stopping the robot.");
-		((TalonClusterDrive) subsystem).logData();
-		//Break if we're interrupted
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		//Brake if we're interrupted
+		subsystem.fullStop();
 	}
 }

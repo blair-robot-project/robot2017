@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
@@ -12,16 +15,16 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 public class NavXDriveStraight extends PIDAngleCommand {
 
 	private TankOI oi;
-	private TalonClusterDrive drive;
+	private UnidirectionalDrive drive;
 	private boolean useLeft;
 
-	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
+	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
 	                         TankOI oi, boolean useLeft) {
-		super(map, drive);
+		super(map, (NavxSubsystem) drive);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;
-		requires(drive);
+		requires((Subsystem) drive);
 	}
 
 	/**
@@ -41,7 +44,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 			throttle = oi.getRightThrottle();
 		}
 
-		drive.setDefaultThrottle(throttle - output, throttle + output);
+		drive.setOutput(throttle - output, throttle + output);
 	}
 
 	/**
@@ -58,7 +61,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		drive.logData();
+
 	}
 
 	/**

@@ -1,10 +1,12 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX;
 
 
+import com.kauailabs.navx.frc.AHRS;
+
 /**
  * A subsystem that has a NavX on it.
  */
-public interface NavxSubsystem{
+public interface NavxSubsystem {
 	/**
 	 * Get the output of the NavX
 	 *
@@ -15,4 +17,6 @@ public interface NavxSubsystem{
 	void setOverrideNavX(boolean override);
 
 	boolean getOverrideNavX();
+
+	AHRS getNavX();
 }

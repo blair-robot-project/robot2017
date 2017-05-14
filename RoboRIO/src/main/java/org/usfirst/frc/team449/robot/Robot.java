@@ -10,6 +10,10 @@ import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
@@ -102,7 +106,7 @@ public class Robot extends IterativeRobot {
 
 	private I2C robotInfo;
 
-	private boolean startLowGear;
+	private ShiftingDrive.gear startingGear;
 	private int minPointsInBtmMPBuffer;
 	private static long currentTimeMillis;
 
@@ -126,7 +130,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		startLowGear = cfg.getStartLowGear();
+		startingGear = cfg.getStartLowGear()? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
 		minPointsInBtmMPBuffer = cfg.getMinPointsInBottomMPBuffer();
 
 		if (cfg.hasRioduinoPort()) {
@@ -138,7 +142,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Constructed OI");
 
 		//Construct the drive (not in a if block because you kind of need it.)
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startLowGear);
+		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startingGear);
 		System.out.println("Constructed Drive");
 
 		//Construct camera if it's in the map.
@@ -265,11 +269,7 @@ public class Robot extends IterativeRobot {
 //		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (startLowGear) {
-				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
-			} else {
-				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
-			}
+			Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
 		}
 
 		if (intakeSubsystem != null) {
@@ -312,11 +312,7 @@ public class Robot extends IterativeRobot {
 
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (startLowGear) {
-				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
-			} else {
-				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
-			}
+			Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
 		}
 
 		if (gearSubsystem != null) {

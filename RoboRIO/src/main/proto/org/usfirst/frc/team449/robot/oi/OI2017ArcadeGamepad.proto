@@ -28,7 +28,7 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton toggle_intake_up_down = 14;
 	optional JoystickButton tmp_override_low = 15;
 	optional JoystickButton tmp_override_high = 24;
-	optional JoystickButton toggle_override_high = 16;
+	optional JoystickButton toggle_override_autoshift = 16;
 	optional JoystickButton shoot = 17;
 
 	optional JoystickButton switch_camera = 23;

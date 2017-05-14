@@ -1,10 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
@@ -14,7 +16,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	/**
 	 * The drive subsystem to execute this command on and to get the gyro reading from.
 	 */
-	protected TalonClusterDrive drive;
+	protected UnidirectionalDrive drive;
 
 	/**
 	 * The angle to turn to.
@@ -36,17 +38,17 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 *
 	 * @param map      An turnPID map with PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
-	 * @param drive    The drive subsystem to execute this command on.
+	 * @param drive    The drive subsystem to execute this command on. Must also be a NavX subsystem.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
 	 */
-	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, TalonClusterDrive drive,
+	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
 	                       double timeout) {
-		super(map, drive);
+		super(map, (NavxSubsystem) drive);
 		this.drive = drive;
 		this.setpoint = setpoint;
 		//Convert from seconds to milliseconds
 		this.timeout = (long) (timeout * 1000);
-		requires(drive);
+		requires((Subsystem) drive);
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		//More logging
 		SmartDashboard.putNumber("NavXTurnToAngle PID loop output", output);
 
-		drive.setDefaultThrottle(-output, output);    //spin to the right angle
+		drive.setOutput(-output, output);    //spin to the right angle
 	}
 
 	/**
@@ -95,7 +97,6 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		drive.logData();
 		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
 		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
 	}

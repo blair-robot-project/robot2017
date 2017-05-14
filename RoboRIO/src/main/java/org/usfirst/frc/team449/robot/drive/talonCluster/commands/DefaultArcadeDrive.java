@@ -1,11 +1,13 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 
 /**
@@ -29,9 +31,9 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	private double rot;
 	/**
-	 * The talonClusterDrive this command is controlling.
+	 * The UnidirectionalDrive this command is controlling.
 	 */
-	private TalonClusterDrive driveSubsystem;
+	private UnidirectionalDrive driveSubsystem;
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
@@ -42,13 +44,13 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * Default constructor
 	 *
 	 * @param map   The angle PID map containing PID and other tuning constants.
-	 * @param drive The drive to execute this command on.
+	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, TalonClusterDrive drive,
+	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
 	                          ArcadeOI oi) {
 		//Assign stuff
-		super(map, drive);
+		super(map, (NavxSubsystem) drive);
 		maxAngularVel = map.getMaxAngularVel();
 		this.oi = oi;
 		driveSubsystem = drive;
@@ -56,7 +58,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		driveStraightTimer = new BufferTimer(map.getDriveStraightDelay());
 
 		//Needs a requires because it's a default command.
-		requires(drive);
+		requires((Subsystem) drive);
 
 		//Logging, but in Spanish.
 		System.out.println("Drive Robot bueno");
@@ -84,20 +86,25 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	@Override
 	protected void execute() {
 		//Auto-shifting
-		driveSubsystem.autoShift();
+		try {
+			((ShiftingDrive) driveSubsystem).autoshift();
+		} catch (ClassCastException e){
+			System.out.println("Attempted to shift in DefaultArcadeDrive, but the subsystem isn't a ShiftingDrive!");
+		}
+
 
 		//Set vel and rot to what they should be.
 		vel = oi.getFwd();
 		rot = oi.getRot();
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
-		if (drivingStraight && (rot != 0 || driveSubsystem.getOverrideNavX())) {
+		if (drivingStraight && (rot != 0 || ((NavxSubsystem) driveSubsystem).getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
 			//System.out.println("Switching to free drive.");
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (driveStraightTimer.get(!(driveSubsystem.getOverrideNavX()) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel)) {
+		else if (driveStraightTimer.get(!(((NavxSubsystem) driveSubsystem).getOverrideNavX()) && !(drivingStraight) && rot == 0 && Math.abs(((NavxSubsystem) driveSubsystem).getNavX().getRate()) <= maxAngularVel)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the NavX
@@ -108,9 +115,8 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		}
 
 		//Log data and stuff
-		driveSubsystem.logData();
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
-		SmartDashboard.putBoolean("Override Navx", driveSubsystem.getOverrideNavX());
+		SmartDashboard.putBoolean("Override Navx", ((NavxSubsystem) driveSubsystem).getOverrideNavX());
 		SmartDashboard.putNumber("Vel Axis", vel);
 		SmartDashboard.putNumber("Rot axis", rot);
 	}
@@ -139,7 +145,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	@Override
 	protected void interrupted() {
 		System.out.println("DefaultArcadeDrive Interrupted! Stopping the robot.");
-		driveSubsystem.setDefaultThrottle(0.0, 0.0);
+		driveSubsystem.setOutput(0.0, 0.0);
 	}
 
 	/**
@@ -157,12 +163,12 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 			SmartDashboard.putNumber("PID output", output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			driveSubsystem.setDefaultThrottle(vel - output, vel + output);
+			driveSubsystem.setOutput(vel - output, vel + output);
 		}
 		//If we're free driving...
 		else {
 			//Set the throttle to normal arcade throttle.
-			driveSubsystem.setDefaultThrottle(oi.getLeftOutput(), oi.getRightOutput());
+			driveSubsystem.setOutput(oi.getLeftOutput(), oi.getRightOutput());
 		}
 	}
 }

@@ -2,7 +2,8 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
  * Turn a certain number of degrees from the current heading.
@@ -17,7 +18,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 * @param drive    The drive subsystem to execute this command on.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
 	 */
-	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, TalonClusterDrive drive,
+	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
 	                       double timeout) {
 		super(map, setpoint, drive, timeout);
 	}
@@ -31,7 +32,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 		this.startTime = Robot.currentTimeMillis();
 		System.out.println("NavXRelativeTurnToAngle init.");
 		//Do math to setup the setpoint.
-		this.setSetpoint(clipTo180(drive.getGyroOutput() + setpoint));
+		this.setSetpoint(clipTo180(((NavxSubsystem) drive).getGyroOutput() + setpoint));
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}

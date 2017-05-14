@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.*;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.*;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
@@ -120,7 +122,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 	/**
 	 * Button for toggling autoshifting
 	 */
-	private Button toggleOverrideHigh;
+	private Button toggleOverrideAutoshift;
 	/**
 	 * Button for toggling feeder
 	 */
@@ -204,8 +206,8 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 		if (map.hasTmpOverrideHigh()) {
 			tmpOverrideHigh = MappedJoystickButton.constructButton(map.getTmpOverrideHigh());
 		}
-		if (map.hasToggleOverrideHigh()) {
-			toggleOverrideHigh = MappedJoystickButton.constructButton(map.getToggleOverrideHigh());
+		if (map.hasToggleOverrideAutoshift()) {
+			toggleOverrideAutoshift = MappedJoystickButton.constructButton(map.getToggleOverrideAutoshift());
 		}
 		if (map.hasToggleFeeder()) {
 			toggleFeeder = MappedJoystickButton.constructButton(map.getToggleFeeder());
@@ -324,16 +326,17 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.instance.driveSubsystem));
 		}
 		if (tmpOverrideHigh != null) {
-			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true, false));
-			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false, false));
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true));
+			tmpOverrideHigh.whenPressed(new SwitchToGear(Robot.instance.driveSubsystem, ShiftingDrive.gear.HIGH));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false));
 		}
 		if (tmpOverrideLow != null) {
-			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true, true));
-			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false, true));
+			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true));
+			tmpOverrideHigh.whenPressed(new SwitchToGear(Robot.instance.driveSubsystem, ShiftingDrive.gear.LOW));
+			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false));
 		}
-		if (toggleOverrideHigh != null) {
-			toggleOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, !Robot.instance.driveSubsystem
-					.overrideAutoShift, false));
+		if (toggleOverrideAutoshift != null) {
+			toggleOverrideAutoshift.whenPressed(new ToggleOverrideAutoShift(Robot.instance.driveSubsystem));
 		}
 
 		//Map climber commands
@@ -395,10 +398,10 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 			}
 		}
 		if (logError != null) {
-			logError.whenPressed(new LogError(Robot.instance.driveSubsystem, "Driver-Reported"));
+			//TODO put something here
 		}
 		if (jiggleRobot != null) {
-			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem));
+			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem, Robot.instance.driveSubsystem.turnPID));
 		}
 	}
 }

@@ -93,6 +93,11 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	@Override
+	public AHRS getNavX() {
+		return navx;
+	}
+
+	@Override
 	public void initDefaultCommand() {
 		//Do nothing
 	}

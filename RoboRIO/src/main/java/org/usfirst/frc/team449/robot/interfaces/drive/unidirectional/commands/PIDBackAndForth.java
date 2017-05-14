@@ -1,0 +1,22 @@
+package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
+
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
+
+/**
+ * Drive back and forth to tune PID
+ */
+public class PIDBackAndForth extends CommandGroup {
+	/**
+	 * Instantiate the CommandGroup
+	 *
+	 * @param subsystem the unidirectional drive to execute this command on.
+	 */
+	public PIDBackAndForth(UnidirectionalDrive subsystem) {
+		double time = 1.5;
+
+		addSequential(new DriveAtSpeed(subsystem, 0.7, 1), time);
+		addSequential(new DriveAtSpeed(subsystem, -0.7, 1), time);
+	}
+}

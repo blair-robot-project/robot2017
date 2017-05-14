@@ -1,26 +1,24 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.ReferencingCommandGroup;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.util.ReferencingCommandGroup;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
  * Created by Noah Gleason on 4/6/2017.
  */
-public class JiggleRobot extends ReferencingCommandGroup {
+public class JiggleRobot extends CommandGroup {
 	/**
 	 * Instantiate the ReferencingCommandGroup
 	 *
-	 * @param mappedSubsystem the {@link MappedSubsystem}
-	 *                        to feed to this
-	 *                        {@code
-	 *                        ReferencingCommandGroup}'s
-	 *                        {@link ReferencingCommand}s
+	 * @param subsystem The unidirectionalDrive to execute this command on.
 	 */
-	public JiggleRobot(TalonClusterDrive mappedSubsystem) {
-		super(mappedSubsystem);
-		addSequential(new NavXRelativeTTA(mappedSubsystem.turnPID, 10, mappedSubsystem, 3));
-		addSequential(new NavXRelativeTTA(mappedSubsystem.turnPID, -10, mappedSubsystem, 3));
+	public JiggleRobot(UnidirectionalDrive subsystem, ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID) {
+		addSequential(new NavXRelativeTTA(turnPID, 10, subsystem, 3));
+		addSequential(new NavXRelativeTTA(turnPID, -10, subsystem, 3));
 	}
 }

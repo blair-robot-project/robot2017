@@ -1,20 +1,21 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 
 /**
  * Very simple arcade drive control.
  */
-public class SimpleWestCoastDrive extends ReferencingCommand {
+public class SimpleUnidirectionalDrive extends Command {
 
 	/**
 	 * The OI used for input.
 	 */
 	public UnidirectionalOI oi;
 	
-	private TalonClusterDrive subsystem;
+	private UnidirectionalDrive subsystem;
 
 	/**
 	 * Default constructor
@@ -22,12 +23,11 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	 * @param drive The drive to execute this command on
 	 * @param oi    The OI that gives the input to this command.
 	 */
-	public SimpleWestCoastDrive(TalonClusterDrive drive, UnidirectionalOI oi) {
-		super(drive);
+	public SimpleUnidirectionalDrive(UnidirectionalDrive drive, UnidirectionalOI oi) {
+		requires((Subsystem) drive);
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.
-		requires(subsystem);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	 */
 	@Override
 	protected void initialize() {
-		subsystem.setDefaultThrottle(0.0, 0.0);
+		subsystem.fullStop();
 	}
 
 	/**
@@ -44,10 +44,7 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		//Calculate the right and left outputs from the fwd and rot inputs.
-		subsystem.setDefaultThrottle(oi.getLeftOutput(), oi.getRightOutput());
-
-		//Logging.
-		subsystem.logData();
+		subsystem.setOutput(oi.getLeftOutput(), oi.getRightOutput());
 	}
 
 	/**
@@ -65,8 +62,8 @@ public class SimpleWestCoastDrive extends ReferencingCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("SimpleWestCoastDrive Interrupted! Stopping the robot.");
+		System.out.println("SimpleUnidirectionalDrive Interrupted! Stopping the robot.");
 		//Brake for safety!
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		subsystem.fullStop();
 	}
 }

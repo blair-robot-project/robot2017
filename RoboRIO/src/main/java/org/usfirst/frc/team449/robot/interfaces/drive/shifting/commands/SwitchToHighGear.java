@@ -1,21 +1,25 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 
 /**
  * A wrapper command that switches to high gear.
  */
-public class SwitchToHighGear extends ReferencingCommand {
+public class SwitchToHighGear extends Command {
+
+	private ShiftingDrive subsystem;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on
 	 */
-	public SwitchToHighGear(MappedSubsystem subsystem) {
-		super(subsystem);
+	public SwitchToHighGear(ShiftingDrive subsystem) {
+		this.subsystem = subsystem;
 	}
 
 	/**
@@ -31,7 +35,7 @@ public class SwitchToHighGear extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
-		((TalonClusterDrive) subsystem).setLowGear(false);
+		subsystem.setGear(ShiftingDrive.gear.HIGH);
 	}
 
 	/**

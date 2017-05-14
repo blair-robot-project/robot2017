@@ -1,30 +1,33 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 
 /**
  * Drives straight when using a tank drive. Not updated for new OI organization.
  */
-public class DriveStraight extends ReferencingCommand {
+public class DriveStraight extends Command {
 	private TankOI oi;
 
 	private boolean useLeft;
 
 	private double throttle;
 
-	public DriveStraight(TalonClusterDrive drive, TankOI oi, boolean useLeft) {
-		super(drive);
+	private UnidirectionalDrive subsystem;
+
+	public DriveStraight(UnidirectionalDrive drive, TankOI oi, boolean useLeft) {
+		subsystem = drive;
 		this.oi = oi;
 		this.useLeft = useLeft;
-		requires(subsystem);
+		requires((Subsystem) subsystem);
 		System.out.println("Drive Robot bueno");
 	}
 
 	@Override
 	protected void initialize() {
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		subsystem.fullStop();
 	}
 
 	@Override
@@ -34,8 +37,7 @@ public class DriveStraight extends ReferencingCommand {
 		} else {
 			throttle = oi.getRightThrottle();
 		}
-		((TalonClusterDrive) subsystem).setDefaultThrottle(throttle, throttle);
-		((TalonClusterDrive) subsystem).logData();
+		subsystem.setOutput(throttle, throttle);
 	}
 
 	@Override
@@ -50,6 +52,6 @@ public class DriveStraight extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		System.out.println("DriveStraight Interrupted! Stopping the robot.");
-		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
+		subsystem.fullStop();
 	}
 }
