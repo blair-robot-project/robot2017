@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.interfaces.oi.BaseOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.ToggleSolenoid;
@@ -32,7 +33,7 @@ import java.util.List;
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
  * controls turning velocity.
  */
-public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
+public class OI2017ArcadeGamepad extends ArcadeOI{
 
 	/**
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that

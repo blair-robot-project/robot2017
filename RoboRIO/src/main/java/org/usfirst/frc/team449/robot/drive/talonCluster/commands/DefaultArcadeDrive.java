@@ -171,7 +171,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//If we're free driving...
 		else {
 			//Set the throttle to normal arcade throttle.
-			driveSubsystem.setDefaultThrottle(vel - rot, vel + rot);
+			driveSubsystem.setDefaultThrottle(oi.getLeftOutput(), oi.getRightOutput());
 		}
 	}
 }

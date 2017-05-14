@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team449.robot.interfaces.oi.BaseOI;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -8,7 +9,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 /**
  * A simple tank drive, where each joystick controls a side of the robot.
  */
-public class OI2017Tank extends BaseOI implements TankOI {
+public class OI2017Tank extends TankOI {
 	/**
 	 * The left throttle
 	 */

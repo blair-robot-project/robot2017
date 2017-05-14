@@ -3,13 +3,14 @@ package org.usfirst.frc.team449.robot.oi;
 import edu.wpi.first.wpilibj.Joystick;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.BaseOI;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
  * A simple, two-stick arcade drive OI that uses two distinct joysticks
  */
-public class OI2017Arcade extends BaseOI implements ArcadeOI {
+public class OI2017Arcade extends ArcadeOI {
 	/**
 	 * Left (rotation control) stick's throttle
 	 */

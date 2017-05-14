@@ -41,11 +41,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 			throttle = oi.getRightThrottle();
 		}
 
-		if (inverted){
-			drive.setDefaultThrottle(throttle + output, throttle - output);
-		} else {
-			drive.setDefaultThrottle(throttle - output, throttle + output);
-		}
+		drive.setDefaultThrottle(throttle - output, throttle + output);
 	}
 
 	/**
