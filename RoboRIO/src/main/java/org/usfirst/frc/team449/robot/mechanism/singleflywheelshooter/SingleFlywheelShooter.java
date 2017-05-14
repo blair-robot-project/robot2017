@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
 import java.io.FileWriter;
@@ -97,7 +98,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 
 		try (FileWriter fw = new FileWriter(logFilename, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((System.currentTimeMillis() - startTime) / 1000);
+			sb.append((Robot.currentTimeMillis() - startTime) / 1000);
 			sb.append(",");
 			sb.append(talon.getSpeed());
 			sb.append(",");
@@ -125,7 +126,7 @@ public class SingleFlywheelShooter extends MappedSubsystem {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		startTime = System.currentTimeMillis();
+		startTime = Robot.currentTimeMillis();
 		//		setDefaultCommand(new PIDTune(this));
 		System.out.println("Finished init default command");
 	}

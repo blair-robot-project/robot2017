@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
@@ -44,7 +45,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		//Set up start time
-		startTime = System.currentTimeMillis();
+		startTime = Robot.currentTimeMillis();
 		//Reset drive speed (for safety reasons)
 		((TalonClusterDrive) subsystem).setDefaultThrottle(0.0, 0.0);
 		System.out.println("DriveAtSpeed init");
@@ -69,7 +70,7 @@ public class DriveAtSpeed extends ReferencingCommand {
 	@Override
 	protected boolean isFinished() {
 		//Time-based exit
-		return (System.currentTimeMillis() - startTime) * 1e-3 > seconds;
+		return (Robot.currentTimeMillis() - startTime) * 1e-3 > seconds;
 	}
 
 	/**

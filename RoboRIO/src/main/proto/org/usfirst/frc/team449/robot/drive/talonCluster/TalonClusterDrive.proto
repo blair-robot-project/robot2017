@@ -9,14 +9,14 @@ option java_outer_classname = "TalonClusterDriveMap";
 
 message TalonClusterDrive {
 	required Drive drive = 1;
-	required ToleranceBufferAnglePID turn_PID = 6;
-	required ToleranceBufferAnglePID straight_PID = 7;
-	optional DoubleSolenoid shifter = 8;
-	optional int32 module_number = 9;
-	required RotPerSecCANTalonSRX right_master = 2;
-	repeated RotPerSecCANTalonSRX right_slave = 3;
-	required RotPerSecCANTalonSRX left_master = 4;
-	repeated RotPerSecCANTalonSRX left_slave = 5;
+	required ToleranceBufferAnglePID turn_PID = 2;
+	required ToleranceBufferAnglePID straight_PID = 3;
+	optional DoubleSolenoid shifter = 4;
+	optional int32 module_number = 5;
+	required RotPerSecCANTalonSRX right_master = 6;
+	repeated RotPerSecCANTalonSRX right_slave = 7;
+	required RotPerSecCANTalonSRX left_master = 8;
+	repeated RotPerSecCANTalonSRX left_slave = 9;
 	optional double wheel_diameter = 10;
 	optional double upshift_speed = 11;
 	optional double downshift_speed = 12;

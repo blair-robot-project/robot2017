@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
@@ -83,7 +84,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	@Override
 	protected void initialize() {
 		//Set up start time
-		this.startTime = System.currentTimeMillis();
+		this.startTime = Robot.currentTimeMillis();
 		this.setSetpoint(setpoint);
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
@@ -107,7 +108,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	@Override
 	protected boolean isFinished() {
 		//The NavX onTarget() is crap and sometimes never terminates because of floating point errors, so we have a timeout
-		return this.getPIDController().onTarget() || System.currentTimeMillis() - startTime > timeout;
+		return this.getPIDController().onTarget() || Robot.currentTimeMillis() - startTime > timeout;
 	}
 
 	/**

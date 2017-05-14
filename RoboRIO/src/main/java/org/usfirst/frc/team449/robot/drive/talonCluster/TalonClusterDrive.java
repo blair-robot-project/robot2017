@@ -277,7 +277,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		/*
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
+			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -312,7 +312,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public void logError(String error) {
 		try (FileWriter fw = new FileWriter(errorFN, true)) {
-			fw.write(((double) (System.currentTimeMillis() - startTime) / 1000.) + "," + error + "\n");
+			fw.write(((double) (Robot.currentTimeMillis() - startTime) / 1000.) + "," + error + "\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -325,7 +325,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Print stuff to the log file for in-depth analysis or tuning.
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
+			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -384,7 +384,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Print stuff to the log file for in-depth analysis or tuning.
 		try (FileWriter fw = new FileWriter(logFN, true)) {
 			StringBuilder sb = new StringBuilder();
-			sb.append((double)(System.currentTimeMillis() - startTime) / 1000.);
+			sb.append((double)(Robot.currentTimeMillis() - startTime) / 1000.);
 			sb.append(",");
 			sb.append(leftMaster.getSpeed());
 			sb.append(",");
@@ -455,7 +455,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	@Override
 	protected void initDefaultCommand() {
 		//Set the start time to current time
-		startTime = System.currentTimeMillis();
+		startTime = Robot.currentTimeMillis();
 		//Start driving
 		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
 	}
@@ -493,14 +493,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 				//Switch the PID constants
 				rightMaster.switchToLowGear();
 				leftMaster.switchToLowGear();
-				timeLastDownshifted = System.currentTimeMillis();
+				timeLastDownshifted = Robot.currentTimeMillis();
 			} else {
 				//Physically shift gears
 				shifter.set(DoubleSolenoid.Value.kReverse);
 				//Switch the PID constants
 				rightMaster.switchToHighGear();
 				leftMaster.switchToHighGear();
-				timeLastUpshifted = System.currentTimeMillis();
+				timeLastUpshifted = Robot.currentTimeMillis();
 			}
 			//Set logging boolean
 			lowGear = setLowGear;
@@ -528,7 +528,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Or commanding a low speed.
 		okToShift = okToShift || (Math.abs(oi.getFwd()) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && System.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
+		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 		//And there's no need to downshift if we're already in low gear.
 		okToShift = okToShift && !lowGear;
 		//And we don't want to shift if autoshifting is turned off.
@@ -538,13 +538,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		if (okToShift && !okToDownshift) {
 			//This block is a "flag" that triggers when we first meet the conditions to shift.
 			okToDownshift = true;
-			timeDownshiftConditionsMet = System.currentTimeMillis();
+			timeDownshiftConditionsMet = Robot.currentTimeMillis();
 		} else if (!okToShift && okToDownshift) {
 			//This resets the flag if we no longer meet the conditions to shift.
 			okToDownshift = false;
 		}
 		//Return if we've been eligible to shift for delayAfterDownshiftConditionsMet seconds and are also currently eligible.
-		return (System.currentTimeMillis() - timeDownshiftConditionsMet > delayAfterDownshiftConditionsMet && okToShift);
+		return (Robot.currentTimeMillis() - timeDownshiftConditionsMet > delayAfterDownshiftConditionsMet && okToShift);
 	}
 
 	/**
@@ -556,7 +556,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//AND the driver's trying to go forward fast.
 		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && System.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
+		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 		//And there's no need to upshift if we're already in high gear.
 		okToShift = okToShift && lowGear;
 		//And we don't want to shift if autoshifting is turned off.
@@ -566,13 +566,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		if (okToShift && !okToUpshift) {
 			//This block is a "flag" that triggers when we first meet the conditions to shift.
 			okToUpshift = true;
-			timeUpshiftConditionsMet = System.currentTimeMillis();
+			timeUpshiftConditionsMet = Robot.currentTimeMillis();
 		} else if (!okToShift && okToUpshift) {
 			//This resets the flag if we no longer meet the conditions to shift.
 			okToUpshift = false;
 		}
 		//Return if we've been eligible to shift for delayAfterUpshiftConditionsMet seconds and are also currently eligible.
-		return (System.currentTimeMillis() - timeUpshiftConditionsMet > delayAfterUpshiftConditionsMet && okToShift);
+		return (Robot.currentTimeMillis() - timeUpshiftConditionsMet > delayAfterUpshiftConditionsMet && okToShift);
 	}
 
 	/**

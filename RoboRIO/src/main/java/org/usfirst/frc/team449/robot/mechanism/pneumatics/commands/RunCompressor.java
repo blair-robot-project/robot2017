@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
  * Created by sam on 1/29/17.
  */
 public class RunCompressor extends ReferencingCommand {
-	PneumaticsSubsystem pneumaticsSubsystem;
+	private PneumaticsSubsystem pneumaticsSubsystem;
 
 	public RunCompressor(PneumaticsSubsystem ps) {
 		super(ps);

@@ -104,11 +104,13 @@ public class Robot extends IterativeRobot {
 
 	private boolean startLowGear;
 	private int minPointsInBtmMPBuffer;
+	private static long currentTimeMillis;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
+		currentTimeMillis = System.currentTimeMillis();
 		System.out.println("Started robotInit.");
 
 		instance = this;
@@ -247,6 +249,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		if (MPNotifier != null) {
 			MPNotifier.stop();
@@ -285,6 +288,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		if (singleFlywheelShooterSubsystem != null) {
 			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
@@ -303,6 +307,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		currentTimeMillis = System.currentTimeMillis();
 		sendModeOverI2C(robotInfo, "auto");
 
 		//Switch to low gear if we have gears
@@ -338,10 +343,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 		if (cfg.getDoMP() && !cfg.getTestMP()) {
-			if (System.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
+			if (Robot.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
 				commandFinished.set(true);
 			}
 			if (commandFinished.get()) {
@@ -352,7 +358,7 @@ public class Robot extends IterativeRobot {
 					if (gearSubsystem != null && dropGear) {
 						Scheduler.getInstance().add(new SolenoidReverse(gearSubsystem));
 					}
-					startedGearPush = System.currentTimeMillis();
+					startedGearPush = Robot.currentTimeMillis();
 				} else if (completedCommands == 2) {
 					if (position.equals("center")) {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
@@ -403,5 +409,9 @@ public class Robot extends IterativeRobot {
 			}
 			i2C.transaction(WriteData, WriteData.length, null, 0);
 		}
+	}
+
+	public static long currentTimeMillis(){
+		return currentTimeMillis;
 	}
 }

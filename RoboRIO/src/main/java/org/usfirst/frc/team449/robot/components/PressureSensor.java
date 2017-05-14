@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * Wrapper for an analog pressure sensor that returns a voltage linearly proportional to pressure.
  */
 public class PressureSensor extends Component {
-	public AnalogInput sensor;
+	private AnalogInput sensor;
 
 	public PressureSensor(maps.org.usfirst.frc.team449.robot.components.AnalogPressureSensorMap.AnalogPressureSensor
 			                      map) {

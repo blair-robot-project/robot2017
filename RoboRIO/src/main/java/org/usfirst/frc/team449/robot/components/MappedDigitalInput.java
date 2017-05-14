@@ -10,14 +10,11 @@ import java.util.List;
  * Created by bryanli on 3/20/17.
  */
 public class MappedDigitalInput {
-	private DigitalInputMap.DigitalInput map;
 
 	private List<DigitalInput> digitalInputs;
 
 
 	public MappedDigitalInput(DigitalInputMap.DigitalInput map) {
-		this.map = map;
-
 		digitalInputs = new ArrayList<>();
 		for (int portNum : map.getPortList()) {
 			DigitalInput tmp = new DigitalInput(portNum);
@@ -27,8 +24,8 @@ public class MappedDigitalInput {
 
 	public List<Boolean> getStatus() {
 		List<Boolean> digitalValues = new ArrayList<>();
-		for (int i = 0; i < digitalInputs.size(); i++) {
-			digitalValues.add(!digitalInputs.get(i).get());
+		for (DigitalInput digitalInput : digitalInputs) {
+			digitalValues.add(!digitalInput.get());
 		}
 		return digitalValues;
 	}

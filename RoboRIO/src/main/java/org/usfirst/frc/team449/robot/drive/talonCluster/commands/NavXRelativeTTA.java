@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 
 /**
@@ -27,7 +28,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	@Override
 	protected void initialize() {
 		//Setup start time
-		this.startTime = System.currentTimeMillis();
+		this.startTime = Robot.currentTimeMillis();
 		System.out.println("NavXRelativeTurnToAngle init.");
 		//Do math to setup the setpoint.
 		this.setSetpoint(clipTo180(drive.getGyroOutput() + setpoint));

@@ -1,14 +1,13 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
- * Set whether or not to use the NavX to drive straight.
+ * Toggle whether or not to use the NavX to drive straight.
  */
-public class OverrideNavX extends Command {
+public class ToggleOverrideNavX extends Command {
 
-	private boolean override;
 	private NavxSubsystem subsystem;
 
 	/**
@@ -16,8 +15,7 @@ public class OverrideNavX extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on
 	 */
-	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
-		this.override = override;
+	public ToggleOverrideNavX(NavxSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -30,11 +28,11 @@ public class OverrideNavX extends Command {
 	}
 
 	/**
-	 * Set whether or not we're overriding the NavX
+	 * Toggle whether or not we're overriding the NavX
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setOverrideNavX(override);
+		subsystem.setOverrideNavX(!subsystem.getOverrideNavX());
 	}
 
 	/**

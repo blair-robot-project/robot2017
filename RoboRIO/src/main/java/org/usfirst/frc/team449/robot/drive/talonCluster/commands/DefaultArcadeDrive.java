@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePIDMap;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
@@ -102,10 +103,10 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//If we're free driving and the driver lets go of the turn stick:
 		else if (!(driveSubsystem.getOverrideNavX()) && !(delayedDriveStraight) && !(drivingStraight) && rot == 0 && Math.abs(driveSubsystem.navx.getRate()) <= maxAngularVel) {
 			delayedDriveStraight = true;
-			timeAbleToDriveStraight = System.currentTimeMillis();
+			timeAbleToDriveStraight = Robot.currentTimeMillis();
 		}
 
-		if (delayedDriveStraight && System.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay) {
+		if (delayedDriveStraight && Robot.currentTimeMillis() - timeAbleToDriveStraight >= driveStraightDelay) {
 			//Switch to driving straight
 			drivingStraight = true;
 			delayedDriveStraight = false;

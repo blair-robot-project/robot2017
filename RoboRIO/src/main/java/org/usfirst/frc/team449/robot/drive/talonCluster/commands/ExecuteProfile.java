@@ -69,7 +69,7 @@ public class ExecuteProfile extends Command {
 			talon.clearMotionProfileHasUnderrun();
 		}
 
-		startTime = System.currentTimeMillis();
+		startTime = Robot.currentTimeMillis();
 
 		finished = false;
 		bottomLoaded = false;
@@ -103,7 +103,7 @@ public class ExecuteProfile extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		return finished || (System.currentTimeMillis() - startTime > timeout);
+		return finished || (Robot.currentTimeMillis() - startTime > timeout);
 	}
 
 	@Override

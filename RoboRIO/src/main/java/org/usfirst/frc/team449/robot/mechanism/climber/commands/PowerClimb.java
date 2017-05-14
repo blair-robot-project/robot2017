@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.climber.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 
 /**
@@ -36,7 +37,7 @@ public class PowerClimb extends ReferencingCommand {
 	@Override
 	protected void initialize() {
 		System.out.println("PowerClimb init");
-		startTime = System.currentTimeMillis();
+		startTime = Robot.currentTimeMillis();
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class PowerClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return climber.reachedTop() && System.currentTimeMillis() - startTime > spinupTime;
+		return climber.reachedTop() && Robot.currentTimeMillis() - startTime > spinupTime;
 	}
 
 	/**
