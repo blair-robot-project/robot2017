@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.components";
+option java_outer_classname = "DigitalInputMap";
+
+message DigitalInput {
+    repeated int32 port = 1;
+}

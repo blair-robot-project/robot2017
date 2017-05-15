@@ -1,25 +1,28 @@
 package org.usfirst.frc.team449.robot.oi;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.TriggerButton;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
+import org.usfirst.frc.team449.robot.mechanism.activegear.commands.FirePiston;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.ManualClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.*;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
@@ -135,6 +138,16 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	private Button fireShooter;
 
+	private Button resetShooter;
+
+	private Button toggleGear;
+	private List<Button> pushGear;
+	private Button manualClimb;
+	private Button logError;
+	private Button jiggleRobot;
+
+	private boolean overrideNavXWhileHeld;
+
 	/**
 	 * Construct the OI2017ArcadeGamepad
 	 *
@@ -151,70 +164,86 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		deadband = map.getDeadband();
 
 		//Instantiate mandatory buttons.
-		toggleOverrideNavX = new MappedJoystickButton(map.getOverrideNavX());
+		toggleOverrideNavX = MappedJoystickButton.constructButton(map.getOverrideNavX());
+		overrideNavXWhileHeld = map.getOverrideNavXWhileHeld();
 
 		//Instantiate optional buttons.
 		if (map.hasTurnTo0()) {
-			turnTo0 = new MappedJoystickButton(map.getTurnTo0());
+			turnTo0 = MappedJoystickButton.constructButton(map.getTurnTo0());
 		}
 		if (map.hasTurnTo30()) {
-			turnTo30 = new MappedJoystickButton(map.getTurnTo30());
+			turnTo30 = MappedJoystickButton.constructButton(map.getTurnTo30());
 		}
 		if (map.hasTurnTo180()) {
-			turnTo180 = new MappedJoystickButton(map.getTurnTo180());
+			turnTo180 = MappedJoystickButton.constructButton(map.getTurnTo180());
 		}
 		if (map.hasTurnTo330()) {
-			turnTo330 = new MappedJoystickButton(map.getTurnTo330());
+			turnTo330 = MappedJoystickButton.constructButton(map.getTurnTo330());
 		}
 		if (map.hasTurnaround()) {
-			turnaround = new MappedJoystickButton(map.getTurnaround());
+			turnaround = MappedJoystickButton.constructButton(map.getTurnaround());
 		}
 		if (map.hasSwitchToLowGear()) {
-			switchToLowGear = new MappedJoystickButton(map.getSwitchToLowGear());
-			switchToHighGear = new MappedJoystickButton(map.getSwitchToHighGear());
+			switchToLowGear = MappedJoystickButton.constructButton(map.getSwitchToLowGear());
+			switchToHighGear = MappedJoystickButton.constructButton(map.getSwitchToHighGear());
 		}
 		if (map.hasClimb()) {
-			climb = new MappedJoystickButton(map.getClimb());
+			climb = MappedJoystickButton.constructButton(map.getClimb());
 		}
 
 		if (map.hasTmpOverrideLow()) {
-			tmpOverrideLow = new MappedJoystickButton(map.getTmpOverrideLow());
-		} else if (map.hasTriggerToggleOverrideLow()){
-			tmpOverrideLow = new TriggerButton(map.getTriggerToggleOverrideLow());
+			tmpOverrideLow = MappedJoystickButton.constructButton(map.getTmpOverrideLow());
 		}
-
 		if (map.hasTmpOverrideHigh()) {
-			tmpOverrideHigh = new MappedJoystickButton(map.getTmpOverrideHigh());
-		} else if (map.hasTriggerToggleOverrideHigh()) {
-			tmpOverrideHigh = new TriggerButton(map.getTriggerToggleOverrideHigh());
+			tmpOverrideHigh = MappedJoystickButton.constructButton(map.getTmpOverrideHigh());
 		}
-
 		if (map.hasToggleOverrideHigh()) {
-			toggleOverrideHigh = new MappedJoystickButton(map.getToggleOverrideHigh());
+			toggleOverrideHigh = MappedJoystickButton.constructButton(map.getToggleOverrideHigh());
 		}
 		if (map.hasToggleFeeder()) {
-			toggleFeeder = new MappedJoystickButton(map.getToggleFeeder());
+			toggleFeeder = MappedJoystickButton.constructButton(map.getToggleFeeder());
 		}
 		if (map.hasToggleIntake()) {
-			toggleIntake = new MappedJoystickButton(map.getToggleIntake());
+			toggleIntake = MappedJoystickButton.constructButton(map.getToggleIntake());
 		}
 		if (map.hasToggleIntakeUpDown()) {
-			toggleIntakeUpDown = new MappedJoystickButton(map.getToggleIntakeUpDown());
+			toggleIntakeUpDown = MappedJoystickButton.constructButton(map.getToggleIntakeUpDown());
 		}
 		if (map.hasShoot()) {
-			toggleShooter = new MappedJoystickButton(map.getShoot());
+			toggleShooter = MappedJoystickButton.constructButton(map.getShoot());
 		}
 		if (map.hasLoadShooter()) {
-			loadShooter = new MappedJoystickButton(map.getLoadShooter());
+			loadShooter = MappedJoystickButton.constructButton(map.getLoadShooter());
 		}
 		if (map.hasRackShooter()) {
-			rackShooter = new MappedJoystickButton(map.getRackShooter());
+			rackShooter = MappedJoystickButton.constructButton(map.getRackShooter());
 		}
 		if (map.hasFireShooter()) {
-			fireShooter = new MappedJoystickButton(map.getFireShooter());
+			fireShooter = MappedJoystickButton.constructButton(map.getFireShooter());
+		}
+		if (map.hasResetShooter()) {
+			resetShooter = MappedJoystickButton.constructButton(map.getResetShooter());
 		}
 		if (map.hasSwitchCamera()) {
-			switchCamera = new MappedJoystickButton(map.getSwitchCamera());
+			switchCamera = MappedJoystickButton.constructButton(map.getSwitchCamera());
+		}
+
+		if (map.hasToggleGear()) {
+			toggleGear = MappedJoystickButton.constructButton(map.getToggleGear());
+		}
+		if (map.hasManualClimb()){
+			manualClimb = MappedJoystickButton.constructButton(map.getManualClimb());
+		}
+		if (map.hasLogError()){
+			logError = MappedJoystickButton.constructButton(map.getLogError());
+		}
+		if (map.hasJiggleRobot()){
+			jiggleRobot = MappedJoystickButton.constructButton(map.getJiggleRobot());
+		}
+		pushGear = new ArrayList<>();
+		for (JoystickButtonMap.JoystickButton button : map.getPushGearList()) {
+			Button tmp = MappedJoystickButton.constructButton(button);
+			pushGear.add(tmp);
 		}
 	}
 
@@ -263,8 +292,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		final double TIMEOUT = 5.;
 
 		//Map mandatory commands
-		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, false));
-		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, true));
+		toggleOverrideNavX.whenPressed(new OverrideNavX(Robot.driveSubsystem, overrideNavXWhileHeld));
+		toggleOverrideNavX.whenReleased(new OverrideNavX(Robot.driveSubsystem, !overrideNavXWhileHeld));
 
 		//Map drive commands
 		if (turnaround != null) {
@@ -304,7 +333,7 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 		//Map climber commands
 		if (Robot.climberSubsystem != null && climb != null) {
-			climb.whenPressed(new CurrentClimb(Robot.climberSubsystem));
+			climb.whenPressed(new PowerClimb(Robot.climberSubsystem));
 			climb.whenReleased(new StopClimbing(Robot.climberSubsystem));
 		}
 
@@ -345,6 +374,29 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (fireShooter != null) {
 			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
 					.feederSubsystem));
+		}
+		if (resetShooter != null) {
+			resetShooter.whenPressed(new ResetShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem,
+					Robot.feederSubsystem));
+		}
+		if (Robot.climberSubsystem != null && manualClimb != null){
+			manualClimb.whenPressed(new ManualClimb(Robot.climberSubsystem));
+			manualClimb.whenReleased(new StopClimbing(Robot.climberSubsystem));
+		}
+		if (Robot.gearSubsystem != null) {
+			if (toggleGear != null) {
+				toggleGear.whenPressed(new FirePiston(Robot.gearSubsystem, Robot.gearSubsystem.contracted ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse));
+			}
+			for (Button button : pushGear) {
+				button.whenPressed(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kReverse));
+				button.whenReleased(new FirePiston(Robot.gearSubsystem, DoubleSolenoid.Value.kForward));
+			}
+		}
+		if (logError != null){
+			logError.whenPressed(new LogError(Robot.driveSubsystem, "Driver-Reported"));
+		}
+		if (jiggleRobot != null){
+			jiggleRobot.whenPressed(new JiggleRobot(Robot.driveSubsystem));
 		}
 	}
 }

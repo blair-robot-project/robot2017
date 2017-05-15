@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.TriggerButtonMap;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -21,6 +22,10 @@ public class TriggerButton extends Button{
 
 	public TriggerButton(TriggerButtonMap.TriggerButton map){
 		this(map.getPort(), map.getAxis(), map.getTriggerAt());
+	}
+
+	public TriggerButton(JoystickButtonMap.JoystickButton map){
+		this(map.getPort(), map.getButtonIndex(), map.getTriggerAt());
 	}
 
 	@Override

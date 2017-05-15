@@ -16,8 +16,15 @@ public class MotionProfileData {
 
 	private int dPtr = -1;
 
-	public MotionProfileData(String filename) {
+	private boolean inverted;
+
+	public MotionProfileData(String filename, boolean inverted){
+		this.inverted = inverted;
 		readFile(filename);
+	}
+
+	public MotionProfileData(String filename) {
+		this(filename, false);
 	}
 
 	private void readFile(String filename) {
@@ -38,7 +45,12 @@ public class MotionProfileData {
 			// Strip the end of line comma
 			tokens[2] = tokens[2].replace(",","");
 
-			data[dPtr] = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
+			double[] tmp = Arrays.stream(tokens).mapToDouble(Double::parseDouble).toArray();
+			if (inverted) {
+				tmp[0] = -tmp[0];
+				tmp[1] = -tmp[1];
+			}
+			data[dPtr] = tmp;
 		}
 		dPtr++;
 	}
