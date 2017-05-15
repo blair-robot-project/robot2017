@@ -5,20 +5,21 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.*;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.JiggleRobot;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.*;
+import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.ToggleMotor;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOff;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.ToggleSolenoid;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
-import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.ManualClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
-import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
@@ -343,7 +344,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 		//Map climber commands
 		if (Robot.instance.climberSubsystem != null && climb != null) {
 			climb.whenPressed(new PowerClimb(Robot.instance.climberSubsystem));
-			climb.whenReleased(new StopClimbing(Robot.instance.climberSubsystem));
+			climb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
 		}
 
 		//Map camera commands
@@ -363,12 +364,12 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 
 		//Map feeder commands
 		if (toggleFeeder != null && Robot.instance.feederSubsystem != null) {
-			toggleFeeder.whenPressed(new ToggleFeeder(Robot.instance.feederSubsystem));
+			toggleFeeder.whenPressed(new ToggleMotor(Robot.instance.feederSubsystem));
 		}
 
 		//Map shooter commands
 		if (toggleShooter != null && Robot.instance.singleFlywheelShooterSubsystem != null) {
-			toggleShooter.whenPressed(new ToggleShooter(Robot.instance.singleFlywheelShooterSubsystem));
+			toggleShooter.whenPressed(new ToggleMotor(Robot.instance.singleFlywheelShooterSubsystem));
 		}
 
 		//Map group commands
@@ -386,8 +387,8 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 					Robot.instance.feederSubsystem));
 		}
 		if (Robot.instance.climberSubsystem != null && manualClimb != null) {
-			manualClimb.whenPressed(new ManualClimb(Robot.instance.climberSubsystem));
-			manualClimb.whenReleased(new StopClimbing(Robot.instance.climberSubsystem));
+			manualClimb.whenPressed(new TurnMotorOn(Robot.instance.climberSubsystem));
+			manualClimb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
 		}
 		if (Robot.instance.gearSubsystem != null) {
 			if (toggleGear != null) {

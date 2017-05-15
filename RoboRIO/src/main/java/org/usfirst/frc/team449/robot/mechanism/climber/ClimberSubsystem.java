@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.mechanism.climber;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
@@ -10,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * The climber, with power monitoring to stop.
  */
-public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
+public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem {
 	/**
 	 * The CANTalon controlling the climber.
 	 */
@@ -24,6 +25,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
 
 	private BufferTimer currentLimitTimer;
 	private long spinupTime;
+	private boolean motorSpinning;
 
 	/**
 	 * Construct a ClimberSubsystem
@@ -41,6 +43,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
 		}
 		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
 		spinupTime = (long) (map.getSpinupTime() * 1000.);
+		motorSpinning = false;
 	}
 
 	public long getSpinupTime() {
@@ -63,7 +66,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
 	 *
 	 * @param percentVbus The voltage to give the motor, from -1 to 1.
 	 */
-	public void setPercentVbus(double percentVbus) {
+	private void setPercentVbus(double percentVbus) {
 		canTalonSRX.setPercentVbus(percentVbus);
 		if (victor != null) {
 			victor.set(percentVbus);
@@ -92,5 +95,35 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
 	@Override
 	public String getName() {
 		return "climber";
+	}
+
+	/**
+	 * Turns the motor on, and sets it to a map-specified speed.
+	 */
+	@Override
+	public void turnMotorOn() {
+		canTalonSRX.canTalon.enable();
+		setPercentVbus(1);
+		motorSpinning = true;
+	}
+
+	/**
+	 * Turns the motor off.
+	 */
+	@Override
+	public void turnMotorOff() {
+		setPercentVbus(0);
+		canTalonSRX.canTalon.disable();
+		motorSpinning = false;
+	}
+
+	/**
+	 * Get the current state of the motor.
+	 *
+	 * @return true if the motor is on, false otherwise.
+	 */
+	@Override
+	public boolean isMotorOn() {
+		return motorSpinning;
 	}
 }

@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.template;
 
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * A broad template for all referencingCommands.
@@ -27,7 +28,7 @@ public class GenericReferencingCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("GenericReferencingCommand init.");
+		Logger.addEvent("GenericReferencingCommand init.", this.getClass());
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class GenericReferencingCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void end() {
-		System.out.println("GenericReferencingCommand end.");
+		Logger.addEvent("GenericReferencingCommand end.", this.getClass());
 	}
 
 	/**
@@ -60,6 +61,6 @@ public class GenericReferencingCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("GenericReferencingCommand Interrupted!");
+		Logger.addEvent("GenericReferencingCommand Interrupted!", this.getClass());
 	}
 }

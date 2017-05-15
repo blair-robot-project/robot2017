@@ -3,17 +3,18 @@ package org.usfirst.frc.team449.robot.mechanism.feeder;
 import edu.wpi.first.wpilibj.VictorSP;
 import maps.org.usfirst.frc.team449.robot.mechanism.feeder.FeederMap;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 
 /**
  * The auger that feeds balls into the shooter.
  */
-public class FeederSubsystem extends MechanismSubsystem {
+public class FeederSubsystem extends MechanismSubsystem implements BinaryMotorSubsystem {
 
 	/**
 	 * Whether or not the motor is currently running.
 	 */
-	public boolean running;
+	private boolean running;
 	/**
 	 * The Victor motor that runs the auger
 	 */
@@ -42,7 +43,7 @@ public class FeederSubsystem extends MechanismSubsystem {
 	/**
 	 * Turns the motor on.
 	 */
-	public void runVictor() {
+	public void turnMotorOn() {
 		victor.set(speed);
 		running = true;
 	}
@@ -50,7 +51,7 @@ public class FeederSubsystem extends MechanismSubsystem {
 	/**
 	 * Turns the motor off.
 	 */
-	public void stopVictor() {
+	public void turnMotorOff() {
 		victor.set(0);
 		running = false;
 	}
@@ -64,5 +65,15 @@ public class FeederSubsystem extends MechanismSubsystem {
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing! Inheritance is dumb sometimes.
+	}
+
+	/**
+	 * Get the current state of the motor.
+	 *
+	 * @return true if the motor is on, false otherwise.
+	 */
+	@Override
+	public boolean isMotorOn() {
+		return running;
 	}
 }

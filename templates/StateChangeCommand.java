@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.template;
 
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
@@ -21,7 +22,7 @@ public class StateChangeCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void initialize() {
-		System.out.println("StateChangeCommand init.");
+		Logger.addEvent("StateChangeCommand init.", this.getClass());
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class StateChangeCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void end() {
-		System.out.println("StateChangeCommand end.");
+		Logger.addEvent("StateChangeCommand end.", this.getClass());
 	}
 
 	/**
@@ -54,6 +55,6 @@ public class StateChangeCommand extends ReferencingCommand{
 	 */
 	@Override
 	protected void interrupted() {
-		System.out.println("StateChangeCommand Interrupted!");
+		Logger.addEvent("StateChangeCommand Interrupted!", this.getClass());
 	}
 }

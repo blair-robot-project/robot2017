@@ -45,7 +45,7 @@ public class PowerClimb extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		//Climb as fast as we can
-		climber.setPercentVbus(1);
+		climber.turnMotorOn();
 		//Log power to SmartDashboard
 		SmartDashboard.putNumber("Power", climber.canTalonSRX.getPower());
 	}
@@ -66,7 +66,7 @@ public class PowerClimb extends ReferencingCommand {
 	@Override
 	protected void end() {
 		//Stop the motor when we reach the top.
-		climber.setPercentVbus(0);
+		climber.turnMotorOff();
 		Logger.addEvent("PowerClimb end", this.getClass());
 	}
 
@@ -76,7 +76,7 @@ public class PowerClimb extends ReferencingCommand {
 	@Override
 	protected void interrupted() {
 		//Stop climbing if we're for some reason interrupted.
-		climber.setPercentVbus(0);
+		climber.turnMotorOff();
 		Logger.addEvent("PowerClimb interrupted, stopping climb.", this.getClass());
 	}
 

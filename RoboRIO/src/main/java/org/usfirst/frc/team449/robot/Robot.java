@@ -17,6 +17,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
@@ -25,7 +26,6 @@ import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.AccelerateFlywheel;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
@@ -46,7 +46,7 @@ public class Robot extends IterativeRobot {
 	private static final double MP_UPDATE_RATE = 0.005;
 	public static Robot instance;
 	private static long currentTimeMillis;
-	public double WHEEL_DIAMETER;
+	private double WHEEL_DIAMETER;
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
@@ -80,7 +80,7 @@ public class Robot extends IterativeRobot {
 	 */
 	public FeederSubsystem feederSubsystem;
 	public ActiveGearSubsystem gearSubsystem;
-	public BooleanWrapper commandFinished;
+	private BooleanWrapper commandFinished;
 	/**
 	 * The object constructed directly from map.cfg.
 	 */
@@ -99,12 +99,15 @@ public class Robot extends IterativeRobot {
 	private ShiftingDrive.gear startingGear;
 	private int minPointsInBtmMPBuffer;
 	private Logger logger;
+	private AutoSide autoSide;
+	private static long startTime;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
 		currentTimeMillis = System.currentTimeMillis();
+		startTime = currentTimeMillis;
 		System.out.println("Started robotInit.");
 
 		instance = this;
@@ -216,9 +219,18 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
+		if (position.equals("center")){
+			autoSide = AutoSide.CENTER;
+		} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)){
+			autoSide = AutoSide.BOILER;
+		} else {
+			autoSide = AutoSide.LOADING_STATION;
+		}
+
 		Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
 		Logger.addEvent("dropGear: " + dropGear, this.getClass());
 		Logger.addEvent("positon: " + position, this.getClass());
+		Logger.addEvent("Auto_plan: " + autoSide, this.getClass());
 
 		if (cfg.getDoMP()) {
 			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
@@ -296,15 +308,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
-		if (singleFlywheelShooterSubsystem != null) {
-			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
-			SmartDashboard.putNumber("Shooter Speed", singleFlywheelShooterSubsystem.talon.getSpeed());
-			SmartDashboard.putNumber("Shooter Error", singleFlywheelShooterSubsystem.talon.getError());
-			SmartDashboard.putNumber("Shooter Current", singleFlywheelShooterSubsystem.talon.canTalon.getOutputCurrent());
-		}
-		if (gearSubsystem != null) {
-			SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
-		}
 		Scheduler.getInstance().run();
 	}
 
@@ -331,8 +334,8 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setVBusThrottle(0, 0);
 
 		if (cfg.getDoMP()) {
-			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()) {
-				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem));
+			if (singleFlywheelShooterSubsystem != null && autoSide == AutoSide.BOILER) {
+				Scheduler.getInstance().add(new TurnMotorOn(singleFlywheelShooterSubsystem));
 			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 
@@ -363,7 +366,7 @@ public class Robot extends IterativeRobot {
 					}
 					startedGearPush = Robot.currentTimeMillis();
 				} else if (completedCommands == 2) {
-					if (position.equals("center")) {
+					if (autoSide == AutoSide.CENTER) {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 					} else if (position.equals("right") && redAlliance) {
 						loadProfile("red_shoot");
@@ -379,9 +382,9 @@ public class Robot extends IterativeRobot {
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					}
 				} else if (completedCommands == 3) {
-					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
+					if (autoSide == AutoSide.BOILER && singleFlywheelShooterSubsystem != null) {
 						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
-					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
+					} else if (autoSide == AutoSide.LOADING_STATION) {
 						loadProfile("forward");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 					}
@@ -414,7 +417,11 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	private enum AutoSide{
+		CENTER,BOILER,LOADING_STATION
+	}
+
 	public static long currentTimeMillis() {
-		return currentTimeMillis;
+		return currentTimeMillis - startTime;
 	}
 }
