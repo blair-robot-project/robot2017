@@ -27,7 +27,6 @@ public abstract class ReferencingCommandGroup extends CommandGroup {
 	 *                        ReferencingCommandGroup}'s
 	 *                        {@link ReferencingCommand}s
 	 */
-	// TODO refactor mappedSubsystem to something SHORTER
 	public ReferencingCommandGroup(MappedSubsystem mappedSubsystem) {
 		subsystem = mappedSubsystem;
 	}

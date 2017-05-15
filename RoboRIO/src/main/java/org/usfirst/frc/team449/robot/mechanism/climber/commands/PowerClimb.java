@@ -18,9 +18,6 @@ public class PowerClimb extends ReferencingCommand {
 
 	private long startTime;
 
-	//TODO externalize
-	private long spinupTime = 250;
-
 	/**
 	 * Default constructor
 	 *
@@ -60,7 +57,7 @@ public class PowerClimb extends ReferencingCommand {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return climber.reachedTop() && Robot.currentTimeMillis() - startTime > spinupTime;
+		return climber.reachedTop() && Robot.currentTimeMillis() - startTime > climber.getSpinupTime();
 	}
 
 	/**

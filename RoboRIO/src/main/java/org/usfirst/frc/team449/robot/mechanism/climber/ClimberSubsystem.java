@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * The climber, with power monitoring to stop.
  */
-public class ClimberSubsystem extends MechanismSubsystem implements Loggable{
+public class ClimberSubsystem extends MechanismSubsystem implements Loggable {
 	/**
 	 * The CANTalon controlling the climber.
 	 */
@@ -23,6 +23,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable{
 	private VictorSP victor;
 
 	private BufferTimer currentLimitTimer;
+	private long spinupTime;
 
 	/**
 	 * Construct a ClimberSubsystem
@@ -39,6 +40,11 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable{
 			this.victor = new MappedVictor(map.getVictor());
 		}
 		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
+		spinupTime = (long) (map.getSpinupTime() * 1000.);
+	}
+
+	public long getSpinupTime() {
+		return spinupTime;
 	}
 
 	/**
@@ -80,11 +86,11 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable{
 
 	@Override
 	public Object[] getData() {
-		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),canTalonSRX.canTalon.getOutputVoltage(),canTalonSRX.getPower()};
+		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(), canTalonSRX.canTalon.getOutputVoltage(), canTalonSRX.getPower()};
 	}
 
 	@Override
-	public String getName(){
+	public String getName() {
 		return "climber";
 	}
 }

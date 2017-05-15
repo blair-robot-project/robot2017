@@ -26,6 +26,7 @@ import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.ResetShooter;
 import org.usfirst.frc.team449.robot.oi.buttons.MappedJoystickButton;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.commands.ChangeCam;
 
 import java.util.ArrayList;
@@ -398,7 +399,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 			}
 		}
 		if (logError != null) {
-			//TODO put something here
+			Logger.addEvent("User pressed the error button!", this.getClass());
 		}
 		if (jiggleRobot != null) {
 			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem, Robot.instance.driveSubsystem.turnPID));

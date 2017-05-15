@@ -12,4 +12,5 @@ message Climber {
 	required double max_power = 3;
 	optional Motor victor = 4;
     optional int64 millis_above_max_power = 5 [default=0];
+    required double spinup_time = 6;
 }
