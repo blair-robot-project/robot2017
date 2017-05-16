@@ -239,7 +239,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	private void setPIDThrottle(double left, double right) {
 		//If we're not shifting, scale by the max speed in the current gear
-		if (overrideAutoshift) {
+		if (overrideAutoshift || oi.getFwd() == 0) {
 			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
 			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
 		}
