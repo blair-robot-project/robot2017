@@ -84,16 +84,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	private boolean overrideAutoshift;
 	/**
-	 * The time (milliseconds) when the robot was enabled (for use in logging)
-	 */
-	private long startTime;
-	/**
-	 * The name of the file to log to
-	 */
-	private String logFN;
-
-	private String errorFN;
-	/**
 	 * Measured max speed of robot reached in a run. Used for testing and tuning. NOT max_speed tuning constant
 	 */
 	private double maxMeasuredSpeed;
@@ -146,23 +136,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi, gear startingGear) {
 		super(map.getDrive());
 		PID_SCALE = map.getPIDScale();
-		// Write the headers for the logfile.
-		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-		logFN = map.getLogFilename() + timeStamp + ".csv";
-		errorFN = map.getLogFilename() + timeStamp +"_errors.csv";
-		try (PrintWriter writer = new PrintWriter(logFN)) {
-			writer.println("time,left vel,right vel,left setpoint,right setpoint,left current,right current,left voltage,right voltage");
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		try (PrintWriter writer = new PrintWriter(errorFN)) {
-			writer.println("time,message");
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		this.map = map;
 		this.oi = oi;
@@ -275,10 +248,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	protected void initDefaultCommand() {
-		//Set the start time to current time
-		startTime = Robot.currentTimeMillis();
-		//Start driving
-		//setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+		//Do nothing, the default command gets set with setDefaultCommandManual
 	}
 
 	public void setDefaultCommandManual(Command defaultCommand) {
