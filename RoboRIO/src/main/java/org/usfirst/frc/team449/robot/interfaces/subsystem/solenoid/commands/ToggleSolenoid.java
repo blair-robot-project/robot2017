@@ -25,7 +25,7 @@ public class ToggleSolenoid extends Command{
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("SolenoidForward init.", this.getClass());
+		Logger.addEvent("ToggleSolenoid init.", this.getClass());
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class ToggleSolenoid extends Command{
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("SolenoidForward end.", this.getClass());
+		Logger.addEvent("ToggleSolenoid end.", this.getClass());
 	}
 
 	/**
@@ -62,6 +62,6 @@ public class ToggleSolenoid extends Command{
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("SolenoidForward Interrupted!", this.getClass());
+		Logger.addEvent("ToggleSolenoid Interrupted!", this.getClass());
 	}
 }
