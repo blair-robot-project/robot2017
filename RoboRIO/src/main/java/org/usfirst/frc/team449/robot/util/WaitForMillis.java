@@ -8,14 +8,21 @@ import org.usfirst.frc.team449.robot.Robot;
  */
 public class WaitForMillis extends Command{
 
-	private long finishTime;
+	private long timeout;
+
+	private long startTime;
 
 	public WaitForMillis(long time){
-		finishTime = Robot.currentTimeMillis() + time;
+		timeout = time;
+	}
+
+	@Override
+	protected void initialize(){
+		startTime = Robot.currentTimeMillis();
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return Robot.currentTimeMillis() >= finishTime;
+		return Robot.currentTimeMillis() - startTime >= timeout;
 	}
 }

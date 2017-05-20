@@ -6,17 +6,15 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
-import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
@@ -32,9 +30,7 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
@@ -42,10 +38,8 @@ import java.util.Map;
 public class Robot extends IterativeRobot {
 
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
-	private static final double MP_UPDATE_RATE = 0.005;
 	public static Robot instance;
 	private static long currentTimeMillis;
-	private double WHEEL_DIAMETER;
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
@@ -80,19 +74,15 @@ public class Robot extends IterativeRobot {
 	 * The object constructed directly from map.cfg.
 	 */
 	private Robot2017Map.Robot2017 cfg;
-	private Notifier MPNotifier;
 	private Notifier loggerNotifier;
 	private int completedCommands = 0;
 	private long startedGearPush = 0;
 	private long timeToPushGear;
-	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
-	private List<RotPerSecCANTalonSRX> talons;
 	private boolean redAlliance, dropGear;
 	private String allianceString;
 	private String position;
 	private I2C robotInfo;
 	private ShiftingDrive.gear startingGear;
-	private int minPointsInBtmMPBuffer;
 	private Logger logger;
 	private AutoSide autoSide;
 	private static long startTime;
@@ -121,7 +111,6 @@ public class Robot extends IterativeRobot {
 		List<Loggable> loggables = new ArrayList<>();
 
 		startingGear = cfg.getStartLowGear() ? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
-		minPointsInBtmMPBuffer = cfg.getMinPointsInBottomMPBuffer();
 
 		if (cfg.hasRioduinoPort()) {
 			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
@@ -219,36 +208,17 @@ public class Robot extends IterativeRobot {
 
 		Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
 		Logger.addEvent("dropGear: " + dropGear, this.getClass());
-		Logger.addEvent("positon: " + position, this.getClass());
+		Logger.addEvent("position: " + position, this.getClass());
 		Logger.addEvent("Auto_plan: " + autoSide, this.getClass());
 
 		if (cfg.getDoMP()) {
-			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
 			timeToPushGear = (long) (cfg.getTimeToPushGear() * 1000);
 
-			leftProfiles = new HashMap<>();
-			rightProfiles = new HashMap<>();
-
-			for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-				leftProfiles.put(profile.getName(), new MotionProfileData(profile));
-			}
-
-			for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-				rightProfiles.put(profile.getName(), new MotionProfileData(profile));
-			}
-
 			if (cfg.getTestMP()) {
-				MPLoader.loadTopLevel(leftProfiles.get("test"), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-				MPLoader.loadTopLevel(rightProfiles.get("test"), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+				driveSubsystem.loadMotionProfile("test");
 			} else {
-				MPLoader.loadTopLevel(leftProfiles.get(allianceString + "_" + position), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-				MPLoader.loadTopLevel(rightProfiles.get(allianceString + "_" + position), driveSubsystem.rightMaster, WHEEL_DIAMETER);
+				driveSubsystem.loadMotionProfile(allianceString + "_" + position);
 			}
-
-			talons = new ArrayList<>();
-			talons.add(driveSubsystem.leftMaster);
-			talons.add(driveSubsystem.rightMaster);
-			MPNotifier = MPLoader.startLoadBottomLevel(talons, MP_UPDATE_RATE);
 			commandFinished = new BooleanWrapper(false);
 			completedCommands = 0;
 		}
@@ -263,9 +233,7 @@ public class Robot extends IterativeRobot {
 		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
 		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
-		if (MPNotifier != null) {
-			MPNotifier.stop();
-		}
+		driveSubsystem.stopMPProcesses();
 		driveSubsystem.setVBusThrottle(0, 0);
 		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
@@ -327,7 +295,7 @@ public class Robot extends IterativeRobot {
 			if (singleFlywheelShooterSubsystem != null && autoSide == AutoSide.BOILER) {
 				Scheduler.getInstance().add(new SpinUpShooter(singleFlywheelShooterSubsystem));
 			}
-			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+			Scheduler.getInstance().add(new RunLoadedProfile(driveSubsystem, 15, commandFinished, true));
 
 		} else {
 			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
@@ -359,24 +327,19 @@ public class Robot extends IterativeRobot {
 					if (autoSide == AutoSide.CENTER) {
 						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
 					} else if (position.equals("right") && redAlliance) {
-						loadProfile("red_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new RunProfile(driveSubsystem, "red_shoot", 10, commandFinished));
 					} else if (position.equals("left") && !redAlliance) {
-						loadProfile("blue_shoot");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new RunProfile(driveSubsystem, "blue_shoot", 10, commandFinished));
 					} else if (redAlliance) {
-						loadProfile("red_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new RunProfile(driveSubsystem, "red_backup", 10, commandFinished));
 					} else {
-						loadProfile("blue_backup");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new RunProfile(driveSubsystem, "blue_backup", 10, commandFinished));
 					}
 				} else if (completedCommands == 3) {
 					if (autoSide == AutoSide.BOILER && singleFlywheelShooterSubsystem != null) {
 						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem));
 					} else if (autoSide == AutoSide.LOADING_STATION) {
-						loadProfile("forward");
-						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
+						Scheduler.getInstance().add(new RunProfile(driveSubsystem, "forward", 10, commandFinished));
 					}
 				}
 			}
@@ -387,13 +350,6 @@ public class Robot extends IterativeRobot {
 	public void disabledInit() {
 		driveSubsystem.setVBusThrottle(0, 0);
 		sendModeOverI2C(robotInfo, "disabled");
-	}
-
-	private void loadProfile(String name) {
-		MPNotifier.stop();
-		MPLoader.loadTopLevel(leftProfiles.get(name), driveSubsystem.leftMaster, WHEEL_DIAMETER);
-		MPLoader.loadTopLevel(rightProfiles.get(name), driveSubsystem.rightMaster, WHEEL_DIAMETER);
-		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 
 	private void sendModeOverI2C(I2C i2C, String mode) {

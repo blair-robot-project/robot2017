@@ -35,17 +35,6 @@ public class MPLoader {
 		}
 	}
 
-	public static Notifier startLoadBottomLevel(List<RotPerSecCANTalonSRX> talons, double updateRate) {
-		MPUpdaterProcess updater = new MPUpdaterProcess();
-		for (RotPerSecCANTalonSRX talon : talons) {
-			updater.addTalon(talon.canTalon);
-		}
-		Notifier updaterNotifier = new Notifier(updater);
-		updaterNotifier.startPeriodic(updateRate);
-		Logger.addEvent("Started the notifier for " + talons.size() + " talons.", MPLoader.class);
-		return updaterNotifier;
-	}
-
 	public static double nativeToFeet(double nativeUnits, int encoderCPR, double wheelDiameter) {
 		double rotations = nativeUnits / (encoderCPR * 4);
 		return rotations * (wheelDiameter * Math.PI);

@@ -3,9 +3,11 @@ package org.usfirst.frc.team449.robot.drive.talonCluster;
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
+import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
@@ -13,17 +15,22 @@ import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.util.BufferTimer;
-import org.usfirst.frc.team449.robot.util.Loggable;
-import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable {
+public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, CANTalonMPSubsystem {
 
+	private final double MP_UPDATE_RATE;
+	private final double WHEEL_DIAMETER;
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
 	 * loop space to compensate.
@@ -114,6 +121,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
+	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
+
+	private int minPointsInBtmMPBuffer;
+
+	private Notifier MPNotifier;
+
+	private List<CANTalon> MPTalons;
+
 	/**
 	 * Construct a TalonClusterDrive
 	 *
@@ -138,6 +153,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		upshiftSpeed = map.getUpshiftSpeed();
 		downshiftSpeed = map.getDownshiftSpeed();
 		currentGear = startingGear;
+		MP_UPDATE_RATE = map.getMPUpdateRateSecs();
 
 		// Initialize shifting constants, assuming robot is stationary.
 		overrideAutoshift = false;
@@ -167,6 +183,27 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
 			talonObject.canTalon.set(map.getLeftMaster().getPort());
 		}
+
+		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
+		WHEEL_DIAMETER = map.getWheelDiameterInches() / 12.;
+		leftProfiles = new HashMap<>();
+		rightProfiles = new HashMap<>();
+
+		MPTalons.add(leftMaster.canTalon);
+		MPTalons.add(rightMaster.canTalon);
+
+		for (MotionProfileMap.MotionProfile profile : map.getLeftMotionProfileList()) {
+			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
+
+		for (MotionProfileMap.MotionProfile profile : map.getRightMotionProfileList()) {
+			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
+
+		MPUpdaterProcess updater = new MPUpdaterProcess();
+		updater.addTalon(rightMaster.canTalon);
+		updater.addTalon(leftMaster.canTalon);
+		MPNotifier = new Notifier(updater);
 	}
 
 	/**
@@ -382,5 +419,46 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	@Override
 	public String getName(){
 		return "Drive";
+	}
+
+	/**
+	 * Loads the profile with the given name into the MP buffer.
+	 *
+	 * @param name The name of the profile.
+	 */
+	@Override
+	public void loadMotionProfile(String name) {
+		MPNotifier.stop();
+		MPLoader.loadTopLevel(leftProfiles.get(name), leftMaster, WHEEL_DIAMETER);
+		MPLoader.loadTopLevel(rightProfiles.get(name), rightMaster, WHEEL_DIAMETER);
+		MPNotifier.startPeriodic(MP_UPDATE_RATE);
+	}
+
+	/**
+	 * Get the Talons in this subsystem to run the MP on.
+	 *
+	 * @return a List of Talons with encoders attached (e.g. master talons)
+	 */
+	@Override
+	public List<CANTalon> getTalons() {
+		return MPTalons;
+	}
+
+	/**
+	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving the profile
+	 *
+	 * @return an integer from [0, 128]
+	 */
+	@Override
+	public int getMinPointsInBtmBuffer() {
+		return minPointsInBtmMPBuffer;
+	}
+
+	/**
+	 * Stops any MP-related threads currently running. Normally called at the start of teleop.
+	 */
+	@Override
+	public void stopMPProcesses() {
+		MPNotifier.stop();
 	}
 }

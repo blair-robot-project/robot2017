@@ -7,7 +7,6 @@ import "org/usfirst/frc/team449/robot/mechanism/climber/Climber.proto";
 import "org/usfirst/frc/team449/robot/mechanism/intake/Intake2017.proto";
 import "org/usfirst/frc/team449/robot/mechanism/pneumatics/PneumaticSystem.proto";
 import "org/usfirst/frc/team449/robot/vision/Camera.proto";
-import "org/usfirst/frc/team449/robot/util/MotionProfile.proto";
 import "org/usfirst/frc/team449/robot/mechanism/activegear/ActiveGear.proto";
 import "org/usfirst/frc/team449/robot/components/DigitalInput.proto";
 import "org/usfirst/frc/team449/robot/util/Logger.proto";
@@ -25,9 +24,6 @@ message Robot2017 {
 	optional Camera camera = 7;
 	optional Intake2017 intake = 8;
 	optional PneumaticSystem pneumatics = 9;
-	repeated MotionProfile left_motion_profile = 11;
-	repeated MotionProfile right_motion_profile = 12;
-	required double wheel_diameter_inches = 13;
 	required double time_to_push_gear = 14;
 	optional ActiveGear gear = 15;
 	optional DigitalInput blue_red = 16;
@@ -38,6 +34,5 @@ message Robot2017 {
 	optional bool do_MP = 21 [default = true];
 	optional bool test_MP = 22 [default = false];
 	optional bool start_low_gear = 23 [default = true];
-    required int32 min_points_in_bottom_MP_buffer = 24;
     optional Logger logger = 25;
 }

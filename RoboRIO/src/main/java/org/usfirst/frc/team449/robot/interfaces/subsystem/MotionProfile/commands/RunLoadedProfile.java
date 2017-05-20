@@ -1,28 +1,23 @@
-package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
 import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
 import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.util.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * ReferencingCommand to load and execute a motion profile on the master Talons in the two motor clusters
  */
-public class ExecuteProfile extends Command {
-	/**
-	 * Number of points that must be loaded to the bottom level buffer before we start executing the profile
-	 */
-	private static int MIN_NUM_POINTS_IN_BTM;
+public class RunLoadedProfile extends Command {
 
 	private boolean bottomLoaded;
 
-	private Collection<CANTalon> talons;
+	private List<CANTalon> talons;
 
 	private boolean finished;
 
@@ -32,31 +27,24 @@ public class ExecuteProfile extends Command {
 
 	private BooleanWrapper finishFlag;
 
+	private CANTalonMPSubsystem subsystem;
+
 
 	/**
-	 * Construct a new ExecuteProfile command
+	 * Construct a new RunLoadedProfile command
 	 */
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, int minPointsInBtm, BooleanWrapper finishFlag, Subsystem toRequire) {
-		if (toRequire != null) {
-			requires(toRequire);
-		}
-
-		this.talons = new ArrayList<>();
-
-		for (RotPerSecCANTalonSRX talon : talons) {
-			this.talons.add(talon.canTalon);
+	public RunLoadedProfile(CANTalonMPSubsystem subsystem, double timeout, BooleanWrapper finishFlag, boolean require) {
+		this.subsystem = subsystem;
+		if (require) {
+			requires((Subsystem) subsystem);
 		}
 
 		this.timeout = (long) (timeout * 1000);
 
+		talons = subsystem.getTalons();
 		finished = false;
 		bottomLoaded = false;
-		MIN_NUM_POINTS_IN_BTM = minPointsInBtm;
 		this.finishFlag = finishFlag;
-	}
-
-	public ExecuteProfile(Collection<RotPerSecCANTalonSRX> talons, double timeout, int minPointsinBtm, BooleanWrapper finishFlag) {
-		this(talons, timeout, minPointsinBtm, finishFlag, null);
 	}
 
 	/**
@@ -85,7 +73,7 @@ public class ExecuteProfile extends Command {
 			talon.getMotionProfileStatus(MPStatus);
 			if (!bottomLoaded) {
 				finished = false;
-				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= MIN_NUM_POINTS_IN_BTM || MPStatus.topBufferCnt == 0);
+				bottomNowLoaded = bottomNowLoaded && (MPStatus.btmBufferCnt >= subsystem.getMinPointsInBtmBuffer() || MPStatus.topBufferCnt == 0);
 			}
 			if (bottomLoaded) {
 				finished = finished && MPStatus.activePoint.isLastPoint;
@@ -112,7 +100,7 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		}
 		finishFlag.set(true);
-		Logger.addEvent("ExecuteProfile end.", this.getClass());
+		Logger.addEvent("RunLoadedProfile end.", this.getClass());
 	}
 
 	@Override
@@ -121,6 +109,6 @@ public class ExecuteProfile extends Command {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
 		finishFlag.set(true);
-		Logger.addEvent("ExecuteProfile interrupted!", this.getClass());
+		Logger.addEvent("RunLoadedProfile interrupted!", this.getClass());
 	}
 }
