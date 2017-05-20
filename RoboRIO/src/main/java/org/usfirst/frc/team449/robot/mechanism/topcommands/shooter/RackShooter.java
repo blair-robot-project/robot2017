@@ -1,10 +1,8 @@
 package org.usfirst.frc.team449.robot.mechanism.topcommands.shooter;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOff;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.spin.FixedInActuatedStop;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
@@ -19,18 +17,14 @@ public class RackShooter extends CommandGroup {
 	 *
 	 * @param sfs    shooter subsystem
 	 * @param intake intake subsystem
-	 * @param feeder feeder subsystem
 	 */
-	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake, FeederSubsystem feeder) {
+	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake) {
 		if (sfs != null) {
-			addParallel(new TurnMotorOn(sfs));
+			addParallel(new SpinUpShooter(sfs));
 		}
 		if (intake != null) {
 			addParallel(new SolenoidReverse(intake));
 			addParallel(new FixedInActuatedStop(intake));
-		}
-		if (feeder != null) {
-			addParallel(new TurnMotorOff(feeder));
 		}
 	}
 }

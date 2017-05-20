@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.*;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.ToggleMotor;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.ToggleShooting;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOff;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
@@ -126,10 +126,6 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 	 */
 	private Button toggleOverrideAutoshift;
 	/**
-	 * Button for toggling feeder
-	 */
-	private Button toggleFeeder;
-	/**
 	 * Button for toggling shooter
 	 */
 	private Button toggleShooter;
@@ -210,9 +206,6 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 		}
 		if (map.hasToggleOverrideAutoshift()) {
 			toggleOverrideAutoshift = MappedJoystickButton.constructButton(map.getToggleOverrideAutoshift());
-		}
-		if (map.hasToggleFeeder()) {
-			toggleFeeder = MappedJoystickButton.constructButton(map.getToggleFeeder());
 		}
 		if (map.hasToggleIntake()) {
 			toggleIntake = MappedJoystickButton.constructButton(map.getToggleIntake());
@@ -362,29 +355,23 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 			}
 		}
 
-		//Map feeder commands
-		if (toggleFeeder != null && Robot.instance.feederSubsystem != null) {
-			toggleFeeder.whenPressed(new ToggleMotor(Robot.instance.feederSubsystem));
-		}
-
 		//Map shooter commands
 		if (toggleShooter != null && Robot.instance.singleFlywheelShooterSubsystem != null) {
-			toggleShooter.whenPressed(new ToggleMotor(Robot.instance.singleFlywheelShooterSubsystem));
+			toggleShooter.whenPressed(new ToggleShooting(Robot.instance.singleFlywheelShooterSubsystem));
 		}
 
 		//Map group commands
 		if (loadShooter != null) {
-			loadShooter.whenPressed(new LoadShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
+			loadShooter.whenPressed(new LoadShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem));
 		}
 		if (rackShooter != null) {
-			rackShooter.whenPressed(new RackShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
+			rackShooter.whenPressed(new RackShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem));
 		}
 		if (fireShooter != null) {
-			fireShooter.whenPressed(new FireShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem, Robot.instance.feederSubsystem));
+			fireShooter.whenPressed(new FireShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem));
 		}
 		if (resetShooter != null) {
-			resetShooter.whenPressed(new ResetShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem,
-					Robot.instance.feederSubsystem));
+			resetShooter.whenPressed(new ResetShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem));
 		}
 		if (Robot.instance.climberSubsystem != null && manualClimb != null) {
 			manualClimb.whenPressed(new TurnMotorOn(Robot.instance.climberSubsystem));

@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
@@ -17,12 +16,11 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
@@ -75,10 +73,6 @@ public class Robot extends IterativeRobot {
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
 	public CameraSubsystem cameraSubsystem;
-	/**
-	 * The auger used to feed balls into the shooter.
-	 */
-	public FeederSubsystem feederSubsystem;
 	public ActiveGearSubsystem gearSubsystem;
 	private BooleanWrapper commandFinished;
 	/**
@@ -178,11 +172,6 @@ public class Robot extends IterativeRobot {
 		//Construct intake if it's in the map.
 		if (cfg.hasIntake()) {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
-		}
-
-		//Construct feeder if it's in the map.
-		if (cfg.hasFeeder()) {
-			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
 		if (cfg.hasGear()) {
@@ -335,7 +324,7 @@ public class Robot extends IterativeRobot {
 
 		if (cfg.getDoMP()) {
 			if (singleFlywheelShooterSubsystem != null && autoSide == AutoSide.BOILER) {
-				Scheduler.getInstance().add(new TurnMotorOn(singleFlywheelShooterSubsystem));
+				Scheduler.getInstance().add(new SpinUpShooter(singleFlywheelShooterSubsystem));
 			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));
 
@@ -383,7 +372,7 @@ public class Robot extends IterativeRobot {
 					}
 				} else if (completedCommands == 3) {
 					if (autoSide == AutoSide.BOILER && singleFlywheelShooterSubsystem != null) {
-						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
+						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem));
 					} else if (autoSide == AutoSide.LOADING_STATION) {
 						loadProfile("forward");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, minPointsInBtmMPBuffer, commandFinished, driveSubsystem));

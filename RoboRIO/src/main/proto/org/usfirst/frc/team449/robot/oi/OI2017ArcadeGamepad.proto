@@ -23,7 +23,6 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton switch_to_low_gear = 8;
 	optional JoystickButton switch_to_high_gear = 9;
 	optional JoystickButton climb = 11;
-	optional JoystickButton toggle_feeder = 12;
 	optional JoystickButton toggle_intake = 13;
 	optional JoystickButton toggle_intake_up_down = 14;
 	optional JoystickButton tmp_override_low = 15;
