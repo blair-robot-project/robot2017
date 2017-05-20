@@ -20,7 +20,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.T
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.ToggleSolenoid;
-import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
+import org.usfirst.frc.team449.robot.mechanism.climber.commands.RunMotorWhileConditonMet;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
@@ -337,7 +337,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 
 		//Map climber commands
 		if (Robot.instance.climberSubsystem != null && climb != null) {
-			climb.whenPressed(new PowerClimb(Robot.instance.climberSubsystem));
+			climb.whenPressed(new RunMotorWhileConditonMet(Robot.instance.climberSubsystem));
 			climb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
 		}
 

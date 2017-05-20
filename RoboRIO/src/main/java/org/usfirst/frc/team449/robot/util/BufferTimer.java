@@ -29,6 +29,6 @@ public class BufferTimer {
 			flag = false;
 			timeConditionBecameTrue = 0;
 		}
-		return currentState && Robot.currentTimeMillis() - timeConditionBecameTrue > bufferTime;
+		return currentState && Robot.currentTimeMillis() - timeConditionBecameTrue >= bufferTime;
 	}
 }

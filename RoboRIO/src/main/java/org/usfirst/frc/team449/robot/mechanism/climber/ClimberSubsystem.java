@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
@@ -11,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * The climber, with power monitoring to stop.
  */
-public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem {
+public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
 	 * The CANTalon controlling the climber.
 	 */
@@ -73,15 +74,6 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 		}
 	}
 
-	/**
-	 * Whether or not the power limit has been reached.
-	 *
-	 * @return If the output power is greater than the max allowable power.
-	 */
-	public boolean reachedTop() {
-		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
-	}
-
 	@Override
 	public String getHeader() {
 		return "current," +
@@ -129,5 +121,15 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	@Override
 	public boolean isMotorOn() {
 		return motorSpinning;
+	}
+
+	/**
+	 * Whether or not the current limit has been exceeded
+	 *
+	 * @return true if exceeded, false otherwise
+	 */
+	@Override
+	public boolean isConditionTrue() {
+		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
 	}
 }
