@@ -13,6 +13,7 @@ public class TurnAllOff extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public TurnAllOff(ShooterSubsystem subsystem) {
@@ -39,6 +40,7 @@ public class TurnAllOff extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

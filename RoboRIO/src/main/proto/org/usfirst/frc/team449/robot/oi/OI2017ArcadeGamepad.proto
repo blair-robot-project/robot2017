@@ -50,5 +50,5 @@ message OI2017ArcadeGamepad {
 	optional JoystickButton log_error = 45;
 	optional JoystickButton jiggle_robot = 46;
 
-    required double scale_fwd_by_rot_coefficient = 47;
+	required double scale_fwd_by_rot_coefficient = 47;
 }

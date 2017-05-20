@@ -14,8 +14,8 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
 
@@ -32,6 +32,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	private final double MP_UPDATE_RATE;
 	private final double WHEEL_DIAMETER;
+	/**
+	 * The PIDAngleCommand constants for turning to an angle with the NavX
+	 */
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+	/**
+	 * The PIDAngleCommand constants for using the NavX to drive straight
+	 */
+	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
 	 * loop space to compensate.
@@ -50,14 +58,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	private AHRS navx;
 	/**
-	 * The PIDAngleCommand constants for turning to an angle with the NavX
-	 */
-	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
-	/**
-	 * The PIDAngleCommand constants for using the NavX to drive straight
-	 */
-	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
-	/**
 	 * The oi used to drive the robot
 	 */
 	private OI2017ArcadeGamepad oi;
@@ -70,15 +70,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * Whether or not to use the NavX for driving straight
 	 */
 	private boolean overrideNavX;
-
-	public boolean getOverrideAutoshift() {
-		return overrideAutoshift;
-	}
-
-	public void setOverrideAutoshift(boolean override) {
-		this.overrideAutoshift = override;
-	}
-
 	/**
 	 * Whether not to override auto shifting
 	 */
@@ -99,35 +90,26 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * What gear we're in
 	 */
 	private ShiftingDrive.gear currentGear;
-
 	/**
 	 * The speed setpoint at the upshift break
 	 */
 	private double upshiftSpeed;
-
 	/**
 	 * The speed setpoint at the downshift break
 	 */
 	private double downshiftSpeed;
-
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after upshifting.
 	 */
 	private long cooldownAfterUpshift;
-
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
 	 */
 	private long cooldownAfterDownshift;
-
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
-
 	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
-
 	private int minPointsInBtmMPBuffer;
-
 	private Notifier MPNotifier;
-
 	private List<CANTalon> MPTalons;
 
 	/**
@@ -148,8 +130,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		straightPID = map.getStraightPID();
 		upshiftBufferTimer = new BufferTimer(map.getDelayAfterUpshiftConditionsMet());
 		downshiftBufferTimer = new BufferTimer(map.getDelayAfterDownshiftConditionsMet());
-		cooldownAfterDownshift = (long) (map.getCooldownAfterDownshift()*1000.);
-		cooldownAfterUpshift = (long) (map.getCooldownAfterUpshift()*1000.);
+		cooldownAfterDownshift = (long) (map.getCooldownAfterDownshift() * 1000.);
+		cooldownAfterUpshift = (long) (map.getCooldownAfterUpshift() * 1000.);
 		upshiftFwdThresh = map.getUpshiftFwdThreshold();
 		upshiftSpeed = map.getUpshiftSpeed();
 		downshiftSpeed = map.getDownshiftSpeed();
@@ -167,23 +149,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 					.getReverse());
 		}
 
-		// Initialize max
-
 		// Initialize master talons
 		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
-
-		// Initialize slave talons.
-		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getRightSlaveList()) {
-			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
-			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
-			talonObject.canTalon.set(map.getRightMaster().getPort());
-		}
-		for (RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX talon : map.getLeftSlaveList()) {
-			RotPerSecCANTalonSRX talonObject = new RotPerSecCANTalonSRX(talon);
-			talonObject.canTalon.changeControlMode(CANTalon.TalonControlMode.Follower);
-			talonObject.canTalon.set(map.getLeftMaster().getPort());
-		}
 
 		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
 		WHEEL_DIAMETER = map.getWheelDiameterInches() / 12.;
@@ -216,6 +184,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	private static double clipToOne(double in) {
 		return Math.min(Math.max(in, -1), 1);
+	}
+
+	public boolean getOverrideAutoshift() {
+		return overrideAutoshift;
+	}
+
+	public void setOverrideAutoshift(boolean override) {
+		this.overrideAutoshift = override;
 	}
 
 	/**
@@ -251,7 +227,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Set the output of each side of the drive.
-	 * @param left The output for the left side of the drive, from [-1, 1]
+	 *
+	 * @param left  The output for the left side of the drive, from [-1, 1]
 	 * @param right the output for the right side of the drive, from [-1, 1]
 	 */
 	public void setOutput(double left, double right) {
@@ -299,9 +276,11 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		return navx.pidGet();
 	}
 
-	@Override
-	public void setOverrideNavX(boolean override) {
-		overrideNavX = override;
+	/**
+	 * @return whether the robot is in low gear
+	 */
+	public gear getGear() {
+		return currentGear;
 	}
 
 	/**
@@ -334,13 +313,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			//Warn the user if they try to shift but didn't define a shifting piston.
 			Logger.addEvent("You're trying to shift gears, but your drive doesn't have a shifter.", this.getClass());
 		}
-	}
-
-	/**
-	 * @return whether the robot is in low gear
-	 */
-	public gear getGear() {
-		return currentGear;
 	}
 
 	/**
@@ -394,8 +366,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		}
 	}
 
-	public boolean getOverrideNavX(){
+	public boolean getOverrideNavX() {
 		return overrideNavX;
+	}
+
+	@Override
+	public void setOverrideNavX(boolean override) {
+		overrideNavX = override;
 	}
 
 	@Override
@@ -428,7 +405,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	@Override
-	public String getName(){
+	public String getName() {
 		return "Drive";
 	}
 

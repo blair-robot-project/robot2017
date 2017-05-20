@@ -34,5 +34,5 @@ message Robot2017 {
 	optional bool do_MP = 21 [default = true];
 	optional bool test_MP = 22 [default = false];
 	optional bool start_low_gear = 23 [default = true];
-    optional Logger logger = 25;
+	optional Logger logger = 25;
 }

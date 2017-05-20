@@ -13,19 +13,19 @@ public class BufferTimer {
 
 	private boolean flag;
 
-	public BufferTimer(double bufferTimeSeconds){
-		bufferTime = (long) (bufferTimeSeconds*1000.);
+	public BufferTimer(double bufferTimeSeconds) {
+		bufferTime = (long) (bufferTimeSeconds * 1000.);
 	}
 
-	public BufferTimer(long bufferTimeMilliseconds){
+	public BufferTimer(long bufferTimeMilliseconds) {
 		bufferTime = bufferTimeMilliseconds;
 	}
 
-	public boolean get(boolean currentState){
-		if (currentState && !flag){
+	public boolean get(boolean currentState) {
+		if (currentState && !flag) {
 			flag = true;
 			timeConditionBecameTrue = Robot.currentTimeMillis();
-		} else if (!currentState && flag){
+		} else if (!currentState && flag) {
 			flag = false;
 			timeConditionBecameTrue = 0;
 		}

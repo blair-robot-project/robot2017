@@ -6,12 +6,16 @@ package org.usfirst.frc.team449.robot.interfaces.drive.shifting;
 public interface ShiftingDrive {
 
 	void autoshift();
-	void setGear(gear gear);
+
 	gear getGear();
-	void setOverrideAutoshift(boolean override);
+
+	void setGear(gear gear);
+
 	boolean getOverrideAutoshift();
 
-	enum gear{
+	void setOverrideAutoshift(boolean override);
+
+	enum gear {
 		HIGH, LOW
 	}
 }

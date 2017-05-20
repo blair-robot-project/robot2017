@@ -6,6 +6,8 @@ package org.usfirst.frc.team449.robot.util;
 public interface Loggable {
 
 	String getHeader();
+
 	Object[] getData();
+
 	String getName();
 }

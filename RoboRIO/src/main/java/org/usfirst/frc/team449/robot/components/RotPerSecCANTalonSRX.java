@@ -1,12 +1,13 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.ctre.CANTalon;
+import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Component wrapper on CTRE CAN Talon SRX {@link CANTalon}, with unit conversions to/from RPS built in. Every
- * method in this class takes arguments in RPS (except nativeToRPS of course).
+ * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every
+ * non-unit-conversion in this class takes arguments in post-gearing RPS.
  */
 public class RotPerSecCANTalonSRX extends Component {
 
@@ -21,17 +22,21 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * The maximum speed of the motor, in RPS.
 	 */
-	protected double maxSpeed;
+	private double maxSpeed;
 	/**
 	 * The type of encoder the talon uses.
 	 */
-	protected CANTalon.FeedbackDevice feedbackDevice;
+	private CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
 	 * The map used to construct this object.
 	 */
 	private RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map;
 
+	/**
+	 * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if
+	 * there was a 70:1 gearing between the encoder and the final output.
+	 */
 	private double postEncoderGearing;
 
 	/**
@@ -74,21 +79,21 @@ public class RotPerSecCANTalonSRX extends Component {
 
 		//If we have motion profile PID constants, put them in slot 1.
 		if (map.hasKPMp()) {
-			if(map.hasMaxSpeedLg() && map.getMpUseLowGear()) {
+			if (map.hasMaxSpeedLg() && map.getMpUseLowGear()) {
 				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedLg(), 0, 0, 1);
 			} else {
 				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
 			}
 		}
 
-		//Choose which profile to use, regular driving or MP.
-		canTalon.setProfile(map.getProfile());
+		//Assume regular driving profile by default.
+		canTalon.setProfile(0);
 
 		if (map.hasClosedLoopRampRate()) {
 			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
 		}
 
-		if (map.hasCurrentLimit()){
+		if (map.hasCurrentLimit()) {
 			canTalon.setCurrentLimit(map.getCurrentLimit());
 			canTalon.EnableCurrentLimit(true);
 		} else {
@@ -96,6 +101,13 @@ public class RotPerSecCANTalonSRX extends Component {
 		}
 
 		postEncoderGearing = map.getPostEncoderGearing();
+
+		for (MotorMap.Motor slave: map.getSlaveList()){
+			CANTalon tmp = new CANTalon(slave.getPort());
+			tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
+			tmp.set(map.getPort());
+			tmp.reverseOutput(slave.getInverted());
+		}
 	}
 
 	/**
@@ -190,11 +202,11 @@ public class RotPerSecCANTalonSRX extends Component {
 		return (nat / (encoderCPR * 4)) * 10 * postEncoderGearing; //4 edges per count, and 10 100ms per second.
 	}
 
-	public double RPMToRPS(double rpm){
+	public double RPMToRPS(double rpm) {
 		return rpm / 60. * postEncoderGearing;
 	}
 
-	public double RPSToRPM(double rps){
+	public double RPSToRPM(double rps) {
 		return rps * 60. / postEncoderGearing;
 	}
 

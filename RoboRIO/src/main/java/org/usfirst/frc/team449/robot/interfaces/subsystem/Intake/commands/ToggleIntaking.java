@@ -15,6 +15,7 @@ public class ToggleIntaking extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public ToggleIntaking(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode speed) {
@@ -35,7 +36,7 @@ public class ToggleIntaking extends Command {
 	 */
 	@Override
 	protected void execute() {
-		if(subsystem.getMode() == IntakeSubsystem.IntakeMode.OFF){
+		if (subsystem.getMode() == IntakeSubsystem.IntakeMode.OFF) {
 			subsystem.setMode(speed);
 		} else {
 			subsystem.setMode(IntakeSubsystem.IntakeMode.OFF);
@@ -44,6 +45,7 @@ public class ToggleIntaking extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

@@ -10,18 +10,21 @@ import java.util.List;
 public interface CANTalonMPSubsystem {
 	/**
 	 * Loads the profile with the given name into the MP buffer.
+	 *
 	 * @param name The name of the profile.
 	 */
 	void loadMotionProfile(String name);
 
 	/**
 	 * Get the Talons in this subsystem to run the MP on.
+	 *
 	 * @return a List of Talons with encoders attached (e.g. master talons)
 	 */
 	List<CANTalon> getTalons();
 
 	/**
 	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving the profile
+	 *
 	 * @return an integer from [0, 128]
 	 */
 	int getMinPointsInBtmBuffer();

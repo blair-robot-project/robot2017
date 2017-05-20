@@ -12,7 +12,7 @@ message Intake2017 {
 	optional Motor actuated_victor = 3;
 	optional DoubleSolenoid piston = 4;
 	optional int32 pistonModuleNum = 5;
-    optional double actuated_speed = 6;
-    required double fixed_intake_speed = 7;
-    required double fixed_agitate_speed = 8;
+	optional double actuated_speed = 6;
+	required double fixed_intake_speed = 7;
+	required double fixed_agitate_speed = 8;
 }

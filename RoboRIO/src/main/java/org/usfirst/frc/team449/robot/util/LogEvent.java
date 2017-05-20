@@ -28,7 +28,7 @@ public class LogEvent {
 		return caller;
 	}
 
-	public String toString(){
+	public String toString() {
 		return timeCalled + caller.toString() + message;
 	}
 }

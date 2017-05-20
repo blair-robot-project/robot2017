@@ -8,12 +8,13 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that toggles the position of a piston.
  */
-public class ToggleSolenoid extends Command{
+public class ToggleSolenoid extends Command {
 
 	private SolenoidSubsystem subsystem;
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
 	public ToggleSolenoid(SolenoidSubsystem subsystem) {
@@ -33,7 +34,7 @@ public class ToggleSolenoid extends Command{
 	 */
 	@Override
 	protected void execute() {
-		if (subsystem.getSolenoidPosition().equals(DoubleSolenoid.Value.kForward)){
+		if (subsystem.getSolenoidPosition().equals(DoubleSolenoid.Value.kForward)) {
 			subsystem.setSolenoid(DoubleSolenoid.Value.kReverse);
 		} else {
 			subsystem.setSolenoid(DoubleSolenoid.Value.kForward);
@@ -42,6 +43,7 @@ public class ToggleSolenoid extends Command{
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

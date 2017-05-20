@@ -33,7 +33,7 @@ public class DriveStraight extends Command {
 
 	@Override
 	protected void execute() {
-		if(useLeft){
+		if (useLeft) {
 			throttle = oi.getLeftThrottle();
 		} else {
 			throttle = oi.getRightThrottle();

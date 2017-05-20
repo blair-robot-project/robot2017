@@ -13,6 +13,7 @@ public class TurnMotorOff extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public TurnMotorOff(BinaryMotorSubsystem subsystem) {
@@ -37,6 +38,7 @@ public class TurnMotorOff extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

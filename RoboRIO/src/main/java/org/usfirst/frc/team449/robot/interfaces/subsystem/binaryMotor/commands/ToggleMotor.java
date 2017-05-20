@@ -13,6 +13,7 @@ public class ToggleMotor extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public ToggleMotor(BinaryMotorSubsystem subsystem) {
@@ -32,7 +33,7 @@ public class ToggleMotor extends Command {
 	 */
 	@Override
 	protected void execute() {
-		if (subsystem.isMotorOn()){
+		if (subsystem.isMotorOn()) {
 			subsystem.turnMotorOff();
 		} else {
 			subsystem.turnMotorOn();
@@ -41,6 +42,7 @@ public class ToggleMotor extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

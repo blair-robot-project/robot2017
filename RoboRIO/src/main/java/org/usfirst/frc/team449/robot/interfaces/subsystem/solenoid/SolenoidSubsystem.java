@@ -7,5 +7,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  */
 public interface SolenoidSubsystem {
 	void setSolenoid(DoubleSolenoid.Value value);
+
 	DoubleSolenoid.Value getSolenoidPosition();
 }

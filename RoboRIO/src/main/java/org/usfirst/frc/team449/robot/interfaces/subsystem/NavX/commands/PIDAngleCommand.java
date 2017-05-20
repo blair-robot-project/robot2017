@@ -75,7 +75,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		this.subsystem = subsystem;
 	}
 
-	protected double processPIDOutput(double output){
+	protected double processPIDOutput(double output) {
 		//If we're using minimumOutput..
 		if (minimumOutputEnabled) {
 			//Set the output to the minimum if it's too small.
@@ -89,7 +89,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		if (Math.abs(this.getPIDController().getError()) < deadband) {
 			output = 0;
 		}
-		if (inverted){
+		if (inverted) {
 			output *= -1;
 		}
 

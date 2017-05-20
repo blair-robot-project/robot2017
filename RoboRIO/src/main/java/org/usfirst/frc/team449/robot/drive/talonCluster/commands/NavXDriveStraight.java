@@ -7,7 +7,6 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
@@ -39,7 +38,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 
 		SmartDashboard.putNumber("NavXDriveStraight PID output", output);
 		double throttle;
-		if (useLeft){
+		if (useLeft) {
 			throttle = oi.getLeftThrottle();
 		} else {
 			throttle = oi.getRightThrottle();

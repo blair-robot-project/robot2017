@@ -15,7 +15,7 @@ public class SimpleUnidirectionalDrive extends Command {
 	 * The OI used for input.
 	 */
 	public UnidirectionalOI oi;
-	
+
 	private UnidirectionalDrive subsystem;
 
 	/**

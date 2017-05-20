@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.oi;
 
 import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team449.robot.interfaces.oi.BaseOI;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -49,7 +48,7 @@ public class OI2017Tank extends TankOI {
 	@Override
 	public double getLeftThrottle() {
 		double value = leftThrottle.getValue();
-		if(value <= deadband){
+		if (value <= deadband) {
 			value = 0;
 		}
 		return value;
@@ -61,7 +60,7 @@ public class OI2017Tank extends TankOI {
 	@Override
 	public double getRightThrottle() {
 		double value = rightThrottle.getValue();
-		if(value <= deadband){
+		if (value <= deadband) {
 			value = 0;
 		}
 		return value;

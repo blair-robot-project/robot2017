@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * The subsystem that picks up balls from the ground.
  */
-public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem{
+public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
 	 * Whether intake is currently up
 	 */
@@ -91,7 +91,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 		}
 	}
 
-	public DoubleSolenoid.Value getSolenoidPosition(){
+	public DoubleSolenoid.Value getSolenoidPosition() {
 		return intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
 
@@ -107,6 +107,16 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	}
 
 	/**
+	 * Get the mode of the intake
+	 *
+	 * @return off, in slow, in fast, out slow, out fast.
+	 */
+	@Override
+	public IntakeMode getMode() {
+		return mode;
+	}
+
+	/**
 	 * Set the speed of the intake to one of 5 IntakeModes.
 	 *
 	 * @param mode off, in slow, in fast, out slow, out fast.
@@ -114,7 +124,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	@Override
 	public void setMode(IntakeMode mode) {
 		this.mode = mode;
-		switch (mode){
+		switch (mode) {
 			case OFF:
 				setActuatedVictor(0);
 				setFixedVictor(0);
@@ -130,15 +140,5 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 			default:
 				Logger.addEvent("Unsupported mode!", this.getClass());
 		}
-	}
-
-	/**
-	 * Get the mode of the intake
-	 *
-	 * @return off, in slow, in fast, out slow, out fast.
-	 */
-	@Override
-	public IntakeMode getMode() {
-		return mode;
 	}
 }

@@ -3,10 +3,10 @@ package org.usfirst.frc.team449.robot.drive.meccanum;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
  * Created by sam on 1/26/17.
@@ -83,13 +83,13 @@ public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 	}
 
 	@Override
-	public void setOverrideNavX(boolean override) {
-		overrideNavX = override;
+	public boolean getOverrideNavX() {
+		return overrideNavX;
 	}
 
 	@Override
-	public boolean getOverrideNavX() {
-		return overrideNavX;
+	public void setOverrideNavX(boolean override) {
+		overrideNavX = override;
 	}
 
 	@Override

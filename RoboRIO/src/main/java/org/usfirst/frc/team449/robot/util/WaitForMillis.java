@@ -6,18 +6,18 @@ import org.usfirst.frc.team449.robot.Robot;
 /**
  * Created by noah on 5/20/17.
  */
-public class WaitForMillis extends Command{
+public class WaitForMillis extends Command {
 
 	private long timeout;
 
 	private long startTime;
 
-	public WaitForMillis(long time){
+	public WaitForMillis(long time) {
 		timeout = time;
 	}
 
 	@Override
-	protected void initialize(){
+	protected void initialize() {
 		startTime = Robot.currentTimeMillis();
 	}
 

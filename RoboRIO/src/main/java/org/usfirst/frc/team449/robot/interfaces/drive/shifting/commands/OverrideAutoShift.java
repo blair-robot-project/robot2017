@@ -1,8 +1,6 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team449.robot.ReferencingCommand;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 
@@ -21,8 +19,8 @@ public class OverrideAutoShift extends Command {
 	/**
 	 * Default constructor
 	 *
-	 * @param drive           The drive subsystem to execute this command on.
-	 * @param override        Whether or not to override autoshifting.
+	 * @param drive    The drive subsystem to execute this command on.
+	 * @param override Whether or not to override autoshifting.
 	 */
 	public OverrideAutoShift(ShiftingDrive drive, boolean override) {
 		subsystem = drive;

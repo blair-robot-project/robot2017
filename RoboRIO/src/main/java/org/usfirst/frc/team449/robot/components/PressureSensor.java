@@ -1,15 +1,22 @@
 package org.usfirst.frc.team449.robot.components;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import maps.org.usfirst.frc.team449.robot.components.AnalogPressureSensorMap;
 
 /**
- * Wrapper for an analog pressure sensor that returns a voltage linearly proportional to pressure.
+ * Wrapper for an {@link AnalogInput} pressure sensor that returns a voltage linearly proportional to pressure.
  */
 public class PressureSensor extends Component {
+	/**
+	 * The AnalogInput this is a wrapper on.
+	 */
 	private AnalogInput sensor;
 
-	public PressureSensor(maps.org.usfirst.frc.team449.robot.components.AnalogPressureSensorMap.AnalogPressureSensor
-			                      map) {
+	/**
+	 * Default constructor
+	 * @param map map of this object.
+	 */
+	public PressureSensor(AnalogPressureSensorMap.AnalogPressureSensor map) {
 		sensor = new AnalogInput(map.getPort());
 		sensor.setOversampleBits(map.getOversampleBits());
 		sensor.setAverageBits(map.getAverageBits());

@@ -9,7 +9,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * Created by sam on 1/29/17.
  */
-public class PneumaticsSubsystem extends MappedSubsystem implements Loggable{
+public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	public Compressor compressor;
 	public PressureSensor pressureSensor;
 
@@ -38,7 +38,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable{
 	}
 
 	@Override
-	public String getName(){
+	public String getName() {
 		return "pneumatics";
 	}
 }

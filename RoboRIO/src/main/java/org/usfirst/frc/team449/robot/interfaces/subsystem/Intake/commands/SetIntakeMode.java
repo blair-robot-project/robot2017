@@ -15,6 +15,7 @@ public class SetIntakeMode extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public SetIntakeMode(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode speed) {
@@ -40,6 +41,7 @@ public class SetIntakeMode extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

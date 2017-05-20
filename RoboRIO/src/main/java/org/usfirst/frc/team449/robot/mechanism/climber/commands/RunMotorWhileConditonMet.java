@@ -2,8 +2,6 @@ package org.usfirst.frc.team449.robot.mechanism.climber.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;

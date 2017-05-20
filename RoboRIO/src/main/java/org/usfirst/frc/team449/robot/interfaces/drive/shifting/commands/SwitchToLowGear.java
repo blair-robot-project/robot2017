@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * A wrapper command that switches to low gear.
  */
 public class SwitchToLowGear extends Command {
-	
+
 	private ShiftingDrive subsystem;
 
 	/**

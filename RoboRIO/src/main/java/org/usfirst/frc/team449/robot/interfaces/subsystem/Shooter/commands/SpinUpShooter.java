@@ -8,11 +8,12 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
  */
 public class SpinUpShooter extends Command {
-	
+
 	private ShooterSubsystem subsystem;
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public SpinUpShooter(ShooterSubsystem subsystem) {
@@ -39,6 +40,7 @@ public class SpinUpShooter extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

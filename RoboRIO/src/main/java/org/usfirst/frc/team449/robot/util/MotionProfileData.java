@@ -12,16 +12,16 @@ import java.util.stream.Stream;
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
  */
-public class MotionProfileData{
+public class MotionProfileData {
 	public double data[][];
 
 	private int dPtr = -1;
 
 	private boolean inverted;
 
-	public MotionProfileData(MotionProfileMap.MotionProfile map){
+	public MotionProfileData(MotionProfileMap.MotionProfile map) {
 		inverted = map.getInverted();
-		readFile(Robot.RESOURCES_PATH+map.getFilename());
+		readFile(Robot.RESOURCES_PATH + map.getFilename());
 	}
 
 	public MotionProfileData(String filename, boolean inverted) {

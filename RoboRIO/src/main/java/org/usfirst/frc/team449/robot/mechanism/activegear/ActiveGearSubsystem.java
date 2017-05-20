@@ -3,12 +3,11 @@ package org.usfirst.frc.team449.robot.mechanism.activegear;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
-import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * The subsystem that carries and pushes gears.
  */
-public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubsystem{
+public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubsystem {
 	/**
 	 * Whether piston is currently contracted
 	 */
@@ -41,7 +40,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 
 	@Override
 	public DoubleSolenoid.Value getSolenoidPosition() {
-		return contracted? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
+		return contracted ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
 
 	/**

@@ -21,17 +21,19 @@ public abstract class ArcadeOI implements UnidirectionalOI {
 
 	/**
 	 * The output to be given to the left side of the drive.
+	 *
 	 * @return Output to left side from [-1, 1]
 	 */
-	public double getLeftOutput(){
+	public double getLeftOutput() {
 		return getFwd() + getRot();
 	}
 
 	/**
 	 * The output to be given to the right side of the drive.
+	 *
 	 * @return Output to right side from [-1, 1]
 	 */
-	public double getRightOutput(){
+	public double getRightOutput() {
 		return getFwd() - getRot();
 	}
 }

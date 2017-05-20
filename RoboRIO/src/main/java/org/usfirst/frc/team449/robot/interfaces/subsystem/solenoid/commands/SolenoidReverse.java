@@ -8,12 +8,13 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that contracts a piston.
  */
-public class SolenoidReverse extends Command{
+public class SolenoidReverse extends Command {
 
 	private SolenoidSubsystem subsystem;
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
 	public SolenoidReverse(SolenoidSubsystem subsystem) {
@@ -38,6 +39,7 @@ public class SolenoidReverse extends Command{
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

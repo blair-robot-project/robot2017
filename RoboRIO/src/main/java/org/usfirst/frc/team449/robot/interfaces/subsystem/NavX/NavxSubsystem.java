@@ -14,9 +14,9 @@ public interface NavxSubsystem {
 	 */
 	double getGyroOutput();
 
-	void setOverrideNavX(boolean override);
-
 	boolean getOverrideNavX();
+
+	void setOverrideNavX(boolean override);
 
 	AHRS getNavX();
 }

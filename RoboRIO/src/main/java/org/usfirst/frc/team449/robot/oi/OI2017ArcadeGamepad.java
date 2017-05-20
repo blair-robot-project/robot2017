@@ -38,7 +38,7 @@ import java.util.List;
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
  * controls turning velocity.
  */
-public class OI2017ArcadeGamepad extends ArcadeOI{
+public class OI2017ArcadeGamepad extends ArcadeOI {
 
 	/**
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that

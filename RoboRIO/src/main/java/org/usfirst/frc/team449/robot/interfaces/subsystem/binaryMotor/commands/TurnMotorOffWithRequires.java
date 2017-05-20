@@ -14,6 +14,7 @@ public class TurnMotorOffWithRequires extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public TurnMotorOffWithRequires(BinaryMotorSubsystem subsystem) {
@@ -39,6 +40,7 @@ public class TurnMotorOffWithRequires extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

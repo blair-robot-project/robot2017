@@ -14,7 +14,7 @@ public class ToggleOverrideAutoShift extends Command {
 	/**
 	 * Default constructor
 	 *
-	 * @param drive           The drive subsystem to execute this command on.
+	 * @param drive The drive subsystem to execute this command on.
 	 */
 	public ToggleOverrideAutoShift(ShiftingDrive drive) {
 		subsystem = drive;

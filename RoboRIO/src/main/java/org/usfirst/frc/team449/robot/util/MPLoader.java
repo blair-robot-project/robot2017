@@ -1,10 +1,7 @@
 package org.usfirst.frc.team449.robot.util;
 
 import com.ctre.CANTalon;
-import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-
-import java.util.List;
 
 /**
  * Created by BlairRobot on 2017-03-15.

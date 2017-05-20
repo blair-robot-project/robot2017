@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by noah on 5/14/17.
  */
-public class Logger implements Runnable{
+public class Logger implements Runnable {
 
 	private static List<LogEvent> events = new ArrayList<>();
 	private FileWriter eventLogWriter;
@@ -30,10 +30,10 @@ public class Logger implements Runnable{
 		itemNames = new String[this.subsystems.length][];
 		eventLogWriter.write("time,class,message");
 		StringBuilder telemetryHeader = new StringBuilder();
-		for (int i = 0; i < this.subsystems.length; i++){
+		for (int i = 0; i < this.subsystems.length; i++) {
 			String[] items = this.subsystems[i].getHeader().split(",");
-			for (int j = 0; j < items.length; j++){
-				String itemName = this.subsystems[i].getName()+"."+items[j];
+			for (int j = 0; j < items.length; j++) {
+				String itemName = this.subsystems[i].getName() + "." + items[j];
 				itemNames[i][j] = itemName;
 				telemetryHeader.append(itemName);
 				telemetryHeader.append(",");
@@ -43,9 +43,13 @@ public class Logger implements Runnable{
 		telemetryLogWriter.write(telemetryHeader.toString());
 	}
 
+	public static void addEvent(String message, Class caller) {
+		events.add(new LogEvent(message, caller));
+	}
+
 	@Override
 	public void run() {
-		for (LogEvent event : events){
+		for (LogEvent event : events) {
 			try {
 				eventLogWriter.write(event.toString());
 			} catch (IOException e) {
@@ -59,17 +63,17 @@ public class Logger implements Runnable{
 			Object[] data = subsystems[i].getData();
 			for (int j = 0; j < data.length; j++) {
 				Object datum = data[j];
-				if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)){
+				if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)) {
 					SmartDashboard.putBoolean(itemNames[i][j], (boolean) datum);
-				} else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)){
+				} else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)) {
 					SmartDashboard.putNumber(itemNames[i][j], (int) datum);
-				} else if (datum.getClass().equals(double.class) || datum.getClass().equals(Double.class)){
+				} else if (datum.getClass().equals(double.class) || datum.getClass().equals(Double.class)) {
 					SmartDashboard.putNumber(itemNames[i][j], (double) datum);
-				} else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)){
+				} else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
 					SmartDashboard.putNumber(itemNames[i][j], (long) datum);
-				} else if (datum.getClass().equals(Sendable.class)){
+				} else if (datum.getClass().equals(Sendable.class)) {
 					SmartDashboard.putData(itemNames[i][j], (Sendable) datum);
-				} else if (datum.getClass().equals(String.class)){
+				} else if (datum.getClass().equals(String.class)) {
 					SmartDashboard.putString(itemNames[i][j], (String) datum);
 				} else {
 					SmartDashboard.putString(itemNames[i][j], datum.toString());
@@ -86,10 +90,6 @@ public class Logger implements Runnable{
 			System.out.println("Logging failed!");
 			e.printStackTrace();
 		}
-	}
-
-	public static void addEvent(String message, Class caller){
-		events.add(new LogEvent(message, caller));
 	}
 
 	public void close() throws IOException {

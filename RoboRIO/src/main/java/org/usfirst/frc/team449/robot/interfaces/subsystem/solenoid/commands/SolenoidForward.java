@@ -8,12 +8,13 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that extends a piston.
  */
-public class SolenoidForward extends Command{
+public class SolenoidForward extends Command {
 
 	private SolenoidSubsystem subsystem;
-	
+
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
 	public SolenoidForward(SolenoidSubsystem subsystem) {
@@ -38,6 +39,7 @@ public class SolenoidForward extends Command{
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

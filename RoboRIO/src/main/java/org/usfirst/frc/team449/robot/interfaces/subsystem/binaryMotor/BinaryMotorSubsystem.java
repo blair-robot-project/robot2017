@@ -17,6 +17,7 @@ public interface BinaryMotorSubsystem {
 
 	/**
 	 * Get the current state of the motor.
+	 *
 	 * @return true if the motor is on, false otherwise.
 	 */
 	boolean isMotorOn();

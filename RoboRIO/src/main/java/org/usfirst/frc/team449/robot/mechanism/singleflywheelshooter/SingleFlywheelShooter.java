@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Class for the flywheel
  */
-public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, ShooterSubsystem{
+public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, ShooterSubsystem {
 	/**
 	 * The flywheel's Talon
 	 */
@@ -79,7 +79,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 		setFlywheelPIDSpeed(sp);
 	}
 
-	private void setFeederSpeed(double sp){
+	private void setFeederSpeed(double sp) {
 		feederVictor.set(sp);
 	}
 
@@ -110,7 +110,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	}
 
 	@Override
-	public String getName(){
+	public String getName() {
 		return "shooter";
 	}
 
@@ -149,16 +149,6 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	}
 
 	/**
-	 * Sets the state of the shooter. Only called from within commands.
-	 *
-	 * @param state Off, spinning up, or shooting
-	 */
-	@Override
-	public void setShooterState(ShooterState state) {
-		this.state = state;
-	}
-
-	/**
 	 * Gets the shooter's state, for use in "toggle" commands.
 	 *
 	 * @return Off, spinning up, or shooting.
@@ -166,6 +156,16 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	@Override
 	public ShooterState getShooterState() {
 		return state;
+	}
+
+	/**
+	 * Sets the state of the shooter. Only called from within commands.
+	 *
+	 * @param state Off, spinning up, or shooting
+	 */
+	@Override
+	public void setShooterState(ShooterState state) {
+		this.state = state;
 	}
 
 	/**

@@ -10,7 +10,7 @@ message SingleFlywheelShooter {
 	required Mechanism mechanism = 1;
 	required RotPerSecCANTalonSRX shooter = 2;
 	required double shooter_throttle = 3;
-    required double spin_up_time_secs = 4;
+	required double spin_up_time_secs = 4;
 	required Motor feeder = 5;
 	required double feeder_throttle = 6;
 }

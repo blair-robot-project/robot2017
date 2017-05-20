@@ -9,11 +9,11 @@ import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
@@ -25,7 +25,9 @@ import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.util.*;
+import org.usfirst.frc.team449.robot.util.BooleanWrapper;
+import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.io.IOException;
@@ -40,6 +42,7 @@ public class Robot extends IterativeRobot {
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 	public static Robot instance;
 	private static long currentTimeMillis;
+	private static long startTime;
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
@@ -85,7 +88,10 @@ public class Robot extends IterativeRobot {
 	private ShiftingDrive.gear startingGear;
 	private Logger logger;
 	private AutoSide autoSide;
-	private static long startTime;
+
+	public static long currentTimeMillis() {
+		return currentTimeMillis - startTime;
+	}
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -156,7 +162,7 @@ public class Robot extends IterativeRobot {
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
-			Logger.addEvent("Compressor enabled: "+compressor.enabled(), this.getClass());
+			Logger.addEvent("Compressor enabled: " + compressor.enabled(), this.getClass());
 		}
 
 		//Construct intake if it's in the map.
@@ -198,9 +204,9 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
-		if (position.equals("center")){
+		if (position.equals("center")) {
 			autoSide = AutoSide.CENTER;
-		} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)){
+		} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
 			autoSide = AutoSide.BOILER;
 		} else {
 			autoSide = AutoSide.LOADING_STATION;
@@ -357,11 +363,7 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
-	private enum AutoSide{
-		CENTER,BOILER,LOADING_STATION
-	}
-
-	public static long currentTimeMillis() {
-		return currentTimeMillis - startTime;
+	private enum AutoSide {
+		CENTER, BOILER, LOADING_STATION
 	}
 }

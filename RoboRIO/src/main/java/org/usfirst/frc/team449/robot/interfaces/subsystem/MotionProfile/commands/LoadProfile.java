@@ -15,6 +15,7 @@ public class LoadProfile extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public LoadProfile(CANTalonMPSubsystem subsystem, String profile) {
@@ -40,6 +41,7 @@ public class LoadProfile extends Command {
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

@@ -33,7 +33,7 @@ public class ShiftGears extends Command {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(subsystem.getGear() == ShiftingDrive.gear.LOW? ShiftingDrive.gear.HIGH : ShiftingDrive.gear.LOW);
+		subsystem.setGear(subsystem.getGear() == ShiftingDrive.gear.LOW ? ShiftingDrive.gear.HIGH : ShiftingDrive.gear.LOW);
 	}
 
 	/**
