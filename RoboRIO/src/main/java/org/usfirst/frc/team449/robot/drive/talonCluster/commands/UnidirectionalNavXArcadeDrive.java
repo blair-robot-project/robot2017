@@ -14,11 +14,11 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
  */
-public class DefaultArcadeDrive extends PIDAngleCommand {
+public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	/**
 	 * The OI giving the vel and turn stick values.
 	 */
-	public ArcadeOI oi;
+	private ArcadeOI oi;
 	/**
 	 * Whether or not we should be using the NavX to drive straight stably.
 	 */
@@ -34,7 +34,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	/**
 	 * The UnidirectionalDrive this command is controlling.
 	 */
-	private UnidirectionalDrive driveSubsystem;
+	protected UnidirectionalDrive driveSubsystem;
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
@@ -48,8 +48,8 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public DefaultArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
-	                          ArcadeOI oi) {
+	public UnidirectionalNavXArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
+	                                     ArcadeOI oi) {
 		//Assign stuff
 		super(map, (NavxSubsystem) drive);
 		maxAngularVel = map.getMaxAngularVel();
@@ -73,7 +73,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 		//Reset all values of the PIDController and enable it.
 		this.getPIDController().reset();
 		this.getPIDController().enable();
-		Logger.addEvent("DefaultArcadeDrive init.", this.getClass());
+		Logger.addEvent("UnidirectionalNavXArcadeDrive init.", this.getClass());
 
 		//Initial assignment
 		drivingStraight = false;
@@ -86,15 +86,6 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	@Override
 	protected void execute() {
-		//Auto-shifting
-		try {
-			((ShiftingDrive) driveSubsystem).autoshift();
-		} catch (ClassCastException e){
-			System.out.println("Attempted to shift in DefaultArcadeDrive, but the subsystem isn't a ShiftingDrive!");
-			Logger.addEvent("Attempted to shift in DefaultArcadeDrive, but the subsystem isn't a ShiftingDrive!", this.getClass());
-		}
-
-
 		//Set vel and rot to what they should be.
 		vel = oi.getFwd();
 		rot = oi.getRot();
@@ -138,7 +129,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("DefaultArcadeDrive End.", this.getClass());
+		Logger.addEvent("UnidirectionalNavXArcadeDrive End.", this.getClass());
 	}
 
 	/**
@@ -146,7 +137,7 @@ public class DefaultArcadeDrive extends PIDAngleCommand {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("DefaultArcadeDrive Interrupted! Stopping the robot.", this.getClass());
+		Logger.addEvent("UnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
 		driveSubsystem.setOutput(0.0, 0.0);
 	}
 

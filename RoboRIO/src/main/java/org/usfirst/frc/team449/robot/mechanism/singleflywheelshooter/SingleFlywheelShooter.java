@@ -93,12 +93,20 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 
 	@Override
 	public String getHeader() {
-		return "speed,setpoint,error,voltage,current";
+		return "speed," +
+				"setpoint," +
+				"error," +
+				"voltage," +
+				"current";
 	}
 
 	@Override
 	public Object[] getData() {
-		return new Object[]{shooterTalon.getSpeed(),shooterTalon.getSetpoint(),shooterTalon.getError(),shooterTalon.canTalon.getOutputVoltage(),shooterTalon.canTalon.getOutputCurrent()};
+		return new Object[]{shooterTalon.getSpeed(),
+				shooterTalon.getSetpoint(),
+				shooterTalon.getError(),
+				shooterTalon.canTalon.getOutputVoltage(),
+				shooterTalon.canTalon.getOutputCurrent()};
 	}
 
 	@Override

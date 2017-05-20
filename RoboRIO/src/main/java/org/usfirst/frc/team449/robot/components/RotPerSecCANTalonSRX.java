@@ -201,7 +201,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * Get the velocity of the CANTalon in RPS
 	 * <p>
-	 * Note: This method is called getSpeed since the TalonControlMode enum is called speed. However, the output
+	 * Note: This method is called getMode since the TalonControlMode enum is called speed. However, the output
 	 * is signed and is actually a velocity.
 	 *
 	 * @return The CANTalon's velocity in RPS

@@ -11,6 +11,8 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXTurnToAngle
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.*;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.ToggleShooting;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOff;
@@ -19,7 +21,6 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.ToggleSolenoid;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.PowerClimb;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
@@ -351,7 +352,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 				toggleIntakeUpDown.whenPressed(new ToggleSolenoid(Robot.instance.intakeSubsystem));
 			}
 			if (toggleIntake != null) {
-				toggleIntake.whenPressed(new ToggleIntaking(Robot.instance.intakeSubsystem));
+				toggleIntake.whenPressed(new ToggleIntaking(Robot.instance.intakeSubsystem, IntakeSubsystem.IntakeMode.IN_SLOW));
 			}
 		}
 

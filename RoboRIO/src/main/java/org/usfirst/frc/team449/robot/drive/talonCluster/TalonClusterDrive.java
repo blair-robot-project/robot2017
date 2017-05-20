@@ -5,26 +5,18 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
+import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
-import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
 import org.usfirst.frc.team449.robot.util.Logger;
-import org.usfirst.frc.team449.robot.util.MPLoader;
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 /**
@@ -83,10 +75,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * Whether not to override auto shifting
 	 */
 	private boolean overrideAutoshift;
-	/**
-	 * Measured max speed of robot reached in a run. Used for testing and tuning. NOT max_speed tuning constant
-	 */
-	private double maxMeasuredSpeed;
 	/**
 	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
 	 */
@@ -163,7 +151,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		}
 
 		// Initialize max
-		maxMeasuredSpeed = -1;
 
 		// Initialize master talons
 		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
@@ -244,7 +231,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Stuff run on first enable
-	 * Reset startTime, turn on navX control, and start DefaultArcadeDrive
+	 * Reset startTime, turn on navX control, and start UnidirectionalNavXArcadeDrive
 	 */
 	@Override
 	protected void initDefaultCommand() {
@@ -370,14 +357,26 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	@Override
 	public String getHeader() {
-		return "left_vel,right_vel,left_setpoint,right_setpoint,left_current,right_current,left_voltage,right_voltage";
+		return "left_vel," +
+				"right_vel," +
+				"left_setpoint," +
+				"right_setpoint," +
+				"left_current," +
+				"right_current," +
+				"left_voltage," +
+				"right_voltage";
 	}
 
 	@Override
 	public Object[] getData() {
-		return new Object[]{leftMaster.getSpeed(), rightMaster.getSpeed(), leftMaster.getSetpoint(), rightMaster.getSetpoint(),
-				leftMaster.canTalon.getOutputCurrent(), rightMaster.canTalon.getOutputCurrent(),
-				leftMaster.canTalon.getOutputVoltage(), rightMaster.canTalon.getOutputVoltage()};
+		return new Object[]{leftMaster.getSpeed(),
+				rightMaster.getSpeed(),
+				leftMaster.getSetpoint(),
+				rightMaster.getSetpoint(),
+				leftMaster.canTalon.getOutputCurrent(),
+				rightMaster.canTalon.getOutputCurrent(),
+				leftMaster.canTalon.getOutputVoltage(),
+				rightMaster.canTalon.getOutputVoltage()};
 	}
 
 	@Override

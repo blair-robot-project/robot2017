@@ -84,12 +84,16 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 
 	@Override
 	public String getHeader() {
-		return "current,voltage,power";
+		return "current," +
+				"voltage," +
+				"power";
 	}
 
 	@Override
 	public Object[] getData() {
-		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(), canTalonSRX.canTalon.getOutputVoltage(), canTalonSRX.getPower()};
+		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),
+				canTalonSRX.canTalon.getOutputVoltage(),
+				canTalonSRX.getPower()};
 	}
 
 	@Override

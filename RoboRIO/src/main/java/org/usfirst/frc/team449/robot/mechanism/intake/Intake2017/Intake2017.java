@@ -4,16 +4,14 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * The subsystem that picks up balls from the ground.
  */
-public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
-	/**
-	 * Whether this is currently intaking
-	 */
-	public boolean isIntaking;
+public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem{
 	/**
 	 * Whether intake is currently up
 	 */
@@ -38,6 +36,8 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 
 	private double actuatedSpeed;
 
+	private IntakeMode mode;
+
 	/**
 	 * Creates a mapped subsystem and sets its map
 	 *
@@ -56,36 +56,27 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 		fixedAgitateSpeed = map.getFixedAgitateSpeed();
 		fixedIntakeSpeed = map.getFixedIntakeSpeed();
 		actuatedSpeed = map.getActuatedSpeed();
+		mode = IntakeMode.OFF;
 	}
 
 	/**
-	 * Set the speed of the static intake
+	 * Set the speed of the actuated victor if it exists.
 	 *
-	 * @param mode the mode to set the victor to.
+	 * @param sp speed to set it to, from [-1, 1]
 	 */
-	public void setFixedVictor(FixedIntakeMode mode) {
-		if (mode == FixedIntakeMode.OFF){
-			fixedVictor.set(0);
-		} else if (mode == FixedIntakeMode.AGITATING){
-			fixedVictor.set(fixedAgitateSpeed);
-		} else {
-			fixedVictor.set(fixedIntakeSpeed);
-		}
-	}
-
-	/**
-	 * Set whether the actuated intake is on
-	 *
-	 * @param on set the motor to the speed in the config if true, 0 otherwise.
-	 */
-	public void setActuatedVictor(boolean on) {
+	private void setActuatedVictor(double sp) {
 		if (actuatedVictor != null) {
-			if (on){
-				actuatedVictor.set(actuatedSpeed);
-			} else {
-				actuatedVictor.set(0);
-			}
+			actuatedVictor.set(sp);
 		}
+	}
+
+	/**
+	 * Set the speed of the fixed victor.
+	 *
+	 * @param sp speed to set it to, from [-1, 1]
+	 */
+	private void setFixedVictor(double sp) {
+		fixedVictor.set(sp);
 	}
 
 	/**
@@ -105,15 +96,6 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 	}
 
 	/**
-	 * Set isIntaking status
-	 *
-	 * @param isIntaking whether currently is intaking
-	 */
-	public void setIntaking(boolean isIntaking) {
-		this.isIntaking = isIntaking;
-	}
-
-	/**
 	 * Initialize the default command for a subsystem. By default subsystems have
 	 * no default command, but if they do, the default command is set with this
 	 * method. It is called on all Subsystems by CommandBase in the users program
@@ -124,7 +106,39 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem{
 		//Do nothing!
 	}
 
-	public enum FixedIntakeMode{
-		INTAKING, AGITATING, OFF
+	/**
+	 * Set the speed of the intake to one of 5 IntakeModes.
+	 *
+	 * @param mode off, in slow, in fast, out slow, out fast.
+	 */
+	@Override
+	public void setMode(IntakeMode mode) {
+		this.mode = mode;
+		switch (mode){
+			case OFF:
+				setActuatedVictor(0);
+				setFixedVictor(0);
+				break;
+			case IN_FAST:
+				setFixedVictor(fixedIntakeSpeed);
+				setActuatedVictor(actuatedSpeed);
+				break;
+			case IN_SLOW:
+				setActuatedVictor(0);
+				setFixedVictor(fixedAgitateSpeed);
+				break;
+			default:
+				Logger.addEvent("Unsupported mode!", this.getClass());
+		}
+	}
+
+	/**
+	 * Get the mode of the intake
+	 *
+	 * @return off, in slow, in fast, out slow, out fast.
+	 */
+	@Override
+	public IntakeMode getMode() {
+		return mode;
 	}
 }

@@ -10,7 +10,8 @@ import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
@@ -271,7 +272,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 
-		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+		driveSubsystem.setDefaultCommandManual(new ShiftingUnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 
 //		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
