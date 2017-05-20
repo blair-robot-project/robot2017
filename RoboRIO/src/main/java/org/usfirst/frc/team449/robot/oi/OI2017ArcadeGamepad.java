@@ -317,7 +317,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI{
 			turnTo330.whenPressed(new NavXTurnToAngle(Robot.instance.driveSubsystem.turnPID, -30, Robot.instance.driveSubsystem,
 					TIMEOUT));
 		}
-		if (Robot.instance.driveSubsystem.shifter != null && switchToHighGear != null && switchToLowGear != null) {
+		if (switchToHighGear != null && switchToLowGear != null) {
 			switchToHighGear.whenPressed(new SwitchToHighGear(Robot.instance.driveSubsystem));
 			switchToLowGear.whenPressed(new SwitchToLowGear(Robot.instance.driveSubsystem));
 		}

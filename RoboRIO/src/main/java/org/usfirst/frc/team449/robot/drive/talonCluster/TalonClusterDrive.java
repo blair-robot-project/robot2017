@@ -19,6 +19,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalon
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +40,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	/**
 	 * Right master Talon
 	 */
-	public RotPerSecCANTalonSRX rightMaster;
+	private RotPerSecCANTalonSRX rightMaster;
 	/**
 	 * Left master Talon
 	 */
-	public RotPerSecCANTalonSRX leftMaster;
+	private RotPerSecCANTalonSRX leftMaster;
 	/**
 	 * The NavX gyro
 	 */
-	public AHRS navx;
+	private AHRS navx;
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
@@ -59,12 +60,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	/**
 	 * The oi used to drive the robot
 	 */
-	public OI2017ArcadeGamepad oi;
+	private OI2017ArcadeGamepad oi;
 
 	/**
 	 * The solenoid that shifts between gears
 	 */
-	public DoubleSolenoid shifter;
+	private DoubleSolenoid shifter;
 	/**
 	 * Whether or not to use the NavX for driving straight
 	 */
@@ -189,6 +190,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		leftProfiles = new HashMap<>();
 		rightProfiles = new HashMap<>();
 
+		MPTalons = new ArrayList<>();
 		MPTalons.add(leftMaster.canTalon);
 		MPTalons.add(rightMaster.canTalon);
 
@@ -264,6 +266,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	@Override
 	public void fullStop() {
 		setVBusThrottle(0, 0);
+	}
+
+	/**
+	 * If this drive uses motors that can be disabled, enable them.
+	 */
+	@Override
+	public void enableMotors() {
+		leftMaster.canTalon.enable();
+		rightMaster.canTalon.enable();
 	}
 
 	/**

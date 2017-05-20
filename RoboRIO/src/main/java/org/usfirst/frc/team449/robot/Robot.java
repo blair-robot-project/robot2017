@@ -237,16 +237,12 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setVBusThrottle(0, 0);
 		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
-		driveSubsystem.leftMaster.canTalon.enable();
-		driveSubsystem.rightMaster.canTalon.enable();
+		driveSubsystem.enableMotors();
 
 		driveSubsystem.setDefaultCommandManual(new ShiftingUnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 
-//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
-		//Switch to low gear if we have gears
-		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
-		}
+		//Switch to starting gear
+		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
 
 		if (intakeSubsystem != null) {
 			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
@@ -278,10 +274,8 @@ public class Robot extends IterativeRobot {
 		currentTimeMillis = System.currentTimeMillis();
 		sendModeOverI2C(robotInfo, "auto");
 
-		//Switch to low gear if we have gears
-		if (driveSubsystem.shifter != null) {
-			Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
-		}
+		//Switch to starting gear
+		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
 
 		if (gearSubsystem != null) {
 			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
