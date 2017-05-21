@@ -26,7 +26,6 @@ message TalonClusterDrive {
 	required double PID_scale = 19;
 	repeated MotionProfile left_motion_profile = 20;
 	repeated MotionProfile right_motion_profile = 21;
-	required double wheel_diameter_inches = 22;
 	required int32 min_points_in_bottom_MP_buffer = 23;
 	required int32 MP_update_rate_secs = 24;
 }

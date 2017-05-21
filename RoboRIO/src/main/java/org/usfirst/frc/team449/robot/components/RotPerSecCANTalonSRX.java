@@ -18,7 +18,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	public int encoderCPR;
+	private int encoderCPR;
 	/**
 	 * The maximum speed of the motor, in RPS.
 	 */
@@ -39,6 +39,8 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	private double postEncoderGearing;
 
+	private double wheelDiameterInches;
+
 	/**
 	 * Construct the CANTalonSRX from its map object
 	 *
@@ -49,6 +51,7 @@ public class RotPerSecCANTalonSRX extends Component {
 		this.map = map;
 		canTalon = new CANTalon(map.getPort());
 		encoderCPR = map.getEncoderCPR();
+		wheelDiameterInches = map.getWheelDiameterInches();
 		canTalon.reverseSensor(map.getReverseSensor());
 		canTalon.reverseOutput(map.getReverseOutput());
 		canTalon.setInverted(map.getIsInverted());
@@ -273,5 +276,23 @@ public class RotPerSecCANTalonSRX extends Component {
 
 	public double getPower() {
 		return canTalon.getOutputVoltage() * canTalon.getOutputCurrent();
+	}
+
+	public double nativeToFeet(double nativeUnits) {
+		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
+		return rotations * (wheelDiameterInches * Math.PI);
+	}
+
+	public double feetToNative(double feet) {
+		double rotations = feet / (wheelDiameterInches * Math.PI);
+		return rotations * (encoderCPR * 4) / postEncoderGearing;
+	}
+
+	public double feetPerSecToNative(double feet) {
+		return RPSToNative(feet / (wheelDiameterInches * Math.PI));
+	}
+
+	public double nativeToFeetPerSec(double nativeUnits) {
+		return nativeToRPS(nativeUnits) * (wheelDiameterInches * Math.PI);
 	}
 }

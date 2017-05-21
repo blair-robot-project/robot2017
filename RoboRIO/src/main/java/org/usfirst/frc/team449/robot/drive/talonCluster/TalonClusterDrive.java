@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
@@ -31,7 +30,6 @@ import java.util.Map;
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, CANTalonMPSubsystem {
 
 	private final double MP_UPDATE_RATE;
-	private final double WHEEL_DIAMETER;
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
@@ -154,7 +152,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
 		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
-		WHEEL_DIAMETER = map.getWheelDiameterInches() / 12.;
 		leftProfiles = new HashMap<>();
 		rightProfiles = new HashMap<>();
 
@@ -417,8 +414,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	@Override
 	public void loadMotionProfile(String name) {
 		MPNotifier.stop();
-		MPLoader.loadTopLevel(leftProfiles.get(name), leftMaster, WHEEL_DIAMETER);
-		MPLoader.loadTopLevel(rightProfiles.get(name), rightMaster, WHEEL_DIAMETER);
+		MPLoader.loadTopLevel(leftProfiles.get(name), leftMaster);
+		MPLoader.loadTopLevel(rightProfiles.get(name), rightMaster);
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 

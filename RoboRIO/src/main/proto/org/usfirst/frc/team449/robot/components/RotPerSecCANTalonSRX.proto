@@ -51,4 +51,5 @@ message RotPerSecCANTalonSRX {
 	optional int32 current_limit = 33;
 	optional double post_encoder_gearing = 34 [default = 1];
     repeated Motor slave = 35;
+    optional double wheel_diameter_inches = 36;
 }
