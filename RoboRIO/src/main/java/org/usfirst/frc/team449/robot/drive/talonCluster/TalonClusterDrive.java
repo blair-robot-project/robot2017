@@ -15,6 +15,7 @@ import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, CANTalonMPSubsystem {
+public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
 	 * The period of the thread that moves points from the API-level MP buffer to the low-level one.
@@ -132,11 +133,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
 	/**
-	 * Maps of the names of each profile to the {@link MotionProfileData} containing the actual points.
-	 */
-	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
-
-	/**
 	 * The minimum number of points that must be in the bottom-level Motion Profile before we start running the profile.
 	 */
 	private int minPointsInBtmMPBuffer;
@@ -196,19 +192,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		MPTalons = new ArrayList<>();
 		MPTalons.add(leftMaster.canTalon);
 		MPTalons.add(rightMaster.canTalon);
-
-		//Instantiate the profile maps.
-		leftProfiles = new HashMap<>();
-		rightProfiles = new HashMap<>();
-
-		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
-		for (MotionProfileMap.MotionProfile profile : map.getLeftMotionProfileList()) {
-			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
-		}
-
-		for (MotionProfileMap.MotionProfile profile : map.getRightMotionProfileList()) {
-			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
-		}
 
 		//Set up the MPNotifier to run an MPUpdaterProcess containing the left and right master talons.
 		MPUpdaterProcess updater = new MPUpdaterProcess();
@@ -500,17 +483,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * Loads the profile with the given name into the MP buffer.
+	 * Loads a profile into the MP buffer.
 	 *
-	 * @param name The name of the profile.
+	 * @param profile The profile to be loaded.
 	 */
 	@Override
-	public void loadMotionProfile(String name) {
+	public void loadMotionProfile(MotionProfileData profile) {
 		//Stop loading points from the API-level buffer into the low-level one.
 		MPNotifier.stop();
-		//Fill the API-level buffer with the points from the named profile.
-		MPLoader.loadTopLevel(leftProfiles.get(name), leftMaster);
-		MPLoader.loadTopLevel(rightProfiles.get(name), rightMaster);
+		//Fill the API-level buffer with the points from the given profile.
+		MPLoader.loadTopLevel(profile, leftMaster);
+		MPLoader.loadTopLevel(profile, rightMaster);
 		//Resume loading points from the API-level buffer into the low-level one.
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
@@ -542,5 +525,22 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	@Override
 	public void stopMPProcesses() {
 		MPNotifier.stop();
+	}
+
+	/**
+	 * Loads given profiles into the left and right sides of the drive.
+	 *
+	 * @param left  The profile to load into the left side.
+	 * @param right The profile to load into the right side.
+	 */
+	@Override
+	public void loadMotionProfile(MotionProfileData left, MotionProfileData right) {
+		//Stop loading points from the API-level buffer into the low-level one.
+		MPNotifier.stop();
+		//Fill the API-level buffer with the points from the given profile.
+		MPLoader.loadTopLevel(left, leftMaster);
+		MPLoader.loadTopLevel(right, rightMaster);
+		//Resume loading points from the API-level buffer into the low-level one.
+		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 }

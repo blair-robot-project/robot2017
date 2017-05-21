@@ -1,27 +1,29 @@
-package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
  * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
  */
-public class LoadProfile extends Command {
+public class LoadProfileTwoSides extends Command {
 
-	private CANTalonMPSubsystem subsystem;
+	private TwoSideMPSubsystem subsystem;
 
-	private MotionProfileData profile;
+	private MotionProfileData left, right;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public LoadProfile(CANTalonMPSubsystem subsystem, MotionProfileData profile) {
+	public LoadProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right) {
 		this.subsystem = subsystem;
-		this.profile = profile;
+		this.left = left;
+		this.right = right;
 	}
 
 	/**
@@ -29,7 +31,7 @@ public class LoadProfile extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("LoadProfile init.", this.getClass());
+		Logger.addEvent("LoadProfileTwoSides init.", this.getClass());
 	}
 
 	/**
@@ -37,7 +39,7 @@ public class LoadProfile extends Command {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.loadMotionProfile(profile);
+		subsystem.loadMotionProfile(left, right);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class LoadProfile extends Command {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("LoadProfile end.", this.getClass());
+		Logger.addEvent("LoadProfileTwoSides end.", this.getClass());
 	}
 
 	/**
@@ -63,6 +65,6 @@ public class LoadProfile extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("LoadProfile Interrupted!", this.getClass());
+		Logger.addEvent("LoadProfileTwoSides Interrupted!", this.getClass());
 	}
 }

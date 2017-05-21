@@ -3,7 +3,6 @@ import "org/usfirst/frc/team449/robot/drive/Drive.proto";
 import "org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.proto";
 import "org/usfirst/frc/team449/robot/util/ToleranceBufferAnglePID.proto";
 import "org/usfirst/frc/team449/robot/components/ModuleDoubleSolenoid.proto";
-import "org/usfirst/frc/team449/robot/util/MotionProfile.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.drive.talonCluster";
 option java_outer_classname = "TalonClusterDriveMap";
@@ -23,8 +22,6 @@ message TalonClusterDrive {
 	optional double cooldown_after_downshift = 16 [default = 0];
 	optional double upshift_fwd_threshold = 17 [default = 0];
 	required double PID_scale = 19;
-	repeated MotionProfile left_motion_profile = 20;
-	repeated MotionProfile right_motion_profile = 21;
 	required int32 min_points_in_bottom_MP_buffer = 23;
 	required int32 MP_update_rate_secs = 24;
 }

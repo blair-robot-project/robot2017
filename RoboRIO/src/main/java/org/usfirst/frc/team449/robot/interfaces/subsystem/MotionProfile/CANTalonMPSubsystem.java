@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile;
 
 import com.ctre.CANTalon;
+import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 import java.util.List;
 
@@ -9,11 +10,11 @@ import java.util.List;
  */
 public interface CANTalonMPSubsystem {
 	/**
-	 * Loads the profile with the given name into the MP buffer.
+	 * Loads a profile into the MP buffer.
 	 *
-	 * @param name The name of the profile.
+	 * @param profile The profile to be loaded.
 	 */
-	void loadMotionProfile(String name);
+	void loadMotionProfile(MotionProfileData profile);
 
 	/**
 	 * Get the Talons in this subsystem to run the MP on.
