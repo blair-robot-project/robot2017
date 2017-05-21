@@ -6,7 +6,8 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 
 /**
- * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
+ * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
+ * alignment.
  */
 public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArcadeDrive {
 	/**

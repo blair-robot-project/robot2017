@@ -14,12 +14,19 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 public class MeccanumDrive extends DriveSubsystem implements NavxSubsystem {
 
 	public AHRS navx;
+
 	public RotPerSecCANTalonSRX frontLeft, frontRight, backLeft, backRight;
+
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
+
 	public TankOI oi;
+
 	boolean strafe = false;
+
 	private long startTime;
+
 	private boolean overrideNavX;
 
 	public MeccanumDrive(maps.org.usfirst.frc.team449.robot.drive.meccanum.MeccanumDriveMap.MeccanumDrive map, TankOI

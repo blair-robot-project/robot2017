@@ -23,7 +23,8 @@ public interface CANTalonMPSubsystem {
 	List<CANTalon> getTalons();
 
 	/**
-	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving the profile
+	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving
+	 * the profile
 	 *
 	 * @return an integer from [0, 128]
 	 */

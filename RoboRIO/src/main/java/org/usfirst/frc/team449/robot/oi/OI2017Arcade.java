@@ -14,6 +14,7 @@ public class OI2017Arcade extends ArcadeOI {
 	 * Left (rotation control) stick's throttle
 	 */
 	private Throttle rotThrottle;
+
 	/**
 	 * Right (fwd/rev control) stick's throttle
 	 */

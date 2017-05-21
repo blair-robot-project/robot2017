@@ -7,7 +7,9 @@ import org.usfirst.frc.team449.robot.Robot;
  */
 public class LogEvent {
 	private long timeCalled;
+
 	private String message;
+
 	private Class caller;
 
 	public LogEvent(String message, Class caller) {

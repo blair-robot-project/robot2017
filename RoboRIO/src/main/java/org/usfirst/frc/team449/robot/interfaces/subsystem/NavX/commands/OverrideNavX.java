@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 public class OverrideNavX extends Command {
 
 	private boolean override;
+
 	private NavxSubsystem subsystem;
 
 	/**

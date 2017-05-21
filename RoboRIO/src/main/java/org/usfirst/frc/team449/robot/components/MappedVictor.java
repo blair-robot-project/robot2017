@@ -10,6 +10,7 @@ public class MappedVictor extends VictorSP {
 
 	/**
 	 * Construct a {@link VictorSP} from a {@link MotorMap.Motor}.
+	 *
 	 * @param map a motor map specifying port and inversion.
 	 */
 	public MappedVictor(MotorMap.Motor map) {

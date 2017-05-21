@@ -13,6 +13,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 public class TriggerButton extends Button {
 
 	private Throttle throttle;
+
 	private double triggerAt;
 
 	public TriggerButton(int port, int axis, double triggerAt) {

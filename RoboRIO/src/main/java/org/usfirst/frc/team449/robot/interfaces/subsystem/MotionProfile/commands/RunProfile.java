@@ -10,8 +10,11 @@ import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 public class RunProfile extends CommandGroup {
 
 	private CANTalonMPSubsystem subsystem;
+
 	private String profile;
+
 	private double timeout;
+
 	private BooleanWrapper finishFlag;
 
 	public RunProfile(CANTalonMPSubsystem subsystem, String profile, double timeout, BooleanWrapper finishFlag) {

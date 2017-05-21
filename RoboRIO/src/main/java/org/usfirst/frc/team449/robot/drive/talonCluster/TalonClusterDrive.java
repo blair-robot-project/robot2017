@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
@@ -29,32 +30,42 @@ import java.util.Map;
  */
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, CANTalonMPSubsystem {
 
+	/**
+	 * The period of the thread that moves points from the API-level MP buffer to the low-level one.
+	 */
 	private final double MP_UPDATE_RATE;
+
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+
 	/**
 	 * The PIDAngleCommand constants for using the NavX to drive straight
 	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
+
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
 	 * loop space to compensate.
 	 */
 	private double PID_SCALE;
+
 	/**
 	 * Right master Talon
 	 */
 	private RotPerSecCANTalonSRX rightMaster;
+
 	/**
 	 * Left master Talon
 	 */
 	private RotPerSecCANTalonSRX leftMaster;
+
 	/**
 	 * The NavX gyro
 	 */
 	private AHRS navx;
+
 	/**
 	 * The oi used to drive the robot
 	 */
@@ -64,50 +75,80 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * The solenoid that shifts between gears
 	 */
 	private DoubleSolenoid shifter;
+
 	/**
 	 * Whether or not to use the NavX for driving straight
 	 */
 	private boolean overrideNavX;
+
 	/**
 	 * Whether not to override auto shifting
 	 */
 	private boolean overrideAutoshift;
+
 	/**
 	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
 	 */
 	private double upshiftFwdThresh;
+
 	/**
 	 * The time we last upshifted (milliseconds)
 	 */
 	private long timeLastUpshifted;
+
 	/**
 	 * The time we last downshifted (milliseconds)
 	 */
 	private long timeLastDownshifted;
+
 	/**
 	 * What gear we're in
 	 */
 	private ShiftingDrive.gear currentGear;
+
 	/**
 	 * The speed setpoint at the upshift break
 	 */
 	private double upshiftSpeed;
+
 	/**
 	 * The speed setpoint at the downshift break
 	 */
 	private double downshiftSpeed;
+
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after upshifting.
 	 */
 	private long cooldownAfterUpshift;
+
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
 	 */
 	private long cooldownAfterDownshift;
+
+	/**
+	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time before shifting actually happens.
+	 */
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
+
+	/**
+	 * Maps of the names of each profile to the {@link MotionProfileData} containing the actual points.
+	 */
 	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
+
+	/**
+	 * The minimum number of points that must be in the bottom-level Motion Profile before we start running the profile.
+	 */
 	private int minPointsInBtmMPBuffer;
+
+	/**
+	 * The Notifier that moves points from the API-level MP buffer to the low-level one.
+	 */
 	private Notifier MPNotifier;
+
+	/**
+	 * The talons on this subsystem that we want to run motion profiles on.
+	 */
 	private List<CANTalon> MPTalons;
 
 	/**
@@ -119,11 +160,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
 			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi, gear startingGear) {
 		super(map.getDrive());
-		PID_SCALE = map.getPIDScale();
-
+		//Initialize stuff directly from the map.
 		this.map = map;
 		this.oi = oi;
-		navx = new AHRS(SPI.Port.kMXP);
+		PID_SCALE = map.getPIDScale();
 		turnPID = map.getTurnPID();
 		straightPID = map.getStraightPID();
 		upshiftBufferTimer = new BufferTimer(map.getDelayAfterUpshiftConditionsMet());
@@ -135,6 +175,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		downshiftSpeed = map.getDownshiftSpeed();
 		currentGear = startingGear;
 		MP_UPDATE_RATE = map.getMPUpdateRateSecs();
+		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
+		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
+		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
+
+		//We only ever use a NavX on the SPI port because the other ports don't work.
+		navx = new AHRS(SPI.Port.kMXP);
 
 		// Initialize shifting constants, assuming robot is stationary.
 		overrideAutoshift = false;
@@ -143,18 +189,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 		// If the map has the shifting piston, instantiate it.
 		if (map.hasShifter()) {
-			this.shifter = new DoubleSolenoid(map.getModuleNumber(), map.getShifter().getForward(), map.getShifter()
-					.getReverse());
+			this.shifter = new MappedDoubleSolenoid(map.getShifter());
 		}
 
-		// Initialize master talons
-		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
-		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
-
-		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
 		leftProfiles = new HashMap<>();
 		rightProfiles = new HashMap<>();
 
+		//Add the masters to the list of Talons to use for MP
 		MPTalons = new ArrayList<>();
 		MPTalons.add(leftMaster.canTalon);
 		MPTalons.add(rightMaster.canTalon);
@@ -430,7 +471,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving the profile
+	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving
+	 * the profile
 	 *
 	 * @return an integer from [0, 128]
 	 */

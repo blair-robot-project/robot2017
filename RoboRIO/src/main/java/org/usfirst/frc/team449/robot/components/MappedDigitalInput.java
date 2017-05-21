@@ -18,6 +18,7 @@ public class MappedDigitalInput {
 
 	/**
 	 * Construct a MappedDigitalInput.
+	 *
 	 * @param map the map to construct this from.
 	 */
 	public MappedDigitalInput(DigitalInputMap.DigitalInput map) {
@@ -30,6 +31,7 @@ public class MappedDigitalInput {
 
 	/**
 	 * Get the status of each pin specified in the map, in the order they were specified.
+	 *
 	 * @return A list of booleans where 1 represents the input receiving a signal and 0 represents no signal.
 	 */
 	public List<Boolean> getStatus() {

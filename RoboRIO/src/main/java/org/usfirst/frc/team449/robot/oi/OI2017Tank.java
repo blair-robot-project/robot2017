@@ -13,6 +13,7 @@ public class OI2017Tank extends TankOI {
 	 * The left throttle
 	 */
 	private Throttle leftThrottle;
+
 	/**
 	 * The right throttle
 	 */

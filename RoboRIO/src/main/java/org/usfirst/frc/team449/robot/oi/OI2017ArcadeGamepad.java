@@ -70,62 +70,77 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 	 * Button for turning to 0 degrees absolute heading (where robot was powered on)
 	 */
 	private Button turnTo0;
+
 	/**
 	 * Button for turning to 30 degrees absolute heading (where robot was powered on)
 	 */
 	private Button turnTo30;
+
 	/**
 	 * Button for turning to 180 degrees absolute heading (where robot was powered on)
 	 */
 	private Button turnTo180;
+
 	/**
 	 * Button for turning to 330 degrees absolute heading (where robot was powered on)
 	 */
 	private Button turnTo330;
+
 	/**
 	 * Button for a 180 degree relative turn
 	 */
 	private Button turnaround;
+
 	/**
 	 * Button for switching to low gear
 	 */
 	private Button switchToLowGear;
+
 	/**
 	 * Button for switching to high gear
 	 */
 	private Button switchToHighGear;
+
 	/**
 	 * Button for climbing
 	 */
 	private Button climb;
+
 	/**
 	 * Button for toggling whether to use NavX DriveStraight
 	 */
 	private Button toggleOverrideNavX;
+
 	/**
 	 * Button for toggling cameras
 	 */
 	private Button switchCamera;
+
 	/**
 	 * Button for toggling intake on/off
 	 */
 	private Button toggleIntake;
+
 	/**
 	 * Button for toggling intake up/down
 	 */
 	private Button toggleIntakeUpDown;
+
 	/**
 	 * Button held to stay in low gear
 	 */
 	private Button tmpOverrideLow;
+
 	/**
 	 * Button held to stay in high gear
 	 */
 	private Button tmpOverrideHigh;
+
 	/**
 	 * Button for toggling autoshifting
 	 */
 	private Button toggleOverrideAutoshift;
+
 	/**
 	 * Button for toggling shooter
 	 */
@@ -135,10 +150,12 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 	 * Button for running the LoadShooter command group (intake balls)
 	 */
 	private Button loadShooter;
+
 	/**
 	 * Button for running the RackShooter command group (set up to shoot)
 	 */
 	private Button rackShooter;
+
 	/**
 	 * Button for running the FireShooter command group (fire the shooter)
 	 */
@@ -147,12 +164,17 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 	private Button resetShooter;
 
 	private Button toggleGear;
+
 	private List<Button> pushGear;
+
 	private Button manualClimb;
+
 	private Button logError;
+
 	private Button jiggleRobot;
 
 	private boolean overrideNavXWhileHeld;
+
 	private double rotScale;
 
 	/**

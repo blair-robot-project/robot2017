@@ -17,9 +17,13 @@ import java.util.List;
 public class Logger implements Runnable {
 
 	private static List<LogEvent> events = new ArrayList<>();
+
 	private FileWriter eventLogWriter;
+
 	private FileWriter telemetryLogWriter;
+
 	private Loggable[] subsystems;
+
 	private String[][] itemNames;
 
 	public Logger(LoggerMap.Logger map, List<Loggable> subsystems) throws IOException {

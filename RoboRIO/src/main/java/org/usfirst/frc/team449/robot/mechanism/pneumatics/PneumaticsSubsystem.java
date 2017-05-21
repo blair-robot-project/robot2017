@@ -11,6 +11,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
  */
 public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	public Compressor compressor;
+
 	public PressureSensor pressureSensor;
 
 	public PneumaticsSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap

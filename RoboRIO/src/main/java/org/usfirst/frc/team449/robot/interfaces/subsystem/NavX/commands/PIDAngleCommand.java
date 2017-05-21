@@ -14,6 +14,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 * The minimum the robot should be able to output, to overcome friction.
 	 */
 	protected double minimumOutput;
+
 	/**
 	 * Whether or not to use minimumOutput.
 	 */

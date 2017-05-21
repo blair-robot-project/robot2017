@@ -10,6 +10,7 @@ import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 public class dPadButton extends Button {
 
 	private int angle;
+
 	private Joystick joystick;
 
 	public dPadButton(int port, int angle) {

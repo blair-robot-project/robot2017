@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
@@ -16,10 +17,12 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	 * Whether intake is currently up
 	 */
 	private boolean intakeUp;
+
 	/**
 	 * VictorSP for the static intake
 	 */
 	private VictorSP fixedVictor;
+
 	/**
 	 * VictorSP for the dynamic intake
 	 */
@@ -51,7 +54,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 			this.actuatedVictor = new MappedVictor(map.getActuatedVictor());
 		}
 		if (map.hasPiston()) {
-			this.piston = new DoubleSolenoid(map.getPistonModuleNum(), map.getPiston().getForward(), map.getPiston().getReverse());
+			this.piston = new MappedDoubleSolenoid( map.getPiston());
 		}
 		fixedAgitateSpeed = map.getFixedAgitateSpeed();
 		fixedIntakeSpeed = map.getFixedIntakeSpeed();

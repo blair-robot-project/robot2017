@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.mechanism.activegear;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 
 /**
@@ -12,6 +13,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	 * Whether piston is currently contracted
 	 */
 	public boolean contracted;
+
 	/**
 	 * Piston for pushing gears
 	 */
@@ -25,7 +27,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	public ActiveGearSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearMap.ActiveGear map) {
 		super(map.getMechanism());
 		this.map = map;
-		this.piston = new DoubleSolenoid(map.getModuleNumber(), map.getPiston().getForward(), map.getPiston().getReverse());
+		this.piston = new MappedDoubleSolenoid(map.getPiston());
 	}
 
 	/**

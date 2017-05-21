@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 public class SwitchToGear extends Command {
 
 	private ShiftingDrive subsystem;
+
 	private ShiftingDrive.gear switchTo;
 
 	/**

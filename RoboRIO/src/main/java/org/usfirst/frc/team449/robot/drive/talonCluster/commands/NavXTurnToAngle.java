@@ -40,7 +40,8 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param map      An turnPID map with PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
 	 * @param drive    The drive subsystem to execute this command on. Must also be a NavX subsystem.
-	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point errors prevent termination.
+	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
+	 *                 errors prevent termination.
 	 */
 	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
 	                       double timeout) {

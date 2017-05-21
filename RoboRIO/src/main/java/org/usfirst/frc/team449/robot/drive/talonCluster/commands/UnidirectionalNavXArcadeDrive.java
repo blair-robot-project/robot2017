@@ -18,22 +18,27 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 * The UnidirectionalDrive this command is controlling.
 	 */
 	protected UnidirectionalDrive driveSubsystem;
+
 	/**
 	 * The OI giving the vel and turn stick values.
 	 */
 	private ArcadeOI oi;
+
 	/**
 	 * Whether or not we should be using the NavX to drive straight stably.
 	 */
 	private boolean drivingStraight;
+
 	/**
 	 * The velocity input from OI. Should be between -1 and 1.
 	 */
 	private double vel;
+
 	/**
 	 * The rotation input from OI. Should be between -1 and 1.
 	 */
 	private double rot;
+
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */

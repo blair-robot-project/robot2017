@@ -22,10 +22,13 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 * The maximum allowable power before we stop the motor.
 	 */
 	private double max_power;
+
 	private VictorSP victor;
 
 	private BufferTimer currentLimitTimer;
+
 	private long spinupTime;
+
 	private boolean motorSpinning;
 
 	/**

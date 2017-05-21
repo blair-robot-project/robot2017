@@ -14,6 +14,7 @@ public class PressureSensor extends Component {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param map map of this object.
 	 */
 	public PressureSensor(AnalogPressureSensorMap.AnalogPressureSensor map) {

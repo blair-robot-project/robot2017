@@ -15,7 +15,9 @@ import org.usfirst.frc.team449.robot.util.Logger;
 public class NavXDriveStraight extends PIDAngleCommand {
 
 	private TankOI oi;
+
 	private UnidirectionalDrive drive;
+
 	private boolean useLeft;
 
 	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,

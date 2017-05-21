@@ -40,53 +40,77 @@ import java.util.List;
 public class Robot extends IterativeRobot {
 
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
+
 	public static Robot instance;
+
 	private static long currentTimeMillis;
+
 	private static long startTime;
+
 	/**
 	 * The shooter subsystem (flywheel only)
 	 */
 	public SingleFlywheelShooter singleFlywheelShooterSubsystem;
+
 	/**
 	 * The intake subsystem (intake motors and pistons)
 	 */
 	public Intake2017 intakeSubsystem;
+
 	/**
 	 * The climber
 	 */
 	public ClimberSubsystem climberSubsystem;
+
 	/**
 	 * The pneumatics (maybe doesn't work?)
 	 */
 	public PneumaticsSubsystem pneumaticsSubsystem;
+
 	/**
 	 * The drive
 	 */
 	public TalonClusterDrive driveSubsystem;
+
 	/**
 	 * OI, using an Xbox-style controller and arcade drive.
 	 */
 	public OI2017ArcadeGamepad oiSubsystem;
+
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
 	public CameraSubsystem cameraSubsystem;
+
 	public ActiveGearSubsystem gearSubsystem;
+
 	private BooleanWrapper commandFinished;
+
 	/**
 	 * The object constructed directly from map.cfg.
 	 */
 	private Robot2017Map.Robot2017 cfg;
+
 	private Notifier loggerNotifier;
+
 	private int completedCommands = 0;
+
 	private long startedGearPush = 0;
+
 	private long timeToPushGear;
+
 	private boolean redAlliance, dropGear;
+
 	private String allianceString;
+
 	private String position;
+
 	private I2C robotInfo;
+
 	private ShiftingDrive.gear startingGear;
+
 	private Logger logger;
+
 	private AutoSide autoSide;
 
 	public static long currentTimeMillis() {

@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.oi.OISubsystem;
  */
 public class DefaultDriveMeccanum extends ReferencingCommand {
 	public OISubsystem oi;
+
 	double leftThrottle, rightThrottle;
 
 	public DefaultDriveMeccanum(MeccanumDrive drive, OISubsystem oi) {
