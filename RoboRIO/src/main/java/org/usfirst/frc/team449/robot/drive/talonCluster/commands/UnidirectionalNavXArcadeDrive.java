@@ -44,6 +44,9 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 */
 	private double maxAngularVel;
 
+	/**
+	 * A bufferTimer so we only switch to driving straight when the conditions are met for a certain period of time.
+	 */
 	private BufferTimer driveStraightTimer;
 
 	/**
@@ -155,6 +158,7 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	protected void usePIDOutput(double output) {
 		//If we're driving straight..
 		if (drivingStraight) {
+			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
 
 			//Log stuff

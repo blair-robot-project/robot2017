@@ -14,18 +14,35 @@ import org.usfirst.frc.team449.robot.util.Logger;
  */
 public class NavXDriveStraight extends PIDAngleCommand {
 
+	/**
+	 * The tank OI to get input from.
+	 */
 	private TankOI oi;
 
+	/**
+	 * The drive subsystem to give output to.
+	 */
 	private UnidirectionalDrive drive;
 
+	/**
+	 * Whether to use the left joystick to drive straight.
+	 */
 	private boolean useLeft;
 
+	/**
+	 * Default constructor.
+	 * @param map A map with the PID constants for controlling the angular PID loop.
+	 * @param drive The unidirectional drive to execute this command on.
+	 * @param oi The tank OI to take input from.
+	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for right.
+	 */
 	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
 	                         TankOI oi, boolean useLeft) {
 		super(map, (NavxSubsystem) drive);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;
+		//This is likely to need to interrupt the DefaultCommand and therefore should require its subsystem.
 		requires((Subsystem) drive);
 	}
 
@@ -36,9 +53,13 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
+		//Process the PID output with deadband, minimum output, etc.
 		output = processPIDOutput(output);
 
+		//Log processed output.
 		SmartDashboard.putNumber("NavXDriveStraight PID output", output);
+
+		//Set throttle to the specified stick.
 		double throttle;
 		if (useLeft) {
 			throttle = oi.getLeftThrottle();
@@ -46,6 +67,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 			throttle = oi.getRightThrottle();
 		}
 
+		//Set the output to the throttle velocity adjusted by the PID output.
 		drive.setOutput(throttle - output, throttle + output);
 	}
 
@@ -59,11 +81,11 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	}
 
 	/**
-	 * Log the drive data.
+	 * Does nothing, the actual work is done in usePIDOutput.
 	 */
 	@Override
 	protected void execute() {
-
+		//nada.
 	}
 
 	/**

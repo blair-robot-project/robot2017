@@ -27,7 +27,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	/**
 	 * How long this command is allowed to run for (in milliseconds)
 	 */
-	protected long timeout;
+	private long timeout;
 
 	/**
 	 * The time this command was initiated
@@ -37,7 +37,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map      An turnPID map with PID values, an absolute tolerance, and minimum output.
+	 * @param map      A map with PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
 	 * @param drive    The drive subsystem to execute this command on. Must also be a NavX subsystem.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
@@ -59,7 +59,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param theta The angle to clip, in degrees.
 	 * @return The equivalent of that number, clipped to be between -180 and 180.
 	 */
-	public static double clipTo180(double theta) {
+	protected static double clipTo180(double theta) {
 		return (theta + 180) % 360 - 180;
 	}
 
@@ -74,6 +74,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 		SmartDashboard.putNumber("Preprocessed output", output);
 		SmartDashboard.putNumber("NavX Turn To Angle Setpoint", getSetpoint());
 
+		//Process the output with deadband, minimum output, etc.
 		output = processPIDOutput(output);
 
 		//More logging
@@ -95,7 +96,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	}
 
 	/**
-	 * Log data to a file and SmartDashboard.
+	 * Log data to SmartDashboard.
 	 */
 	@Override
 	protected void execute() {
@@ -110,7 +111,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 */
 	@Override
 	protected boolean isFinished() {
-		//The PIDController onTarget() is crap and sometimes never terminates because of floating point errors, so we have a timeout
+		//The PIDController onTarget() is crap and sometimes never terminates because of floating point errors, so we need a timeout
 		return this.getPIDController().onTarget() || Robot.currentTimeMillis() - startTime > timeout;
 	}
 

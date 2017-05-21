@@ -54,7 +54,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 			this.actuatedVictor = new MappedVictor(map.getActuatedVictor());
 		}
 		if (map.hasPiston()) {
-			this.piston = new MappedDoubleSolenoid( map.getPiston());
+			this.piston = new MappedDoubleSolenoid(map.getPiston());
 		}
 		fixedAgitateSpeed = map.getFixedAgitateSpeed();
 		fixedIntakeSpeed = map.getFixedIntakeSpeed();

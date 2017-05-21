@@ -16,6 +16,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.Toggle
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.ToggleShooting;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOff;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOffWithRequires;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
@@ -360,7 +361,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 		//Map climber commands
 		if (Robot.instance.climberSubsystem != null && climb != null) {
 			climb.whenPressed(new RunMotorWhileConditonMet(Robot.instance.climberSubsystem));
-			climb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
+			climb.whenReleased(new TurnMotorOffWithRequires(Robot.instance.climberSubsystem));
 		}
 
 		//Map camera commands

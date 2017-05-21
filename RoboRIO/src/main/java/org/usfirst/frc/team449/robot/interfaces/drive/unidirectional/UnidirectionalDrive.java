@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional;
 import org.usfirst.frc.team449.robot.interfaces.drive.DriveSubsystem;
 
 /**
- * Created by noah on 5/13/17.
+ * A drive with a left side and a right side. "Unidirectional" because it can only move forwards or backwards, not sideways.
  */
 public interface UnidirectionalDrive extends DriveSubsystem {
 

@@ -14,9 +14,21 @@ public interface NavxSubsystem {
 	 */
 	double getGyroOutput();
 
+	/**
+	 * Get whether this subsystem's NavX is currently being overriden.
+	 * @return true if the NavX is overriden, false otherwise.
+	 */
 	boolean getOverrideNavX();
 
+	/**
+	 * Set whether or not to override this subsystem's NavX.
+	 * @param override true to override, false otherwise.
+	 */
 	void setOverrideNavX(boolean override);
 
+	/**
+	 * Get the NavX this subsystem uses.
+	 * @return An AHRS object representing this subsystem's NavX.
+	 */
 	AHRS getNavX();
 }

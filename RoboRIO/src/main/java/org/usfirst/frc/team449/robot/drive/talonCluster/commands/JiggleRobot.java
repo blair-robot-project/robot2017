@@ -5,7 +5,7 @@ import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
- * Created by Noah Gleason on 4/6/2017.
+ * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 public class JiggleRobot extends CommandGroup {
 	/**

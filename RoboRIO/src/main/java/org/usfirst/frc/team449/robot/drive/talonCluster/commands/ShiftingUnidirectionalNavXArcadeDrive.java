@@ -21,6 +21,9 @@ public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArc
 		super(map, drive, oi);
 	}
 
+	/**
+	 * Autoshift, decide whether or not we should be in free drive or straight drive, and log data.
+	 */
 	@Override
 	public void execute() {
 		//Auto-shifting

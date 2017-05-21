@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.interfaces.drive;
 
 /**
- * Created by noah on 5/20/17.
+ * Any locomotion device for the robot.
  */
 public interface DriveSubsystem {
 	/**

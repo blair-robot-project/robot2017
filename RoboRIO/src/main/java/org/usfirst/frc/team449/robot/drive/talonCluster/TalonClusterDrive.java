@@ -192,14 +192,16 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			this.shifter = new MappedDoubleSolenoid(map.getShifter());
 		}
 
-		leftProfiles = new HashMap<>();
-		rightProfiles = new HashMap<>();
-
 		//Add the masters to the list of Talons to use for MP
 		MPTalons = new ArrayList<>();
 		MPTalons.add(leftMaster.canTalon);
 		MPTalons.add(rightMaster.canTalon);
 
+		//Instantiate the profile maps.
+		leftProfiles = new HashMap<>();
+		rightProfiles = new HashMap<>();
+
+		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
 		for (MotionProfileMap.MotionProfile profile : map.getLeftMotionProfileList()) {
 			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
 		}
@@ -208,6 +210,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
 		}
 
+		//Set up the MPNotifier to run an MPUpdaterProcess containing the left and right master talons.
 		MPUpdaterProcess updater = new MPUpdaterProcess();
 		updater.addTalon(rightMaster.canTalon);
 		updater.addTalon(leftMaster.canTalon);
@@ -224,10 +227,20 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		return Math.min(Math.max(in, -1), 1);
 	}
 
+	/**
+	 * A getter for whether we're currently overriding autoshifting.
+	 * @return true if overriding, false otherwise.
+	 */
+	@Override
 	public boolean getOverrideAutoshift() {
 		return overrideAutoshift;
 	}
 
+	/**
+	 * A setter for overriding the autoshifting.
+	 * @param override Whether or not to override autoshifting.
+	 */
+	@Override
 	public void setOverrideAutoshift(boolean override) {
 		this.overrideAutoshift = override;
 	}
@@ -269,6 +282,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * @param left  The output for the left side of the drive, from [-1, 1]
 	 * @param right the output for the right side of the drive, from [-1, 1]
 	 */
+	@Override
 	public void setOutput(double left, double right) {
 		//Clip to one to avoid anything strange.
 		setPIDThrottle(clipToOne(left), clipToOne(right));
@@ -293,14 +307,17 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * Stuff run on first enable
-	 * Reset startTime, turn on navX control, and start UnidirectionalNavXArcadeDrive
+	 * Stuff run on first enable.
 	 */
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing, the default command gets set with setDefaultCommandManual
 	}
 
+	/**
+	 * Set the default command. Done here instead of in initDefaultCommand so we don't have a defaultCommand during auto.
+	 * @param defaultCommand The command to have run by default. Must require this subsystem.
+	 */
 	public void setDefaultCommandManual(Command defaultCommand) {
 		setDefaultCommand(defaultCommand);
 	}
@@ -310,22 +327,25 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 *
 	 * @return robot heading (degrees) [-180, 180]
 	 */
+	@Override
 	public double getGyroOutput() {
 		return navx.pidGet();
 	}
 
 	/**
-	 * @return whether the robot is in low gear
+	 * @return The gear this subsystem is currently in.
 	 */
+	@Override
 	public gear getGear() {
 		return currentGear;
 	}
 
 	/**
-	 * Shift as appropriate
+	 * Shift to a specific gear.
 	 *
 	 * @param gear Which gear to shift to.
 	 */
+	@Override
 	public void setGear(gear gear) {
 		//If we have a shifter on the robot
 		if (shifter != null) {
@@ -336,6 +356,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 				//Switch the PID constants
 				rightMaster.switchToLowGear();
 				leftMaster.switchToLowGear();
+				//Record the current time
 				timeLastDownshifted = Robot.currentTimeMillis();
 			} else {
 				//Physically shift gears
@@ -343,6 +364,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 				//Switch the PID constants
 				rightMaster.switchToHighGear();
 				leftMaster.switchToHighGear();
+				//Record the current time.
 				timeLastUpshifted = Robot.currentTimeMillis();
 			}
 			//Set logging var
@@ -370,6 +392,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		//And we don't want to shift if autoshifting is turned off.
 		okToShift = okToShift && !overrideAutoshift;
 
+		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
+		// This avoids brief blips causing shifting.
 		return downshiftBufferTimer.get(okToShift);
 	}
 
@@ -388,12 +412,15 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		//And we don't want to shift if autoshifting is turned off.
 		okToShift = okToShift && !overrideAutoshift;
 
+		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
+		// This avoids brief blips causing shifting.
 		return upshiftBufferTimer.get(okToShift);
 	}
 
 	/**
-	 * Shift if necessary
+	 * Check if we should autoshift, then, if so, shift.
 	 */
+	@Override
 	public void autoshift() {
 		if (shouldUpshift()) {
 			//Upshift if we should
@@ -404,20 +431,37 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		}
 	}
 
+	/**
+	 * Get whether this subsystem's NavX is currently being overriden.
+	 * @return true if the NavX is overriden, false otherwise.
+	 */
+	@Override
 	public boolean getOverrideNavX() {
 		return overrideNavX;
 	}
 
+	/**
+	 * Set whether or not to override this subsystem's NavX.
+	 * @param override true to override, false otherwise.
+	 */
 	@Override
 	public void setOverrideNavX(boolean override) {
 		overrideNavX = override;
 	}
 
+	/**
+	 * Get the NavX this subsystem uses.
+	 * @return An AHRS object representing this subsystem's NavX.
+	 */
 	@Override
 	public AHRS getNavX() {
 		return navx;
 	}
 
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 */
 	@Override
 	public String getHeader() {
 		return "left_vel," +
@@ -430,6 +474,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 				"right_voltage";
 	}
 
+	/**
+	 * Get the data this subsystem logs every loop.
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
 	@Override
 	public Object[] getData() {
 		return new Object[]{leftMaster.getSpeed(),
@@ -442,6 +490,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 				rightMaster.canTalon.getOutputVoltage()};
 	}
 
+	/**
+	 * Get the name of this object.
+	 * @return A string that will identify this object in the log file.
+	 */
 	@Override
 	public String getName() {
 		return "Drive";
@@ -454,9 +506,12 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void loadMotionProfile(String name) {
+		//Stop loading points from the API-level buffer into the low-level one.
 		MPNotifier.stop();
+		//Fill the API-level buffer with the points from the named profile.
 		MPLoader.loadTopLevel(leftProfiles.get(name), leftMaster);
 		MPLoader.loadTopLevel(rightProfiles.get(name), rightMaster);
+		//Resume loading points from the API-level buffer into the low-level one.
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
 
