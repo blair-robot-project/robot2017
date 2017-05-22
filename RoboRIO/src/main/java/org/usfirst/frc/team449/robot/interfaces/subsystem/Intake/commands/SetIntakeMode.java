@@ -5,22 +5,29 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Sets the mode of the intake.
  */
 public class SetIntakeMode extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private IntakeSubsystem subsystem;
 
-	private IntakeSubsystem.IntakeMode speed;
+	/**
+	 * The mode to set this subsystem to.
+	 */
+	private IntakeSubsystem.IntakeMode mode;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
+	 * @param mode The mode to set the intake to.
 	 */
-	public SetIntakeMode(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode speed) {
+	public SetIntakeMode(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode mode) {
 		this.subsystem = subsystem;
-		this.speed = speed;
+		this.mode = mode;
 	}
 
 	/**
@@ -32,11 +39,11 @@ public class SetIntakeMode extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Set the intake to the given mode.
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setMode(speed);
+		subsystem.setMode(mode);
 	}
 
 	/**

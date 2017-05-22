@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Intake;
 
 /**
- * Created by noah on 5/20/17.
+ * A subsystem used for intaking and possibly ejecting game pieces.
  */
 public interface IntakeSubsystem {
 	/**

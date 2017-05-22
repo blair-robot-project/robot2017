@@ -5,18 +5,25 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A wrapper command that switches to high gear.
+ * Switches to a specified gear.
  */
 public class SwitchToGear extends Command {
 
+	/**
+	 * The drive to execute this command on.
+	 */
 	private ShiftingDrive subsystem;
 
+	/**
+	 * The gear to switch to.
+	 */
 	private ShiftingDrive.gear switchTo;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The subsystem to execute this command on
+	 * @param subsystem The drive to execute this command on
+	 * @param switchTo The gear to switch to.
 	 */
 	public SwitchToGear(ShiftingDrive subsystem, ShiftingDrive.gear switchTo) {
 		this.subsystem = subsystem;
@@ -32,7 +39,7 @@ public class SwitchToGear extends Command {
 	}
 
 	/**
-	 * Switch to high gear
+	 * Switch to the specified gear
 	 */
 	@Override
 	protected void execute() {

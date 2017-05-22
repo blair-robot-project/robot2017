@@ -9,6 +9,9 @@ import org.usfirst.frc.team449.robot.util.Logger;
  */
 public class ToggleOverrideAutoShift extends Command {
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private ShiftingDrive subsystem;
 
 	/**
@@ -29,7 +32,7 @@ public class ToggleOverrideAutoShift extends Command {
 	}
 
 	/**
-	 * Override autoshifting.
+	 * Toggle overriding autoshifting.
 	 */
 	@Override
 	protected void execute() {

@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Very simple arcade drive control.
+ * Very simple unidirectional drive control.
  */
 public class SimpleUnidirectionalDrive extends Command {
 
@@ -16,6 +16,9 @@ public class SimpleUnidirectionalDrive extends Command {
 	 */
 	public UnidirectionalOI oi;
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private UnidirectionalDrive subsystem;
 
 	/**
@@ -25,10 +28,10 @@ public class SimpleUnidirectionalDrive extends Command {
 	 * @param oi    The OI that gives the input to this command.
 	 */
 	public SimpleUnidirectionalDrive(UnidirectionalDrive drive, UnidirectionalOI oi) {
-		requires((Subsystem) drive);
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.
+		requires((Subsystem) drive);
 	}
 
 	/**
@@ -44,7 +47,6 @@ public class SimpleUnidirectionalDrive extends Command {
 	 */
 	@Override
 	protected void execute() {
-		//Calculate the right and left outputs from the fwd and rot inputs.
 		subsystem.setOutput(oi.getLeftOutput(), oi.getRightOutput());
 	}
 

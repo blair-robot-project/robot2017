@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A wrapper command that switches to high gear.
+ * A command that switches to high gear.
  */
 public class SwitchToHighGear extends Command {
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private ShiftingDrive subsystem;
 
 	/**

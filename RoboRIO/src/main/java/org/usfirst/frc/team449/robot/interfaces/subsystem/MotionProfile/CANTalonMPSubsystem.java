@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import java.util.List;
 
 /**
- * Created by noah on 5/20/17.
+ * A subsystem using CANTalonSRXs that can have motion profiles run on it.
  */
 public interface CANTalonMPSubsystem {
 	/**

@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMoto
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Turns on the motor of the specified subsystem.
  */
 public class TurnMotorOn extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private BinaryMotorSubsystem subsystem;
 
 	/**
@@ -29,7 +32,7 @@ public class TurnMotorOn extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Turn the motor on.
 	 */
 	@Override
 	protected void execute() {

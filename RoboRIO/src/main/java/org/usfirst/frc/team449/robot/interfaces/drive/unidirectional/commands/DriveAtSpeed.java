@@ -25,6 +25,9 @@ public class DriveAtSpeed extends Command {
 	 */
 	private long startTime;
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private UnidirectionalDrive subsystem;
 
 	/**
@@ -70,7 +73,6 @@ public class DriveAtSpeed extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		//Time-based exit
 		return (Robot.currentTimeMillis() - startTime) * 1e-3 > seconds;
 	}
 
@@ -79,7 +81,7 @@ public class DriveAtSpeed extends Command {
 	 */
 	@Override
 	protected void end() {
-		//Brake on exit.
+		//Brake on exit. Yes this should be setOutput because often we'll be testing how well the PID loop handles a full stop.
 		subsystem.setOutput(0, 0);
 		Logger.addEvent("DriveAtSpeed end.", this.getClass());
 	}

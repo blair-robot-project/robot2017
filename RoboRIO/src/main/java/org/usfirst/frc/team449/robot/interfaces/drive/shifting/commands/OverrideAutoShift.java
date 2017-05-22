@@ -14,6 +14,9 @@ public class OverrideAutoShift extends Command {
 	 */
 	private boolean override;
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private ShiftingDrive subsystem;
 
 	/**

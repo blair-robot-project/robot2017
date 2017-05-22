@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
- * Drive back and forth to tune PID
+ * Drive back and forth to tune PID.
  */
 public class PIDBackAndForth extends CommandGroup {
 	/**
@@ -15,7 +15,9 @@ public class PIDBackAndForth extends CommandGroup {
 	public PIDBackAndForth(UnidirectionalDrive subsystem) {
 		double time = 1.5;
 
-		addSequential(new DriveAtSpeed(subsystem, 0.7, 1), time);
-		addSequential(new DriveAtSpeed(subsystem, -0.7, 1), time);
+		//Drive forwards
+		addSequential(new DriveAtSpeed(subsystem, 0.7, time));
+		//Drive backwards
+		addSequential(new DriveAtSpeed(subsystem, -0.7, time));
 	}
 }

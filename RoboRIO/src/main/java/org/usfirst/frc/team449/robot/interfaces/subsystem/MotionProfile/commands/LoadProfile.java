@@ -6,18 +6,25 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Loads the given profile into the subsystem's Talons, but doesn't run it.
  */
 public class LoadProfile extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private CANTalonMPSubsystem subsystem;
 
+	/**
+	 * The profile to execute.
+	 */
 	private MotionProfileData profile;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
+	 * @param profile The profile to run.
 	 */
 	public LoadProfile(CANTalonMPSubsystem subsystem, MotionProfileData profile) {
 		this.subsystem = subsystem;
@@ -33,7 +40,7 @@ public class LoadProfile extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Load the profile.
 	 */
 	@Override
 	protected void execute() {

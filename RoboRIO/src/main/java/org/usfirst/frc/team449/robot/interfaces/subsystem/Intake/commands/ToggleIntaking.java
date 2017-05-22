@@ -5,22 +5,29 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Toggles whether the subsystem is off or set to a given mode.
  */
 public class ToggleIntaking extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private IntakeSubsystem subsystem;
 
-	private IntakeSubsystem.IntakeMode speed;
+	/**
+	 * The mode to set this subsystem to if it's currently off.
+	 */
+	private IntakeSubsystem.IntakeMode mode;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
+	 * @param mode The mode to set this subsystem to if it's currently off.
 	 */
-	public ToggleIntaking(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode speed) {
+	public ToggleIntaking(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode mode) {
 		this.subsystem = subsystem;
-		this.speed = speed;
+		this.mode = mode;
 	}
 
 	/**
@@ -32,12 +39,12 @@ public class ToggleIntaking extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Set the subsystem to the specified mode if it's off, and set it to off otherwise.
 	 */
 	@Override
 	protected void execute() {
 		if (subsystem.getMode() == IntakeSubsystem.IntakeMode.OFF) {
-			subsystem.setMode(speed);
+			subsystem.setMode(mode);
 		} else {
 			subsystem.setMode(IntakeSubsystem.IntakeMode.OFF);
 		}

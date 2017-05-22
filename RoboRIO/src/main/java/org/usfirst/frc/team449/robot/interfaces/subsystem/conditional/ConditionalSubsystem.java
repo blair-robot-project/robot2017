@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.conditional;
 
 /**
- * Created by noah on 5/20/17.
+ * A subsystem with a condition that's sometimes met, e.g. a limit switch, a current/power limit, an IR sensor.
  */
 public interface ConditionalSubsystem {
 

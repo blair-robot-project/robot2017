@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMoto
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * A command that toggles the state of the motor between off and on.
  */
 public class ToggleMotor extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private BinaryMotorSubsystem subsystem;
 
 	/**
@@ -29,7 +32,7 @@ public class ToggleMotor extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Toggle the motor state.
 	 */
 	@Override
 	protected void execute() {

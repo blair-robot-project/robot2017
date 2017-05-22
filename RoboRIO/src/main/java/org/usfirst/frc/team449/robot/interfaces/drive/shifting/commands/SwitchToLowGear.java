@@ -5,16 +5,19 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A wrapper command that switches to low gear.
+ * A command that switches to low gear.
  */
 public class SwitchToLowGear extends Command {
 
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
 	private ShiftingDrive subsystem;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The subsystem to execute this command on
+	 * @param subsystem The drive subsystem to execute this command on
 	 */
 	public SwitchToLowGear(ShiftingDrive subsystem) {
 		this.subsystem = subsystem;

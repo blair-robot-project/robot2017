@@ -6,10 +6,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMoto
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently controlling the subsystem.
  */
 public class TurnMotorOffWithRequires extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private BinaryMotorSubsystem subsystem;
 
 	/**
@@ -31,7 +34,7 @@ public class TurnMotorOffWithRequires extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Turn the motor off.
 	 */
 	@Override
 	protected void execute() {
