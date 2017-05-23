@@ -123,9 +123,13 @@ public class RunLoadedProfile extends Command {
 			}
 		}
 
+		//If the bottom just became loaded this cycle and we're ready to start moving
 		if (bottomNowLoaded && !bottomLoaded) {
+			//Flip the flag
 			bottomLoaded = true;
+			//Log
 			Logger.addEvent("Enabling the talons!", this.getClass());
+			//Enable the talons
 			for (CANTalon talon : talons) {
 				talon.enable();
 				talon.set(CANTalon.SetValueMotionProfile.Enable.value);
@@ -133,26 +137,42 @@ public class RunLoadedProfile extends Command {
 		}
 	}
 
+	/**
+	 * Whether or not this command is finished.
+	 * @return true if the motion profile is finished or the time limit has been exceeded.
+	 */
 	@Override
 	protected boolean isFinished() {
-		return finished || (Robot.currentTimeMillis() - startTime > timeout);
+		return finished || (Robot.currentTimeMillis() - startTime >= timeout);
 	}
 
+	/**
+	 * Log and hold position upon exit.
+	 */
 	@Override
 	protected void end() {
+		//Have the talons hold their position and use PID to resist any force applied.
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		}
+		//Set the finish flag to true.
 		finishFlag.set(true);
+		//Log
 		Logger.addEvent("RunLoadedProfile end.", this.getClass());
 	}
 
+	/**
+	 * Log and disable if interrupted.
+	 */
 	@Override
 	protected void interrupted() {
+		//Disable the talons
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
+		//Still set the finish flag to true if interrupted.
 		finishFlag.set(true);
+		//Log
 		Logger.addEvent("RunLoadedProfile interrupted!", this.getClass());
 	}
 }

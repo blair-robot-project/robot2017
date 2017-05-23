@@ -9,7 +9,14 @@ import org.usfirst.frc.team449.robot.util.WaitForMillis;
  */
 public class SpinUpThenShoot extends CommandGroup {
 
+	private ShooterSubsystem subsystem;
+
 	public SpinUpThenShoot(ShooterSubsystem subsystem) {
+		this.subsystem = subsystem;
+	}
+
+	@Override
+	public void initialize(){
 		addSequential(new SpinUpShooter(subsystem));
 		addSequential(new WaitForMillis(subsystem.getSpinUpTimeMillis()));
 		addSequential(new TurnAllOn(subsystem));
