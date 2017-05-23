@@ -17,8 +17,14 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 */
 	private RotPerSecCANTalonSRX shooterTalon;
 
+	/**
+	 * The feeder's Victor
+	 */
 	private VictorSP feederVictor;
 
+	/**
+	 * How fast to run the feeder, from [-1, 1]
+	 */
 	private double feederThrottle;
 
 	/**
@@ -31,6 +37,9 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 */
 	private double shooterThrottle;
 
+	/**
+	 * How long it takes the shooter to get up to speed, in milliseconds.
+	 */
 	private long spinUpTime;
 
 	/**
@@ -73,24 +82,32 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	/**
 	 * A wrapper around the speed method we're currently using/testing
 	 *
-	 * @param sp The speed to go at [-1, 1]
+	 * @param sp The velocity to go at [-1, 1]
 	 */
 	private void setFlywheelDefaultSpeed(double sp) {
 		setFlywheelPIDSpeed(sp);
 	}
 
+	/**
+	 * Set the speed of the feeder motor.
+	 * @param sp The velocity to go at from [-1, 1]
+	 */
 	private void setFeederSpeed(double sp) {
 		feederVictor.set(sp);
 	}
 
 	/**
-	 * Init the log file on enabling
+	 * Do nothing
 	 */
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing!
 	}
 
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 */
 	@Override
 	public String getHeader() {
 		return "speed," +
@@ -100,6 +117,10 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 				"current";
 	}
 
+	/**
+	 * Get the data this subsystem logs every loop.
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
 	@Override
 	public Object[] getData() {
 		return new Object[]{shooterTalon.getSpeed(),
@@ -109,6 +130,10 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 				shooterTalon.canTalon.getOutputCurrent()};
 	}
 
+	/**
+	 * Get the name of this object.
+	 * @return A string that will identify this object in the log file.
+	 */
 	@Override
 	public String getName() {
 		return "shooter";

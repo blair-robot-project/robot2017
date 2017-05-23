@@ -12,7 +12,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	/**
 	 * Whether piston is currently contracted
 	 */
-	public boolean contracted;
+	private boolean contracted;
 
 	/**
 	 * Piston for pushing gears
@@ -31,15 +31,18 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	}
 
 	/**
-	 * Fire the piston
-	 *
-	 * @param value direction to fire
+	 * Set the solenoid to a certain position.
+	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
 	public void setSolenoid(DoubleSolenoid.Value value) {
 		piston.set(value);
 		contracted = (value == DoubleSolenoid.Value.kReverse);
 	}
 
+	/**
+	 * Get the position of the solenoid.
+	 * @return Forward if extended, Reverse if contracted.
+	 */
 	@Override
 	public DoubleSolenoid.Value getSolenoidPosition() {
 		return contracted ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;

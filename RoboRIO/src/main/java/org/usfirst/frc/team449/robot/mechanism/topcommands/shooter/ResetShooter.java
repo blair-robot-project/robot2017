@@ -18,7 +18,7 @@ public class ResetShooter extends CommandGroup {
 	/**
 	 * Constructs a ResetShooter command group
 	 *
-	 * @param shooterSubsystem    shooter subsystem
+	 * @param shooterSubsystem shooter subsystem
 	 * @param intakeSubsystem intake subsystem. Must also be a {@link SolenoidSubsystem}.
 	 */
 	public ResetShooter(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {

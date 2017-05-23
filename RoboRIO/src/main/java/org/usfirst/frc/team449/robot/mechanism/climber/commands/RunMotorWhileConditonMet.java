@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.Conditiona
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Climb the rope and stop when the power limit is exceeded.
+ * Run a BinaryMotor while a condition is true.
  */
 public class RunMotorWhileConditonMet extends Command {
 
@@ -19,7 +19,7 @@ public class RunMotorWhileConditonMet extends Command {
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The BinaryMotor and Conditional subsystem to execute this command on
+	 * @param subsystem The BinaryMotor subsystem to execute this command on. Must also be a {@link ConditionalSubsystem}.
 	 */
 	public RunMotorWhileConditonMet(BinaryMotorSubsystem subsystem) {
 		requires((Subsystem) subsystem);
@@ -46,7 +46,7 @@ public class RunMotorWhileConditonMet extends Command {
 	/**
 	 * Stop when the condition is met.
 	 *
-	 * @return true when the condition is met, false otherwise.
+	 * @return true if the condition is met, false otherwise.
 	 */
 	@Override
 	protected boolean isFinished() {
@@ -68,7 +68,7 @@ public class RunMotorWhileConditonMet extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		//Stop the motor if we're for some reason interrupted.
+		//Stop the motor if this command is interrupted.
 		subsystem.turnMotorOff();
 		Logger.addEvent("RunMotorWhileConditonMet interrupted, stopping climb.", this.getClass());
 	}

@@ -10,25 +10,32 @@ import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
 
 /**
- * The climber, with power monitoring to stop.
+ * A climber subsystem that uses power monitoring to stop climbing.
  */
 public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
-	 * The CANTalon controlling the climber.
+	 * The CANTalon controlling one of the climber motors.
 	 */
-	public RotPerSecCANTalonSRX canTalonSRX;
+	private RotPerSecCANTalonSRX canTalonSRX;
+
+	/**
+	 * The Victor controlling the other climber motor.
+	 */
+	private VictorSP victor;
 
 	/**
 	 * The maximum allowable power before we stop the motor.
 	 */
 	private double max_power;
 
-	private VictorSP victor;
-
+	/**
+	 * The bufferTimer controlling how long we can be above the current limit before we stop climbing.
+	 */
 	private BufferTimer currentLimitTimer;
 
-	private long spinupTime;
-
+	/**
+	 * Whether or not the motor is currently spinning.
+	 */
 	private boolean motorSpinning;
 
 	/**
@@ -42,16 +49,13 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 		this.map = map;
 		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
 		this.max_power = map.getMaxPower();
+		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
+		motorSpinning = false;
+
+		//Victor is optional
 		if (map.hasVictor()) {
 			this.victor = new MappedVictor(map.getVictor());
 		}
-		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
-		spinupTime = (long) (map.getSpinupTime() * 1000.);
-		motorSpinning = false;
-	}
-
-	public long getSpinupTime() {
-		return spinupTime;
 	}
 
 	/**
@@ -77,6 +81,10 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 		}
 	}
 
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 */
 	@Override
 	public String getHeader() {
 		return "current," +
@@ -84,6 +92,10 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 				"power";
 	}
 
+	/**
+	 * Get the data this subsystem logs every loop.
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
 	@Override
 	public Object[] getData() {
 		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),
@@ -91,6 +103,10 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 				canTalonSRX.getPower()};
 	}
 
+	/**
+	 * Get the name of this object.
+	 * @return A string that will identify this object in the log file.
+	 */
 	@Override
 	public String getName() {
 		return "climber";

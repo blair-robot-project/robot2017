@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsy
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * The subsystem that picks up balls from the ground.
+ * A subsystem that picks up balls from the ground.
  */
 public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
@@ -19,12 +19,12 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	private boolean intakeUp;
 
 	/**
-	 * VictorSP for the static intake
+	 * VictorSP for the fixed intake
 	 */
 	private VictorSP fixedVictor;
 
 	/**
-	 * VictorSP for the dynamic intake
+	 * VictorSP for the actuated intake
 	 */
 	private VictorSP actuatedVictor;
 
@@ -33,12 +33,24 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	 */
 	private DoubleSolenoid piston;
 
+	/**
+	 * How fast the fixed victor should go to pick up balls, on [-1, 1]
+	 */
 	private double fixedIntakeSpeed;
 
+	/**
+	 * How fast the fixed victor should go to agitate balls while they're being fed into the shooter, on [-1, 1]
+	 */
 	private double fixedAgitateSpeed;
 
+	/**
+	 * How fast the actuated victor should go to pick up balls, on [-1, 1]
+	 */
 	private double actuatedSpeed;
 
+	/**
+	 * The mode the intake's currently in.
+	 */
 	private IntakeMode mode;
 
 	/**
@@ -48,18 +60,21 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	 */
 	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
 		super(map.getMechanism());
+		//Instantiate stuff.
 		this.map = map;
-		this.fixedVictor = new MappedVictor(map.getFixedVictor());
-		if (map.hasActuatedVictor()) {
-			this.actuatedVictor = new MappedVictor(map.getActuatedVictor());
-		}
-		if (map.hasPiston()) {
-			this.piston = new MappedDoubleSolenoid(map.getPiston());
-		}
+		fixedVictor = new MappedVictor(map.getFixedVictor());
 		fixedAgitateSpeed = map.getFixedAgitateSpeed();
 		fixedIntakeSpeed = map.getFixedIntakeSpeed();
 		actuatedSpeed = map.getActuatedSpeed();
 		mode = IntakeMode.OFF;
+
+		//Instantiate optional stuff
+		if (map.hasActuatedVictor()) {
+			actuatedVictor = new MappedVictor(map.getActuatedVictor());
+		}
+		if (map.hasPiston()) {
+			piston = new MappedDoubleSolenoid(map.getPiston());
+		}
 	}
 
 	/**
@@ -83,9 +98,8 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	}
 
 	/**
-	 * Fire the piston
-	 *
-	 * @param value direction to fire
+	 * Set the solenoid to a certain position.
+	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
 	public void setSolenoid(DoubleSolenoid.Value value) {
 		if (piston != null) {
@@ -94,6 +108,10 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 		}
 	}
 
+	/**
+	 * Get the position of the solenoid.
+	 * @return Forward if extended, Reverse if contracted.
+	 */
 	public DoubleSolenoid.Value getSolenoidPosition() {
 		return intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
@@ -133,10 +151,12 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 				setFixedVictor(0);
 				break;
 			case IN_FAST:
+				//In fast is used for picking up balls.
 				setFixedVictor(fixedIntakeSpeed);
 				setActuatedVictor(actuatedSpeed);
 				break;
 			case IN_SLOW:
+				//In slow is used for agitation.
 				setActuatedVictor(0);
 				setFixedVictor(fixedAgitateSpeed);
 				break;

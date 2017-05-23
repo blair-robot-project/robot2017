@@ -18,7 +18,7 @@ public class LoadShooter extends CommandGroup {
 	/**
 	 * Constructs a LoadShooter command group
 	 *
-	 * @param shooterSubsystem    shooter subsystem
+	 * @param shooterSubsystem shooter subsystem
 	 * @param intakeSubsystem intake subsystem. Must also be a {@link SolenoidSubsystem}.
 	 */
 	public LoadShooter(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
