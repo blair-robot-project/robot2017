@@ -19,6 +19,11 @@ public class MappedJoystickButton extends JoystickButton {
 		super(new Joystick(map.getPort()), map.getButtonIndex());
 	}
 
+	/**
+	 * Static factory method used to construct a Button from a map.
+	 * @param map A map containing constants for a Trigger, dPad, or MappedJoystick button.
+	 * @return A Button constructed from that map.
+	 */
 	public static Button constructButton(JoystickButtonMap.JoystickButton map) {
 		if (map.hasTriggerAt()) {
 			return new TriggerButton(map);
