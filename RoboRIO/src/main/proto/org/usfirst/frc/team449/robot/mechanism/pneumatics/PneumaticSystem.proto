@@ -6,5 +6,5 @@ option java_outer_classname = "PneumaticSystemMap";
 
 message PneumaticSystem {
 	required int32 node_ID = 1;
-	required AnalogPressureSensor pressureSensor = 2;
+	optional AnalogPressureSensor pressure_sensor = 2;
 }

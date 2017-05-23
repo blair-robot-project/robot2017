@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot;
 
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
@@ -16,20 +15,16 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.util.Loggable;
@@ -92,8 +87,6 @@ public class Robot extends IterativeRobot {
 	public CameraSubsystem cameraSubsystem;
 
 	public ActiveGearSubsystem gearSubsystem;
-
-	private BooleanWrapper commandFinished;
 
 	/**
 	 * The object constructed directly from map.cfg.
@@ -177,15 +170,6 @@ public class Robot extends IterativeRobot {
 			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
 			loggables.add(pneumaticsSubsystem);
 			Logger.addEvent("Constructed PneumaticsSubsystem", this.getClass());
-		}
-
-		//Activate the compressor if its module number is in the map.
-		if (cfg.hasModule()) {
-			Logger.addEvent("Setting up a compressor at module number " + cfg.getModule(), this.getClass());
-			Compressor compressor = new Compressor(cfg.getModule());
-			compressor.setClosedLoopControl(true);
-			compressor.start();
-			Logger.addEvent("Compressor enabled: " + compressor.enabled(), this.getClass());
 		}
 
 		//Construct intake if it's in the map.
@@ -275,7 +259,6 @@ public class Robot extends IterativeRobot {
 						break;
 				}
 			}
-			commandFinished = new BooleanWrapper(false);
 		}
 		logger.run();
 	}
@@ -298,6 +281,10 @@ public class Robot extends IterativeRobot {
 
 		//Switch to starting gear
 		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
+
+		if (pneumaticsSubsystem != null){
+			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
+		}
 
 		if (intakeSubsystem != null) {
 			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
@@ -327,6 +314,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
 		currentTimeMillis = System.currentTimeMillis();
+		driveSubsystem.fullStop();
 		sendModeOverI2C(robotInfo, "auto");
 
 		//Switch to starting gear
@@ -336,9 +324,9 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
 		}
 
-		commandFinished.set(false);
-
-		driveSubsystem.fullStop();
+		if (pneumaticsSubsystem != null){
+			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
+		}
 
 		if (cfg.getDoMP()) {
 			autonomousCommand.start();
