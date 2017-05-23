@@ -30,6 +30,9 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 */
 	protected double deadband;
 
+	/**
+	 * Whether or not the loop is inverted.
+	 */
 	protected boolean inverted;
 
 	/**
@@ -41,6 +44,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
 		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
+		this.subsystem = subsystem;
 
 		//Navx reads from -180 to 180.
 		setInputRange(-180, 180);
@@ -48,6 +52,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		//It's a circle, so it's continuous
 		this.getPIDController().setContinuous(true);
 
+		//Set the absolute tolerance to be considered on target within.
 		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
 
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
@@ -55,6 +60,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 
 		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
+		//TODO test and implement that Talon nominalOutputVoltage and then get rid of this.
 		minimumOutput = map.getMinimumOutput();
 		minimumOutputEnabled = map.getMinimumOutputEnabled();
 
@@ -68,14 +74,19 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		if (map.getDeadbandEnabled()) {
 			deadband = map.getDeadband();
 		} else {
+			//Deadband of zero is equivalent to no deadband at all.
 			deadband = 0;
 		}
 
+		//Set whether or not to invert the loop.
 		inverted = map.getInverted();
-
-		this.subsystem = subsystem;
 	}
 
+	/**
+	 * Process the output of the PID loop to account for minimum output, deadband, and inversion.
+	 * @param output The output from the WPILib angular PID loop.
+	 * @return The processed output, ready to be subtracted from the left side of the drive output and added to the right side.
+	 */
 	protected double processPIDOutput(double output) {
 		//If we're using minimumOutput..
 		if (minimumOutputEnabled) {

@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
- * Loads and runs the given profile onto the given subsystem.
+ * Loads and runs the given profile into the given subsystem.
  */
 public class RunProfile extends CommandGroup {
 
@@ -45,7 +45,7 @@ public class RunProfile extends CommandGroup {
 	}
 
 	/**
-	 * Add the commands to load and run the profile.
+	 * Schedule the commands to load and run the profile.
 	 */
 	@Override
 	public void initialize() {

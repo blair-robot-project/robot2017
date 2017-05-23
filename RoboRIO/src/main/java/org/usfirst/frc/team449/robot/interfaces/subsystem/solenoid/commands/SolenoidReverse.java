@@ -10,6 +10,9 @@ import org.usfirst.frc.team449.robot.util.Logger;
  */
 public class SolenoidReverse extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private SolenoidSubsystem subsystem;
 
 	/**
@@ -30,7 +33,7 @@ public class SolenoidReverse extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Retract the piston.
 	 */
 	@Override
 	protected void execute() {

@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsyst
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Turn on the shooter but not the feeder in order to give the shooter time to get up to speed.
  */
 public class SpinUpShooter extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private ShooterSubsystem subsystem;
 
 	/**
@@ -29,7 +32,7 @@ public class SpinUpShooter extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Turn the feeder off and the shooter on.
 	 */
 	@Override
 	protected void execute() {

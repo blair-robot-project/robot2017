@@ -7,18 +7,26 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Loads the given profiles into the subsystem's Talons, but doesn't run it.
  */
 public class LoadProfileTwoSides extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private TwoSideMPSubsystem subsystem;
 
+	/**
+	 * The motion profiles for the left and right sides to execute, respectively.
+	 */
 	private MotionProfileData left, right;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
+	 * @param left The profile for the left side to run.
+	 * @param right The profile for the right side to run.
 	 */
 	public LoadProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right) {
 		this.subsystem = subsystem;
@@ -35,7 +43,7 @@ public class LoadProfileTwoSides extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Load the profiles.
 	 */
 	@Override
 	protected void execute() {

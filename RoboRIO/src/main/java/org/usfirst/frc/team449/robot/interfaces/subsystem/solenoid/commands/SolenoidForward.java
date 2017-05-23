@@ -10,6 +10,9 @@ import org.usfirst.frc.team449.robot.util.Logger;
  */
 public class SolenoidForward extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private SolenoidSubsystem subsystem;
 
 	/**
@@ -30,7 +33,7 @@ public class SolenoidForward extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Extend the piston.
 	 */
 	@Override
 	protected void execute() {

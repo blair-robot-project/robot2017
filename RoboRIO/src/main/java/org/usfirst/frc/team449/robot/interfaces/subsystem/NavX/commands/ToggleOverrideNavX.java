@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Toggle whether or not to use the NavX to drive straight.
+ * Toggle whether or not to override the NavX.
  */
 public class ToggleOverrideNavX extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private NavxSubsystem subsystem;
 
 	/**

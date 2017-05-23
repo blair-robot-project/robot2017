@@ -5,10 +5,13 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsyst
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * Turn off the shooter and feeder.
  */
 public class TurnAllOff extends Command {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private ShooterSubsystem subsystem;
 
 	/**
@@ -29,7 +32,7 @@ public class TurnAllOff extends Command {
 	}
 
 	/**
-	 * Do the state change.
+	 * Turn off the shooter and feeder.
 	 */
 	@Override
 	protected void execute() {

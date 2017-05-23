@@ -5,18 +5,25 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Set whether or not to use the NavX to drive straight.
+ * Set whether or not to override the NavX.
  */
 public class OverrideNavX extends Command {
 
+	/**
+	 * Whether or not to override the NavX.
+	 */
 	private boolean override;
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	private NavxSubsystem subsystem;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param subsystem The subsystem to execute this command on
+	 * @param override Whether or not to override the NavX.
 	 */
 	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
 		this.override = override;

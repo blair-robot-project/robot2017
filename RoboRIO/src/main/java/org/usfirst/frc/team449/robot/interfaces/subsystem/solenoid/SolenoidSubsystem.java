@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
- * Created by noah on 5/13/17.
+ * A subsystem with a single DoubleSolenoid piston.
  */
 public interface SolenoidSubsystem {
 	/**
