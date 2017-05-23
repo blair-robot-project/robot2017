@@ -3,9 +3,7 @@ package org.usfirst.frc.team449.robot.mechanism.topcommands.shooter;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
@@ -15,30 +13,19 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
  * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
 public class RackShooter extends CommandGroup {
-
-	private ShooterSubsystem shooterSubsystem;
-
-	private IntakeSubsystem intakeSubsystem;
-
 	/**
 	 * Constructs a RackShooter command group
 	 *
-	 * @param shooterSubsystem    shooter subsystem
-	 * @param intakeSubsystem intake subsystem. Must also be a {@link SolenoidSubsystem}.
+	 * @param sfs    shooter subsystem
+	 * @param intake intake subsystem
 	 */
-	public RackShooter(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
-		this.shooterSubsystem = shooterSubsystem;
-		this.intakeSubsystem = intakeSubsystem;
-	}
-
-	@Override
-	public void initialize(){
-		if (shooterSubsystem != null) {
-			addParallel(new SpinUpShooter(shooterSubsystem));
+	public RackShooter(SingleFlywheelShooter sfs, Intake2017 intake) {
+		if (sfs != null) {
+			addParallel(new SpinUpShooter(sfs));
 		}
-		if (intakeSubsystem != null) {
-			addParallel(new SolenoidReverse((SolenoidSubsystem) intakeSubsystem));
-			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.IN_SLOW));
+		if (intake != null) {
+			addParallel(new SolenoidReverse(intake));
+			addParallel(new SetIntakeMode(intake, IntakeSubsystem.IntakeMode.IN_SLOW));
 		}
 	}
 }

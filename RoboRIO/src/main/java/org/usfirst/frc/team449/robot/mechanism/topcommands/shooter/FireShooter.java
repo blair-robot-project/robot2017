@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.mechanism.topcommands.shooter;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
@@ -13,29 +12,18 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
  * Runs flywheel, runs static intake, stops dynamic intake, raises intake, and runs feeder.
  */
 public class FireShooter extends CommandGroup {
-
-	private ShooterSubsystem shooterSubsystem;
-
-	private IntakeSubsystem intakeSubsystem;
-
 	/**
 	 * Constructs a FireShooter command group
 	 *
-	 * @param shooter    shooter subsystem
+	 * @param sfs    shooter subsystem
 	 * @param intake intake subsystem
 	 */
-	public FireShooter(ShooterSubsystem shooter, IntakeSubsystem intake) {
-		shooterSubsystem = shooter;
-		intakeSubsystem = intake;
-	}
-
-	@Override
-	public void initialize(){
-		if (shooterSubsystem != null) {
-			addParallel(new TurnAllOn(shooterSubsystem));
+	public FireShooter(SingleFlywheelShooter sfs, Intake2017 intake) {
+		if (sfs != null) {
+			addParallel(new TurnAllOn(sfs));
 		}
-		if (intakeSubsystem != null) {
-			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.IN_SLOW));
+		if (intake != null) {
+			addParallel(new SetIntakeMode(intake, IntakeSubsystem.IntakeMode.IN_SLOW));
 		}
 	}
 }
