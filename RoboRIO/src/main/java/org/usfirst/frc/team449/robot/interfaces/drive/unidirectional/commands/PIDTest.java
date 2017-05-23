@@ -12,6 +12,7 @@ public class PIDTest extends CommandGroup {
 	 * Default constructor
 	 *
 	 * @param subsystem the UnidirectionalDrive to execute this command on
+	 * @param driveTime How long to drive forwards for, in seconds.
 	 */
 	public PIDTest(UnidirectionalDrive subsystem, double driveTime) {
 

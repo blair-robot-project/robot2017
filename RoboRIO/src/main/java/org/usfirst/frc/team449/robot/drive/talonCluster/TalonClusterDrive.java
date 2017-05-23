@@ -234,7 +234,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * @param left  The left voltage throttle, [-1, 1]
 	 * @param right The right voltage throttle, [-1, 1]
 	 */
-	public void setVBusThrottle(double left, double right) {
+	private void setVBusThrottle(double left, double right) {
 		//Set voltage mode throttles
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(-right); //This is negative so PID doesn't have to be. Future people, if your robot goes in circles in voltage mode, this may be why.

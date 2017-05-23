@@ -41,11 +41,6 @@ public class RunLoadedProfile extends Command {
 	private long startTime;
 
 	/**
-	 * A flag passed into this subsystem and set to true when this command finishes to signal to the calling class that it's complete.
-	 */
-	private BooleanWrapper finishFlag;
-
-	/**
 	 * The subsystem to execute this command on.
 	 */
 	private CANTalonMPSubsystem subsystem;
@@ -56,10 +51,9 @@ public class RunLoadedProfile extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param timeout The max amount of time this subsystem is allowed to run for, in seconds.
-	 * @param finishFlag A booleanWrapper used to signal that this command is complete.
 	 * @param require Whether or not to require the subsystem this command is running on.
 	 */
-	public RunLoadedProfile(CANTalonMPSubsystem subsystem, double timeout, BooleanWrapper finishFlag, boolean require) {
+	public RunLoadedProfile(CANTalonMPSubsystem subsystem, double timeout, boolean require) {
 		this.subsystem = subsystem;
 		//Require if specified.
 		if (require) {
@@ -72,7 +66,6 @@ public class RunLoadedProfile extends Command {
 		talons = subsystem.getTalons();
 		finished = false;
 		bottomLoaded = false;
-		this.finishFlag = finishFlag;
 	}
 
 	/**
@@ -143,7 +136,6 @@ public class RunLoadedProfile extends Command {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		}
-		finishFlag.set(true);
 		Logger.addEvent("RunLoadedProfile end.", this.getClass());
 	}
 
@@ -152,7 +144,6 @@ public class RunLoadedProfile extends Command {
 		for (CANTalon talon : talons) {
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
-		finishFlag.set(true);
 		Logger.addEvent("RunLoadedProfile interrupted!", this.getClass());
 	}
 }

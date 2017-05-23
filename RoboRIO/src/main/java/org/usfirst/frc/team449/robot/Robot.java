@@ -4,9 +4,13 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
+import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
+import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
+import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
@@ -53,7 +57,7 @@ public class Robot extends IterativeRobot {
 	private static long startTime;
 
 	/**
-	 * The shooter subsystem (flywheel only)
+	 * The shooter subsystem (flywheel and feeder)
 	 */
 	public SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
@@ -98,12 +102,6 @@ public class Robot extends IterativeRobot {
 
 	private Notifier loggerNotifier;
 
-	private int completedCommands = 0;
-
-	private long startedGearPush = 0;
-
-	private long timeToPushGear;
-
 	private boolean redAlliance, dropGear;
 
 	private String allianceString;
@@ -116,16 +114,7 @@ public class Robot extends IterativeRobot {
 
 	private Logger logger;
 
-	private AutoSide autoSide;
-
-	/**
-	 * Maps of the names of each profile to the {@link MotionProfileData} containing the actual points.
-	 */
-	private Map<String, MotionProfileData> rightProfiles, leftProfiles;
-
-	public static long currentTimeMillis() {
-		return currentTimeMillis - startTime;
-	}
+	private Command autonomousCommand;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -208,19 +197,6 @@ public class Robot extends IterativeRobot {
 			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
 		}
 
-		//Instantiate the profile maps.
-		leftProfiles = new HashMap<>();
-		rightProfiles = new HashMap<>();
-
-		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
-		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
-		}
-
-		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
-		}
-
 		try {
 			logger = new Logger(cfg.getLogger(), loggables);
 		} catch (IOException e) {
@@ -232,6 +208,17 @@ public class Robot extends IterativeRobot {
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		Logger.addEvent("Mapped buttons", this.getClass());
+
+		Map<String, MotionProfileData> rightProfiles = new HashMap<>(), leftProfiles = new HashMap<>();
+
+		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
+		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
+			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
+
+		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
+			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
 
 		if (cfg.hasBlueRed()) {
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
@@ -251,6 +238,7 @@ public class Robot extends IterativeRobot {
 			}
 		}
 
+		AutoSide autoSide;
 		if (position.equals("center")) {
 			autoSide = AutoSide.CENTER;
 		} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
@@ -265,15 +253,29 @@ public class Robot extends IterativeRobot {
 		Logger.addEvent("Auto_plan: " + autoSide, this.getClass());
 
 		if (cfg.getDoMP()) {
-			timeToPushGear = (long) (cfg.getTimeToPushGear() * 1000);
 
 			if (cfg.getTestMP()) {
 				driveSubsystem.loadMotionProfile(leftProfiles.get("test"), rightProfiles.get("test"));
+				autonomousCommand = new RunLoadedProfile(driveSubsystem, 15, true);
 			} else {
-				driveSubsystem.loadMotionProfile(leftProfiles.get(allianceString + "_" + position),rightProfiles.get(allianceString + "_" + position));
+				driveSubsystem.loadMotionProfile(leftProfiles.get(allianceString + "_" + position), rightProfiles.get(allianceString + "_" + position));
+				switch (autoSide){
+					case CENTER:
+						autonomousCommand = new CenterAuto2017(driveSubsystem, gearSubsystem, dropGear, cfg.getDriveBackTime());
+						break;
+					case BOILER:
+						autonomousCommand = new BoilerAuto2017(driveSubsystem, gearSubsystem, dropGear,
+								leftProfiles.get(allianceString+"_shoot"), rightProfiles.get(allianceString+"_shoot"),
+								singleFlywheelShooterSubsystem);
+						break;
+					case LOADING_STATION:
+						autonomousCommand= new FeederAuto2017(driveSubsystem, gearSubsystem, dropGear,
+								leftProfiles.get(allianceString+"_backup"), rightProfiles.get(allianceString+"_backup"),
+								leftProfiles.get("forward"));
+						break;
+				}
 			}
 			commandFinished = new BooleanWrapper(false);
-			completedCommands = 0;
 		}
 		logger.run();
 	}
@@ -287,7 +289,7 @@ public class Robot extends IterativeRobot {
 		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		driveSubsystem.stopMPProcesses();
-		driveSubsystem.setVBusThrottle(0, 0);
+		driveSubsystem.fullStop();
 		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
 		driveSubsystem.enableMotors();
@@ -336,14 +338,10 @@ public class Robot extends IterativeRobot {
 
 		commandFinished.set(false);
 
-		driveSubsystem.setVBusThrottle(0, 0);
+		driveSubsystem.fullStop();
 
 		if (cfg.getDoMP()) {
-			if (singleFlywheelShooterSubsystem != null && autoSide == AutoSide.BOILER) {
-				Scheduler.getInstance().add(new SpinUpShooter(singleFlywheelShooterSubsystem));
-			}
-			Scheduler.getInstance().add(new RunLoadedProfile(driveSubsystem, 15, commandFinished, true));
-
+			autonomousCommand.start();
 		} else {
 			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 		}
@@ -357,46 +355,16 @@ public class Robot extends IterativeRobot {
 		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
-		if (cfg.getDoMP() && !cfg.getTestMP()) {
-			if (Robot.currentTimeMillis() - startedGearPush > timeToPushGear && completedCommands == 1) {
-				commandFinished.set(true);
-			}
-			if (commandFinished.get()) {
-				Logger.addEvent("A command finished!", this.getClass());
-				completedCommands++;
-				commandFinished.set(false);
-				if (completedCommands == 1) {
-					if (gearSubsystem != null && dropGear) {
-						Scheduler.getInstance().add(new SolenoidReverse(gearSubsystem));
-					}
-					startedGearPush = Robot.currentTimeMillis();
-				} else if (completedCommands == 2) {
-					if (autoSide == AutoSide.CENTER) {
-						Scheduler.getInstance().add(new DriveAtSpeed(driveSubsystem, -0.3, cfg.getDriveBackTime()));
-					} else if (position.equals("right") && redAlliance) {
-						Scheduler.getInstance().add(new RunProfileTwoSides(driveSubsystem, leftProfiles.get("red_shoot"), rightProfiles.get("red_shoot"), 10, commandFinished));
-					} else if (position.equals("left") && !redAlliance) {
-						Scheduler.getInstance().add(new RunProfileTwoSides(driveSubsystem, leftProfiles.get("blue_shoot"), rightProfiles.get("blue_shoot"), 10, commandFinished));
-					} else if (redAlliance) {
-						Scheduler.getInstance().add(new RunProfileTwoSides(driveSubsystem, leftProfiles.get("red_backup"), rightProfiles.get("red_backup"), 10, commandFinished));
-					} else {
-						Scheduler.getInstance().add(new RunProfileTwoSides(driveSubsystem, leftProfiles.get("blue_backup"), rightProfiles.get("blue_backup"), 10, commandFinished));
-					}
-				} else if (completedCommands == 3) {
-					if (autoSide == AutoSide.BOILER && singleFlywheelShooterSubsystem != null) {
-						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem));
-					} else if (autoSide == AutoSide.LOADING_STATION) {
-						Scheduler.getInstance().add(new RunProfileTwoSides(driveSubsystem, leftProfiles.get("forward"), rightProfiles.get("forward"), 10, commandFinished));
-					}
-				}
-			}
-		}
 	}
 
 	@Override
 	public void disabledInit() {
-		driveSubsystem.setVBusThrottle(0, 0);
+		driveSubsystem.fullStop();
 		sendModeOverI2C(robotInfo, "disabled");
+	}
+
+	public static long currentTimeMillis() {
+		return currentTimeMillis - startTime;
 	}
 
 	private void sendModeOverI2C(I2C i2C, String mode) {
