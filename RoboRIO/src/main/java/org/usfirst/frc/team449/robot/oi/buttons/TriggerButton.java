@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.oi.buttons;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
-import maps.org.usfirst.frc.team449.robot.oi.TriggerButtonMap;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
