@@ -19,6 +19,9 @@ public class OI2017Tank extends TankOI {
 	 */
 	private Throttle rightThrottle;
 
+	/**
+	 * The deadband for the joysicks. Any measurement below this is considered zero.
+	 */
 	private double deadband;
 
 	/**
@@ -49,7 +52,8 @@ public class OI2017Tank extends TankOI {
 	@Override
 	public double getLeftThrottle() {
 		double value = leftThrottle.getValue();
-		if (value <= deadband) {
+		//apply deadband
+		if (value < deadband) {
 			value = 0;
 		}
 		return value;
@@ -61,7 +65,8 @@ public class OI2017Tank extends TankOI {
 	@Override
 	public double getRightThrottle() {
 		double value = rightThrottle.getValue();
-		if (value <= deadband) {
+		//apply deadband
+		if (value < deadband) {
 			value = 0;
 		}
 		return value;

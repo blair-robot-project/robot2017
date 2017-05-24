@@ -162,20 +162,44 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 	 */
 	private Button fireShooter;
 
+	/**
+	 * Button for running the ResetShooter command group (turn everything off)
+	 */
 	private Button resetShooter;
 
+	/**
+	 * Button for toggling whether the gear handler is open or closed.
+	 */
 	private Button toggleGear;
 
+	/**
+	 * Buttons that open the gear handler when pressed and close it when released.
+	 */
 	private List<Button> pushGear;
 
+	/**
+	 * Button that, while held, climbs without a current limit.
+	 */
 	private Button manualClimb;
 
+	/**
+	 * A button that logs an error to the log file.
+	 */
 	private Button logError;
 
+	/**
+	 * A button that turns the robot back and forth 10 degrees to un-jam the feeder.
+	 */
 	private Button jiggleRobot;
 
+	/**
+	 * Whether to override the NavX while the button is held or while it is not held.
+	 */
 	private boolean overrideNavXWhileHeld;
 
+	/**
+	 * Scaling, from [0, 1], that the rotational throttle decreases the forwards throttle by. Used so that turning while at high speed still has an impact.
+	 */
 	private double rotScale;
 
 	/**
@@ -268,6 +292,8 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 		if (map.hasJiggleRobot()) {
 			jiggleRobot = MappedJoystickButton.constructButton(map.getJiggleRobot());
 		}
+
+		//We may have multiple push gear buttons
 		pushGear = new ArrayList<>();
 		for (JoystickButtonMap.JoystickButton button : map.getPushGearList()) {
 			Button tmp = MappedJoystickButton.constructButton(button);
@@ -357,11 +383,20 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 		if (toggleOverrideAutoshift != null) {
 			toggleOverrideAutoshift.whenPressed(new ToggleOverrideAutoShift(Robot.instance.driveSubsystem));
 		}
+		if (jiggleRobot != null) {
+			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem, Robot.instance.driveSubsystem.turnPID));
+		}
 
 		//Map climber commands
-		if (Robot.instance.climberSubsystem != null && climb != null) {
-			climb.whenPressed(new RunMotorWhileConditonMet(Robot.instance.climberSubsystem));
-			climb.whenReleased(new TurnMotorOffWithRequires(Robot.instance.climberSubsystem));
+		if (Robot.instance.climberSubsystem != null) {
+			if (climb != null) {
+				climb.whenPressed(new RunMotorWhileConditonMet(Robot.instance.climberSubsystem));
+				climb.whenReleased(new TurnMotorOffWithRequires(Robot.instance.climberSubsystem));
+			}
+			if (manualClimb != null){
+				manualClimb.whenPressed(new TurnMotorOn(Robot.instance.climberSubsystem));
+				manualClimb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
+			}
 		}
 
 		//Map camera commands
@@ -397,10 +432,8 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 		if (resetShooter != null) {
 			resetShooter.whenPressed(new ResetShooter(Robot.instance.singleFlywheelShooterSubsystem, Robot.instance.intakeSubsystem));
 		}
-		if (Robot.instance.climberSubsystem != null && manualClimb != null) {
-			manualClimb.whenPressed(new TurnMotorOn(Robot.instance.climberSubsystem));
-			manualClimb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
-		}
+
+		//Map gear handler commands
 		if (Robot.instance.gearSubsystem != null) {
 			if (toggleGear != null) {
 				toggleGear.whenPressed(new ToggleSolenoid(Robot.instance.gearSubsystem));
@@ -410,11 +443,10 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 				button.whenReleased(new SolenoidForward(Robot.instance.gearSubsystem));
 			}
 		}
+
+		//Map miscellaneous commands
 		if (logError != null) {
 			Logger.addEvent("User pressed the error button!", this.getClass());
-		}
-		if (jiggleRobot != null) {
-			jiggleRobot.whenPressed(new JiggleRobot(Robot.instance.driveSubsystem, Robot.instance.driveSubsystem.turnPID));
 		}
 	}
 }
