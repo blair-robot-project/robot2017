@@ -38,9 +38,6 @@ public class ChangeCam extends ReferencingCommand {
 	 */
 	@Override
 	protected void execute() {
-		//Logging to console
-		Logger.addEvent("ChangeCam exec start", this.getClass());
-
 		//Switches camNum to next camera, if applicable
 		if (cameraSubsystem.cameras.size() == 1) {
 			Logger.addEvent("You're trying to switch cameras, but your robot only has one camera!", this.getClass());
@@ -50,9 +47,6 @@ public class ChangeCam extends ReferencingCommand {
 
 		//Switches to set camera
 		cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
-
-		//Logging to camera
-		Logger.addEvent("ChangeCam exec end", this.getClass());
 	}
 
 	/**

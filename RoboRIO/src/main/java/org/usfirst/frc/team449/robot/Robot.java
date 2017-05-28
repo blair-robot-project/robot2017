@@ -42,12 +42,24 @@ import java.util.Map;
  */
 public class Robot extends IterativeRobot {
 
+	/**
+	 * The absolute filepath to the resources folder containing the config files.
+	 */
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
+	/**
+	 * The instance of this object that exists. This is a static field so that the subsystems don't have to be.
+	 */
 	public static Robot instance;
 
+	/**
+	 * The current time in milliseconds as it was stored the last time a method in robot was run.
+	 */
 	private static long currentTimeMillis;
 
+	/**
+	 * The time robotInit started running.
+	 */
 	private static long startTime;
 
 	/**
@@ -66,7 +78,7 @@ public class Robot extends IterativeRobot {
 	public ClimberSubsystem climberSubsystem;
 
 	/**
-	 * The pneumatics (maybe doesn't work?)
+	 * The compressor and pressure sensor
 	 */
 	public PneumaticsSubsystem pneumaticsSubsystem;
 
@@ -85,6 +97,9 @@ public class Robot extends IterativeRobot {
 	 */
 	public CameraSubsystem cameraSubsystem;
 
+	/**
+	 * The active gear subsystem.
+	 */
 	public ActiveGearSubsystem gearSubsystem;
 
 	/**
@@ -92,30 +107,62 @@ public class Robot extends IterativeRobot {
 	 */
 	private Robot2017Map.Robot2017 cfg;
 
+	/**
+	 * The Notifier running the logging thread.
+	 */
 	private Notifier loggerNotifier;
 
-	private boolean redAlliance, dropGear;
+	/**
+	 * Whether or not we're on the red alliance, according to the dIO switch.
+	 */
+	private boolean redAlliance;
 
-	private String allianceString;
+	/**
+	 * Whether or not to drop the gear during autonomous, according to the dIO switch.
+	 */
+	private boolean dropGear;
 
+	/**
+	 * The position we're in, according to the dIO switch.
+	 */
 	private String position;
 
+	/**
+	 * The string version of the alliance we're on ("red" or "blue"). Used for string concatenation to pick which profile to execute.
+	 */
+	private String allianceString;
+
+	/**
+	 * The I2C channel for communicating with the RIOduino.
+	 */
 	private I2C robotInfo;
 
+	/**
+	 * The gear to start both autonomous and teleop in.
+	 */
 	private ShiftingDrive.gear startingGear;
 
+	/**
+	 * The logger for the robot.
+	 */
 	private Logger logger;
 
+	/**
+	 * The command to run during autonomous.
+	 */
 	private Command autonomousCommand;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
+		//Set up start time
 		currentTimeMillis = System.currentTimeMillis();
 		startTime = currentTimeMillis;
+		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
 
+		//Set up instance.
 		instance = this;
 
 		try {
@@ -129,19 +176,17 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
+		//Instantiate the list of loggable subsystems.
 		List<Loggable> loggables = new ArrayList<>();
 
+		//Set up starting gear from the map.
 		startingGear = cfg.getStartLowGear() ? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
-
-		if (cfg.hasRioduinoPort()) {
-			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
-		}
 
 		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
 		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
 		Logger.addEvent("Constructed OI", this.getClass());
 
-		//Construct the drive (not in a if block because you kind of need it.)
+		//Construct the drive (not in an "if null" block because you kind of need it.)
 		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startingGear);
 		Logger.addEvent("Constructed Drive", this.getClass());
 		loggables.add(driveSubsystem);
@@ -176,42 +221,38 @@ public class Robot extends IterativeRobot {
 			intakeSubsystem = new Intake2017(cfg.getIntake());
 		}
 
+		//Construct active gear if it's in the map.
 		if (cfg.hasGear()) {
 			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
 		}
-
-		try {
-			logger = new Logger(cfg.getLogger(), loggables);
-		} catch (IOException e) {
-			System.out.println("Instantiating logger failed!");
-			e.printStackTrace();
-		}
-		loggerNotifier = new Notifier(logger);
 
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
 		Logger.addEvent("Mapped buttons", this.getClass());
 
-		Map<String, MotionProfileData> rightProfiles = new HashMap<>(), leftProfiles = new HashMap<>();
-
-		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
-		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
+		//Try to instantiate the logger.
+		try {
+			logger = new Logger(cfg.getLogger(), loggables);
+			//Set up the Notifier that runs the logging thread.
+			loggerNotifier = new Notifier(logger);
+		} catch (IOException e) {
+			System.out.println("Instantiating logger failed!");
+			e.printStackTrace();
 		}
 
-		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
+		//Set up RIOduino I2C channel if it's in the map.
+		if (cfg.hasRioduinoPort()) {
+			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
 		}
 
+		//Read the dIO pins if they're in the map
 		if (cfg.hasBlueRed()) {
+			//Read from the pins
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
-			if (redAlliance) {
-				allianceString = "red";
-			} else {
-				allianceString = "blue";
-			}
 			dropGear = new MappedDigitalInput(cfg.getDropGear()).getStatus().get(0);
 			List<Boolean> tmp = new MappedDigitalInput(cfg.getLocation()).getStatus();
+
+			//Interpret the pin input from the three-way side selection switch.
 			if (!tmp.get(0) && !tmp.get(1)) {
 				position = "center";
 			} else if (tmp.get(0)) {
@@ -219,46 +260,57 @@ public class Robot extends IterativeRobot {
 			} else {
 				position = "right";
 			}
+
+			//Set up allianceString to use for concatenation.
+			if (redAlliance) {
+				allianceString = "red";
+			} else {
+				allianceString = "blue";
+			}
 		}
 
-		AutoSide autoSide;
-		if (position.equals("center")) {
-			autoSide = AutoSide.CENTER;
-		} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
-			autoSide = AutoSide.BOILER;
-		} else {
-			autoSide = AutoSide.LOADING_STATION;
-		}
-
+		//Log the data read from the switches
 		Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
 		Logger.addEvent("dropGear: " + dropGear, this.getClass());
 		Logger.addEvent("position: " + position, this.getClass());
-		Logger.addEvent("Auto_plan: " + autoSide, this.getClass());
 
+		//Instantiate the profile maps.
+		Map<String, MotionProfileData> rightProfiles = new HashMap<>(), leftProfiles = new HashMap<>();
+
+		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
+		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
+			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
+		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
+			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
+		}
+
+		//Set up the motion profiles if we're doing motion profiling
 		if (cfg.getDoMP()) {
-
+			//Load the test profiles if we just want to run one.
 			if (cfg.getTestMP()) {
 				driveSubsystem.loadMotionProfile(leftProfiles.get("test"), rightProfiles.get("test"));
 				autonomousCommand = new RunLoadedProfile(driveSubsystem, 15, true);
 			} else {
+				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(leftProfiles.get(allianceString + "_" + position), rightProfiles.get(allianceString + "_" + position));
-				switch (autoSide){
-					case CENTER:
-						autonomousCommand = new CenterAuto2017(driveSubsystem, gearSubsystem, dropGear, cfg.getDriveBackTime());
-						break;
-					case BOILER:
-						autonomousCommand = new BoilerAuto2017(driveSubsystem, gearSubsystem, dropGear,
-								leftProfiles.get(allianceString+"_shoot"), rightProfiles.get(allianceString+"_shoot"),
-								singleFlywheelShooterSubsystem);
-						break;
-					case LOADING_STATION:
-						autonomousCommand= new FeederAuto2017(driveSubsystem, gearSubsystem, dropGear,
-								leftProfiles.get(allianceString+"_backup"), rightProfiles.get(allianceString+"_backup"),
-								leftProfiles.get("forward"));
-						break;
+				//Set the autonomousCommand to be the correct command for the current position and alliance.
+				if (position.equals("center")) {
+					autonomousCommand = new CenterAuto2017(driveSubsystem, gearSubsystem, dropGear, cfg.getDriveBackTime());
+				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
+					autonomousCommand = new BoilerAuto2017(driveSubsystem, gearSubsystem, dropGear,
+							leftProfiles.get(allianceString + "_shoot"), rightProfiles.get(allianceString + "_shoot"),
+							singleFlywheelShooterSubsystem);
+				} else {
+					autonomousCommand = new FeederAuto2017(driveSubsystem, gearSubsystem, dropGear,
+							leftProfiles.get(allianceString + "_backup"), rightProfiles.get(allianceString + "_backup"),
+							leftProfiles.get("forward"));
 				}
 			}
+		} else {
+			autonomousCommand = new PIDTest(driveSubsystem, cfg.getDriveBackTime());
 		}
+		//Run the logger to write all the events that happened during initialization to a file.
 		logger.run();
 	}
 
@@ -267,32 +319,22 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
-		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		driveSubsystem.stopMPProcesses();
 		driveSubsystem.fullStop();
+		//Set up whether to override the NavX based on whether it's overriden by default.
 		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
+		//Enable the motors in case they got disabled somehow
 		driveSubsystem.enableMotors();
 
+		//Set the default command
 		driveSubsystem.setDefaultCommandManual(new ShiftingUnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
 
-		//Switch to starting gear
-		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
+		//Do the startup tasks
+		doStartupTasks();
 
-		if (pneumaticsSubsystem != null){
-			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
-		}
-
-		if (intakeSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
-		}
-
-		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
-		}
-
+		//Tell the RIOduino that we're in teleop
 		sendModeOverI2C(robotInfo, "teleop");
 	}
 
@@ -301,6 +343,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
@@ -311,27 +354,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
-		currentTimeMillis = System.currentTimeMillis();
+		//Stop the drive for safety reasons
 		driveSubsystem.fullStop();
+
+		//Do startup tasks
+		doStartupTasks();
+
+		//Start running the autonomous command
+		autonomousCommand.start();
+
+		//Tell the RIOduino we're in autonomous
 		sendModeOverI2C(robotInfo, "auto");
-
-		//Switch to starting gear
-		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
-
-		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
-		}
-
-		if (pneumaticsSubsystem != null){
-			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
-		}
-
-		if (cfg.getDoMP()) {
-			autonomousCommand.start();
-		} else {
-			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
-		}
 	}
 
 	/**
@@ -339,33 +372,75 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		//Update the current time
 		currentTimeMillis = System.currentTimeMillis();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}
 
+	/**
+	 * Run when we disable.
+	 */
 	@Override
 	public void disabledInit() {
+		//Fully stop the drive
 		driveSubsystem.fullStop();
+		//Tell the RIOduino we're disabled.
 		sendModeOverI2C(robotInfo, "disabled");
 	}
 
+	/**
+	 * Get the current time, in milliseconds, since startup.
+	 * @return current time in milliseconds.
+	 */
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
 	}
 
+	/**
+	 * Sends the current mode (auto, teleop, or disabled) over I2C.
+	 * @param i2C The I2C channel to send the data over.
+	 * @param mode The current mode, represented as a String.
+	 */
 	private void sendModeOverI2C(I2C i2C, String mode) {
+		//If the I2C exists
 		if (i2C != null) {
+			//Turn the alliance and mode into a character array.
 			char[] CharArray = (allianceString + "_" + mode).toCharArray();
+			//Transfer the character array to a byte array.
 			byte[] WriteData = new byte[CharArray.length];
 			for (int i = 0; i < CharArray.length; i++) {
 				WriteData[i] = (byte) CharArray[i];
 			}
+			//Send the byte array.
 			i2C.transaction(WriteData, WriteData.length, null, 0);
 		}
 	}
 
-	private enum AutoSide {
-		CENTER, BOILER, LOADING_STATION
+	/**
+	 * Do tasks that should be done when we first enable, in both auto and teleop.
+	 */
+	private void doStartupTasks(){
+		//Start running the logger
+		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
+		//Refresh the current time.
+		currentTimeMillis = System.currentTimeMillis();
+		//Switch to starting gear
+		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
+
+		//Start the compressor if it exists
+		if (pneumaticsSubsystem != null){
+			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
+		}
+
+		//Put up the intake if it exists
+		if (intakeSubsystem != null) {
+			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
+		}
+
+		//Close the gear handler if it exists
+		if (gearSubsystem != null) {
+			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
+		}
 	}
 }

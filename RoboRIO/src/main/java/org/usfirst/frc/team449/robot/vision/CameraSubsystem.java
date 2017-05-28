@@ -44,7 +44,7 @@ public class CameraSubsystem extends MappedSubsystem {
 		super(map);
 		this.map = map;
 
-		//Logging to SmartDashboard
+		//Logging
 		Logger.addEvent("CameraSubsystem construct start", this.getClass());
 		Logger.addEvent("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + map.getServer().getPort() +
 				"/stream.mjpg\"", this.getClass());
@@ -60,6 +60,7 @@ public class CameraSubsystem extends MappedSubsystem {
 			UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
 			tmp.setResolution(camera.getWidth(), camera.getHeight());
 			tmp.setFPS(camera.getFps());
+			//If we don't make the exposure automatic, it lags like crazy. No idea why.
 			tmp.setExposureAuto();
 			Logger.addEvent("Added " + camera.getName() + " to camera list.", this.getClass());
 			cameras.add(tmp);
@@ -69,7 +70,7 @@ public class CameraSubsystem extends MappedSubsystem {
 		server.setSource(cameras.get(0));
 		camNum = 0;
 
-		//Logging to console
+		//Logging
 		Logger.addEvent("CameraSubsystem construct end", this.getClass());
 	}
 
