@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
@@ -14,16 +13,13 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -193,8 +189,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		MPTalons.add(leftMaster.canTalon);
 		MPTalons.add(rightMaster.canTalon);
 
-		//Set up the MPNotifier to run an MPUpdaterProcess containing the left and right master talons.
-		MPUpdaterProcess updater = new MPUpdaterProcess();
+		//Set up the MPNotifier to run an CANTalonMPUpdaterProcess containing the left and right master talons.
+		CANTalonMPUpdaterProcess updater = new CANTalonMPUpdaterProcess();
 		updater.addTalon(rightMaster.canTalon);
 		updater.addTalon(leftMaster.canTalon);
 		MPNotifier = new Notifier(updater);
@@ -443,18 +439,18 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
-	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
-	public String getHeader() {
-		return "left_vel," +
-				"right_vel," +
-				"left_setpoint," +
-				"right_setpoint," +
-				"left_current," +
-				"right_current," +
-				"left_voltage," +
-				"right_voltage";
+	public String[] getHeader() {
+		return new String[]{"left_vel,",
+				"right_vel,",
+				"left_setpoint,",
+				"right_setpoint,",
+				"left_current,",
+				"right_current,",
+				"left_voltage,",
+				"right_voltage"};
 	}
 
 	/**
@@ -492,8 +488,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		//Stop loading points from the API-level buffer into the low-level one.
 		MPNotifier.stop();
 		//Fill the API-level buffer with the points from the given profile.
-		MPLoader.loadTopLevel(profile, leftMaster);
-		MPLoader.loadTopLevel(profile, rightMaster);
+		CANTalonMPLoader.loadTopLevel(profile, leftMaster);
+		CANTalonMPLoader.loadTopLevel(profile, rightMaster);
 		//Resume loading points from the API-level buffer into the low-level one.
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}
@@ -538,8 +534,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		//Stop loading points from the API-level buffer into the low-level one.
 		MPNotifier.stop();
 		//Fill the API-level buffer with the points from the given profile.
-		MPLoader.loadTopLevel(left, leftMaster);
-		MPLoader.loadTopLevel(right, rightMaster);
+		CANTalonMPLoader.loadTopLevel(left, leftMaster);
+		CANTalonMPLoader.loadTopLevel(right, rightMaster);
 		//Resume loading points from the API-level buffer into the low-level one.
 		MPNotifier.startPeriodic(MP_UPDATE_RATE);
 	}

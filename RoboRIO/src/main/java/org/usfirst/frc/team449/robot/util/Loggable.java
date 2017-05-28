@@ -1,15 +1,15 @@
 package org.usfirst.frc.team449.robot.util;
 
 /**
- * Created by noah on 5/14/17.
+ * An object that logs telemetry data every loop.
  */
 public interface Loggable {
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
-	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
-	String getHeader();
+	String[] getHeader();
 
 	/**
 	 * Get the data this subsystem logs every loop.

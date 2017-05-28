@@ -7,7 +7,6 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideM
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 
 /**
  * The autonomous routine to deliver a gear to the center gear.

@@ -5,8 +5,6 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 
 /**
  * Command group for firing the shooter.

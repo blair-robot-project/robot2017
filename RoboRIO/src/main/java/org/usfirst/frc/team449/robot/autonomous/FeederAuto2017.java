@@ -6,12 +6,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideM
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.util.BooleanWrapper;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**

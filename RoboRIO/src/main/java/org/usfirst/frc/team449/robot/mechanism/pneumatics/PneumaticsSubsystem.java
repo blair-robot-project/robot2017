@@ -46,11 +46,11 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
-	 * @return A string consisting of N comma-separated labels for data, where N is the length of the Object[] returned by getData().
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
-	public String getHeader() {
-		return "pressure";
+	public String[] getHeader() {
+		return new String[]{"pressure"};
 	}
 
 	/**

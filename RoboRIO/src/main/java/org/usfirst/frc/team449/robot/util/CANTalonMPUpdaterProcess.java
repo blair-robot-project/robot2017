@@ -7,19 +7,19 @@ import java.util.Queue;
 
 /**
  * Thread that can be spawned by motion profile executing commands that processes the motion profile buffer.
- * This is so that you can update the buffer faster than the RoboRIO scheduler does.
+ * This is so that you can update the buffer faster than the main robot loop could.
  */
-public class MPUpdaterProcess implements Runnable {
+public class CANTalonMPUpdaterProcess implements Runnable {
 	/**
 	 * The queue of talons to update
 	 */
 	private Queue<CANTalon> talonQueue;
 
 	/**
-	 * Construct a MPUpdaterProcess.
+	 * Construct a CANTalonMPUpdaterProcess.
 	 * Talons must be added after construction.
 	 */
-	public MPUpdaterProcess() {
+	public CANTalonMPUpdaterProcess() {
 		talonQueue = new LinkedList<>();
 	}
 
