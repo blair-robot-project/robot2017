@@ -6,7 +6,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
- * Loads the given profiles into the subsystem's Talons, but doesn't run it.
+ * Loads the given profiles into the subsystem, but doesn't run it.
  */
 public class LoadProfileTwoSides extends Command {
 

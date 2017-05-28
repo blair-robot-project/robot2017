@@ -141,7 +141,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	/**
 	 * The talons on this subsystem that we want to run motion profiles on.
 	 */
-	private List<CANTalon> MPTalons;
+	private CANTalon[] MPTalons;
 
 	/**
 	 * Construct a TalonClusterDrive
@@ -185,9 +185,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		}
 
 		//Add the masters to the list of Talons to use for MP
-		MPTalons = new ArrayList<>();
-		MPTalons.add(leftMaster.canTalon);
-		MPTalons.add(rightMaster.canTalon);
+		MPTalons = new CANTalon[2];
+		MPTalons[0] = leftMaster.canTalon;
+		MPTalons[1] = rightMaster.canTalon;
 
 		//Set up the MPNotifier to run an CANTalonMPUpdaterProcess containing the left and right master talons.
 		CANTalonMPUpdaterProcess updater = new CANTalonMPUpdaterProcess();
@@ -495,24 +495,53 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * Get the Talons in this subsystem to run the MP on.
-	 *
-	 * @return a List of Talons with encoders attached (e.g. master talons)
+	 * Start running the profile that's currently loaded into the MP buffer.
 	 */
 	@Override
-	public List<CANTalon> getTalons() {
-		return MPTalons;
+	public void startRunningLoadedProfile() {
+		CANTalonMPRunner.startRunningProfile(MPTalons);
 	}
 
 	/**
-	 * Get the minimum number of points that can be in the bottom-level motion profile buffer before we start driving
-	 * the profile
+	 * Get whether this subsystem has finished running the profile loaded in it.
 	 *
-	 * @return an integer from [0, 128]
+	 * @return true if there's no profile loaded and no profile running, false otherwise.
 	 */
 	@Override
-	public int getMinPointsInBtmBuffer() {
-		return minPointsInBtmMPBuffer;
+	public boolean profileFinished() {
+		return CANTalonMPRunner.isFinished(MPTalons);
+	}
+
+	/**
+	 * Disable the motors.
+	 */
+	@Override
+	public void disable() {
+		rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+		leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+	}
+
+	/**
+	 * Hold the current position.
+	 */
+	@Override
+	public void holdPosition() {
+		rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
+		leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
+	}
+
+	/**
+	 * Get whether the subsystem is ready to run the loaded profile.
+	 *
+	 * @return true if a profile is loaded and ready to run, false otherwise.
+	 */
+	@Override
+	public boolean readyToRunProfile() {
+		return CANTalonMPRunner.isReady(MPTalons, minPointsInBtmMPBuffer);
 	}
 
 	/**

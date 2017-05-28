@@ -1,19 +1,19 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.CANTalonMPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
- * Loads the given profile into the subsystem's Talons, but doesn't run it.
+ * Loads the given profile into the subsystem, but doesn't run it.
  */
 public class LoadProfile extends Command {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private CANTalonMPSubsystem subsystem;
+	private MPSubsystem subsystem;
 
 	/**
 	 * The profile to execute.
@@ -26,7 +26,7 @@ public class LoadProfile extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param profile The profile to run.
 	 */
-	public LoadProfile(CANTalonMPSubsystem subsystem, MotionProfileData profile) {
+	public LoadProfile(MPSubsystem subsystem, MotionProfileData profile) {
 		this.subsystem = subsystem;
 		this.profile = profile;
 	}
