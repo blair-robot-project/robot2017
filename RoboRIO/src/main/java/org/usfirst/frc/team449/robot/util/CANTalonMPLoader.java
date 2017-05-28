@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.util;
 
 import com.ctre.CANTalon;
+import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
 /**
@@ -9,7 +10,84 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 public class CANTalonMPLoader {
 
 	/**
-	 * Loads the given motion profile onto the given Talon's API-level buffer.
+	 * The talons to load profiles into.
+	 */
+	private RotPerSecCANTalonSRX[] talons;
+
+	/**
+	 * The notifier for the thread in which points are moved from the API-level buffer to the low-level one.
+	 */
+	private Notifier MPNotifier;
+
+	/**
+	 * The period of the thread in which points are moved from the API-level buffer to the low-level one, in seconds.
+	 */
+	private double updaterProcessPeriodSecs;
+
+	/**
+	 * Default constructor.
+	 * @param talons The talons to load profiles into.
+	 * @param updaterProcessPeriodSecs The period of the thread in which points are moved from the API-level buffer to
+	 *                                    the low-level one, in seconds.
+	 */
+	public CANTalonMPLoader(RotPerSecCANTalonSRX[] talons, double updaterProcessPeriodSecs){
+		this.talons = talons;
+		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
+		//Set up the updater
+		CANTalonMPUpdaterProcess updaterProcess = new CANTalonMPUpdaterProcess();
+		for (RotPerSecCANTalonSRX talon : this.talons) {
+			updaterProcess.addTalon(talon.canTalon);
+		}
+		//Set up the notifier.
+		MPNotifier = new Notifier(updaterProcess);
+	}
+
+	/**
+	 * Loads the given motion profile into the Talon's API-level buffer.
+	 * @param data The profile to load.
+	 */
+	public void loadTopLevel(MotionProfileData data){
+		//Stop the updater while we load the API-level buffer
+		startUpdaterProcess();
+		//Load the profile into each talon.
+		for (RotPerSecCANTalonSRX talon : talons){
+			loadTopLevel(data, talon);
+		}
+		//Resume the updater.
+		startUpdaterProcess();
+	}
+
+	/**
+	 * Start running the thread that loads points from the API-level buffer into the low-level one.
+	 */
+	public void startUpdaterProcess(){
+		MPNotifier.startPeriodic(updaterProcessPeriodSecs);
+	}
+
+	/**
+	 * Stop running the thread that loads points from the API-level buffer into the low-level one.
+	 */
+	public void stopUpdaterProcess(){
+		MPNotifier.stop();
+	}
+
+	/**
+	 * Load in one profile to each Talon.
+	 * @param profiles An array of profiles at least as long as the list of Talons this object was constructed with.
+	 */
+	public void loadIndividualProfiles(MotionProfileData[] profiles){
+		//Stop the updater while we load the API-level buffer
+		stopUpdaterProcess();
+		//Load each profile
+		for (int i = 0; i < talons.length; i++){
+			loadTopLevel(profiles[i], talons[i]);
+		}
+		//Resume the updater.
+		startUpdaterProcess();
+	}
+
+	/**
+	 * Loads the given motion profile into the given Talon's API-level buffer.
 	 * @param data The profile to load.
 	 * @param talon The talon to load it into.
 	 */

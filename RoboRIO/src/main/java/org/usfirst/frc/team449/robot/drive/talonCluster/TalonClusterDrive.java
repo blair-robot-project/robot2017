@@ -28,11 +28,6 @@ import java.util.List;
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
-	 * The period of the thread that moves points from the API-level MP buffer to the low-level one.
-	 */
-	private final double MP_UPDATE_RATE;
-
-	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
 	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
@@ -129,19 +124,14 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
 	/**
-	 * The minimum number of points that must be in the bottom-level Motion Profile before we start running the profile.
+	 * A helper class that loads profiles into the Talons.
 	 */
-	private int minPointsInBtmMPBuffer;
+	private CANTalonMPLoader loader;
 
 	/**
-	 * The Notifier that moves points from the API-level MP buffer to the low-level one.
+	 * A helper class that runs profiles loaded into the Talons.
 	 */
-	private Notifier MPNotifier;
-
-	/**
-	 * The talons on this subsystem that we want to run motion profiles on.
-	 */
-	private CANTalon[] MPTalons;
+	private CANTalonMPRunner runner;
 
 	/**
 	 * Construct a TalonClusterDrive
@@ -166,8 +156,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 		upshiftSpeed = map.getUpshiftSpeed();
 		downshiftSpeed = map.getDownshiftSpeed();
 		currentGear = startingGear;
-		MP_UPDATE_RATE = map.getMPUpdateRateSecs();
-		minPointsInBtmMPBuffer = map.getMinPointsInBottomMPBuffer();
 		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
 		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
 
@@ -184,16 +172,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			this.shifter = new MappedDoubleSolenoid(map.getShifter());
 		}
 
-		//Add the masters to the list of Talons to use for MP
-		MPTalons = new CANTalon[2];
-		MPTalons[0] = leftMaster.canTalon;
-		MPTalons[1] = rightMaster.canTalon;
-
-		//Set up the MPNotifier to run an CANTalonMPUpdaterProcess containing the left and right master talons.
-		CANTalonMPUpdaterProcess updater = new CANTalonMPUpdaterProcess();
-		updater.addTalon(rightMaster.canTalon);
-		updater.addTalon(leftMaster.canTalon);
-		MPNotifier = new Notifier(updater);
+		//Set up the MP loader and runner.
+		loader = new CANTalonMPLoader(new RotPerSecCANTalonSRX[]{leftMaster, rightMaster}, map.getMPUpdateRateSecs());
+		runner = new CANTalonMPRunner(new CANTalon[]{leftMaster.canTalon, rightMaster.canTalon}, map.getMinPointsInBottomMPBuffer());
 	}
 
 	/**
@@ -485,13 +466,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void loadMotionProfile(MotionProfileData profile) {
-		//Stop loading points from the API-level buffer into the low-level one.
-		MPNotifier.stop();
-		//Fill the API-level buffer with the points from the given profile.
-		CANTalonMPLoader.loadTopLevel(profile, leftMaster);
-		CANTalonMPLoader.loadTopLevel(profile, rightMaster);
-		//Resume loading points from the API-level buffer into the low-level one.
-		MPNotifier.startPeriodic(MP_UPDATE_RATE);
+		loader.loadTopLevel(profile);
 	}
 
 	/**
@@ -499,7 +474,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
-		CANTalonMPRunner.startRunningProfile(MPTalons);
+		runner.startRunningProfile();
 	}
 
 	/**
@@ -509,7 +484,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public boolean profileFinished() {
-		return CANTalonMPRunner.isFinished(MPTalons);
+		return runner.isFinished();
 	}
 
 	/**
@@ -517,10 +492,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void disable() {
-		rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
-		leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+		runner.disableTalons();
 	}
 
 	/**
@@ -528,10 +500,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void holdPosition() {
-		rightMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		leftMaster.canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		rightMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
-		leftMaster.canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
+		runner.holdTalons();
 	}
 
 	/**
@@ -541,7 +510,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public boolean readyToRunProfile() {
-		return CANTalonMPRunner.isReady(MPTalons, minPointsInBtmMPBuffer);
+		return runner.isReady();
 	}
 
 	/**
@@ -549,7 +518,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void stopMPProcesses() {
-		MPNotifier.stop();
+		loader.stopUpdaterProcess();
 	}
 
 	/**
@@ -560,12 +529,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void loadMotionProfile(MotionProfileData left, MotionProfileData right) {
-		//Stop loading points from the API-level buffer into the low-level one.
-		MPNotifier.stop();
-		//Fill the API-level buffer with the points from the given profile.
-		CANTalonMPLoader.loadTopLevel(left, leftMaster);
-		CANTalonMPLoader.loadTopLevel(right, rightMaster);
-		//Resume loading points from the API-level buffer into the low-level one.
-		MPNotifier.startPeriodic(MP_UPDATE_RATE);
+		loader.loadIndividualProfiles(new MotionProfileData[]{left, right});
 	}
 }
