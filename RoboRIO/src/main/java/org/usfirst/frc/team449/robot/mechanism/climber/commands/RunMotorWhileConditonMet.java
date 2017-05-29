@@ -19,7 +19,8 @@ public class RunMotorWhileConditonMet extends Command {
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The BinaryMotor subsystem to execute this command on. Must also be a {@link ConditionalSubsystem}.
+	 * @param subsystem The BinaryMotor subsystem to execute this command on. Must also be a {@link
+	 *                  ConditionalSubsystem}.
 	 */
 	public RunMotorWhileConditonMet(BinaryMotorSubsystem subsystem) {
 		requires((Subsystem) subsystem);

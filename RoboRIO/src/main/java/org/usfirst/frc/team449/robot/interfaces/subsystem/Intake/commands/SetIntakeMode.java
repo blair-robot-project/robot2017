@@ -23,7 +23,7 @@ public class SetIntakeMode extends Command {
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param mode The mode to set the intake to.
+	 * @param mode      The mode to set the intake to.
 	 */
 	public SetIntakeMode(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode mode) {
 		this.subsystem = subsystem;

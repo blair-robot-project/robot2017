@@ -84,8 +84,10 @@ public abstract class PIDAngleCommand extends PIDCommand {
 
 	/**
 	 * Process the output of the PID loop to account for minimum output, deadband, and inversion.
+	 *
 	 * @param output The output from the WPILib angular PID loop.
-	 * @return The processed output, ready to be subtracted from the left side of the drive output and added to the right side.
+	 * @return The processed output, ready to be subtracted from the left side of the drive output and added to the
+	 * right side.
 	 */
 	protected double processPIDOutput(double output) {
 		//If we're using minimumOutput..

@@ -23,8 +23,9 @@ public class TriggerButton extends Button {
 
 	/**
 	 * Argument-based constructor.
-	 * @param port The port of the joystick containing the throttle.
-	 * @param axis The axis of the throttle.
+	 *
+	 * @param port      The port of the joystick containing the throttle.
+	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
 	public TriggerButton(int port, int axis, double triggerAt) {
@@ -34,6 +35,7 @@ public class TriggerButton extends Button {
 
 	/**
 	 * Map-based constructor
+	 *
 	 * @param map config map
 	 */
 	public TriggerButton(JoystickButtonMap.JoystickButton map) {
@@ -42,6 +44,7 @@ public class TriggerButton extends Button {
 
 	/**
 	 * Get whether this button is pressed.
+	 *
 	 * @return true if the throttle's output is greater than or equal to the trigger threshold, false otherwise.
 	 */
 	@Override

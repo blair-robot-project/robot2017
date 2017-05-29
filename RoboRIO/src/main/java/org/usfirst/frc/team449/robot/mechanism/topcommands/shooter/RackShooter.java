@@ -17,7 +17,7 @@ public class RackShooter extends CommandGroup {
 	 * Constructs a RackShooter command group
 	 *
 	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem intake subsystem. Must also be a {@link SolenoidSubsystem}.
+	 * @param intakeSubsystem  intake subsystem. Must also be a {@link SolenoidSubsystem}.
 	 */
 	public RackShooter(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
 		if (shooterSubsystem != null) {

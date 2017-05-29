@@ -99,6 +99,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 
 	/**
 	 * Set the solenoid to a certain position.
+	 *
 	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
 	public void setSolenoid(DoubleSolenoid.Value value) {
@@ -110,6 +111,7 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 
 	/**
 	 * Get the position of the solenoid.
+	 *
 	 * @return Forward if extended, Reverse if contracted.
 	 */
 	public DoubleSolenoid.Value getSolenoidPosition() {

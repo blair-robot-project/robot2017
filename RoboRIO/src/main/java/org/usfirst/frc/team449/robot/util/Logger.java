@@ -43,7 +43,8 @@ public class Logger implements Runnable {
 
 	/**
 	 * Construct a logger from a map and a list of subsystems to log telemetry data from.
-	 * @param map The config map.
+	 *
+	 * @param map        The config map.
 	 * @param subsystems The subsystems to log telemetry data from.
 	 * @throws IOException If the file names provided from the log can't be written to.
 	 */
@@ -81,8 +82,9 @@ public class Logger implements Runnable {
 
 	/**
 	 * Log an event to be written to the event log file.
+	 *
 	 * @param message The text of the event to log.
-	 * @param caller The class causing the event. Almost always will be this.getClass().
+	 * @param caller  The class causing the event. Almost always will be this.getClass().
 	 */
 	public static void addEvent(String message, Class caller) {
 		events.add(new LogEvent(message, caller));
@@ -146,6 +148,7 @@ public class Logger implements Runnable {
 
 	/**
 	 * Close all IO writers.
+	 *
 	 * @throws IOException if any of the writers throw an exception while being closed.
 	 */
 	public void close() throws IOException {

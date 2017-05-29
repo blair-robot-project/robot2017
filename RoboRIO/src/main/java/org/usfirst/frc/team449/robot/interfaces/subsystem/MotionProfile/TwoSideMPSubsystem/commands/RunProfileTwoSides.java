@@ -12,10 +12,11 @@ public class RunProfileTwoSides extends CommandGroup {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param left The motion profile for the left side to load and execute.
-	 * @param right The motion profile for the right side to load and execute.
-	 * @param timeout The maximum amount of time this command is allowed to take, in seconds..
+	 * @param left      The motion profile for the left side to load and execute.
+	 * @param right     The motion profile for the right side to load and execute.
+	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds..
 	 */
 	public RunProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right, double timeout) {
 		addSequential(new LoadProfileTwoSides(subsystem, left, right));

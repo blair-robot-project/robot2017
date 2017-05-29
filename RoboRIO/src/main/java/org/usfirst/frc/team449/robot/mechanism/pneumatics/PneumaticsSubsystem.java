@@ -23,7 +23,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 			                           .PneumaticSystem map) {
 		super(map);
 		compressor = new Compressor(map.getNodeID());
-		if (map.hasPressureSensor()){
+		if (map.hasPressureSensor()) {
 			pressureSensor = new PressureSensor(map.getPressureSensor());
 		}
 	}
@@ -39,13 +39,14 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	/**
 	 * Start up the compressor in closed loop control mode.
 	 */
-	public void startCompressor(){
+	public void startCompressor() {
 		compressor.setClosedLoopControl(true);
 		compressor.start();
 	}
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
@@ -55,11 +56,12 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 
 	/**
 	 * Get the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
 	@Override
 	public Object[] getData() {
-		if (pressureSensor == null){
+		if (pressureSensor == null) {
 			return new Object[]{"N/A"};
 		} else {
 			return new Object[]{pressureSensor.getPressure()};
@@ -68,6 +70,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 
 	/**
 	 * Get the name of this object.
+	 *
 	 * @return A string that will identify this object in the log file.
 	 */
 	@Override

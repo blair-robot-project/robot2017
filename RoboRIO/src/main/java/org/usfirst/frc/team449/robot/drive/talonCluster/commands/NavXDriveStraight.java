@@ -31,10 +31,12 @@ public class NavXDriveStraight extends PIDAngleCommand {
 
 	/**
 	 * Default constructor.
-	 * @param map A map with the PID constants for controlling the angular PID loop.
-	 * @param drive The unidirectional drive to execute this command on.
-	 * @param oi The tank OI to take input from.
-	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for right.
+	 *
+	 * @param map     A map with the PID constants for controlling the angular PID loop.
+	 * @param drive   The unidirectional drive to execute this command on.
+	 * @param oi      The tank OI to take input from.
+	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for
+	 *                right.
 	 */
 	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
 	                         TankOI oi, boolean useLeft) {

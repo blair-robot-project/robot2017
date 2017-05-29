@@ -32,6 +32,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 
 	/**
 	 * Set the solenoid to a certain position.
+	 *
 	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
 	public void setSolenoid(DoubleSolenoid.Value value) {
@@ -41,6 +42,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 
 	/**
 	 * Get the position of the solenoid.
+	 *
 	 * @return Forward if extended, Reverse if contracted.
 	 */
 	@Override

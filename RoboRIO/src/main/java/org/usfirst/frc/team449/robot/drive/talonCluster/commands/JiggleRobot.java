@@ -9,7 +9,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
  */
 public class JiggleRobot extends CommandGroup {
 	/**
-	 * Instantiate the ReferencingCommandGroup
+	 * Instantiate the CommandGroup
 	 *
 	 * @param subsystem The unidirectionalDrive to execute this command on.
 	 */

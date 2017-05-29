@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.Robot;
 
 /**
- * A command that does nothing and finishes after a set number of milliseconds. For use to create a delay in sequential CommandGroups.
+ * A command that does nothing and finishes after a set number of milliseconds. For use to create a delay in sequential
+ * CommandGroups.
  */
 public class WaitForMillis extends Command {
 
@@ -20,6 +21,7 @@ public class WaitForMillis extends Command {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param time How long this command will take to finish, in milliseconds.
 	 */
 	public WaitForMillis(long time) {
@@ -36,6 +38,7 @@ public class WaitForMillis extends Command {
 
 	/**
 	 * Finish if the specified amount of time has passed.
+	 *
 	 * @return true if the specified number of milliseconds have passed since this command started, false otherwise.
 	 */
 	@Override

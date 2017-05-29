@@ -23,6 +23,7 @@ public class MotionProfileData {
 
 	/**
 	 * Map constructor
+	 *
 	 * @param map the config map
 	 */
 	public MotionProfileData(MotionProfileMap.MotionProfile map) {
@@ -36,7 +37,9 @@ public class MotionProfileData {
 
 	/**
 	 * Parameter constructor
-	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other lines.
+	 *
+	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
+	 *                 lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */
 	public MotionProfileData(String filename, boolean inverted) {
@@ -50,6 +53,7 @@ public class MotionProfileData {
 
 	/**
 	 * Read the profile from the given file and store it in data.
+	 *
 	 * @param filename The name of the .csv file containing the motion profile data.
 	 * @throws IOException if that file doesn't exist.
 	 */
@@ -63,7 +67,7 @@ public class MotionProfileData {
 		double[] tmp;
 
 		//Iterate through each line of data.
-		for (int i = 0; i < numLines; i++){
+		for (int i = 0; i < numLines; i++) {
 			//split up the line
 			line = br.readLine().split(",\t");
 			//declare as a new double because we already put the old object it referenced in data.
@@ -79,7 +83,7 @@ public class MotionProfileData {
 			}
 
 			//Trim the end of line comma
-			tmp[2] = Double.parseDouble(line[2].replace(",",""));
+			tmp[2] = Double.parseDouble(line[2].replace(",", ""));
 			data[i] = tmp;
 		}
 		//Close the reader

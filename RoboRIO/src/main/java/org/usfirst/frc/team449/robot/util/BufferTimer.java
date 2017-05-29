@@ -24,6 +24,7 @@ public class BufferTimer {
 
 	/**
 	 * Constructor for a time given in seconds.
+	 *
 	 * @param bufferTimeSeconds The amount of time the condition has to be true for, in seconds.
 	 */
 	public BufferTimer(double bufferTimeSeconds) {
@@ -32,6 +33,7 @@ public class BufferTimer {
 
 	/**
 	 * Constructor for a time given in milliseconds.
+	 *
 	 * @param bufferTimeMilliseconds The amount of time the condition has to be true for, in milliseconds.
 	 */
 	public BufferTimer(long bufferTimeMilliseconds) {
@@ -40,6 +42,7 @@ public class BufferTimer {
 
 	/**
 	 * Get whether the condition has been true for at least the specified amount of time.
+	 *
 	 * @param currentState The current state of the condition.
 	 * @return True if the condition has been true for the specified amount of time, false otherwise.
 	 */

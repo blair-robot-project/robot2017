@@ -23,7 +23,7 @@ public class ToggleIntaking extends Command {
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param mode The mode to set this subsystem to if it's currently off.
+	 * @param mode      The mode to set this subsystem to if it's currently off.
 	 */
 	public ToggleIntaking(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode mode) {
 		this.subsystem = subsystem;

@@ -36,12 +36,14 @@ public class CANTalonMPHandler {
 
 	/**
 	 * Default constructor.
-	 * @param talons The talons to load profiles into.
+	 *
+	 * @param talons                   The talons to load profiles into.
 	 * @param updaterProcessPeriodSecs The period of the thread in which points are moved from the API-level buffer to
-	 *                                    the low-level one, in seconds.
-	 * @param minNumPointsInBtmBuffer The minimum number of points that must be in the bottom MP buffer to start a profile.
+	 *                                 the low-level one, in seconds.
+	 * @param minNumPointsInBtmBuffer  The minimum number of points that must be in the bottom MP buffer to start a
+	 *                                 profile.
 	 */
-	public CANTalonMPHandler(RotPerSecCANTalonSRX[] talons, double updaterProcessPeriodSecs, int minNumPointsInBtmBuffer){
+	public CANTalonMPHandler(RotPerSecCANTalonSRX[] talons, double updaterProcessPeriodSecs, int minNumPointsInBtmBuffer) {
 		this.RPStalons = talons;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;
@@ -60,98 +62,18 @@ public class CANTalonMPHandler {
 	}
 
 	/**
-	 * Loads the given motion profile into the Talon's API-level buffer.
-	 * @param data The profile to load.
-	 */
-	public void loadTopLevel(MotionProfileData data){
-		//Stop the updater while we load the API-level buffer
-		startUpdaterProcess();
-		//Load the profile into each talon.
-		for (RotPerSecCANTalonSRX talon : RPStalons){
-			loadTopLevel(data, talon);
-		}
-		//Resume the updater.
-		startUpdaterProcess();
-	}
-
-	/**
-	 * Start running the thread that loads points from the API-level buffer into the low-level one.
-	 */
-	public void startUpdaterProcess(){
-		MPNotifier.startPeriodic(updaterProcessPeriodSecs);
-	}
-
-	/**
-	 * Stop running the thread that loads points from the API-level buffer into the low-level one.
-	 */
-	public void stopUpdaterProcess(){
-		MPNotifier.stop();
-	}
-
-	/**
-	 * Load in one profile to each Talon.
-	 * @param profiles An array of profiles at least as long as the list of Talons this object was constructed with.
-	 */
-	public void loadIndividualProfiles(MotionProfileData[] profiles){
-		//Stop the updater while we load the API-level buffer
-		stopUpdaterProcess();
-		//Load each profile
-		for (int i = 0; i < RPStalons.length; i++){
-			loadTopLevel(profiles[i], RPStalons[i]);
-		}
-		//Resume the updater.
-		startUpdaterProcess();
-	}
-
-	/**
-	 * Get whether the talons are ready to start running the loaded profile.
-	 * @return true if all the talons either have at least minNumPointsInBtmBuffer points in the bottom buffer or no
-	 * points remaining in the API-level buffer, false otherwise.
-	 */
-	public boolean isReady(){
-		return isReady(talons, minNumPointsInBtmBuffer);
-	}
-
-	/**
-	 * Get whether the talons are done running a motion profile.
-	 * @return true if the all the talons have the final point as the active one, false otherwise.
-	 */
-	public boolean isFinished(){
-		return isFinished(talons);
-	}
-
-	/**
-	 * Start running the loaded profile on the given talons.
-	 */
-	public void startRunningProfile(){
-		startRunningProfile(talons);
-	}
-
-	/**
-	 * Disable the talons.
-	 */
-	public void disableTalons(){
-		disableTalons(talons);
-	}
-
-	/**
-	 * Have the talons hold their current position via closed-loop control.
-	 */
-	public void holdTalons(){
-		holdTalons(talons);
-	}
-
-	/**
 	 * Get whether the given talons are ready to start running the loaded profile.
-	 * @param talons The talons the profiles are on.
-	 * @param minNumPointsInBtmBuffer The minimum number of points that must be in the bottom MP buffer to start the profile.
+	 *
+	 * @param talons                  The talons the profiles are on.
+	 * @param minNumPointsInBtmBuffer The minimum number of points that must be in the bottom MP buffer to start the
+	 *                                profile.
 	 * @return true if all the talons either have at least minNumPointsInBtmBuffer points in the bottom buffer or no
 	 * points remaining in the API-level buffer, false otherwise.
 	 */
-	public static boolean isReady(CANTalon[] talons, int minNumPointsInBtmBuffer){
+	public static boolean isReady(CANTalon[] talons, int minNumPointsInBtmBuffer) {
 		//Assume true, set to false if even one talon doesn't meet the criteria
 		boolean ready = true;
-		for(CANTalon talon : talons){
+		for (CANTalon talon : talons) {
 			CANTalon.MotionProfileStatus status = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(status);
 			//Set to false if the top buffer still has points and the bottom buffer isn't full enough.
@@ -162,13 +84,14 @@ public class CANTalonMPHandler {
 
 	/**
 	 * Get whether the given talons are done running a motion profile.
+	 *
 	 * @param talons The talons the profiles are on.
 	 * @return true if the all the talons have the final point as the active one, false otherwise.
 	 */
-	public static boolean isFinished(CANTalon[] talons){
+	public static boolean isFinished(CANTalon[] talons) {
 		//Assume true, set to false if even one talon doesn't meet the criteria
 		boolean finished = true;
-		for (CANTalon talon : talons){
+		for (CANTalon talon : talons) {
 			CANTalon.MotionProfileStatus status = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(status);
 			//We check if the current point is the final one to see if the profile is finished.
@@ -179,27 +102,29 @@ public class CANTalonMPHandler {
 
 	/**
 	 * Start running the loaded profile on the given talons.
+	 *
 	 * @param talons The talons the profiles are on.
 	 */
-	public static void startRunningProfile(CANTalon[] talons){
+	public static void startRunningProfile(CANTalon[] talons) {
 		//Set up the talons to run
-		for (CANTalon talon : talons){
+		for (CANTalon talon : talons) {
 			talon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 			talon.clearMotionProfileHasUnderrun();
 			talon.enable();
 		}
 		//Actually start running them in another loop so they start as simultaneously as possible.
-		for (CANTalon talon : talons){
+		for (CANTalon talon : talons) {
 			talon.setControlMode(CANTalon.SetValueMotionProfile.Enable.value);
 		}
 	}
 
 	/**
 	 * Disable the given talons.
+	 *
 	 * @param talons The talons to disable.
 	 */
-	public static void disableTalons(CANTalon[] talons){
-		for (CANTalon talon : talons){
+	public static void disableTalons(CANTalon[] talons) {
+		for (CANTalon talon : talons) {
 			talon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 			talon.set(CANTalon.SetValueMotionProfile.Disable.value);
 		}
@@ -207,10 +132,11 @@ public class CANTalonMPHandler {
 
 	/**
 	 * Have the given talons hold their current position via closed-loop control.
+	 *
 	 * @param talons The talons to have hold their position.
 	 */
-	public static void holdTalons(CANTalon[] talons){
-		for (CANTalon talon : talons){
+	public static void holdTalons(CANTalon[] talons) {
+		for (CANTalon talon : talons) {
 			talon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
 			talon.set(CANTalon.SetValueMotionProfile.Hold.value);
 		}
@@ -218,7 +144,8 @@ public class CANTalonMPHandler {
 
 	/**
 	 * Loads the given motion profile into the given Talon's API-level buffer.
-	 * @param data The profile to load.
+	 *
+	 * @param data  The profile to load.
 	 * @param talon The talon to load it into.
 	 */
 	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalonSRX talon) {
@@ -249,5 +176,91 @@ public class CANTalonMPHandler {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Loads the given motion profile into the Talon's API-level buffer.
+	 *
+	 * @param data The profile to load.
+	 */
+	public void loadTopLevel(MotionProfileData data) {
+		//Stop the updater while we load the API-level buffer
+		startUpdaterProcess();
+		//Load the profile into each talon.
+		for (RotPerSecCANTalonSRX talon : RPStalons) {
+			loadTopLevel(data, talon);
+		}
+		//Resume the updater.
+		startUpdaterProcess();
+	}
+
+	/**
+	 * Start running the thread that loads points from the API-level buffer into the low-level one.
+	 */
+	public void startUpdaterProcess() {
+		MPNotifier.startPeriodic(updaterProcessPeriodSecs);
+	}
+
+	/**
+	 * Stop running the thread that loads points from the API-level buffer into the low-level one.
+	 */
+	public void stopUpdaterProcess() {
+		MPNotifier.stop();
+	}
+
+	/**
+	 * Load in one profile to each Talon.
+	 *
+	 * @param profiles An array of profiles at least as long as the list of Talons this object was constructed with.
+	 */
+	public void loadIndividualProfiles(MotionProfileData[] profiles) {
+		//Stop the updater while we load the API-level buffer
+		stopUpdaterProcess();
+		//Load each profile
+		for (int i = 0; i < RPStalons.length; i++) {
+			loadTopLevel(profiles[i], RPStalons[i]);
+		}
+		//Resume the updater.
+		startUpdaterProcess();
+	}
+
+	/**
+	 * Get whether the talons are ready to start running the loaded profile.
+	 *
+	 * @return true if all the talons either have at least minNumPointsInBtmBuffer points in the bottom buffer or no
+	 * points remaining in the API-level buffer, false otherwise.
+	 */
+	public boolean isReady() {
+		return isReady(talons, minNumPointsInBtmBuffer);
+	}
+
+	/**
+	 * Get whether the talons are done running a motion profile.
+	 *
+	 * @return true if the all the talons have the final point as the active one, false otherwise.
+	 */
+	public boolean isFinished() {
+		return isFinished(talons);
+	}
+
+	/**
+	 * Start running the loaded profile on the given talons.
+	 */
+	public void startRunningProfile() {
+		startRunningProfile(talons);
+	}
+
+	/**
+	 * Disable the talons.
+	 */
+	public void disableTalons() {
+		disableTalons(talons);
+	}
+
+	/**
+	 * Have the talons hold their current position via closed-loop control.
+	 */
+	public void holdTalons() {
+		holdTalons(talons);
 	}
 }

@@ -11,6 +11,7 @@ public class SpinUpThenShoot extends CommandGroup {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public SpinUpThenShoot(ShooterSubsystem subsystem) {

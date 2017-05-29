@@ -7,12 +7,13 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Start up the pneumatic compressor.
  */
-public class StartCompressor extends ReferencingCommand{
+public class StartCompressor extends ReferencingCommand {
 
 	private PneumaticsSubsystem subsystem;
 
 	/**
 	 * Default constructor
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public StartCompressor(PneumaticsSubsystem subsystem) {
@@ -38,6 +39,7 @@ public class StartCompressor extends ReferencingCommand{
 
 	/**
 	 * Finish immediately because this is a state-change command.
+	 *
 	 * @return true
 	 */
 	@Override

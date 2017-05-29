@@ -23,7 +23,7 @@ public class OverrideNavX extends Command {
 	 * Default constructor.
 	 *
 	 * @param subsystem The subsystem to execute this command on
-	 * @param override Whether or not to override the NavX.
+	 * @param override  Whether or not to override the NavX.
 	 */
 	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
 		this.override = override;

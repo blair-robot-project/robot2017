@@ -23,7 +23,7 @@ public class SwitchToGear extends Command {
 	 * Default constructor
 	 *
 	 * @param subsystem The drive to execute this command on
-	 * @param switchTo The gear to switch to.
+	 * @param switchTo  The gear to switch to.
 	 */
 	public SwitchToGear(ShiftingDrive subsystem, ShiftingDrive.gear switchTo) {
 		this.subsystem = subsystem;

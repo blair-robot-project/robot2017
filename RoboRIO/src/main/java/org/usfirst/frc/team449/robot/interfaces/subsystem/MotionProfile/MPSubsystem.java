@@ -20,6 +20,7 @@ public interface MPSubsystem {
 
 	/**
 	 * Get whether this subsystem has finished running the profile loaded in it.
+	 *
 	 * @return true if there's no profile loaded and no profile running, false otherwise.
 	 */
 	boolean profileFinished();
@@ -36,6 +37,7 @@ public interface MPSubsystem {
 
 	/**
 	 * Get whether the subsystem is ready to run the loaded profile.
+	 *
 	 * @return true if a profile is loaded and ready to run, false otherwise.
 	 */
 	boolean readyToRunProfile();

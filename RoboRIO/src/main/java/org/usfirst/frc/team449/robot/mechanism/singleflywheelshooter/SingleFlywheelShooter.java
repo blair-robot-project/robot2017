@@ -90,6 +90,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 
 	/**
 	 * Set the speed of the feeder motor.
+	 *
 	 * @param sp The velocity to go at from [-1, 1]
 	 */
 	private void setFeederSpeed(double sp) {
@@ -106,6 +107,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
@@ -119,6 +121,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 
 	/**
 	 * Get the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
 	@Override
@@ -132,6 +135,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 
 	/**
 	 * Get the name of this object.
+	 *
 	 * @return A string that will identify this object in the log file.
 	 */
 	@Override

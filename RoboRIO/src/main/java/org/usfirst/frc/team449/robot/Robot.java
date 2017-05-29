@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
+import org.jetbrains.annotations.Contract;
 import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
@@ -128,7 +129,8 @@ public class Robot extends IterativeRobot {
 	private String position;
 
 	/**
-	 * The string version of the alliance we're on ("red" or "blue"). Used for string concatenation to pick which profile to execute.
+	 * The string version of the alliance we're on ("red" or "blue"). Used for string concatenation to pick which
+	 * profile to execute.
 	 */
 	private String allianceString;
 
@@ -151,6 +153,16 @@ public class Robot extends IterativeRobot {
 	 * The command to run during autonomous.
 	 */
 	private Command autonomousCommand;
+
+	/**
+	 * Get the current time, in milliseconds, since startup.
+	 *
+	 * @return current time in milliseconds.
+	 */
+	@Contract(pure = true)
+	public static long currentTimeMillis() {
+		return currentTimeMillis - startTime;
+	}
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
@@ -390,16 +402,9 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
-	 * Get the current time, in milliseconds, since startup.
-	 * @return current time in milliseconds.
-	 */
-	public static long currentTimeMillis() {
-		return currentTimeMillis - startTime;
-	}
-
-	/**
 	 * Sends the current mode (auto, teleop, or disabled) over I2C.
-	 * @param i2C The I2C channel to send the data over.
+	 *
+	 * @param i2C  The I2C channel to send the data over.
 	 * @param mode The current mode, represented as a String.
 	 */
 	private void sendModeOverI2C(I2C i2C, String mode) {
@@ -420,7 +425,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * Do tasks that should be done when we first enable, in both auto and teleop.
 	 */
-	private void doStartupTasks(){
+	private void doStartupTasks() {
 		//Start running the logger
 		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
 		//Refresh the current time.
@@ -429,7 +434,7 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
 
 		//Start the compressor if it exists
-		if (pneumaticsSubsystem != null){
+		if (pneumaticsSubsystem != null) {
 			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
 		}
 

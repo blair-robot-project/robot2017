@@ -198,7 +198,8 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 	private boolean overrideNavXWhileHeld;
 
 	/**
-	 * Scaling, from [0, 1], that the rotational throttle decreases the forwards throttle by. Used so that turning while at high speed still has an impact.
+	 * Scaling, from [0, 1], that the rotational throttle decreases the forwards throttle by. Used so that turning while
+	 * at high speed still has an impact.
 	 */
 	private double rotScale;
 
@@ -393,7 +394,7 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 				climb.whenPressed(new RunMotorWhileConditonMet(Robot.instance.climberSubsystem));
 				climb.whenReleased(new TurnMotorOffWithRequires(Robot.instance.climberSubsystem));
 			}
-			if (manualClimb != null){
+			if (manualClimb != null) {
 				manualClimb.whenPressed(new TurnMotorOn(Robot.instance.climberSubsystem));
 				manualClimb.whenReleased(new TurnMotorOff(Robot.instance.climberSubsystem));
 			}

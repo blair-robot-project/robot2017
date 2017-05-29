@@ -114,7 +114,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	private long cooldownAfterDownshift;
 
 	/**
-	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time before shifting actually happens.
+	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time
+	 * before shifting actually happens.
 	 */
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
@@ -178,6 +179,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * A getter for whether we're currently overriding autoshifting.
+	 *
 	 * @return true if overriding, false otherwise.
 	 */
 	@Override
@@ -187,6 +189,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * A setter for overriding the autoshifting.
+	 *
 	 * @param override Whether or not to override autoshifting.
 	 */
 	@Override
@@ -264,7 +267,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * Set the default command. Done here instead of in initDefaultCommand so we don't have a defaultCommand during auto.
+	 * Set the default command. Done here instead of in initDefaultCommand so we don't have a defaultCommand during
+	 * auto.
+	 *
 	 * @param defaultCommand The command to have run by default. Must require this subsystem.
 	 */
 	public void setDefaultCommandManual(Command defaultCommand) {
@@ -382,6 +387,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get whether this subsystem's NavX is currently being overriden.
+	 *
 	 * @return true if the NavX is overriden, false otherwise.
 	 */
 	@Override
@@ -391,6 +397,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Set whether or not to override this subsystem's NavX.
+	 *
 	 * @param override true to override, false otherwise.
 	 */
 	@Override
@@ -400,6 +407,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get the NavX this subsystem uses.
+	 *
 	 * @return An AHRS object representing this subsystem's NavX.
 	 */
 	@Override
@@ -409,6 +417,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
@@ -425,6 +434,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
 	@Override
@@ -441,6 +451,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 
 	/**
 	 * Get the name of this object.
+	 *
 	 * @return A string that will identify this object in the log file.
 	 */
 	@Override

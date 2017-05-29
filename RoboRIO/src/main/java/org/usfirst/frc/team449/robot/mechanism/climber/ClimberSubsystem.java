@@ -83,6 +83,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
@@ -94,6 +95,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 
 	/**
 	 * Get the data this subsystem logs every loop.
+	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
 	@Override
@@ -105,6 +107,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 
 	/**
 	 * Get the name of this object.
+	 *
 	 * @return A string that will identify this object in the log file.
 	 */
 	@Override

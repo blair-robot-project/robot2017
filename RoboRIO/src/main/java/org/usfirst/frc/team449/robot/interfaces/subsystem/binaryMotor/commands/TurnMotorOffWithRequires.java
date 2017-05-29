@@ -6,7 +6,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMoto
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently controlling the subsystem.
+ * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently
+ * controlling the subsystem.
  */
 public class TurnMotorOffWithRequires extends Command {
 

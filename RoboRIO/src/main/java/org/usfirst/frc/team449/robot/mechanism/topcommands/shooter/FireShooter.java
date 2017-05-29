@@ -15,7 +15,7 @@ public class FireShooter extends CommandGroup {
 	 * Constructs a FireShooter command group
 	 *
 	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem intake subsystem
+	 * @param intakeSubsystem  intake subsystem
 	 */
 	public FireShooter(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
 		if (shooterSubsystem != null) {

@@ -21,6 +21,7 @@ public class MappedJoystickButton extends JoystickButton {
 
 	/**
 	 * Static factory method used to construct a Button from a map.
+	 *
 	 * @param map A map containing constants for a Trigger, dPad, or MappedJoystick button.
 	 * @return A Button constructed from that map.
 	 */

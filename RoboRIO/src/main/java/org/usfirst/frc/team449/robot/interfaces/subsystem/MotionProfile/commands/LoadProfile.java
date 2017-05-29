@@ -24,7 +24,7 @@ public class LoadProfile extends Command {
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param profile The profile to run.
+	 * @param profile   The profile to run.
 	 */
 	public LoadProfile(MPSubsystem subsystem, MotionProfileData profile) {
 		this.subsystem = subsystem;

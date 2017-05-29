@@ -24,8 +24,8 @@ public class LoadProfileTwoSides extends Command {
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param left The profile for the left side to run.
-	 * @param right The profile for the right side to run.
+	 * @param left      The profile for the left side to run.
+	 * @param right     The profile for the right side to run.
 	 */
 	public LoadProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right) {
 		this.subsystem = subsystem;

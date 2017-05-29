@@ -36,8 +36,8 @@ public class RunLoadedProfile extends Command {
 	 * Default constructor.
 	 *
 	 * @param subsystem The subsystem to execute this command on.
-	 * @param timeout The max amount of time this subsystem is allowed to run for, in seconds.
-	 * @param require Whether or not to require the subsystem this command is running on.
+	 * @param timeout   The max amount of time this subsystem is allowed to run for, in seconds.
+	 * @param require   Whether or not to require the subsystem this command is running on.
 	 */
 	public RunLoadedProfile(MPSubsystem subsystem, double timeout, boolean require) {
 		this.subsystem = subsystem;
@@ -68,7 +68,7 @@ public class RunLoadedProfile extends Command {
 	 */
 	@Override
 	protected void execute() {
-		if (subsystem.readyToRunProfile() && !runningProfile){
+		if (subsystem.readyToRunProfile() && !runningProfile) {
 			subsystem.startRunningLoadedProfile();
 			runningProfile = true;
 		}
@@ -76,6 +76,7 @@ public class RunLoadedProfile extends Command {
 
 	/**
 	 * Finish when the profile finishes or the timeout is reached.
+	 *
 	 * @return true if the profile is finished or the timeout has been exceeded, false otherwise.
 	 */
 	@Override

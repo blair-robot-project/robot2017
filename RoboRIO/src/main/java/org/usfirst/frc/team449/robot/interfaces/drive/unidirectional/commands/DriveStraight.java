@@ -33,8 +33,9 @@ public class DriveStraight extends Command {
 
 	/**
 	 * Drive straight without NavX stabilization.
-	 * @param drive The drive subsystem to execute this command on.
-	 * @param oi The oi to get input from.
+	 *
+	 * @param drive   The drive subsystem to execute this command on.
+	 * @param oi      The oi to get input from.
 	 * @param useLeft true to use the left stick to drive straight, false to use the right.
 	 */
 	public DriveStraight(UnidirectionalDrive drive, TankOI oi, boolean useLeft) {
@@ -69,6 +70,7 @@ public class DriveStraight extends Command {
 
 	/**
 	 * Runs constantly because this is a drive command.
+	 *
 	 * @return false
 	 */
 	@Override

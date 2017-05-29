@@ -21,7 +21,8 @@ public class dPadButton extends Button {
 
 	/**
 	 * Explicit argument constructor.
-	 * @param port The port the relevant joystick is plugged into.
+	 *
+	 * @param port  The port the relevant joystick is plugged into.
 	 * @param angle The angle that the D-pad must be pushed to to trigger this button.
 	 */
 	public dPadButton(int port, int angle) {
@@ -31,6 +32,7 @@ public class dPadButton extends Button {
 
 	/**
 	 * Map-based constructor
+	 *
 	 * @param map Map containing constants defining this object.
 	 */
 	public dPadButton(JoystickButtonMap.JoystickButton map) {
@@ -39,6 +41,7 @@ public class dPadButton extends Button {
 
 	/**
 	 * Get whether this button is pressed
+	 *
 	 * @return true if the joystick's D-pad is pressed to the given angle, false otherwise.
 	 */
 	@Override

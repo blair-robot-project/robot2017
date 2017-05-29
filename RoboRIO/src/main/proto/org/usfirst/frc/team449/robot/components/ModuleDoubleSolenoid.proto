@@ -6,5 +6,5 @@ option java_outer_classname = "ModuleDoubleSolenoidMap";
 message ModuleDoubleSolenoid {
 	required int32 forward = 1;
 	required int32 reverse = 2;
-    optional int32 module = 3 [default = 0];
+	optional int32 module = 3 [default = 0];
 }

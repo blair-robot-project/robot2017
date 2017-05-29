@@ -11,6 +11,7 @@ public class ToggleShooting extends CommandGroup {
 
 	/**
 	 * Default constructor.
+	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	public ToggleShooting(ShooterSubsystem subsystem) {

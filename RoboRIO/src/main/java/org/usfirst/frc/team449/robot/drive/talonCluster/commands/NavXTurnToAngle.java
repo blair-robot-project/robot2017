@@ -25,14 +25,14 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	protected double setpoint;
 
 	/**
-	 * How long this command is allowed to run for (in milliseconds)
-	 */
-	private long timeout;
-
-	/**
 	 * The time this command was initiated
 	 */
 	protected long startTime;
+
+	/**
+	 * How long this command is allowed to run for (in milliseconds)
+	 */
+	private long timeout;
 
 	/**
 	 * Default constructor.
