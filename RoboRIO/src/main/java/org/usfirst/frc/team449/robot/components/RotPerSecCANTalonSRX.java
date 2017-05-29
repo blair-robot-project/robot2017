@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.components;
 import com.ctre.CANTalon;
 import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
-import org.jetbrains.annotations.Contract;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
@@ -238,7 +237,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param RPS The RPS velocity you want to convert.
 	 * @return That velocity in CANTalon native units.
 	 */
-	@Contract(pure = true)
 	private double RPSToNative(double RPS) {
 		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
 	}
@@ -250,7 +248,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param nat A velocity in CANTalon native units.
 	 * @return That velocity in RPS.
 	 */
-	@Contract(pure = true)
 	private double nativeToRPS(double nat) {
 		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
 	}
@@ -261,7 +258,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param rpm A velocity in RPM.
 	 * @return That velocity in RPS.
 	 */
-	@Contract(pure = true)
 	private double RPMToRPS(double rpm) {
 		return rpm / 60.;
 	}
@@ -272,7 +268,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param rps A velocity in RPS.
 	 * @return That velocity in RPM.
 	 */
-	@Contract(pure = true)
 	private double RPSToRPM(double rps) {
 		return rps * 60.;
 	}

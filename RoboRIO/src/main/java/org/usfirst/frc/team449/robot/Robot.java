@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
-import org.jetbrains.annotations.Contract;
 import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
@@ -159,7 +158,6 @@ public class Robot extends IterativeRobot {
 	 *
 	 * @return current time in milliseconds.
 	 */
-	@Contract(pure = true)
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
 	}
