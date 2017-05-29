@@ -1,9 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
-import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
@@ -17,9 +15,6 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideM
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -124,14 +119,9 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
 	/**
-	 * A helper class that loads profiles into the Talons.
+	 * A helper class that loads and runs profiles on the Talons.
 	 */
-	private CANTalonMPLoader loader;
-
-	/**
-	 * A helper class that runs profiles loaded into the Talons.
-	 */
-	private CANTalonMPRunner runner;
+	private CANTalonMPHandler mpHandler;
 
 	/**
 	 * Construct a TalonClusterDrive
@@ -172,9 +162,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 			this.shifter = new MappedDoubleSolenoid(map.getShifter());
 		}
 
-		//Set up the MP loader and runner.
-		loader = new CANTalonMPLoader(new RotPerSecCANTalonSRX[]{leftMaster, rightMaster}, map.getMPUpdateRateSecs());
-		runner = new CANTalonMPRunner(new CANTalon[]{leftMaster.canTalon, rightMaster.canTalon}, map.getMinPointsInBottomMPBuffer());
+		//Set up the MP handler.
+		mpHandler = new CANTalonMPHandler(new RotPerSecCANTalonSRX[]{leftMaster, rightMaster}, map.getMPUpdateRateSecs(), map.getMinPointsInBottomMPBuffer());
 	}
 
 	/**
@@ -466,7 +455,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void loadMotionProfile(MotionProfileData profile) {
-		loader.loadTopLevel(profile);
+		mpHandler.loadTopLevel(profile);
 	}
 
 	/**
@@ -474,7 +463,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
-		runner.startRunningProfile();
+		mpHandler.startRunningProfile();
 	}
 
 	/**
@@ -484,7 +473,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public boolean profileFinished() {
-		return runner.isFinished();
+		return mpHandler.isFinished();
 	}
 
 	/**
@@ -492,7 +481,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void disable() {
-		runner.disableTalons();
+		mpHandler.disableTalons();
 	}
 
 	/**
@@ -500,7 +489,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void holdPosition() {
-		runner.holdTalons();
+		mpHandler.holdTalons();
 	}
 
 	/**
@@ -510,7 +499,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public boolean readyToRunProfile() {
-		return runner.isReady();
+		return mpHandler.isReady();
 	}
 
 	/**
@@ -518,7 +507,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void stopMPProcesses() {
-		loader.stopUpdaterProcess();
+		mpHandler.stopUpdaterProcess();
 	}
 
 	/**
@@ -529,6 +518,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public void loadMotionProfile(MotionProfileData left, MotionProfileData right) {
-		loader.loadIndividualProfiles(new MotionProfileData[]{left, right});
+		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
 	}
 }
