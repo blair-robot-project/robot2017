@@ -32,7 +32,7 @@ message Robot2017 {
 	optional int32 rioduino_port = 20;
 	optional bool do_MP = 21 [default = true];
 	optional bool test_MP = 22 [default = false];
-	optional bool start_low_gear = 23 [default = true];
+	optional bool start_low_gear = 23 [default = false];
 	optional Logger logger = 25;
 	repeated MotionProfile left_motion_profile = 26;
 	repeated MotionProfile right_motion_profile = 27;

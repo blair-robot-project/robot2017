@@ -377,9 +377,9 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false));
 		}
 		if (tmpOverrideLow != null) {
-			tmpOverrideHigh.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true));
-			tmpOverrideHigh.whenPressed(new SwitchToGear(Robot.instance.driveSubsystem, ShiftingDrive.gear.LOW));
-			tmpOverrideHigh.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false));
+			tmpOverrideLow.whenPressed(new OverrideAutoShift(Robot.instance.driveSubsystem, true));
+			tmpOverrideLow.whenPressed(new SwitchToGear(Robot.instance.driveSubsystem, ShiftingDrive.gear.LOW));
+			tmpOverrideLow.whenReleased(new OverrideAutoShift(Robot.instance.driveSubsystem, false));
 		}
 		if (toggleOverrideAutoshift != null) {
 			toggleOverrideAutoshift.whenPressed(new ToggleOverrideAutoShift(Robot.instance.driveSubsystem));

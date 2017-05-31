@@ -73,7 +73,7 @@ idea {
 
 task convertFiles {
 	doLast {
-		fileTree("./src/main/resources").matching { include "*.txt" }.each { aFile ->
+		fileTree("src/main/resources").matching { include "*.txt" }.each { aFile ->
 			exec {
 				commandLine 'dos2unix'
 				args aFile.absolutePath
@@ -117,7 +117,7 @@ task('copyResources', dependsOn: convertFiles) {
 			session(remotes.rio) {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
-				put from: 'src/main/resources/*', into: './449_resources/'
+				put from: fileTree('src/main/resources'), into: './449_resources/'
 			}
 		}
 	}
@@ -133,7 +133,6 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
 }
-
 
 artifacts {
 	archives genJavadoc

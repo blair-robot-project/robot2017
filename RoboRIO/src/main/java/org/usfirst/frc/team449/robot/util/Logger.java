@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,8 @@ public class Logger implements Runnable {
 		telemetryLogWriter = new FileWriter(map.getTelemetryLogFilename() + timeStamp + ".csv");
 
 		//Set up the list of loggable subsystems.
-		this.subsystems = (Loggable[]) subsystems.toArray();
+		this.subsystems = new Loggable[subsystems.size()];
+		subsystems.toArray(this.subsystems);
 
 		//Construct itemNames.
 		itemNames = new String[this.subsystems.length][];
@@ -66,6 +68,8 @@ public class Logger implements Runnable {
 		StringBuilder telemetryHeader = new StringBuilder();
 		for (int i = 0; i < this.subsystems.length; i++) {
 			String[] items = this.subsystems[i].getHeader();
+			//Initialize itemNames rows
+			itemNames[i] = new String[items.length];
 			//For each datum
 			for (int j = 0; j < items.length; j++) {
 				//Format name as Subsystem.dataName

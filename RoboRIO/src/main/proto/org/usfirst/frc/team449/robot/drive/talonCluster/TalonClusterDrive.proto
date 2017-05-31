@@ -23,5 +23,5 @@ message TalonClusterDrive {
 	optional double upshift_fwd_threshold = 17 [default = 0];
 	required double PID_scale = 19;
 	required int32 min_points_in_bottom_MP_buffer = 23;
-	required int32 MP_update_rate_secs = 24;
+	required double MP_update_rate_secs = 24;
 }

@@ -62,6 +62,9 @@ public class MotionProfileData {
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		int numLines = Integer.parseInt(br.readLine());
 
+		//Instantiate data
+		data = new double[numLines][3];
+
 		//Declare the arrays outside the loop to avoid garbage collection.
 		String[] line;
 		double[] tmp;
