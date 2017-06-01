@@ -5,6 +5,9 @@ import maps.org.usfirst.frc.team449.robot.components.MotorMap;
 import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
 import org.usfirst.frc.team449.robot.util.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every
  * non-unit-conversion in this class takes arguments in post-gearing RPS.
@@ -118,13 +121,33 @@ public class RotPerSecCANTalonSRX extends Component {
 			canTalon.EnableCurrentLimit(false);
 		}
 
+		slaves = new ArrayList<>();
+
 		//Set up slaves.
 		for (MotorMap.Motor slave : map.getSlaveList()) {
 			CANTalon tmp = new CANTalon(slave.getPort());
-			tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
-			tmp.set(map.getPort());
+			tmp.reverseSensor(false);
+			tmp.setInverted(false);
+			tmp.ConfigFwdLimitSwitchNormallyOpen(map.getFwdLimNormOpen());
+			tmp.ConfigRevLimitSwitchNormallyOpen(map.getRevLimNormOpen());
+			tmp.enableLimitSwitch(map.getFwdLimEnabled(), map.getRevLimEnabled());
+			tmp.enableForwardSoftLimit(map.getFwdSoftLimEnabled());
+			tmp.setForwardSoftLimit(map.getFwdSoftLimVal());
+			tmp.enableReverseSoftLimit(map.getRevSoftLimEnabled());
+			tmp.setReverseSoftLimit(map.getRevSoftLimVal());
+			tmp.enableBrakeMode(map.getBrakeMode());
+			tmp.enable();
+			if (map.hasCurrentLimit()) {
+				tmp.setCurrentLimit(map.getCurrentLimit());
+				tmp.EnableCurrentLimit(true);
+			} else {
+				//If we don't have a current limit, disable current limiting.
+				tmp.EnableCurrentLimit(false);
+			}
 			//To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
 			tmp.reverseOutput(slave.getInverted());
+			tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
+			tmp.set(map.getPort());
 		}
 	}
 
