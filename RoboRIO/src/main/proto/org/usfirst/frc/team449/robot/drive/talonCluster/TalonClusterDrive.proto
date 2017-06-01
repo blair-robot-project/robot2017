@@ -1,0 +1,27 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/drive/Drive.proto";
+import "org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.proto";
+import "org/usfirst/frc/team449/robot/util/ToleranceBufferAnglePID.proto";
+import "org/usfirst/frc/team449/robot/components/ModuleDoubleSolenoid.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.drive.talonCluster";
+option java_outer_classname = "TalonClusterDriveMap";
+
+message TalonClusterDrive {
+	required Drive drive = 1;
+	required ToleranceBufferAnglePID turn_PID = 2;
+	required ToleranceBufferAnglePID straight_PID = 3;
+	optional ModuleDoubleSolenoid shifter = 4;
+	required RotPerSecCANTalonSRX right_master = 6;
+	required RotPerSecCANTalonSRX left_master = 8;
+	optional double upshift_speed = 11;
+	optional double downshift_speed = 12;
+	optional double delay_after_upshift_conditions_met = 13 [default = 0];
+	optional double delay_after_downshift_conditions_met = 14 [default = 0];
+	optional double cooldown_after_upshift = 15 [default = 0];
+	optional double cooldown_after_downshift = 16 [default = 0];
+	optional double upshift_fwd_threshold = 17 [default = 0];
+	required double PID_scale = 19;
+	required int32 min_points_in_bottom_MP_buffer = 23;
+	required double MP_update_rate_secs = 24;
+}

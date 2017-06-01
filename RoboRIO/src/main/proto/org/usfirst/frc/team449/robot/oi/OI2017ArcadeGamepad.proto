@@ -1,0 +1,53 @@
+syntax = "proto2";
+import "org/usfirst/frc/team449/robot/oi/JoystickButton.proto";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.oi";
+option java_outer_classname = "OI2017ArcadeGamepadMap";
+
+message OI2017ArcadeGamepad {
+	required int32 gamepad = 1;
+	required int32 gamepad_left_axis = 2;
+	required int32 gamepad_right_axis = 3;
+
+	required double deadband = 4;
+	required double dpad_shift = 5;
+
+	required bool invert_fwd = 6;
+	required bool invert_rot = 7;
+	required bool invert_dpad = 18;
+
+	required JoystickButton override_navX = 10;
+	required bool override_navX_while_held = 34;
+
+	optional JoystickButton switch_to_low_gear = 8;
+	optional JoystickButton switch_to_high_gear = 9;
+	optional JoystickButton climb = 11;
+	optional JoystickButton toggle_intake = 13;
+	optional JoystickButton toggle_intake_up_down = 14;
+	optional JoystickButton tmp_override_low = 15;
+	optional JoystickButton tmp_override_high = 24;
+	optional JoystickButton toggle_override_autoshift = 16;
+	optional JoystickButton shoot = 17;
+
+	optional JoystickButton switch_camera = 23;
+
+	// The new ones
+	optional JoystickButton load_shooter = 19;
+	optional JoystickButton rack_shooter = 20;
+	optional JoystickButton fire_shooter = 21;
+	optional JoystickButton reset_shooter = 22;
+
+	optional JoystickButton turn_to_0 = 25;
+	optional JoystickButton turn_to_30 = 26;
+	optional JoystickButton turn_to_180 = 27;
+	optional JoystickButton turn_to_330 = 28;
+	optional JoystickButton turnaround = 29;
+
+	optional JoystickButton toggle_gear = 32;
+	repeated JoystickButton push_gear = 33;
+	optional JoystickButton manual_climb = 44;
+	optional JoystickButton log_error = 45;
+	optional JoystickButton jiggle_robot = 46;
+
+	required double scale_fwd_by_rot_coefficient = 47;
+}
