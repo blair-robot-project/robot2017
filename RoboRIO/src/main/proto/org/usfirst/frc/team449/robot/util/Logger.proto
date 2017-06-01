@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+option java_package = "maps.org.usfirst.frc.team449.robot.util";
+option java_outer_classname = "LoggerMap";
+
+message Logger {
+	required double loop_time_secs = 1;
+	required string event_log_filename = 2;
+	required string telemetry_log_filename = 3;
+}
