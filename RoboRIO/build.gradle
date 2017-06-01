@@ -1,14 +1,30 @@
 plugins {
-	id 'org.hidetake.ssh' version "2.9.0"
+	id 'org.hidetake.ssh' version "2.7.2"
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
-	id "com.google.protobuf" version "0.8.1"
+	id "jaci.openrio.gradle.GradleRIO" version "2017.1.1"
 }
 
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
+
+allprojects {
+	tasks.withType(Javadoc).all { enabled = false }
+	repositories {
+		maven {
+			url 'https://jitpack.io'
+		}
+	}
+}
+
+remotes {
+	rio {
+		host = 'roboRIO-449-frc.local'
+		user = 'lvuser'
+		knownHosts = allowAnyHosts
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -21,47 +37,19 @@ repositories {
 }
 
 dependencies {
-	compile 'com.google.protobuf:protobuf-java:3.0.0'
-	compile 'io.grpc:grpc-stub:1.0.0-pre2'
-	compile 'io.grpc:grpc-protobuf:1.0.0-pre2'
-	compile 'com.github.blair-robot-project:449-central-repo:v4.0.0-WPILib2017'
+	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
+	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.8.3'
+	compile 'com.github.blair-robot-project:449-central-repo:v5.0.1-YAML'
 	compile wpilib()
 	compile talonSrx()
 	compile fileTree(dir: "lib", include: "*.jar")
-}
-
-
-
-/* Protobuf stuff */
-
-protobuf {
-	generatedFilesBaseDir = "$projectDir/gen"
-	protoc {
-		// The artifact spec for the Protobuf Compiler
-		artifact = 'com.google.protobuf:protoc:3.0.0'
-	}
-	plugins {
-		// Optional: an artifact spec for a protoc plugin, with "grpc" as
-		// the identifier, which can be referred to in the "plugins"
-		// container of the "generateProtoTasks" closure.
-		grpc {
-			artifact = 'io.grpc:protoc-gen-grpc-java:1.0.0-pre2'
-		}
-	}
-	generateProtoTasks {
-		ofSourceSet('main')*.plugins {
-			// Apply the "grpc" plugin whose spec is defined above, without
-			// options.  Note the braces cannot be omitted, otherwise the
-			// plugin will not be added. This is because of the implicit way
-			// NamedDomainObjectContainer binds the methods.
-			grpc {}
-		}
-	}
-}
-
-/* Utils */
-clean {
-	delete protobuf.generatedFilesBaseDir
 }
 
 idea {
@@ -70,24 +58,14 @@ idea {
 	}
 }
 
-
 task convertFiles {
 	doLast {
-		fileTree("src/main/resources").matching { include "*.txt" }.each { aFile ->
+		fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
 			exec {
 				commandLine 'dos2unix'
 				args aFile.absolutePath
 			}
 		}
-	}
-}
-
-/* GradleRIO stuff */
-remotes {
-	rio {
-		host = 'roboRIO-449-frc.local'
-		user = 'lvuser'
-		knownHosts = allowAnyHosts
 	}
 }
 
@@ -111,19 +89,6 @@ def robotManifest = {
 	attributes 'Robot-Class': frc.robotClass
 }
 
-task('copyResources', dependsOn: convertFiles) {
-	doLast {
-		ssh.run {
-			session(remotes.rio) {
-				execute 'mkdir ~/449_resources', ignoreError: true
-				execute 'mkdir ~/logs', ignoreError: true
-				put from: fileTree('src/main/resources'), into: './449_resources/'
-			}
-		}
-	}
-}
-
-/* Generic artifact gen stuff */
 jar {
 	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 	manifest robotManifest
@@ -132,6 +97,18 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task('copyResources', dependsOn: convertFiles) {
+	doLast {
+		ssh.run {
+			session(remotes.rio) {
+				execute 'mkdir ~/449_resources', ignoreError: true
+				execute 'mkdir ~/logs', ignoreError: true
+				put from: 'src/main/resources/*', into: './449_resources/'
+			}
+		}
+	}
 }
 
 artifacts {
