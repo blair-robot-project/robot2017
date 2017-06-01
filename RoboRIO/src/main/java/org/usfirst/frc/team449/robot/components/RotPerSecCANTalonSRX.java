@@ -121,8 +121,6 @@ public class RotPerSecCANTalonSRX extends Component {
 			canTalon.EnableCurrentLimit(false);
 		}
 
-		slaves = new ArrayList<>();
-
 		//Set up slaves.
 		for (MotorMap.Motor slave : map.getSlaveList()) {
 			CANTalon tmp = new CANTalon(slave.getPort());
