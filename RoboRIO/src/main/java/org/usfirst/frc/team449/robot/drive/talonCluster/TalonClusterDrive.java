@@ -1,10 +1,11 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
@@ -20,6 +21,7 @@ import org.usfirst.frc.team449.robot.util.*;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, TwoSideMPSubsystem {
 
 	/**

@@ -26,7 +26,7 @@ public class MappedDigitalInput {
 	 * @param ports The ports to read from, in order.
 	 */
 	@JsonCreator
-	public MappedDigitalInput(@JsonProperty(value = "ports", required = true) List<Integer> ports) {
+	public MappedDigitalInput(@JsonProperty(required = true) List<Integer> ports) {
 		digitalInputs = new ArrayList<>();
 		for (int portNum : ports) {
 			DigitalInput tmp = new DigitalInput(portNum);

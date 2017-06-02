@@ -6,6 +6,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 /**
  * Drive forward at constant speed then stop to tune PID.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class PIDTest extends CommandGroup {
 
 	/**

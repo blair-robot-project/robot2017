@@ -13,6 +13,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * The autonomous routine to deliver a gear to the center gear.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class FeederAuto2017 extends CommandGroup {
 
 	/**

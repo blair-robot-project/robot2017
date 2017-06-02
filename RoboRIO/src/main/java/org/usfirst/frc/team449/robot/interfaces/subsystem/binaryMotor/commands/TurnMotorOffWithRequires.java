@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently
  * controlling the subsystem.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class TurnMotorOffWithRequires extends Command {
 
 	/**

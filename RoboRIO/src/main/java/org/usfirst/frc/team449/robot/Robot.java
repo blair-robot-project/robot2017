@@ -1,12 +1,12 @@
 package org.usfirst.frc.team449.robot;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
 import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
@@ -40,6 +40,7 @@ import java.util.Map;
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class Robot extends IterativeRobot {
 
 	/**

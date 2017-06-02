@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turn a certain number of degrees from the current heading.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class NavXRelativeTTA extends NavXTurnToAngle {
 
 	/**

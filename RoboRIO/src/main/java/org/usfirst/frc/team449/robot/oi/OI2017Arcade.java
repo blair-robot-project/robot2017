@@ -1,7 +1,7 @@
 package org.usfirst.frc.team449.robot.oi;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
-import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 /**
  * A simple, two-stick arcade drive OI that uses two distinct joysticks
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class OI2017Arcade extends ArcadeOI {
 	/**
 	 * Left (rotation control) stick's throttle

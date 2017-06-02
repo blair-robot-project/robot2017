@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.util;
 
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
@@ -10,6 +10,7 @@ import java.io.IOException;
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class MotionProfileData {
 	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.

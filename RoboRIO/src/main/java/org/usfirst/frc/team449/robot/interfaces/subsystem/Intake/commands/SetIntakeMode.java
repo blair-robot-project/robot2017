@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Sets the mode of the intake.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class SetIntakeMode extends Command {
 
 	/**

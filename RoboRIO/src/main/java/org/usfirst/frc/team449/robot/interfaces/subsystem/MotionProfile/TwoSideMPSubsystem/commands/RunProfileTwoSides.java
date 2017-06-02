@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * Loads and runs the given profiles into the given subsystem.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class RunProfileTwoSides extends CommandGroup {
 
 	/**

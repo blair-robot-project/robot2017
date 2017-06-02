@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Command group for preparing the shooter to fire.
  * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class RackShooter extends CommandGroup {
 	/**
 	 * Constructs a RackShooter command group

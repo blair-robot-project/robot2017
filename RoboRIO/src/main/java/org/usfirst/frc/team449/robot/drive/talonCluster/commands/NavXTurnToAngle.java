@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**

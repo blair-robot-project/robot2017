@@ -6,6 +6,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsyst
 /**
  * Toggle whether or not the subsystem is firing.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class ToggleShooting extends CommandGroup {
 
 

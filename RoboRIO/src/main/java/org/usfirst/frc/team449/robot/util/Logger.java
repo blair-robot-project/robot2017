@@ -1,20 +1,20 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import maps.org.usfirst.frc.team449.robot.util.LoggerMap;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 /**
  * A logger that logs telemetry data and individual events. Should be run as a separate thread from the main robot loop.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class Logger implements Runnable {
 
 	/**

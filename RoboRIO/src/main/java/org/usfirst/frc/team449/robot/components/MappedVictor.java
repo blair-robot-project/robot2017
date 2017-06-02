@@ -18,8 +18,8 @@ public class MappedVictor extends VictorSP {
 	 * @param inverted Whether the motor is inverted. Defaults to false.
 	 */
 	@JsonCreator
-	public MappedVictor(@JsonProperty(value = "port",required = true) int port,
-	                    @JsonProperty("inverted") Boolean inverted) {
+	public MappedVictor(@JsonProperty(required = true) int port,
+	                    Boolean inverted) {
 		super(port);
 		if (inverted == null){
 			inverted = false;

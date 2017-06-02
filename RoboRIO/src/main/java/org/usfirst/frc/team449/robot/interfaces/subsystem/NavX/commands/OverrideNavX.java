@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Set whether or not to override the NavX.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class OverrideNavX extends Command {
 
 	/**

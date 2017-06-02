@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Very simple unidirectional drive control.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class SimpleUnidirectionalDrive extends Command {
 
 	/**

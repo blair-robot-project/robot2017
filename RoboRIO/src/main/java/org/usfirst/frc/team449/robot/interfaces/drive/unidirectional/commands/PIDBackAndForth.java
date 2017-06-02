@@ -6,6 +6,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 /**
  * Drive back and forth to tune PID.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class PIDBackAndForth extends CommandGroup {
 	/**
 	 * Instantiate the CommandGroup

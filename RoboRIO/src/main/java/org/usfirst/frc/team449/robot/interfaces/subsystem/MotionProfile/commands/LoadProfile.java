@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * Loads the given profile into the subsystem, but doesn't run it.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class LoadProfile extends Command {
 
 	/**

@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Go at a certain speed for a set number of seconds
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class DriveAtSpeed extends Command {
 
 	/**

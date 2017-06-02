@@ -1,12 +1,13 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class dPadButton extends Button {
 
 	/**

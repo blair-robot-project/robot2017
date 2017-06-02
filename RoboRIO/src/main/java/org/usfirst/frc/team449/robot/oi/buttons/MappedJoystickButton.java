@@ -1,13 +1,14 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
 
 /**
  * A button with a port and joystick that can be constructed from a map object.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class MappedJoystickButton extends JoystickButton {
 
 	/**

@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.WaitForMillis;
 /**
  * Spin up the shooter until it's at the target speed, then start feeding in balls.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class SpinUpThenShoot extends CommandGroup {
 
 	/**

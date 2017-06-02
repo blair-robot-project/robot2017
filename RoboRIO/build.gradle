@@ -18,6 +18,10 @@ allprojects {
 	}
 }
 
+compileJava {
+	options.compilerArgs << '-parameters'
+}
+
 remotes {
 	rio {
 		host = 'roboRIO-449-frc.local'
@@ -50,12 +54,6 @@ dependencies {
 	compile wpilib()
 	compile talonSrx()
 	compile fileTree(dir: "lib", include: "*.jar")
-}
-
-idea {
-	module {
-		sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
-	}
 }
 
 task convertFiles {

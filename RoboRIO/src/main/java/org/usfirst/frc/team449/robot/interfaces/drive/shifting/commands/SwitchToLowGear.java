@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that switches to low gear.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class SwitchToLowGear extends Command {
 
 	/**

@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turns off the motor of the specified subsystem.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class TurnMotorOff extends Command {
 
 	/**

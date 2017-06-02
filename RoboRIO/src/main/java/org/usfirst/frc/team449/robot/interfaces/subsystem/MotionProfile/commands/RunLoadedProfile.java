@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Runs the command that is currently loaded in the given subsystem.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class RunLoadedProfile extends Command {
 
 	/**

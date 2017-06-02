@@ -11,6 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Class for the flywheel
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, ShooterSubsystem {
 	/**
 	 * The flywheel's Talon

@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 /**
  * Toggles camera on button press.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class ChangeCam extends ReferencingCommand {
 
 	/**

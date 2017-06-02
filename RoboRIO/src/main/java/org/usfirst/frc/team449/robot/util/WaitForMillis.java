@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.Robot;
  * A command that does nothing and finishes after a set number of milliseconds. For use to create a delay in sequential
  * CommandGroups.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class WaitForMillis extends Command {
 
 	/**

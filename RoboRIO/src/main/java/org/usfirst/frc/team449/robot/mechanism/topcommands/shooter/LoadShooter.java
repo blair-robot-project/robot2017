@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Command group for intaking balls from the ground.
  * Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class LoadShooter extends CommandGroup {
 	/**
 	 * Constructs a LoadShooter command group

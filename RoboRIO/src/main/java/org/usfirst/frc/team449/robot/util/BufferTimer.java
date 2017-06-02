@@ -5,6 +5,7 @@ import org.usfirst.frc.team449.robot.Robot;
 /**
  * A timer that checks if condition has been true for the past n seconds/milliseconds.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class BufferTimer {
 
 	/**

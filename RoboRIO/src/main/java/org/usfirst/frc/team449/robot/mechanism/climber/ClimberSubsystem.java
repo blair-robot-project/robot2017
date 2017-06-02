@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * A climber subsystem that uses power monitoring to stop climbing.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
 	 * The CANTalon controlling one of the climber motors.

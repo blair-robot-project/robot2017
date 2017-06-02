@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 /**
  * A simple tank drive, where each joystick controls a side of the robot.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class OI2017Tank extends TankOI {
 	/**
 	 * The left throttle

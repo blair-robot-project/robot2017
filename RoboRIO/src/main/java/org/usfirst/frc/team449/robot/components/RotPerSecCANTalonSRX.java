@@ -1,17 +1,20 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.ctre.CANTalon;
-import maps.org.usfirst.frc.team449.robot.components.MotorMap;
-import maps.org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRXMap;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.usfirst.frc.team449.robot.util.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every
  * non-unit-conversion in this class takes arguments in post-gearing RPS.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class RotPerSecCANTalonSRX extends Component {
 
 	/**
@@ -35,11 +38,6 @@ public class RotPerSecCANTalonSRX extends Component {
 	private CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
-	 * The map used to construct this object.
-	 */
-	private RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map;
-
-	/**
 	 * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if
 	 * there was a 70:1 gearing between the encoder and the final output.
 	 */
@@ -52,100 +50,285 @@ public class RotPerSecCANTalonSRX extends Component {
 	private Double wheelDiameterInches;
 
 	/**
-	 * Construct the CANTalonSRX from its map object
-	 *
-	 * @param map CANTalonSRX map object
+	 * The max speed of this motor, in RPS, when in high gear, or if the output motor doesn't have gears,
+	 * just the max speed. May be null.
 	 */
-	public RotPerSecCANTalonSRX(RotPerSecCANTalonSRXMap.RotPerSecCANTalonSRX map) {
-		// Configure stuff
-		this.map = map;
-		canTalon = new CANTalon(map.getPort());
-		encoderCPR = map.getEncoderCPR();
-		canTalon.reverseSensor(map.getReverseSensor());
-		canTalon.reverseOutput(map.getReverseOutput());
-		canTalon.setInverted(map.getIsInverted());
-		canTalon.ConfigFwdLimitSwitchNormallyOpen(map.getFwdLimNormOpen());
-		canTalon.ConfigRevLimitSwitchNormallyOpen(map.getRevLimNormOpen());
-		canTalon.enableLimitSwitch(map.getFwdLimEnabled(), map.getRevLimEnabled());
-		canTalon.enableForwardSoftLimit(map.getFwdSoftLimEnabled());
-		canTalon.setForwardSoftLimit(map.getFwdSoftLimVal());
-		canTalon.enableReverseSoftLimit(map.getRevSoftLimEnabled());
-		canTalon.setReverseSoftLimit(map.getRevSoftLimVal());
-		canTalon.enableBrakeMode(map.getBrakeMode());
-		postEncoderGearing = map.getPostEncoderGearing();
+	private Double maxSpeedHigh;
 
-		//High gear speed is the default
-		maxSpeed = map.getMaxSpeedHg();
+	/**
+	 * If this motor has a low gear, this is the max speed of this motor when in that gear. Otherwise, null.
+	 */
+	private Double maxSpeedLow;
 
-		//We have to do some weird things to convert out of the enum in the proto and into the CANTalon enum.
-		feedbackDevice = CANTalon.FeedbackDevice.valueOf(map.getFeedbackDevice().getNumber());
-		canTalon.setFeedbackDevice(feedbackDevice);
+	/**
+	 * The PID constants for high gear or, if this motor does not have gears, just the PID constants.
+	 */
+	private double kPHigh,kIHigh,kDHigh;
 
-		//Configure the minimum output voltage. Should be symmetrical because it can go forwards and back.
-		canTalon.configNominalOutputVoltage(+map.getNominalOutVoltage(), -map.getNominalOutVoltage());
+	/**
+	 * The PID constants for low gear if this motor has a low gear.
+	 */
+	private double kPLow, kILow, kDLow;
 
-		//Configure the maximum output voltage. Should be symmetrical because it can go forwards and back.
-		canTalon.configPeakOutputVoltage(+map.getPeakOutVoltage(), -map.getPeakOutVoltage());
+	/**
+	 * An object representing a slave {@link CANTalon} for use in the map.
+	 */
+	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+	private class SlaveTalon{
 
-		//Initialize the PID constants in slot 0 to the high gear ones.
-		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
+		/**
+		 * The port number of this Talon.
+		 */
+		private int port;
 
-		//Assume regular driving profile by default.
-		canTalon.setProfile(0);
+		/**
+		 * Whether this Talon is inverted compared to its master.
+		 */
+		private boolean inverted;
 
-		//Configure optional parameters
-		if (map.hasClosedLoopRampRate()) {
-			canTalon.setCloseLoopRampRate(map.getClosedLoopRampRate());
+		/**
+		 * Default constructor.
+		 * @param port The port number of this Talon.
+		 * @param inverted Whether this Talon is inverted compared to its master.
+		 */
+		@JsonCreator
+		public SlaveTalon(@JsonProperty(required = true) int port,
+		                  @JsonProperty(required = true) boolean inverted) {
+			this.port = port;
+			this.inverted = inverted;
 		}
 
-		if (map.hasWheelDiameterInches()) {
-			wheelDiameterInches = map.getWheelDiameterInches();
+		/**
+		 * Getter for port number.
+		 * @return The port number of this Talon.
+		 */
+		public int getPort() {
+			return port;
 		}
 
-		//If we have motion profile PID constants, put them in slot 1.
-		if (map.hasKPMp()) {
-			//If we have a low gear and want to use it for MP, set the MP max speed to the low gear max.
-			if (map.hasMaxSpeedLg() && map.getMpUseLowGear()) {
-				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedLg(), 0, 0, 1);
-			} else {
-				//Otherwise, use high gear.
-				setPIDF(map.getKPMp(), map.getKIMp(), map.getKDMp(), map.getMaxSpeedHg(), 0, 0, 1);
-			}
+		/**
+		 * Getter for inversion.
+		 * @return true if this Talon is inverted compared to its master, false otherwise.
+		 */
+		public boolean isInverted() {
+			return inverted;
+		}
+	}
+
+	/**
+	 * Default constructor.
+	 * @param port CAN port of this Talon.
+	 * @param inverted Whether this Talon is inverted.
+	 * @param enableBrakeMode Whether to brake or coast when stopped.
+	 * @param fwdPeakOutputVoltage The peak voltage in the forward direction, in volts. If revPeakOutputVoltage is null,
+	 *                               this is used for peak voltage in both directions. Should be a positive or zero.
+	 * @param revPeakOutputVoltage The peak voltage in the reverse direction. Can be null, and if it is,
+	 *                                fwdPeakOutputVoltage is used as the peak voltage in both directions.
+	 *                                Should be positive or zero.
+	 * @param fwdNominalOutputVoltage The minimum non-zero voltage in the forward direction, in volts.
+	 *                                   If revNominalOutputVoltage is null, this is used for nominal voltage in both
+	 *                                   directions. Should be a positive or zero.
+	 * @param revNominalOutputVoltage The minimum non-zero voltage in the reverse direction. Can be null, and if it is,
+	 *                                fwdNominalOutputVoltage is used as the nominal voltage in both directions.
+	 *                                Should be positive or zero.
+	 * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
+	 *                                      the forward limit switch is disabled.
+	 * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
+	 *                                      the reverse limit switch is disabled.
+	 * @param fwdSoftLimit The forward software limit. If this is null, the forward software limit is disabled.
+	 *                       TODO figure out units
+	 * @param revSoftLimit The reverse software limit. If this is null, the reverse software limit is disabled.
+	 *                     TODO figure out units
+	 * @param postEncoderGearing The coefficient the output changes by after being measured by the encoder, e.g. this
+	 *                              would be 1/70 if there was a 70:1 gearing between the encoder and the final output.
+	 *                              Defaults to 1.
+	 * @param closedLoopRampRate The voltage ramp rate for closed-loop velocity control. Can be null, and if it is, no
+	 *                              ramp rate is used.
+	 * @param wheelDiameterInches The diameter of the wheel attached to this motor, used for motion profiles. Can be null.
+	 * @param currentLimit The max amps this device can draw. If this is null, no current limit is used.
+	 * @param feedbackDevice The type of encoder used to measure the output velocity of this motor. Can be null if there
+	 *                         is no encoder attached to this Talon.
+	 * @param encoderCPR The counts per rotation of the encoder on this Talon. Can be null if feedbackDevice is, but
+	 *                      otherwise must have a value.
+	 * @param reverseSensor Whether or not to reverse the reading from the encoder on this Talon. Can be null if
+	 *                         feedbackDevice is, but otherwise must have a value.
+	 * @param maxSpeedHigh The high gear max speed, in RPS. If this motor doesn't have gears, then this is just the max
+	 *                        speed. Used to calculate velocity PIDF feed-forward. Can be null, and if it is, it's
+	 *                        assumed that this motor won't use velocity closed-loop control.
+	 * @param kPHigh The proportional gain for the PIDF loop of the high/only gear. Defaults to zero.
+	 * @param kIHigh The integral gain for the PIDF loop of the high/only gear. Defaults to zero.
+	 * @param kDHigh The derivative gain for the PIDF loop of the high/only gear. Defaults to zero.
+	 * @param maxSpeedLow The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward. Can be null, and
+	 *                       if it is, it's assumed that either this motor doesn't have a low gear or the low gear won't
+	 *                       use velocity closed-loop control.
+	 * @param kPLow The proportional gain for the PIDF loop of the low gear. Defaults to zero.
+	 * @param kILow The integral gain for the PIDF loop of the low gear. Defaults to zero.
+	 * @param kDLow The derivative gain for the PIDF loop of the low gear. Defaults to zero.
+	 * @param kPMP The proportional gain for the Motion Profile loop. Defaults to zero.
+	 * @param kIMP The integral gain for the Motion Profile loop. Defaults to zero.
+	 * @param kDMP The derivative gain for the Motion Profile loop. Defaults to zero.
+	 * @param MPUseLowGear Whether this motor uses high or low gear for running motion profiles. Defaults to false.
+	 * @param slaves The other {@link CANTalon}s that are slaved to this one.
+	 */
+	@JsonCreator
+	public RotPerSecCANTalonSRX(@JsonProperty(required = true) int port,
+	                            @JsonProperty(required = true) boolean inverted,
+	                            @JsonProperty(required = true) boolean enableBrakeMode,
+	                            @JsonProperty(required = true) double fwdPeakOutputVoltage,
+	                            Double revPeakOutputVoltage,
+	                            @JsonProperty(required = true) double fwdNominalOutputVoltage,
+	                            Double revNominalOutputVoltage,
+	                            Boolean fwdLimitSwitchNormallyOpen,
+	                            Boolean revLimitSwitchNormallyOpen,
+	                            Double fwdSoftLimit,
+	                            Double revSoftLimit,
+	                            Double postEncoderGearing,
+	                            Double closedLoopRampRate,
+	                            Double wheelDiameterInches,
+	                            Integer currentLimit,
+	                            CANTalon.FeedbackDevice feedbackDevice,
+	                            Integer encoderCPR,
+	                            Boolean reverseSensor,
+	                            Double maxSpeedHigh,
+	                            double kPHigh, double kIHigh, double kDHigh,
+	                            Double maxSpeedLow,
+	                            double kPLow, double kILow, double kDLow,
+	                            double kPMP, double kIMP, double kDMP,
+	                            boolean MPUseLowGear,
+	                            List<SlaveTalon> slaves) {
+		//Instantiate the base CANTalon this is a wrapper on.
+		canTalon = new CANTalon(port);
+		//Set this to false because we only use reverseOutput for slaves.
+		canTalon.reverseOutput(false);
+		//Set inversion
+		canTalon.setInverted(inverted);
+		//Set brake mode
+		canTalon.enableBrakeMode(enableBrakeMode);
+
+		//Only enable the limit switches if it was specified if they're normally open or closed.
+		boolean fwdSwitchEnable = false, revSwitchEnable = false;
+		if (fwdLimitSwitchNormallyOpen != null) {
+			canTalon.ConfigFwdLimitSwitchNormallyOpen(fwdLimitSwitchNormallyOpen);
+			fwdSwitchEnable = true;
+		}
+		if (revLimitSwitchNormallyOpen != null) {
+			canTalon.ConfigRevLimitSwitchNormallyOpen(revLimitSwitchNormallyOpen);
+			revSwitchEnable = true;
+		}
+		canTalon.enableLimitSwitch(fwdSwitchEnable, revSwitchEnable);
+
+		//Only enable the software limits if they were given a value.
+		if (fwdSoftLimit != null){
+			canTalon.enableForwardSoftLimit(true);
+			canTalon.setForwardSoftLimit(fwdSoftLimit);
+		} else {
+			canTalon.enableForwardSoftLimit(false);
+		}
+		if (revSoftLimit != null){
+			canTalon.enableReverseSoftLimit(true);
+			canTalon.setReverseSoftLimit(revSoftLimit);
+		} else {
+			canTalon.enableReverseSoftLimit(false);
 		}
 
-		if (map.hasCurrentLimit()) {
-			canTalon.setCurrentLimit(map.getCurrentLimit());
+		//Set up the feedback device if it exists.
+		if (feedbackDevice != null) {
+			this.feedbackDevice = feedbackDevice;
+			canTalon.setFeedbackDevice(feedbackDevice);
+			this.encoderCPR = encoderCPR;
+			canTalon.reverseSensor(reverseSensor);
+		}
+
+		//postEncoderGearing defaults to 1
+		if (postEncoderGearing == null){
+			postEncoderGearing = 1.;
+		}
+		this.postEncoderGearing = postEncoderGearing;
+
+		//Configure the nominal output voltage. If only forward voltage was given, use it for both forward and reverse.
+		if (revNominalOutputVoltage == null){
+			revNominalOutputVoltage = fwdNominalOutputVoltage;
+		}
+		canTalon.configNominalOutputVoltage(fwdNominalOutputVoltage, -revNominalOutputVoltage);
+
+		//Configure the maximum output voltage. If only forward voltage was given, use it for both forward and reverse.
+		if (revPeakOutputVoltage == null){
+			revPeakOutputVoltage = fwdPeakOutputVoltage;
+		}
+		canTalon.configPeakOutputVoltage(fwdPeakOutputVoltage, -revPeakOutputVoltage);
+
+		//Set the current limit if it was given
+		if (currentLimit != null) {
+			canTalon.setCurrentLimit(currentLimit);
 			canTalon.EnableCurrentLimit(true);
 		} else {
 			//If we don't have a current limit, disable current limiting.
 			canTalon.EnableCurrentLimit(false);
 		}
 
+		//Configure ramp rate
+		if (closedLoopRampRate != null) {
+			canTalon.setCloseLoopRampRate(closedLoopRampRate);
+		}
+
+		//We can set this directly because the field is also a Double and can be null.
+		this.wheelDiameterInches = wheelDiameterInches;
+
+		//Set fields
+		this.maxSpeedHigh = maxSpeedHigh;
+		this.kPHigh = kPHigh;
+		this.kIHigh = kIHigh;
+		this.kDHigh = kDHigh;
+		this.maxSpeedLow = maxSpeedLow;
+		this.kPLow = kPLow;
+		this.kILow = kILow;
+		this.kDLow = kDLow;
+
+		//Set up PID constants.
+		if(maxSpeedHigh != null) {
+			//High gear speed is the default
+			maxSpeed = maxSpeedHigh;
+
+			//Initialize the PID constants in slot 0 to the high gear ones.
+			setPIDF(kPHigh, kIHigh, kDHigh, maxSpeed, 0, 0, 0);
+
+			//Assume regular driving profile by default.
+			canTalon.setProfile(0);
+
+			//Put motion profile PID constants in slot 1.
+			//If we have a low gear and want to use it for MP, set the MP max speed to the low gear max.
+			if (maxSpeedLow != null && MPUseLowGear) {
+				setPIDF(kPMP, kIMP, kDMP, maxSpeedLow, 0, 0, 1);
+			} else {
+				//Otherwise, use high gear.
+				setPIDF(kPMP, kIMP, kDMP, maxSpeed, 0, 0, 1);
+			}
+		}
+
 		//Set up slaves.
-		for (MotorMap.Motor slave : map.getSlaveList()) {
+		for (SlaveTalon slave : slaves) {
 			CANTalon tmp = new CANTalon(slave.getPort());
+			//To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
+			tmp.reverseOutput(slave.isInverted());
+			//Don't use the other inversion options
 			tmp.reverseSensor(false);
 			tmp.setInverted(false);
-			tmp.ConfigFwdLimitSwitchNormallyOpen(map.getFwdLimNormOpen());
-			tmp.ConfigRevLimitSwitchNormallyOpen(map.getRevLimNormOpen());
-			tmp.enableLimitSwitch(map.getFwdLimEnabled(), map.getRevLimEnabled());
-			tmp.enableForwardSoftLimit(map.getFwdSoftLimEnabled());
-			tmp.setForwardSoftLimit(map.getFwdSoftLimVal());
-			tmp.enableReverseSoftLimit(map.getRevSoftLimEnabled());
-			tmp.setReverseSoftLimit(map.getRevSoftLimVal());
-			tmp.enableBrakeMode(map.getBrakeMode());
-			tmp.enable();
-			if (map.hasCurrentLimit()) {
-				tmp.setCurrentLimit(map.getCurrentLimit());
-				tmp.EnableCurrentLimit(true);
+
+			//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
+			tmp.enableBrakeMode(enableBrakeMode);
+			if (currentLimit != null) {
+				canTalon.setCurrentLimit(currentLimit);
+				canTalon.EnableCurrentLimit(true);
 			} else {
 				//If we don't have a current limit, disable current limiting.
-				tmp.EnableCurrentLimit(false);
+				canTalon.EnableCurrentLimit(false);
 			}
-			//To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
-			tmp.reverseOutput(slave.getInverted());
+
+			//Don't forget to enable!
+			tmp.enable();
+			//Set the slave up to follow this talon.
 			tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
-			tmp.set(map.getPort());
+			tmp.set(port);
 		}
 	}
 
@@ -190,9 +373,9 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	public void switchToHighGear() {
 		//Switch max speed to high gear max speed
-		maxSpeed = map.getMaxSpeedHg();
+		maxSpeed = maxSpeedHigh;
 		//Set the slot 0 constants to the high gear ones.
-		setPIDF(map.getKPHg(), map.getKIHg(), map.getKDHg(), maxSpeed, 0, 0, 0);
+		setPIDF(kPHigh, kIHigh, kDHigh, maxSpeed, 0, 0, 0);
 	}
 
 	/**
@@ -200,11 +383,11 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	public void switchToLowGear() {
 		//If there are low gear constants in the map
-		if (map.hasKPLg()) {
+		if (maxSpeedLow != null) {
 			//Switch max speed to low gear max speed
-			maxSpeed = map.getMaxSpeedLg();
+			maxSpeed = maxSpeedLow;
 			//Set the slot 0 constants to the low gear ones.
-			setPIDF(map.getKPLg(), map.getKILg(), map.getKDLg(), maxSpeed, 0, 0, 0);
+			setPIDF(kPLow, kILow, kDLow, maxSpeed, 0, 0, 0);
 		} else {
 			//Warn the user if they're trying to do this but don't have the low gear constants in the map.
 			Logger.addEvent("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +
@@ -343,7 +526,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @return The high gear max speed in RPS.
 	 */
 	public double getMaxSpeedHG() {
-		return map.getMaxSpeedHg();
+		return maxSpeedHigh;
 	}
 
 	/**

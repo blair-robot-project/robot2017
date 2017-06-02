@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Start up the pneumatic compressor.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class StartCompressor extends ReferencingCommand {
 
 	private PneumaticsSubsystem subsystem;

@@ -1,9 +1,8 @@
 package org.usfirst.frc.team449.robot.oi;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
-import maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepadMap;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.JiggleRobot;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.NavXRelativeTTA;
@@ -39,6 +38,7 @@ import java.util.List;
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
  * controls turning velocity.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class OI2017ArcadeGamepad extends ArcadeOI {
 
 	/**

@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A subsystem that picks up balls from the ground.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
 	 * Whether intake is currently up

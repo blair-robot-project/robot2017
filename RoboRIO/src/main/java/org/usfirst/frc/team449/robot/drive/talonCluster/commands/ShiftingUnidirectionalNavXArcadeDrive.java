@@ -1,6 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
  * alignment.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArcadeDrive {
 	/**
 	 * Default constructor

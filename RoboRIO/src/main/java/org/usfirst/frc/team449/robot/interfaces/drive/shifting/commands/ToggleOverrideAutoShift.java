@@ -7,6 +7,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Override or unoverride whether we're autoshifting. Used to stay in low gear for pushing matches and more!
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class ToggleOverrideAutoShift extends Command {
 
 	/**

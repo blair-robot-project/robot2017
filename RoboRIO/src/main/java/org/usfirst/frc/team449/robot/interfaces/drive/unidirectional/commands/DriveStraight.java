@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Drives straight when using a tank drive.
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class DriveStraight extends Command {
 
 	/**
