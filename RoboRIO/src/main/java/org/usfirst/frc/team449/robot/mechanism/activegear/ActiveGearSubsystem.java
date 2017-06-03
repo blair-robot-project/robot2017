@@ -1,7 +1,11 @@
 package org.usfirst.frc.team449.robot.mechanism.activegear;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 
@@ -9,7 +13,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsy
  * The subsystem that carries and pushes gears.
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubsystem {
+public class ActiveGearSubsystem extends Subsystem implements SolenoidSubsystem {
 	/**
 	 * Whether piston is currently contracted
 	 */
@@ -23,12 +27,12 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	/**
 	 * Creates a mapped subsystem and sets its map
 	 *
-	 * @param map the map of constants relevant to this subsystem
+	 * @param piston The piston that comprises this subsystem.
 	 */
-	public ActiveGearSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearMap.ActiveGear map) {
-		super(map.getMechanism());
-		this.map = map;
-		this.piston = new MappedDoubleSolenoid(map.getPiston());
+	@JsonCreator
+	public ActiveGearSubsystem(@JsonProperty(required = true) MappedDoubleSolenoid piston) {
+		super();
+		this.piston = piston;
 	}
 
 	/**

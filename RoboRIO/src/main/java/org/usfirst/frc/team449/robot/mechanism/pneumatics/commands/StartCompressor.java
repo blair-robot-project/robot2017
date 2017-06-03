@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.mechanism.pneumatics.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -17,7 +21,8 @@ public class StartCompressor extends ReferencingCommand {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public StartCompressor(PneumaticsSubsystem subsystem) {
+	@JsonCreator
+	public StartCompressor(@JsonProperty(required = true) PneumaticsSubsystem subsystem) {
 		super(subsystem);
 		this.subsystem = subsystem;
 	}

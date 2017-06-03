@@ -1,7 +1,11 @@
 package org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
@@ -12,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Class for the flywheel
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, ShooterSubsystem {
+public class SingleFlywheelShooter extends Subsystem implements Loggable, ShooterSubsystem {
 	/**
 	 * The flywheel's Talon
 	 */
@@ -44,21 +48,26 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	private long spinUpTime;
 
 	/**
-	 * Construct a SingleFlywheelShooter
-	 *
-	 * @param map config map
+	 * Default constructor
+	 * @param shooterTalon The TalonSRX controlling the flywheel.
+	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the shooter.
+	 * @param feederVictor The VictorSP controlling the feeder.
+	 * @param feederThrottle The throttle, from [-1, 1], at which to run the feeder.
+	 * @param spinUpTimeSecs The amount of time, in seconds, it takes for the shooter to get up to speed. Defaults to 0.
 	 */
-	public SingleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter
-			                             .SingleFlywheelShooterMap.SingleFlywheelShooter map) {
-		super(map.getMechanism());
-		this.map = map;
-		shooterTalon = new RotPerSecCANTalonSRX(map.getShooter());
-
-		shooterThrottle = map.getShooterThrottle();
+	@JsonCreator
+	public SingleFlywheelShooter(@JsonProperty(required = true) RotPerSecCANTalonSRX shooterTalon,
+	                             @JsonProperty(required = true) double shooterThrottle,
+	                             @JsonProperty(required = true) MappedVictor feederVictor,
+	                             @JsonProperty(required = true) double feederThrottle,
+	                             double spinUpTimeSecs) {
+		super();
+		this.shooterTalon = shooterTalon;
+		this.shooterThrottle = shooterThrottle;
+		this.feederVictor = feederVictor;
+		this.feederThrottle = feederThrottle;
 		state = ShooterState.OFF;
-		spinUpTime = (long) (map.getSpinUpTimeSecs() * 1000.);
-		feederVictor = new MappedVictor(map.getFeeder());
-		feederThrottle = map.getFeederThrottle();
+		spinUpTime = (long) (spinUpTimeSecs * 1000.);
 		Logger.addEvent("Shooter F: " + shooterTalon.canTalon.getF(), this.getClass());
 	}
 

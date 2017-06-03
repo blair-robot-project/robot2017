@@ -1,8 +1,12 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
@@ -13,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * A subsystem that picks up balls from the ground.
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, IntakeSubsystem {
+public class Intake2017 extends Subsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
 	 * Whether intake is currently up
 	 */
@@ -55,27 +59,30 @@ public class Intake2017 extends MappedSubsystem implements SolenoidSubsystem, In
 	private IntakeMode mode;
 
 	/**
-	 * Creates a mapped subsystem and sets its map
-	 *
-	 * @param map the map of constants relevant to this subsystem
+	 * Default constructor.
+	 * @param fixedVictor The VictorSP powering the fixed intake.
+	 * @param fixedAgitateSpeed The speed to run the fixed victor at to agitate balls, on [-1, 1]
+	 * @param fixedIntakeSpeed The speed to run the fixed victor to intake balls, on [-1, 1]
+	 * @param actuatedVictor The VictorSP powering the actuated intake. Can be null.
+	 * @param actuatedSpeed The speed to run the actuated victor to intake balls, on [-1, 1]. Defaults to 0.
+	 * @param piston The piston for raising and lowering the actuated intake. Can be null.
 	 */
-	public Intake2017(maps.org.usfirst.frc.team449.robot.mechanism.intake.Intake2017Map.Intake2017 map) {
-		super(map.getMechanism());
+	@JsonCreator
+	public Intake2017(@JsonProperty(required = true) MappedVictor fixedVictor,
+	                  @JsonProperty(required = true) double fixedAgitateSpeed,
+	                  @JsonProperty(required = true) double fixedIntakeSpeed,
+	                  MappedVictor actuatedVictor,
+	                  double actuatedSpeed,
+	                  MappedDoubleSolenoid piston) {
+		super();
 		//Instantiate stuff.
-		this.map = map;
-		fixedVictor = new MappedVictor(map.getFixedVictor());
-		fixedAgitateSpeed = map.getFixedAgitateSpeed();
-		fixedIntakeSpeed = map.getFixedIntakeSpeed();
-		actuatedSpeed = map.getActuatedSpeed();
+		this.fixedVictor = fixedVictor;
+		this.fixedIntakeSpeed = fixedIntakeSpeed;
+		this.fixedAgitateSpeed = fixedAgitateSpeed;
+		this.actuatedVictor = actuatedVictor;
+		this.actuatedSpeed = actuatedSpeed;
+		this.piston = piston;
 		mode = IntakeMode.OFF;
-
-		//Instantiate optional stuff
-		if (map.hasActuatedVictor()) {
-			actuatedVictor = new MappedVictor(map.getActuatedVictor());
-		}
-		if (map.hasPiston()) {
-			piston = new MappedDoubleSolenoid(map.getPiston());
-		}
 	}
 
 	/**

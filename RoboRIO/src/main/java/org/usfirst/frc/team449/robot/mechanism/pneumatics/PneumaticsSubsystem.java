@@ -1,7 +1,11 @@
 package org.usfirst.frc.team449.robot.mechanism.pneumatics;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.PressureSensor;
 import org.usfirst.frc.team449.robot.util.Loggable;
 
@@ -9,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
+public class PneumaticsSubsystem extends Subsystem implements Loggable {
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
 	 */
@@ -20,13 +24,17 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	 */
 	private PressureSensor pressureSensor;
 
-	public PneumaticsSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap
-			                           .PneumaticSystem map) {
-		super(map);
-		compressor = new Compressor(map.getNodeID());
-		if (map.hasPressureSensor()) {
-			pressureSensor = new PressureSensor(map.getPressureSensor());
-		}
+	/**
+	 * Default constructor
+	 * @param nodeID The node ID of the compressor.
+	 * @param pressureSensor The pressure sensor attached to this pneumatics system. Can be null.
+	 */
+	@JsonCreator
+	public PneumaticsSubsystem(@JsonProperty(required = true) int nodeID,
+	                           PressureSensor pressureSensor) {
+		super();
+		compressor = new Compressor(nodeID);
+		this.pressureSensor = pressureSensor;
 	}
 
 	/**

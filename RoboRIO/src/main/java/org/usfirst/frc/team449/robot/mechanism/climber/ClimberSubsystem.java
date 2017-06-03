@@ -1,11 +1,15 @@
 package org.usfirst.frc.team449.robot.mechanism.climber;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
 
@@ -13,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
  * A climber subsystem that uses power monitoring to stop climbing.
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
+public class ClimberSubsystem extends Subsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
 	 * The CANTalon controlling one of the climber motors.
 	 */
@@ -27,7 +31,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	/**
 	 * The maximum allowable power before we stop the motor.
 	 */
-	private double max_power;
+	private double maxPower;
 
 	/**
 	 * The bufferTimer controlling how long we can be above the current limit before we stop climbing.
@@ -39,24 +43,27 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 */
 	private boolean motorSpinning;
 
-	/**
-	 * Construct a ClimberSubsystem
-	 *
-	 * @param map the config map
-	 */
-	public ClimberSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.climber.ClimberMap.Climber map) {
-		super(map.getMechanism());
-		//Instantiate things
-		this.map = map;
-		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
-		this.max_power = map.getMaxPower();
-		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
-		motorSpinning = false;
 
-		//Victor is optional
-		if (map.hasVictor()) {
-			this.victor = new MappedVictor(map.getVictor());
-		}
+	/**
+	 * Default constructor
+	 * @param talonSRX The CANTalon controlling one of the climber motors.
+	 * @param maxPower The maximum power at which the motor won't shut off.
+	 * @param victor The VictorSP controlling the other climber motor. Can be null.
+	 * @param millisAboveMaxPower The number of milliseconds it takes to shut off the climber after being above the
+	 *                              current limit. Defaults to 0.
+	 */
+	@JsonCreator
+	public ClimberSubsystem(@JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,
+	                        @JsonProperty(required = true) double maxPower,
+	                        MappedVictor victor,
+	                        int millisAboveMaxPower) {
+		super();
+		//Instantiate things
+		canTalonSRX = talonSRX;
+		this.maxPower = maxPower;
+		currentLimitTimer = new BufferTimer(millisAboveMaxPower);
+		motorSpinning = false;
+		this.victor = victor;
 	}
 
 	/**
@@ -153,6 +160,6 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 */
 	@Override
 	public boolean isConditionTrue() {
-		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
+		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > maxPower);
 	}
 }
