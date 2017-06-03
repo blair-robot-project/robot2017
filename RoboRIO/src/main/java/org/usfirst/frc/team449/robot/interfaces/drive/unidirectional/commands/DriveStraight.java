@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Drives straight when using a tank drive.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DriveStraight extends Command {
 
 	/**
@@ -45,8 +45,8 @@ public class DriveStraight extends Command {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive> DriveStraight(@JsonProperty(required = true) T drive,
-	                     @JsonProperty(required = true) TankOI oi,
-	                     @JsonProperty(required = true) boolean useLeft) {
+	                                                                 @JsonProperty(required = true) TankOI oi,
+	                                                                 @JsonProperty(required = true) boolean useLeft) {
 		subsystem = drive;
 		this.oi = oi;
 		this.useLeft = useLeft;

@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that extends a piston.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SolenoidForward extends Command {
 
 	/**

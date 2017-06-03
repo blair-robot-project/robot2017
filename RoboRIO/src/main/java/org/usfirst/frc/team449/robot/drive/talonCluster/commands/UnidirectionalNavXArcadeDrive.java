@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	/**
 	 * The UnidirectionalDrive this command is controlling.
@@ -63,8 +63,8 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
-	                                     @JsonProperty(required = true) T drive,
-	                                     @JsonProperty(required = true) ArcadeOI oi) {
+	                                                                                                 @JsonProperty(required = true) T drive,
+	                                                                                                 @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff
 		super(PID, drive);
 		maxAngularVelToEnterLoop = PID.getMaxAngularVelToEnterLoop();

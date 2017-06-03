@@ -13,7 +13,6 @@ import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.CANTalonMPHandler;
 import org.usfirst.frc.team449.robot.util.Loggable;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
@@ -22,7 +21,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class TalonClusterDrive extends Subsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
@@ -57,23 +56,24 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 	private final AHRS navx;
 
 	/**
-	 * Whether or not to use the NavX for driving straight
-	 */
-	private boolean overrideNavX;
-
-	/**
 	 * A helper class that loads and runs profiles on the Talons.
 	 */
 	private final CANTalonMPHandler mpHandler;
 
 	/**
+	 * Whether or not to use the NavX for driving straight
+	 */
+	private boolean overrideNavX;
+
+	/**
 	 * Default constructor.
-	 * @param turnPID The angular PID for turning in place.
+	 *
+	 * @param turnPID     The angular PID for turning in place.
 	 * @param straightPID The angular PID for driving straight.
-	 * @param leftMaster The master talon on the left side of the drive.
+	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
-	 * @param MPHandler The motion profile handler that runs this drive's motion profiles.
-	 * @param PIDScale The amount to scale the output to the PID loop by. Defaults to 1.
+	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
+	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
 	@JsonCreator
 	public TalonClusterDrive(@JsonProperty(required = true) ToleranceBufferAnglePID turnPID,
@@ -84,7 +84,7 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 	                         Double PIDScale) {
 		super();
 		//Initialize stuff
-		if (PIDScale == null){
+		if (PIDScale == null) {
 			PIDScale = 1.;
 		}
 		PID_SCALE = PIDScale;

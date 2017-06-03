@@ -16,7 +16,7 @@ import java.util.List;
  * An OI for using an Xbox-style controller for an arcade drive, where one stick controls forward velocity and the other
  * controls turning velocity.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class OI2017ArcadeGamepad extends ArcadeOI {
 
 	/**
@@ -53,15 +53,16 @@ public class OI2017ArcadeGamepad extends ArcadeOI {
 
 	/**
 	 * Default constructor
-	 * @param gamepad The gamepad containing the joysticks and buttons.
-	 * @param rotThrottle The throttle for rotating the robot.
-	 * @param fwdThrottle The throttle for driving the robot straight.
-	 * @param invertDPad Whether or not to invert the D-pad.
-	 * @param dPadShift How fast the dPad should turn the robot, on [0, 1].
+	 *
+	 * @param gamepad                  The gamepad containing the joysticks and buttons.
+	 * @param rotThrottle              The throttle for rotating the robot.
+	 * @param fwdThrottle              The throttle for driving the robot straight.
+	 * @param invertDPad               Whether or not to invert the D-pad.
+	 * @param dPadShift                How fast the dPad should turn the robot, on [0, 1].
 	 * @param scaleFwdByRotCoefficient Scaling, from [0, 1], that the rotational throttle decreases the forwards
-	 *                                    throttle by. Used so that turning while at high speed still has an impact.
-	 *                                    Defaults to 0.
-	 * @param buttons The button-command mappings for running commands.
+	 *                                 throttle by. Used so that turning while at high speed still has an impact.
+	 *                                 Defaults to 0.
+	 * @param buttons                  The button-command mappings for running commands.
 	 */
 	@JsonCreator
 	public OI2017ArcadeGamepad(@JsonProperty(required = true) MappedJoystick gamepad,

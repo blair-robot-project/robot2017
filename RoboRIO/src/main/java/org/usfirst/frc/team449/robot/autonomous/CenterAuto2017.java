@@ -16,14 +16,15 @@ import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 /**
  * The autonomous routine to deliver a gear to the center gear.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CenterAuto2017 extends CommandGroup {
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param drive         The drive subsystem to execute this command on. Must have the profile to drive up to the peg
-	 *                        already loaded into it.
+	 * @param drive         The drive subsystem to execute this command on. Must have the profile to drive up to the
+	 *                      peg
+	 *                      already loaded into it.
 	 * @param gearHandler   The gear handler to execute this command on.
 	 * @param dropGear      Whether or not to drop the gear.
 	 * @param driveBackTime How long, in seconds, to drive back from the peg for.

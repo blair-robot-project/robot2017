@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class NavXDriveStraight extends PIDAngleCommand {
 
 	/**
@@ -45,9 +45,9 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
-	                         @JsonProperty(required = true) T drive,
-	                         @JsonProperty(required = true) TankOI oi,
-	                         @JsonProperty(required = true) boolean useLeft) {
+	                                                                                     @JsonProperty(required = true) T drive,
+	                                                                                     @JsonProperty(required = true) TankOI oi,
+	                                                                                     @JsonProperty(required = true) boolean useLeft) {
 		super(PID, drive);
 		this.oi = oi;
 		this.drive = drive;

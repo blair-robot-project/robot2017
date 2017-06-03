@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Command group to reset everything.
  * Turns everything off, raises intake
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ResetShooter extends CommandGroup {
 	/**
 	 * Constructs a ResetShooter command group
@@ -26,7 +26,7 @@ public class ResetShooter extends CommandGroup {
 	 */
 	@JsonCreator
 	public <T extends IntakeSubsystem & SolenoidSubsystem> ResetShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                    @JsonProperty(required = true) T intakeSubsystem) {
+	                                                                    @JsonProperty(required = true) T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));
 		}

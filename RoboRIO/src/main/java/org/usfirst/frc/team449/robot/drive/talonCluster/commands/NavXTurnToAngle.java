@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class NavXTurnToAngle extends PIDAngleCommand {
 
 	/**
@@ -48,9 +48,9 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 *                 errors prevent termination.
 	 */
 	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXTurnToAngle(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
-	                       @JsonProperty(required = true) double setpoint,
-	                       @JsonProperty(required = true) T drive,
-	                       @JsonProperty(required = true) double timeout) {
+	                                                                                   @JsonProperty(required = true) double setpoint,
+	                                                                                   @JsonProperty(required = true) T drive,
+	                                                                                   @JsonProperty(required = true) double timeout) {
 		super(PID, drive);
 		this.drive = drive;
 		this.setpoint = setpoint;

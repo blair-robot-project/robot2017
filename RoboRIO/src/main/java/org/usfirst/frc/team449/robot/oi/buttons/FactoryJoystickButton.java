@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a FactoryButton.
  */
-public class FactoryJoystickButton extends FactoryButton{
+public class FactoryJoystickButton extends FactoryButton {
 
 	/**
 	 * The joystick the button is on.
@@ -19,7 +19,8 @@ public class FactoryJoystickButton extends FactoryButton{
 
 	/**
 	 * Default constructor.
-	 * @param joystick The joystick the button is on.
+	 *
+	 * @param joystick  The joystick the button is on.
 	 * @param buttonNum The port of the button. Note that button numbers begin at 1, not 0.
 	 */
 	FactoryJoystickButton(Joystick joystick, int buttonNum) {
@@ -29,6 +30,7 @@ public class FactoryJoystickButton extends FactoryButton{
 
 	/**
 	 * Get whether the button is pressed.
+	 *
 	 * @return true if the button is pressed, false otherwise.
 	 */
 	@Override

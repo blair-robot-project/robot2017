@@ -11,13 +11,13 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 /**
  * Drive back and forth to tune PID.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class PIDBackAndForth extends CommandGroup {
 	/**
 	 * Instantiate the CommandGroup
 	 *
-	 * @param subsystem the unidirectional drive to execute this command on.
-	 * @param speed The speed to drive forwards and backwards at, from [0, 1].
+	 * @param subsystem  the unidirectional drive to execute this command on.
+	 * @param speed      The speed to drive forwards and backwards at, from [0, 1].
 	 * @param timeInSecs How long to drive in each direction for, in seconds.
 	 */
 	@JsonCreator

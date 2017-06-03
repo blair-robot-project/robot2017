@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 /**
  * A wrapper on the {@link DoubleSolenoid} that can be constructed from a map object.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedDoubleSolenoid extends DoubleSolenoid {
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param module The module number of the PCM. Defaults to 0.
+	 * @param module  The module number of the PCM. Defaults to 0.
 	 * @param forward The forward port on the PCM.
 	 * @param reverse The reverse port on the PCM.
 	 */

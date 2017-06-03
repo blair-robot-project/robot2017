@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * A polynomically scaled throttle.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	/**
 	 * The power that X is raised to.
@@ -32,7 +31,7 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	                          boolean inverted,
 	                          Integer degree) {
 		super(stick, axis, deadband, inverted);
-		if (degree == null){
+		if (degree == null) {
 			degree = 1;
 		}
 		this.degree = degree;
@@ -46,8 +45,9 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	@Override
 	public double getValue() {
 		double input = super.getValue();
-		if (degree % 2 == 0 && input < 0)
+		if (degree % 2 == 0 && input < 0) {
 			return -1 * Math.pow(input, degree);
+		}
 		return Math.pow(input, degree);
 	}
 }

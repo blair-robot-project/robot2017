@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Very simple unidirectional drive control.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SimpleUnidirectionalDrive extends Command {
 
 	/**
@@ -34,7 +34,7 @@ public class SimpleUnidirectionalDrive extends Command {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive> SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
-	                                 @JsonProperty(required = true) UnidirectionalOI oi) {
+	                                                                             @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.

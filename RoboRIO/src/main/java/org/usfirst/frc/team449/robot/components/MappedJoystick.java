@@ -9,11 +9,12 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * A Json-compatible wrapper on a {@link Joystick}.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class MappedJoystick extends Joystick{
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class MappedJoystick extends Joystick {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param port The USB port of this joystick, on [0, 5].
 	 */
 	@JsonCreator

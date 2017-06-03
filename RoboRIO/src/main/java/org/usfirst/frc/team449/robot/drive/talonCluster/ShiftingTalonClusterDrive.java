@@ -13,13 +13,12 @@ import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.CANTalonMPHandler;
-import org.usfirst.frc.team449.robot.util.Logger;
 
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ShiftingTalonClusterDrive extends TalonClusterDrive implements ShiftingDrive {
 
 	/**
@@ -84,28 +83,39 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	private ArcadeOI oi;
 
 	/**
+	 * The gear to start teleop and autonomous in.
+	 */
+	private gear startingGear;
+
+	/**
 	 * Default constructor.
-	 * @param turnPID The angular PID for turning in place.
-	 * @param straightPID The angular PID for driving straight.
-	 * @param leftMaster The master talon on the left side of the drive.
-	 * @param rightMaster The master talon on the right side of the drive.
-	 * @param MPHandler The motion profile handler that runs this drive's motion profiles.
-	 * @param PIDScale The amount to scale the output to the PID loop by. Defaults to 1.
-	 * @param oi The ArcadeOI used to control this drive.
-	 * @param upshiftSpeed The minimum speed both sides the drive must be going at to shift to high gear.
-	 * @param downshiftSpeed The maximum speed both sides must be going at to shift to low gear.
-	 * @param shifter The piston that shifts between gears.
-	 * @param delayAfterUpshiftConditionsMet How long, in seconds, the conditions to upshift have to be met for before
-	 *                                       upshifting happens. Defaults to 0.
+	 *
+	 * @param turnPID                          The angular PID for turning in place.
+	 * @param straightPID                      The angular PID for driving straight.
+	 * @param leftMaster                       The master talon on the left side of the drive.
+	 * @param rightMaster                      The master talon on the right side of the drive.
+	 * @param MPHandler                        The motion profile handler that runs this drive's motion profiles.
+	 * @param PIDScale                         The amount to scale the output to the PID loop by. Defaults to 1.
+	 * @param oi                               The ArcadeOI used to control this drive.
+	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high
+	 *                                         gear.
+	 * @param downshiftSpeed                   The maximum speed both sides must be going at to shift to low gear.
+	 * @param shifter                          The piston that shifts between gears.
+	 * @param delayAfterUpshiftConditionsMet   How long, in seconds, the conditions to upshift have to be met for
+	 *                                         before
+	 *                                         upshifting happens. Defaults to 0.
 	 * @param delayAfterDownshiftConditionsMet How long, in seconds, the conditions to downshift have to be met for
-	 *                                            before downshifting happens. Defaults to 0.
-	 * @param cooldownAfterDownshift The minimum time, in seconds, between downshifting and then upshifting again.
-	 *                              Defaults to 0.
-	 * @param cooldownAfterUpshift The minimum time, in seconds, between upshifting and then downshifting again.
-	 *                              Defaults to 0.
-	 * @param upshiftFwdThresh The minimum amount the forward joystick must be pushed forward in order to upshift, on
-	 *                            [0, 1]. Defaults to 0.
-	 * @param startingGear The gear the drive starts in. Defaults to low.
+	 *                                         before downshifting happens. Defaults to 0.
+	 * @param cooldownAfterDownshift           The minimum time, in seconds, between downshifting and then upshifting
+	 *                                         again.
+	 *                                         Defaults to 0.
+	 * @param cooldownAfterUpshift             The minimum time, in seconds, between upshifting and then downshifting
+	 *                                         again.
+	 *                                         Defaults to 0.
+	 * @param upshiftFwdThresh                 The minimum amount the forward joystick must be pushed forward in order
+	 *                                         to upshift, on
+	 *                                         [0, 1]. Defaults to 0.
+	 * @param startingGear                     The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
 	public ShiftingTalonClusterDrive(@JsonProperty(required = true) ToleranceBufferAnglePID turnPID,
@@ -137,9 +147,11 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 		this.shifter = shifter;
 
 		//Default to low
-		if (startingGear == null){
+		if (startingGear == null) {
 			startingGear = gear.LOW;
 		}
+
+		this.startingGear = startingGear;
 		currentGear = startingGear;
 
 		// Initialize shifting constants, assuming robot is stationary.
@@ -203,32 +215,26 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 */
 	@Override
 	public void setGear(gear gear) {
-		//If we have a shifter on the robot
-		if (shifter != null) {
-			//If we want to downshift
-			if (gear == ShiftingDrive.gear.LOW) {
-				//Physically shift gears
-				shifter.set(DoubleSolenoid.Value.kForward);
-				//Switch the PID constants
-				rightMaster.switchToLowGear();
-				leftMaster.switchToLowGear();
-				//Record the current time
-				timeLastDownshifted = Robot.currentTimeMillis();
-			} else {
-				//Physically shift gears
-				shifter.set(DoubleSolenoid.Value.kReverse);
-				//Switch the PID constants
-				rightMaster.switchToHighGear();
-				leftMaster.switchToHighGear();
-				//Record the current time.
-				timeLastUpshifted = Robot.currentTimeMillis();
-			}
-			//Set logging var
-			currentGear = gear;
+		//If we want to downshift
+		if (gear == ShiftingDrive.gear.LOW) {
+			//Physically shift gears
+			shifter.set(DoubleSolenoid.Value.kForward);
+			//Switch the PID constants
+			rightMaster.switchToLowGear();
+			leftMaster.switchToLowGear();
+			//Record the current time
+			timeLastDownshifted = Robot.currentTimeMillis();
 		} else {
-			//Warn the user if they try to shift but didn't define a shifting piston.
-			Logger.addEvent("You're trying to shift gears, but your drive doesn't have a shifter.", this.getClass());
+			//Physically shift gears
+			shifter.set(DoubleSolenoid.Value.kReverse);
+			//Switch the PID constants
+			rightMaster.switchToHighGear();
+			leftMaster.switchToHighGear();
+			//Record the current time.
+			timeLastUpshifted = Robot.currentTimeMillis();
 		}
+		//Set logging var
+		currentGear = gear;
 	}
 
 	/**
@@ -285,5 +291,9 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 			//Downshift if we should
 			setGear(gear.LOW);
 		}
+	}
+
+	public gear getStartingGear() {
+		return startingGear;
 	}
 }

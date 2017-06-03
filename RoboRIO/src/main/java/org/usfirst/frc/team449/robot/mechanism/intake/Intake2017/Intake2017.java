@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A subsystem that picks up balls from the ground.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Intake2017 extends Subsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
 	 * Whether intake is currently up
@@ -60,12 +60,13 @@ public class Intake2017 extends Subsystem implements SolenoidSubsystem, IntakeSu
 
 	/**
 	 * Default constructor.
-	 * @param fixedVictor The VictorSP powering the fixed intake.
+	 *
+	 * @param fixedVictor       The VictorSP powering the fixed intake.
 	 * @param fixedAgitateSpeed The speed to run the fixed victor at to agitate balls, on [-1, 1]
-	 * @param fixedIntakeSpeed The speed to run the fixed victor to intake balls, on [-1, 1]
-	 * @param actuatedVictor The VictorSP powering the actuated intake. Can be null.
-	 * @param actuatedSpeed The speed to run the actuated victor to intake balls, on [-1, 1]. Defaults to 0.
-	 * @param piston The piston for raising and lowering the actuated intake. Can be null.
+	 * @param fixedIntakeSpeed  The speed to run the fixed victor to intake balls, on [-1, 1]
+	 * @param actuatedVictor    The VictorSP powering the actuated intake. Can be null.
+	 * @param actuatedSpeed     The speed to run the actuated victor to intake balls, on [-1, 1]. Defaults to 0.
+	 * @param piston            The piston for raising and lowering the actuated intake. Can be null.
 	 */
 	@JsonCreator
 	public Intake2017(@JsonProperty(required = true) MappedVictor fixedVictor,

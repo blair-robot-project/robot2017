@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
  * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every
  * non-unit-conversion in this class takes arguments in post-gearing RPS.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RotPerSecCANTalonSRX extends Component {
 
 	/**
@@ -71,99 +70,74 @@ public class RotPerSecCANTalonSRX extends Component {
 	private PID lowGearPID;
 
 	/**
-	 * An object representing a slave {@link CANTalon} for use in the map.
-	 */
-	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-	private class SlaveTalon{
-
-		/**
-		 * The port number of this Talon.
-		 */
-		private int port;
-
-		/**
-		 * Whether this Talon is inverted compared to its master.
-		 */
-		private boolean inverted;
-
-		/**
-		 * Default constructor.
-		 * @param port The port number of this Talon.
-		 * @param inverted Whether this Talon is inverted compared to its master.
-		 */
-		@JsonCreator
-		public SlaveTalon(@JsonProperty(required = true) int port,
-		                  @JsonProperty(required = true) boolean inverted) {
-			this.port = port;
-			this.inverted = inverted;
-		}
-
-		/**
-		 * Getter for port number.
-		 * @return The port number of this Talon.
-		 */
-		public int getPort() {
-			return port;
-		}
-
-		/**
-		 * Getter for inversion.
-		 * @return true if this Talon is inverted compared to its master, false otherwise.
-		 */
-		public boolean isInverted() {
-			return inverted;
-		}
-	}
-
-	/**
 	 * Default constructor.
-	 * @param port CAN port of this Talon.
-	 * @param inverted Whether this Talon is inverted.
-	 * @param enableBrakeMode Whether to brake or coast when stopped.
-	 * @param fwdPeakOutputVoltage The peak voltage in the forward direction, in volts. If revPeakOutputVoltage is null,
-	 *                               this is used for peak voltage in both directions. Should be a positive or zero.
-	 * @param revPeakOutputVoltage The peak voltage in the reverse direction. Can be null, and if it is,
-	 *                                fwdPeakOutputVoltage is used as the peak voltage in both directions.
-	 *                                Should be positive or zero.
-	 * @param fwdNominalOutputVoltage The minimum non-zero voltage in the forward direction, in volts.
+	 *
+	 * @param port                       CAN port of this Talon.
+	 * @param inverted                   Whether this Talon is inverted.
+	 * @param enableBrakeMode            Whether to brake or coast when stopped.
+	 * @param fwdPeakOutputVoltage       The peak voltage in the forward direction, in volts. If revPeakOutputVoltage is
+	 *                                   null,
+	 *                                   this is used for peak voltage in both directions. Should be a positive or
+	 *                                   zero.
+	 * @param revPeakOutputVoltage       The peak voltage in the reverse direction. Can be null, and if it is,
+	 *                                   fwdPeakOutputVoltage is used as the peak voltage in both directions.
+	 *                                   Should be positive or zero.
+	 * @param fwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction, in volts.
 	 *                                   If revNominalOutputVoltage is null, this is used for nominal voltage in both
 	 *                                   directions. Should be a positive or zero.
-	 * @param revNominalOutputVoltage The minimum non-zero voltage in the reverse direction. Can be null, and if it is,
-	 *                                fwdNominalOutputVoltage is used as the nominal voltage in both directions.
-	 *                                Should be positive or zero.
+	 * @param revNominalOutputVoltage    The minimum non-zero voltage in the reverse direction. Can be null, and if it
+	 *                                   is,
+	 *                                   fwdNominalOutputVoltage is used as the nominal voltage in both directions.
+	 *                                   Should be positive or zero.
 	 * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
-	 *                                      the forward limit switch is disabled.
+	 *                                   the forward limit switch is disabled.
 	 * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
-	 *                                      the reverse limit switch is disabled.
-	 * @param fwdSoftLimit The forward software limit. If this is null, the forward software limit is disabled.
-	 *                       TODO figure out units
-	 * @param revSoftLimit The reverse software limit. If this is null, the reverse software limit is disabled.
-	 *                     TODO figure out units
-	 * @param postEncoderGearing The coefficient the output changes by after being measured by the encoder, e.g. this
-	 *                              would be 1/70 if there was a 70:1 gearing between the encoder and the final output.
-	 *                              Defaults to 1.
-	 * @param closedLoopRampRate The voltage ramp rate for closed-loop velocity control. Can be null, and if it is, no
-	 *                              ramp rate is used.
-	 * @param wheelDiameterInches The diameter of the wheel attached to this motor, used for motion profiles. Can be null.
-	 * @param currentLimit The max amps this device can draw. If this is null, no current limit is used.
-	 * @param feedbackDevice The type of encoder used to measure the output velocity of this motor. Can be null if there
-	 *                         is no encoder attached to this Talon.
-	 * @param encoderCPR The counts per rotation of the encoder on this Talon. Can be null if feedbackDevice is, but
-	 *                      otherwise must have a value.
-	 * @param reverseSensor Whether or not to reverse the reading from the encoder on this Talon. Can be null if
-	 *                         feedbackDevice is, but otherwise must have a value.
-	 * @param maxSpeedHigh The high gear max speed, in RPS. If this motor doesn't have gears, then this is just the max
-	 *                        speed. Used to calculate velocity PIDF feed-forward. Can be null, and if it is, it's
-	 *                        assumed that this motor won't use velocity closed-loop control.
-	 * @param highGearPID The high/only gear's PID constants. Can be null if maxSpeedHigh is, but otherwise must have a
-	 *                       value.
-	 * @param maxSpeedLow The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward. Can be null, and
-	 *                       if it is, it's assumed that either this motor doesn't have a low gear or the low gear won't
-	 *                       use velocity closed-loop control.
-	 * @param lowGearPID The low gear's PID constants. Can be null if maxSpeedLow is, but otherwise must have a value.
-	 * @param MotionProfilePID The motion profile PID constants. Can be null.
-	 * @param MPUseLowGear Whether this motor uses high or low gear for running motion profiles. Defaults to false.
-	 * @param slaves The other {@link CANTalon}s that are slaved to this one.
+	 *                                   the reverse limit switch is disabled.
+	 * @param fwdSoftLimit               The forward software limit. If this is null, the forward software limit is
+	 *                                   disabled.
+	 *                                   TODO figure out units
+	 * @param revSoftLimit               The reverse software limit. If this is null, the reverse software limit is
+	 *                                   disabled.
+	 *                                   TODO figure out units
+	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
+	 *                                   this
+	 *                                   would be 1/70 if there was a 70:1 gearing between the encoder and the final
+	 *                                   output.
+	 *                                   Defaults to 1.
+	 * @param closedLoopRampRate         The voltage ramp rate for closed-loop velocity control. Can be null, and if it
+	 *                                   is, no
+	 *                                   ramp rate is used.
+	 * @param wheelDiameterInches        The diameter of the wheel attached to this motor, used for motion profiles. Can
+	 *                                   be null.
+	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
+	 * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
+	 *                                   null if there
+	 *                                   is no encoder attached to this Talon.
+	 * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
+	 *                                   feedbackDevice is, but
+	 *                                   otherwise must have a value.
+	 * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Can be
+	 *                                   null if
+	 *                                   feedbackDevice is, but otherwise must have a value.
+	 * @param maxSpeedHigh               The high gear max speed, in RPS. If this motor doesn't have gears, then this is
+	 *                                   just the max
+	 *                                   speed. Used to calculate velocity PIDF feed-forward. Can be null, and if it is,
+	 *                                   it's
+	 *                                   assumed that this motor won't use velocity closed-loop control.
+	 * @param highGearPID                The high/only gear's PID constants. Can be null if maxSpeedHigh is, but
+	 *                                   otherwise must have a
+	 *                                   value.
+	 * @param maxSpeedLow                The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward.
+	 *                                   Can be null, and
+	 *                                   if it is, it's assumed that either this motor doesn't have a low gear or the
+	 *                                   low gear won't
+	 *                                   use velocity closed-loop control.
+	 * @param lowGearPID                 The low gear's PID constants. Can be null if maxSpeedLow is, but otherwise must
+	 *                                   have a value.
+	 * @param MotionProfilePID           The motion profile PID constants. Can be null.
+	 * @param MPUseLowGear               Whether this motor uses high or low gear for running motion profiles. Defaults
+	 *                                   to false.
+	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
 	public RotPerSecCANTalonSRX(@JsonProperty(required = true) int port,
@@ -213,13 +187,13 @@ public class RotPerSecCANTalonSRX extends Component {
 		canTalon.enableLimitSwitch(fwdSwitchEnable, revSwitchEnable);
 
 		//Only enable the software limits if they were given a value.
-		if (fwdSoftLimit != null){
+		if (fwdSoftLimit != null) {
 			canTalon.enableForwardSoftLimit(true);
 			canTalon.setForwardSoftLimit(fwdSoftLimit);
 		} else {
 			canTalon.enableForwardSoftLimit(false);
 		}
-		if (revSoftLimit != null){
+		if (revSoftLimit != null) {
 			canTalon.enableReverseSoftLimit(true);
 			canTalon.setReverseSoftLimit(revSoftLimit);
 		} else {
@@ -235,19 +209,19 @@ public class RotPerSecCANTalonSRX extends Component {
 		}
 
 		//postEncoderGearing defaults to 1
-		if (postEncoderGearing == null){
+		if (postEncoderGearing == null) {
 			postEncoderGearing = 1.;
 		}
 		this.postEncoderGearing = postEncoderGearing;
 
 		//Configure the nominal output voltage. If only forward voltage was given, use it for both forward and reverse.
-		if (revNominalOutputVoltage == null){
+		if (revNominalOutputVoltage == null) {
 			revNominalOutputVoltage = fwdNominalOutputVoltage;
 		}
 		canTalon.configNominalOutputVoltage(fwdNominalOutputVoltage, -revNominalOutputVoltage);
 
 		//Configure the maximum output voltage. If only forward voltage was given, use it for both forward and reverse.
-		if (revPeakOutputVoltage == null){
+		if (revPeakOutputVoltage == null) {
 			revPeakOutputVoltage = fwdPeakOutputVoltage;
 		}
 		canTalon.configPeakOutputVoltage(fwdPeakOutputVoltage, -revPeakOutputVoltage);
@@ -276,7 +250,7 @@ public class RotPerSecCANTalonSRX extends Component {
 		this.lowGearPID = lowGearPID;
 
 		//Set up PID constants.
-		if(maxSpeedHigh != null) {
+		if (maxSpeedHigh != null) {
 			//High gear speed is the default
 			maxSpeed = maxSpeedHigh;
 
@@ -581,5 +555,53 @@ public class RotPerSecCANTalonSRX extends Component {
 	 */
 	public double nativeToFeetPerSec(double nativeUnits) {
 		return encoderToRPS(nativeUnits) * (wheelDiameterInches * Math.PI);
+	}
+
+	/**
+	 * An object representing a slave {@link CANTalon} for use in the map.
+	 */
+	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+	private class SlaveTalon {
+
+		/**
+		 * The port number of this Talon.
+		 */
+		private int port;
+
+		/**
+		 * Whether this Talon is inverted compared to its master.
+		 */
+		private boolean inverted;
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param port     The port number of this Talon.
+		 * @param inverted Whether this Talon is inverted compared to its master.
+		 */
+		@JsonCreator
+		public SlaveTalon(@JsonProperty(required = true) int port,
+		                  @JsonProperty(required = true) boolean inverted) {
+			this.port = port;
+			this.inverted = inverted;
+		}
+
+		/**
+		 * Getter for port number.
+		 *
+		 * @return The port number of this Talon.
+		 */
+		public int getPort() {
+			return port;
+		}
+
+		/**
+		 * Getter for inversion.
+		 *
+		 * @return true if this Talon is inverted compared to its master, false otherwise.
+		 */
+		public boolean isInverted() {
+			return inverted;
+		}
 	}
 }

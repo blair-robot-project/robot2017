@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Turn off the shooter and feeder, using requires() to interrupt any other commands that may be telling them to
  * continue running.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class TurnAllOffWithRequires extends Command {
 
 	/**

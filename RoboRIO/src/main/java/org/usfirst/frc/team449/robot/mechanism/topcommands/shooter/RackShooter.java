@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Command group for preparing the shooter to fire.
  * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RackShooter extends CommandGroup {
 	/**
 	 * Constructs a RackShooter command group
@@ -26,7 +26,7 @@ public class RackShooter extends CommandGroup {
 	 */
 	@JsonCreator
 	public <T extends IntakeSubsystem & SolenoidSubsystem> RackShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                   @JsonProperty(required = true) T intakeSubsystem) {
+	                                                                   @JsonProperty(required = true) T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new SpinUpShooter(shooterSubsystem));
 		}

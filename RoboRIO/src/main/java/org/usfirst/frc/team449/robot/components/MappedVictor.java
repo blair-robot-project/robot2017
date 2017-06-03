@@ -9,19 +9,20 @@ import edu.wpi.first.wpilibj.VictorSP;
 /**
  * A wrapper for a {@link VictorSP} allowing it to be easily constructed from a map object.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedVictor extends VictorSP {
 
 	/**
 	 * Json constructor using a port and inversion.
-	 * @param port The port number of the Victor.
+	 *
+	 * @param port     The port number of the Victor.
 	 * @param inverted Whether the motor is inverted. Defaults to false.
 	 */
 	@JsonCreator
 	public MappedVictor(@JsonProperty(required = true) int port,
 	                    Boolean inverted) {
 		super(port);
-		if (inverted == null){
+		if (inverted == null) {
 			inverted = false;
 		}
 		this.setInverted(inverted);

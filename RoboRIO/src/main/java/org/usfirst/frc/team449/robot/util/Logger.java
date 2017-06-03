@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * A logger that logs telemetry data and individual events. Should be run as a separate thread from the main robot loop.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Logger implements Runnable {
 
 	/**
@@ -52,12 +52,14 @@ public class Logger implements Runnable {
 
 	/**
 	 * Default constructor.
-	 * @param subsystems The subsystems to log telemetry data from.
-	 * @param loopTimeSecs The period of the loop for collecting telemetry data, in seconds.
-	 * @param eventLogFilename The filepath of the log for events. Will have the timestamp and file extension appended
-	 *                           onto the end.
+	 *
+	 * @param subsystems           The subsystems to log telemetry data from.
+	 * @param loopTimeSecs         The period of the loop for collecting telemetry data, in seconds.
+	 * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension
+	 *                             appended
+	 *                             onto the end.
 	 * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
-	 *                                extension appended onto the end.
+	 *                             extension appended onto the end.
 	 * @throws IOException If the file names provided from the log can't be written to.
 	 */
 	@JsonCreator
@@ -97,7 +99,7 @@ public class Logger implements Runnable {
 			}
 		}
 		//Delete the trailing comma
-		telemetryHeader.deleteCharAt(telemetryHeader.length()-1);
+		telemetryHeader.deleteCharAt(telemetryHeader.length() - 1);
 
 		telemetryHeader.append("\n");
 		//Write the telemetry file header

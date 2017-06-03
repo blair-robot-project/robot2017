@@ -13,17 +13,17 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 /**
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class JiggleRobot extends CommandGroup {
 	/**
 	 * Instantiate the CommandGroup
 	 *
 	 * @param subsystem The drive to execute this command on.
-	 * @param turnPID The angular PID loop to turn with.
+	 * @param turnPID   The angular PID loop to turn with.
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> JiggleRobot(@JsonProperty(required = true) T subsystem,
-	                                                                              @JsonProperty(required = true) ToleranceBufferAnglePID turnPID) {
+	                                                                               @JsonProperty(required = true) ToleranceBufferAnglePID turnPID) {
 		addSequential(new NavXRelativeTTA(turnPID, 10, subsystem, 3));
 		addSequential(new NavXRelativeTTA(turnPID, -10, subsystem, 3));
 	}

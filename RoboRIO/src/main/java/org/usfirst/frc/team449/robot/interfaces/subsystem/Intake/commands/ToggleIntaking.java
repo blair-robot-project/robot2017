@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Toggles whether the subsystem is off or set to a given mode.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ToggleIntaking extends Command {
 
 	/**

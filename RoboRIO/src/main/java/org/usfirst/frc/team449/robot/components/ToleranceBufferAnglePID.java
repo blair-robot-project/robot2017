@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 /**
  * An object that holds the constants for an angular PID loop.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ToleranceBufferAnglePID {
 	/**
 	 * The PID gains for this loop.
@@ -16,7 +16,8 @@ public class ToleranceBufferAnglePID {
 	private PID PID;
 
 	/**
-	 * How many consecutive loops have to be run while within tolerance to be considered on target. Multiply by loop period of ~20 milliseconds for time.
+	 * How many consecutive loops have to be run while within tolerance to be considered on target. Multiply by loop
+	 * period of ~20 milliseconds for time.
 	 */
 	private int toleranceBuffer;
 
@@ -57,19 +58,25 @@ public class ToleranceBufferAnglePID {
 
 	/**
 	 * Default constructor.
-	 * @param PID The PID gains for this loop.
-	 * @param toleranceBuffer How many consecutive loops have to be run while within tolerance to be considered on
-	 *                           target. Multiply by loop period of ~20 milliseconds for time.
-	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
-	 *                            tolerance.
-	 * @param minimumOutput The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput The maximum output of the loop. Can be null, and if it is, no maximum output is used.
-	 * @param deadband The deadband around the setpoint, in degrees, within which no output is given to the motors.
-	 *                    Defaults to zero.
+	 *
+	 * @param PID                      The PID gains for this loop.
+	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
+	 *                                 on
+	 *                                 target. Multiply by loop period of ~20 milliseconds for time.
+	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
+	 *                                 within
+	 *                                 tolerance.
+	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
+	 *                                 used.
+	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
+	 *                                 the motors.
+	 *                                 Defaults to zero.
 	 * @param maxAngularVelToEnterLoop The maximum angular velocity, in degrees/sec, at which the loop will be entered.
 	 *                                 Defaults to 180.
-	 * @param inverted Whether the loop is inverted. Defaults to false.
-	 * @param loopEntryDelay The delay to enter the loop after conditions for entry are met. Defaults to zero.
+	 * @param inverted                 Whether the loop is inverted. Defaults to false.
+	 * @param loopEntryDelay           The delay to enter the loop after conditions for entry are met. Defaults to
+	 *                                 zero.
 	 */
 	@JsonCreator
 	public ToleranceBufferAnglePID(@JsonProperty(required = true) PID PID,
@@ -86,7 +93,7 @@ public class ToleranceBufferAnglePID {
 		this.minimumOutput = minimumOutput;
 		this.maximumOutput = maximumOutput;
 		this.deadband = deadband;
-		if (maxAngularVelToEnterLoop == null){
+		if (maxAngularVelToEnterLoop == null) {
 			maxAngularVelToEnterLoop = 180.;
 		}
 		this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop;

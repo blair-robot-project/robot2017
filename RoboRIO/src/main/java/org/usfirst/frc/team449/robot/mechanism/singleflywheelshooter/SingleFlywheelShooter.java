@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Class for the flywheel
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SingleFlywheelShooter extends Subsystem implements Loggable, ShooterSubsystem {
 	/**
 	 * The flywheel's Talon
@@ -49,11 +49,13 @@ public class SingleFlywheelShooter extends Subsystem implements Loggable, Shoote
 
 	/**
 	 * Default constructor
-	 * @param shooterTalon The TalonSRX controlling the flywheel.
+	 *
+	 * @param shooterTalon    The TalonSRX controlling the flywheel.
 	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the shooter.
-	 * @param feederVictor The VictorSP controlling the feeder.
-	 * @param feederThrottle The throttle, from [-1, 1], at which to run the feeder.
-	 * @param spinUpTimeSecs The amount of time, in seconds, it takes for the shooter to get up to speed. Defaults to 0.
+	 * @param feederVictor    The VictorSP controlling the feeder.
+	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
+	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the shooter to get up to speed. Defaults to
+	 *                        0.
 	 */
 	@JsonCreator
 	public SingleFlywheelShooter(@JsonProperty(required = true) RotPerSecCANTalonSRX shooterTalon,

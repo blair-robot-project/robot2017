@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 /**
  * Utility class for loading and running profiles on a {@link CANTalon}.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CANTalonMPHandler {
 
 	/**

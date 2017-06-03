@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * An exponentially-scaled throttle.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedExpThrottle extends MappedSmoothedThrottle {
 
 	/**
@@ -25,14 +24,14 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	 * @param axis     The axis being used. 0 is X, 1 is Y, 2 is Z.
 	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
 	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
-	 * @param base   The base that is raised to the power of the joystick input..
+	 * @param base     The base that is raised to the power of the joystick input..
 	 */
 	@JsonCreator
 	public MappedExpThrottle(@JsonProperty(required = true) MappedJoystick stick,
-	                          @JsonProperty(required = true) int axis,
-	                          double deadband,
-	                          boolean inverted,
-	                          @JsonProperty(required = true) int base) {
+	                         @JsonProperty(required = true) int axis,
+	                         double deadband,
+	                         boolean inverted,
+	                         @JsonProperty(required = true) int base) {
 		super(stick, axis, deadband, inverted);
 		this.base = base;
 	}
@@ -45,8 +44,9 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	@Override
 	public double getValue() {
 		double input = super.getValue();
-		if (input > 0)
+		if (input > 0) {
 			return (Math.pow(base, input) - 1) / (base - 1);
+		}
 		return -1 * (Math.pow(base, input * -1) - 1) / (base - 1);
 	}
 }

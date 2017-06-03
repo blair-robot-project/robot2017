@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,7 +12,7 @@ import java.io.IOException;
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MotionProfileData {
 	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
@@ -28,7 +27,8 @@ public class MotionProfileData {
 	/**
 	 * Default constructor
 	 *
-	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
+	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of
+	 *                 other
 	 *                 lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */

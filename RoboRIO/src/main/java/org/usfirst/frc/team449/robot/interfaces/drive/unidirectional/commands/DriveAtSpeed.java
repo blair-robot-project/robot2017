@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Go at a certain speed for a set number of seconds
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DriveAtSpeed extends Command {
 
 	/**
@@ -45,8 +45,8 @@ public class DriveAtSpeed extends Command {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive> DriveAtSpeed(@JsonProperty(required = true) T drive,
-	                                         @JsonProperty(required = true) double speed,
-	                                         @JsonProperty(required = true) double seconds) {
+	                                                                @JsonProperty(required = true) double speed,
+	                                                                @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
 		this.subsystem = drive;
 		this.speed = speed;

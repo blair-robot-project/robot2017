@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class PneumaticsSubsystem extends Subsystem implements Loggable {
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
@@ -26,7 +26,8 @@ public class PneumaticsSubsystem extends Subsystem implements Loggable {
 
 	/**
 	 * Default constructor
-	 * @param nodeID The node ID of the compressor.
+	 *
+	 * @param nodeID         The node ID of the compressor.
 	 * @param pressureSensor The pressure sensor attached to this pneumatics system. Can be null.
 	 */
 	@JsonCreator

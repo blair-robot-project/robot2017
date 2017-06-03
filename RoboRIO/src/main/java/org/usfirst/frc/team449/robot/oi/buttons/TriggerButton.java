@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
 import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
@@ -23,7 +22,7 @@ public class TriggerButton extends FactoryButton {
 	/**
 	 * Argument-based constructor.
 	 *
-	 * @param joystick      The the joystick containing the throttle.
+	 * @param joystick  The the joystick containing the throttle.
 	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */

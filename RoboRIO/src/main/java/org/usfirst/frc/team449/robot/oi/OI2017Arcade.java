@@ -1,52 +1,49 @@
 package org.usfirst.frc.team449.robot.oi;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import edu.wpi.first.wpilibj.Joystick;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
-import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
-import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
+
+import java.util.List;
 
 /**
  * A simple, two-stick arcade drive OI that uses two distinct joysticks
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class OI2017Arcade extends ArcadeOI {
 	/**
 	 * Left (rotation control) stick's throttle
 	 */
-	private Throttle rotThrottle;
+	private MappedSmoothedThrottle rotThrottle;
 
 	/**
 	 * Right (fwd/rev control) stick's throttle
 	 */
-	private Throttle velThrottle;
+	private MappedSmoothedThrottle velThrottle;
 
 	/**
-	 * The map for this object.
+	 * The button-command mappings for running commands. This only exists to prevent garbage collection.
 	 */
-	private OI2017ArcadeMap.OI2017Arcade map;
+	private List<CommandButton> buttons;
 
 	/**
-	 * Construct an OI2017Arcade
+	 * Default constructor
 	 *
-	 * @param map config map
+	 * @param rotThrottle The throttle for rotating the robot.
+	 * @param velThrottle The throttle for driving straight.
+	 * @param buttons     The button-command mappings for running commands.
 	 */
-	public OI2017Arcade(maps.org.usfirst.frc.team449.robot.oi.OI2017ArcadeMap.OI2017Arcade map) {
-		this.map = map;
-
-		//Instantiate the sticks
-		Joystick _leftStick = new Joystick(map.getLeftStick());
-		Joystick _rightStick = new Joystick(map.getRightStick());
-		this.rotThrottle = new SmoothedThrottle(_leftStick, 1);
-		this.velThrottle = new SmoothedThrottle(_rightStick, 1);
-	}
-
-	/**
-	 * Map the buttons (call this after all subsytems are constructed)
-	 */
-	@Override
-	public void mapButtons() {
-		// Do nothing
+	@JsonCreator
+	public OI2017Arcade(@JsonProperty(required = true) MappedSmoothedThrottle rotThrottle,
+	                    @JsonProperty(required = true) MappedSmoothedThrottle velThrottle,
+	                    List<CommandButton> buttons) {
+		this.rotThrottle = rotThrottle;
+		this.velThrottle = velThrottle;
+		this.buttons = buttons;
 	}
 
 	/**

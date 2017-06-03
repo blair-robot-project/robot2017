@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turn a certain number of degrees from the current heading.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class NavXRelativeTTA extends NavXTurnToAngle {
 
 	/**

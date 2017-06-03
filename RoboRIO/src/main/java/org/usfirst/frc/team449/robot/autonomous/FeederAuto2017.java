@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
@@ -16,14 +17,14 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * The autonomous routine to deliver a gear to the center gear.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FeederAuto2017 extends CommandGroup {
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param drive              The drive subsystem to execute this command on. Must have the profile to drive up to
-	 *                              the peg already loaded into it.
+	 *                           the peg already loaded into it.
 	 * @param gearHandler        The gear handler to execute this command on.
 	 * @param dropGear           Whether or not to drop the gear.
 	 * @param leftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg.
@@ -31,12 +32,12 @@ public class FeederAuto2017 extends CommandGroup {
 	 * @param forwardsProfile    The motion profile for both sides to drive forwards after backing up from the peg.
 	 */
 	@JsonCreator
-	public FeederAuto2017(@JsonProperty(required = true) TwoSideMPSubsystem drive,
-	                      @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
-	                      @JsonProperty(required = true) boolean dropGear,
-	                      @JsonProperty(required = true) MotionProfileData leftBackupProfile,
-	                      @JsonProperty(required = true) MotionProfileData rightBackupProfile,
-	                      @JsonProperty(required = true) MotionProfileData forwardsProfile) {
+	public <T extends Subsystem & TwoSideMPSubsystem> FeederAuto2017(@JsonProperty(required = true) T drive,
+	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
+	                                                                 @JsonProperty(required = true) boolean dropGear,
+	                                                                 @JsonProperty(required = true) MotionProfileData leftBackupProfile,
+	                                                                 @JsonProperty(required = true) MotionProfileData rightBackupProfile,
+	                                                                 @JsonProperty(required = true) MotionProfileData forwardsProfile) {
 		addSequential(new RunLoadedProfile(drive, 15, true));
 		if (dropGear) {
 			addSequential(new SolenoidReverse(gearHandler));

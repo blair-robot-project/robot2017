@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnA
  * Command group for firing the shooter.
  * Runs flywheel, runs static intake, stops dynamic intake, raises intake, and runs feeder.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FireShooter extends CommandGroup {
 	/**
 	 * Constructs a FireShooter command group

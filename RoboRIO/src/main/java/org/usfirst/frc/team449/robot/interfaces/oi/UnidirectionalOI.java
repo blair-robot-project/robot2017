@@ -4,7 +4,7 @@ package org.usfirst.frc.team449.robot.interfaces.oi;
  * An OI to control a robot with a unidirectional drive that has a left and right side (e.g. not meccanum, swerve, or
  * holonomic)
  */
-public interface UnidirectionalOI{
+public interface UnidirectionalOI {
 
 	/**
 	 * The output to be given to the left side of the drive.

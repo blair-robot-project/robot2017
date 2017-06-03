@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * A command that toggles the state of the motor between off and on.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ToggleMotor extends Command {
 
 	/**

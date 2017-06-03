@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.Joystick;
 /**
  * A class representing a single axis on a joystick.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedThrottle {
 	//The stick we're using
 	protected Joystick stick;
+
 	//The axis on the joystick we care about. Usually 1.
 	protected int axis;
+
 	//Whether or not the controls should be inverted
 	protected boolean inverted;
 

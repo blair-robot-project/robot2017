@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team449.robot.oi.components.Throttle;
 
 /**
  * A smoothed throttle with a deadband.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedSmoothedThrottle extends MappedThrottle {
 
 	private double deadband;
@@ -44,7 +42,7 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 		input *= sign; // get the absolute value
 
 		//apply the deadband.
-		if (input < deadband){
+		if (input < deadband) {
 			input = 0;
 		}
 

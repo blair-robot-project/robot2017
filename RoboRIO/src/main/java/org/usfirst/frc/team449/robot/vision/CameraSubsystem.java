@@ -5,18 +5,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.MappedUsbCamera;
 import org.usfirst.frc.team449.robot.util.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Subsystem to initialize and push video to SmartDashboard
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CameraSubsystem extends Subsystem {
 
 	/**
@@ -36,9 +34,10 @@ public class CameraSubsystem extends Subsystem {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param serverPort The port of the {@link MjpegServer} this subsystem uses.
 	 * @param serverName The human-friendly name of the {@link MjpegServer} this subsystem uses.
-	 * @param cameras The cameras this subsystem controls.
+	 * @param cameras    The cameras this subsystem controls.
 	 */
 	@JsonCreator
 	public CameraSubsystem(@JsonProperty(required = true) int serverPort,

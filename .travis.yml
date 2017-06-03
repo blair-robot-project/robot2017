@@ -8,4 +8,4 @@ script:
 notifications:
   email:
     on_success: never
-    on_failure: never # default: always
+    on_failure: always # default: always

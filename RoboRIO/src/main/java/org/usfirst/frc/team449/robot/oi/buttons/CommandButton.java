@@ -11,15 +11,16 @@ public class CommandButton {
 
 	/**
 	 * Default constructor.
-	 * @param button The button that triggers the command.
+	 *
+	 * @param button  The button that triggers the command.
 	 * @param command The command to run or cancel.
-	 * @param action The action to do to the command.
+	 * @param action  The action to do to the command.
 	 */
 	@JsonCreator
 	public CommandButton(@JsonProperty(required = true) FactoryButton button,
-	                                  @JsonProperty(required = true) Command command,
-	                                  @JsonProperty(required = true) Action action){
-		switch (action){
+	                     @JsonProperty(required = true) Command command,
+	                     @JsonProperty(required = true) Action action) {
+		switch (action) {
 			case WHILE_HELD:
 				button.whileHeld(command);
 				break;
@@ -42,6 +43,6 @@ public class CommandButton {
 	 * The possible actions for the button to do to the command.
 	 */
 	enum Action {
-		WHEN_PRESSED,WHILE_HELD,WHEN_RELEASED,TOGGLE_WHEN_PRESSED, CANCEL_WHEN_PRESSED
+		WHEN_PRESSED, WHILE_HELD, WHEN_RELEASED, TOGGLE_WHEN_PRESSED, CANCEL_WHEN_PRESSED
 	}
 }

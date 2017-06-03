@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * A series of roboRIO digital input pins.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedDigitalInput {
 
 	/**

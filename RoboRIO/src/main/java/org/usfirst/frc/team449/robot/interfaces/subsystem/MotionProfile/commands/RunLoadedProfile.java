@@ -7,14 +7,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
  * Runs the command that is currently loaded in the given subsystem.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RunLoadedProfile extends Command {
 
 	/**
@@ -47,8 +46,8 @@ public class RunLoadedProfile extends Command {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & MPSubsystem> RunLoadedProfile(@JsonProperty(required = true) T subsystem,
-	                                                                   @JsonProperty(required = true) double timeout,
-	                                                                   @JsonProperty(required = true) boolean require) {
+	                                                            @JsonProperty(required = true) double timeout,
+	                                                            @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;
 		//Require if specified.
 		if (require) {

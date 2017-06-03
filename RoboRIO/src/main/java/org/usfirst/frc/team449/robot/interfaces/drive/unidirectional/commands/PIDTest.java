@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 /**
  * Drive forward at constant speed then stop to tune PID.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class PIDTest extends CommandGroup {
 
 	/**
@@ -19,12 +19,12 @@ public class PIDTest extends CommandGroup {
 	 *
 	 * @param subsystem the UnidirectionalDrive to execute this command on
 	 * @param driveTime How long to drive forwards for, in seconds.
-	 * @param speed The speed to drive at, from [0, 1].
+	 * @param speed     The speed to drive at, from [0, 1].
 	 */
 	@JsonCreator
 	public <T extends Subsystem & UnidirectionalDrive> PIDTest(@JsonProperty(required = true) T subsystem,
-	                                                          @JsonProperty(required = true) double driveTime,
-	                                                          @JsonProperty(required = true) double speed) {
+	                                                           @JsonProperty(required = true) double driveTime,
+	                                                           @JsonProperty(required = true) double speed) {
 		//Drive forward for a bit
 		addSequential(new DriveAtSpeed(subsystem, speed, driveTime));
 		//Stop actively to see how the PID responds.

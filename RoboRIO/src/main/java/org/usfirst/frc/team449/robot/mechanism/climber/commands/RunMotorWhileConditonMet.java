@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Run a BinaryMotor while a condition is true.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RunMotorWhileConditonMet extends Command {
 
 	/**

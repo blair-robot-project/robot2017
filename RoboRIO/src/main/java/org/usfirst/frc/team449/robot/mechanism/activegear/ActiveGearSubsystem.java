@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsy
 /**
  * The subsystem that carries and pushes gears.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ActiveGearSubsystem extends Subsystem implements SolenoidSubsystem {
 	/**
 	 * Whether piston is currently contracted

@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
 /**
  * Turn on the shooter but not the feeder in order to give the shooter time to get up to speed.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SpinUpShooter extends Command {
 
 	/**

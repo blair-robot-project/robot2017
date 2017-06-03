@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
 /**
  * A climber subsystem that uses power monitoring to stop climbing.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ClimberSubsystem extends Subsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
 	 * The CANTalon controlling one of the climber motors.
@@ -46,11 +46,12 @@ public class ClimberSubsystem extends Subsystem implements Loggable, BinaryMotor
 
 	/**
 	 * Default constructor
-	 * @param talonSRX The CANTalon controlling one of the climber motors.
-	 * @param maxPower The maximum power at which the motor won't shut off.
-	 * @param victor The VictorSP controlling the other climber motor. Can be null.
+	 *
+	 * @param talonSRX            The CANTalon controlling one of the climber motors.
+	 * @param maxPower            The maximum power at which the motor won't shut off.
+	 * @param victor              The VictorSP controlling the other climber motor. Can be null.
 	 * @param millisAboveMaxPower The number of milliseconds it takes to shut off the climber after being above the
-	 *                              current limit. Defaults to 0.
+	 *                            current limit. Defaults to 0.
 	 */
 	@JsonCreator
 	public ClimberSubsystem(@JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
@@ -12,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * Loads and runs the given profiles into the given subsystem.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RunProfileTwoSides extends CommandGroup {
 
 	/**
@@ -24,10 +25,10 @@ public class RunProfileTwoSides extends CommandGroup {
 	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
 	 */
 	@JsonCreator
-	public RunProfileTwoSides(@JsonProperty(required = true) TwoSideMPSubsystem subsystem,
-	                          @JsonProperty(required = true) MotionProfileData left,
-	                          @JsonProperty(required = true) MotionProfileData right,
-	                          @JsonProperty(required = true) double timeout) {
+	public <T extends Subsystem & TwoSideMPSubsystem> RunProfileTwoSides(@JsonProperty(required = true) T subsystem,
+	                                                                     @JsonProperty(required = true) MotionProfileData left,
+	                                                                     @JsonProperty(required = true) MotionProfileData right,
+	                                                                     @JsonProperty(required = true) double timeout) {
 		addSequential(new LoadProfileTwoSides(subsystem, left, right));
 		addSequential(new RunLoadedProfile(subsystem, timeout, true));
 	}

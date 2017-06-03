@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
 /**
  * Loads the given profiles into the subsystem, but doesn't run it.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LoadProfileTwoSides extends Command {
 
 	/**
