@@ -61,17 +61,14 @@ public class ToleranceBufferAnglePID {
 	 *
 	 * @param PID                      The PID gains for this loop.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
-	 *                                 on
-	 *                                 target. Multiply by loop period of ~20 milliseconds for time.
+	 *                                 on target. Multiply by loop period of ~20 milliseconds for time.
 	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
-	 *                                 within
-	 *                                 tolerance.
+	 *                                 within tolerance.
 	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
 	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
 	 *                                 used.
 	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
-	 *                                 the motors.
-	 *                                 Defaults to zero.
+	 *                                 the motors. Defaults to zero.
 	 * @param maxAngularVelToEnterLoop The maximum angular velocity, in degrees/sec, at which the loop will be entered.
 	 *                                 Defaults to 180.
 	 * @param inverted                 Whether the loop is inverted. Defaults to false.

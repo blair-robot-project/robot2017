@@ -14,12 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * continue running.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnAllOffWithRequires extends Command {
-
-	/**
-	 * The subsystem to execute this command on.
-	 */
-	private ShooterSubsystem subsystem;
+public class TurnAllOffWithRequires extends TurnAllOff {
 
 	/**
 	 * Default constructor
@@ -28,51 +23,7 @@ public class TurnAllOffWithRequires extends Command {
 	 */
 	@JsonCreator
 	public <T extends Subsystem & ShooterSubsystem> TurnAllOffWithRequires(@JsonProperty(required = true) T subsystem) {
+		super(subsystem);
 		requires(subsystem);
-		this.subsystem = subsystem;
-	}
-
-	/**
-	 * Log when this command is initialized
-	 */
-	@Override
-	protected void initialize() {
-		Logger.addEvent("TurnAllOffWithRequires init.", this.getClass());
-	}
-
-	/**
-	 * Turn off the shooter and feeder.
-	 */
-	@Override
-	protected void execute() {
-		subsystem.turnFeederOff();
-		subsystem.turnShooterOff();
-		subsystem.setShooterState(ShooterSubsystem.ShooterState.OFF);
-	}
-
-	/**
-	 * Finish immediately because this is a state-change command.
-	 *
-	 * @return true
-	 */
-	@Override
-	protected boolean isFinished() {
-		return true;
-	}
-
-	/**
-	 * Log when this command ends
-	 */
-	@Override
-	protected void end() {
-		Logger.addEvent("TurnAllOffWithRequires end.", this.getClass());
-	}
-
-	/**
-	 * Log when this command is interrupted.
-	 */
-	@Override
-	protected void interrupted() {
-		Logger.addEvent("TurnAllOffWithRequires Interrupted!", this.getClass());
 	}
 }
