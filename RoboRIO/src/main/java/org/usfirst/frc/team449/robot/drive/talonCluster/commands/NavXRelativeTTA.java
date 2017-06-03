@@ -1,7 +1,9 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -21,7 +23,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public NavXRelativeTTA(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
+	public NavXRelativeTTA(ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
 	                       double timeout) {
 		super(map, setpoint, drive, timeout);
 	}

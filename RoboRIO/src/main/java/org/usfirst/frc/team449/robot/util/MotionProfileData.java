@@ -1,6 +1,9 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
@@ -23,27 +26,15 @@ public class MotionProfileData {
 	private boolean inverted;
 
 	/**
-	 * Map constructor
-	 *
-	 * @param map the config map
-	 */
-	public MotionProfileData(MotionProfileMap.MotionProfile map) {
-		inverted = map.getInverted();
-		try {
-			readFile(Robot.RESOURCES_PATH + map.getFilename());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Parameter constructor
+	 * Default constructor
 	 *
 	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
 	 *                 lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */
-	public MotionProfileData(String filename, boolean inverted) {
+	@JsonCreator
+	public MotionProfileData(@JsonProperty(required = true) String filename,
+	                         @JsonProperty(required = true) boolean inverted) {
 		this.inverted = inverted;
 		try {
 			readFile(filename);

@@ -1,69 +1,60 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.util.*;
+import org.usfirst.frc.team449.robot.util.CANTalonMPHandler;
+import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, UnidirectionalDrive, ShiftingDrive, Loggable, TwoSideMPSubsystem {
+public class TalonClusterDrive extends Subsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
-	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID turnPID;
+	public final ToleranceBufferAnglePID turnPID;
 
 	/**
 	 * The PIDAngleCommand constants for using the NavX to drive straight
 	 */
-	public ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID straightPID;
+	public final ToleranceBufferAnglePID straightPID;
 
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
 	 * loop space to compensate.
 	 */
-	private double PID_SCALE;
+	protected final double PID_SCALE;
 
 	/**
 	 * Right master Talon
 	 */
-	private RotPerSecCANTalonSRX rightMaster;
+	protected final RotPerSecCANTalonSRX rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
-	private RotPerSecCANTalonSRX leftMaster;
+	protected final RotPerSecCANTalonSRX leftMaster;
 
 	/**
 	 * The NavX gyro
 	 */
-	private AHRS navx;
-
-	/**
-	 * The oi used to drive the robot
-	 */
-	private OI2017ArcadeGamepad oi;
-
-	/**
-	 * The solenoid that shifts between gears
-	 */
-	private DoubleSolenoid shifter;
+	private final AHRS navx;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -71,102 +62,40 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	private boolean overrideNavX;
 
 	/**
-	 * Whether not to override auto shifting
-	 */
-	private boolean overrideAutoshift;
-
-	/**
-	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
-	 */
-	private double upshiftFwdThresh;
-
-	/**
-	 * The time we last upshifted (milliseconds)
-	 */
-	private long timeLastUpshifted;
-
-	/**
-	 * The time we last downshifted (milliseconds)
-	 */
-	private long timeLastDownshifted;
-
-	/**
-	 * What gear we're in
-	 */
-	private ShiftingDrive.gear currentGear;
-
-	/**
-	 * The speed setpoint at the upshift break
-	 */
-	private double upshiftSpeed;
-
-	/**
-	 * The speed setpoint at the downshift break
-	 */
-	private double downshiftSpeed;
-
-	/**
-	 * The robot isn't eligible to shift again for this many milliseconds after upshifting.
-	 */
-	private long cooldownAfterUpshift;
-
-	/**
-	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
-	 */
-	private long cooldownAfterDownshift;
-
-	/**
-	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time
-	 * before shifting actually happens.
-	 */
-	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
-
-	/**
 	 * A helper class that loads and runs profiles on the Talons.
 	 */
-	private CANTalonMPHandler mpHandler;
+	private final CANTalonMPHandler mpHandler;
 
 	/**
-	 * Construct a TalonClusterDrive
-	 *
-	 * @param map config map
-	 * @param oi  OI to read throttle from
+	 * Default constructor.
+	 * @param turnPID The angular PID for turning in place.
+	 * @param straightPID The angular PID for driving straight.
+	 * @param leftMaster The master talon on the left side of the drive.
+	 * @param rightMaster The master talon on the right side of the drive.
+	 * @param MPHandler The motion profile handler that runs this drive's motion profiles.
+	 * @param PIDScale The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
-	public TalonClusterDrive(maps.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDriveMap
-			                         .TalonClusterDrive map, OI2017ArcadeGamepad oi, gear startingGear) {
-		super(map.getDrive());
-		//Initialize stuff directly from the map.
-		this.map = map;
-		this.oi = oi;
-		PID_SCALE = map.getPIDScale();
-		turnPID = map.getTurnPID();
-		straightPID = map.getStraightPID();
-		upshiftBufferTimer = new BufferTimer(map.getDelayAfterUpshiftConditionsMet());
-		downshiftBufferTimer = new BufferTimer(map.getDelayAfterDownshiftConditionsMet());
-		cooldownAfterDownshift = (long) (map.getCooldownAfterDownshift() * 1000.);
-		cooldownAfterUpshift = (long) (map.getCooldownAfterUpshift() * 1000.);
-		upshiftFwdThresh = map.getUpshiftFwdThreshold();
-		upshiftSpeed = map.getUpshiftSpeed();
-		downshiftSpeed = map.getDownshiftSpeed();
-		currentGear = startingGear;
-		rightMaster = new RotPerSecCANTalonSRX(map.getRightMaster());
-		leftMaster = new RotPerSecCANTalonSRX(map.getLeftMaster());
+	@JsonCreator
+	public TalonClusterDrive(@JsonProperty(required = true) ToleranceBufferAnglePID turnPID,
+	                         @JsonProperty(required = true) ToleranceBufferAnglePID straightPID,
+	                         @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
+	                         @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
+	                         @JsonProperty(required = true) CANTalonMPHandler MPHandler,
+	                         Double PIDScale) {
+		super();
+		//Initialize stuff
+		if (PIDScale == null){
+			PIDScale = 1.;
+		}
+		PID_SCALE = PIDScale;
+		this.turnPID = turnPID;
+		this.straightPID = straightPID;
+		this.rightMaster = rightMaster;
+		this.leftMaster = leftMaster;
+		this.mpHandler = MPHandler;
 
 		//We only ever use a NavX on the SPI port because the other ports don't work.
 		navx = new AHRS(SPI.Port.kMXP);
-
-		// Initialize shifting constants, assuming robot is stationary.
-		overrideAutoshift = false;
-		timeLastUpshifted = 0;
-		timeLastDownshifted = 0;
-
-		// If the map has the shifting piston, instantiate it.
-		if (map.hasShifter()) {
-			this.shifter = new MappedDoubleSolenoid(map.getShifter());
-		}
-
-		//Set up the MP handler.
-		mpHandler = new CANTalonMPHandler(new RotPerSecCANTalonSRX[]{leftMaster, rightMaster}, map.getMPUpdateRateSecs(), map.getMinPointsInBottomMPBuffer());
 	}
 
 	/**
@@ -177,26 +106,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	private static double clipToOne(double in) {
 		return Math.min(Math.max(in, -1), 1);
-	}
-
-	/**
-	 * A getter for whether we're currently overriding autoshifting.
-	 *
-	 * @return true if overriding, false otherwise.
-	 */
-	@Override
-	public boolean getOverrideAutoshift() {
-		return overrideAutoshift;
-	}
-
-	/**
-	 * A setter for overriding the autoshifting.
-	 *
-	 * @param override Whether or not to override autoshifting.
-	 */
-	@Override
-	public void setOverrideAutoshift(boolean override) {
-		this.overrideAutoshift = override;
 	}
 
 	/**
@@ -217,17 +126,10 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 * @param left  The left PID velocity setpoint as a percent [-1, 1]
 	 * @param right The right PID velocity setpoint as a percent [-1, 1]
 	 */
-	private void setPIDThrottle(double left, double right) {
-		//If we're not shifting, scale by the max speed in the current gear
-		if (overrideAutoshift || oi.getFwd() == 0) {
-			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
-		}
-		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.
-		else {
-			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
-			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
-		}
+	protected void setPIDThrottle(double left, double right) {
+		//scale by the max speed
+		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
 	}
 
 	/**
@@ -289,105 +191,6 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	}
 
 	/**
-	 * @return The gear this subsystem is currently in.
-	 */
-	@Override
-	public gear getGear() {
-		return currentGear;
-	}
-
-	/**
-	 * Shift to a specific gear.
-	 *
-	 * @param gear Which gear to shift to.
-	 */
-	@Override
-	public void setGear(gear gear) {
-		//If we have a shifter on the robot
-		if (shifter != null) {
-			//If we want to downshift
-			if (gear == ShiftingDrive.gear.LOW) {
-				//Physically shift gears
-				shifter.set(DoubleSolenoid.Value.kForward);
-				//Switch the PID constants
-				rightMaster.switchToLowGear();
-				leftMaster.switchToLowGear();
-				//Record the current time
-				timeLastDownshifted = Robot.currentTimeMillis();
-			} else {
-				//Physically shift gears
-				shifter.set(DoubleSolenoid.Value.kReverse);
-				//Switch the PID constants
-				rightMaster.switchToHighGear();
-				leftMaster.switchToHighGear();
-				//Record the current time.
-				timeLastUpshifted = Robot.currentTimeMillis();
-			}
-			//Set logging var
-			currentGear = gear;
-		} else {
-			//Warn the user if they try to shift but didn't define a shifting piston.
-			Logger.addEvent("You're trying to shift gears, but your drive doesn't have a shifter.", this.getClass());
-		}
-	}
-
-	/**
-	 * @return whether the robot should downshift
-	 */
-	private boolean shouldDownshift() {
-		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) < downshiftSpeed;
-		//Or if we're just turning in place.
-		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
-		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs(oi.getFwd()) < upshiftFwdThresh);
-		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
-		//And there's no need to downshift if we're already in low gear.
-		okToShift = okToShift && currentGear == gear.HIGH;
-		//And we don't want to shift if autoshifting is turned off.
-		okToShift = okToShift && !overrideAutoshift;
-
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		return downshiftBufferTimer.get(okToShift);
-	}
-
-	/**
-	 * @return whether the robot should upshift
-	 */
-	private boolean shouldUpshift() {
-		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.min(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) > upshiftSpeed;
-		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdThresh;
-		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
-		//And there's no need to upshift if we're already in high gear.
-		okToShift = okToShift && currentGear == gear.LOW;
-		//And we don't want to shift if autoshifting is turned off.
-		okToShift = okToShift && !overrideAutoshift;
-
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		return upshiftBufferTimer.get(okToShift);
-	}
-
-	/**
-	 * Check if we should autoshift, then, if so, shift.
-	 */
-	@Override
-	public void autoshift() {
-		if (shouldUpshift()) {
-			//Upshift if we should
-			setGear(gear.HIGH);
-		} else if (shouldDownshift()) {
-			//Downshift if we should
-			setGear(gear.LOW);
-		}
-	}
-
-	/**
 	 * Get whether this subsystem's NavX is currently being overriden.
 	 *
 	 * @return true if the NavX is overriden, false otherwise.
@@ -424,13 +227,13 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem, 
 	 */
 	@Override
 	public String[] getHeader() {
-		return new String[]{"left_vel,",
-				"right_vel,",
-				"left_setpoint,",
-				"right_setpoint,",
-				"left_current,",
-				"right_current,",
-				"left_voltage,",
+		return new String[]{"left_vel",
+				"right_vel",
+				"left_setpoint",
+				"right_setpoint",
+				"left_current",
+				"right_current",
+				"left_voltage",
 				"right_voltage"};
 	}
 

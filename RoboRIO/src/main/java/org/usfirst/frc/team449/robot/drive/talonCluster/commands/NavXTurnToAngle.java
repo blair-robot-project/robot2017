@@ -1,9 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
@@ -38,15 +41,17 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map      A map with PID values, an absolute tolerance, and minimum output.
+	 * @param PID      The PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
 	 * @param drive    The drive subsystem to execute this command on. Must also be a NavX subsystem.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public NavXTurnToAngle(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, double setpoint, UnidirectionalDrive drive,
-	                       double timeout) {
-		super(map, (NavxSubsystem) drive);
+	public NavXTurnToAngle(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                       @JsonProperty(required = true) double setpoint,
+	                       @JsonProperty(required = true) UnidirectionalDrive drive,
+	                       @JsonProperty(required = true) double timeout) {
+		super(PID, (NavxSubsystem) drive);
 		this.drive = drive;
 		this.setpoint = setpoint;
 		//Convert from seconds to milliseconds

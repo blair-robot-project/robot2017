@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.Robot;
 
@@ -25,7 +29,8 @@ public class WaitForMillis extends Command {
 	 *
 	 * @param time How long this command will take to finish, in milliseconds.
 	 */
-	public WaitForMillis(long time) {
+	@JsonCreator
+	public WaitForMillis(@JsonProperty(required = true) long time) {
 		timeout = time;
 	}
 
@@ -38,6 +43,15 @@ public class WaitForMillis extends Command {
 	}
 
 	/**
+	 * The execute method is called repeatedly until this Command either finishes
+	 * or is canceled.
+	 */
+	@Override
+	protected void execute() {
+
+	}
+
+	/**
 	 * Finish if the specified amount of time has passed.
 	 *
 	 * @return true if the specified number of milliseconds have passed since this command started, false otherwise.
@@ -45,5 +59,21 @@ public class WaitForMillis extends Command {
 	@Override
 	protected boolean isFinished() {
 		return Robot.currentTimeMillis() - startTime >= timeout;
+	}
+
+	/**
+	 * Do nothing.
+	 */
+	@Override
+	protected void end() {
+
+	}
+
+	/**
+	 * Do nothing.
+	 */
+	@Override
+	protected void interrupted() {
+
 	}
 }

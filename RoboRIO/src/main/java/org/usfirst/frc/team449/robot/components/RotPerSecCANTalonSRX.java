@@ -63,12 +63,12 @@ public class RotPerSecCANTalonSRX extends Component {
 	/**
 	 * The PID constants for high gear or, if this motor does not have gears, just the PID constants.
 	 */
-	private double kPHigh,kIHigh,kDHigh;
+	private PID highGearPID;
 
 	/**
 	 * The PID constants for low gear if this motor has a low gear.
 	 */
-	private double kPLow, kILow, kDLow;
+	private PID lowGearPID;
 
 	/**
 	 * An object representing a slave {@link CANTalon} for use in the map.
@@ -155,18 +155,13 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * @param maxSpeedHigh The high gear max speed, in RPS. If this motor doesn't have gears, then this is just the max
 	 *                        speed. Used to calculate velocity PIDF feed-forward. Can be null, and if it is, it's
 	 *                        assumed that this motor won't use velocity closed-loop control.
-	 * @param kPHigh The proportional gain for the PIDF loop of the high/only gear. Defaults to zero.
-	 * @param kIHigh The integral gain for the PIDF loop of the high/only gear. Defaults to zero.
-	 * @param kDHigh The derivative gain for the PIDF loop of the high/only gear. Defaults to zero.
+	 * @param highGearPID The high/only gear's PID constants. Can be null if maxSpeedHigh is, but otherwise must have a
+	 *                       value.
 	 * @param maxSpeedLow The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward. Can be null, and
 	 *                       if it is, it's assumed that either this motor doesn't have a low gear or the low gear won't
 	 *                       use velocity closed-loop control.
-	 * @param kPLow The proportional gain for the PIDF loop of the low gear. Defaults to zero.
-	 * @param kILow The integral gain for the PIDF loop of the low gear. Defaults to zero.
-	 * @param kDLow The derivative gain for the PIDF loop of the low gear. Defaults to zero.
-	 * @param kPMP The proportional gain for the Motion Profile loop. Defaults to zero.
-	 * @param kIMP The integral gain for the Motion Profile loop. Defaults to zero.
-	 * @param kDMP The derivative gain for the Motion Profile loop. Defaults to zero.
+	 * @param lowGearPID The low gear's PID constants. Can be null if maxSpeedLow is, but otherwise must have a value.
+	 * @param MotionProfilePID The motion profile PID constants. Can be null.
 	 * @param MPUseLowGear Whether this motor uses high or low gear for running motion profiles. Defaults to false.
 	 * @param slaves The other {@link CANTalon}s that are slaved to this one.
 	 */
@@ -190,10 +185,10 @@ public class RotPerSecCANTalonSRX extends Component {
 	                            Integer encoderCPR,
 	                            Boolean reverseSensor,
 	                            Double maxSpeedHigh,
-	                            double kPHigh, double kIHigh, double kDHigh,
+	                            PID highGearPID,
 	                            Double maxSpeedLow,
-	                            double kPLow, double kILow, double kDLow,
-	                            double kPMP, double kIMP, double kDMP,
+	                            PID lowGearPID,
+	                            PID MotionProfilePID,
 	                            boolean MPUseLowGear,
 	                            List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
@@ -276,13 +271,9 @@ public class RotPerSecCANTalonSRX extends Component {
 
 		//Set fields
 		this.maxSpeedHigh = maxSpeedHigh;
-		this.kPHigh = kPHigh;
-		this.kIHigh = kIHigh;
-		this.kDHigh = kDHigh;
+		this.highGearPID = highGearPID;
 		this.maxSpeedLow = maxSpeedLow;
-		this.kPLow = kPLow;
-		this.kILow = kILow;
-		this.kDLow = kDLow;
+		this.lowGearPID = lowGearPID;
 
 		//Set up PID constants.
 		if(maxSpeedHigh != null) {
@@ -290,18 +281,20 @@ public class RotPerSecCANTalonSRX extends Component {
 			maxSpeed = maxSpeedHigh;
 
 			//Initialize the PID constants in slot 0 to the high gear ones.
-			setPIDF(kPHigh, kIHigh, kDHigh, maxSpeed, 0, 0, 0);
+			setPIDF(highGearPID.getP(), highGearPID.getI(), highGearPID.getD(), maxSpeed, 0, 0, 0);
 
 			//Assume regular driving profile by default.
 			canTalon.setProfile(0);
 
-			//Put motion profile PID constants in slot 1.
-			//If we have a low gear and want to use it for MP, set the MP max speed to the low gear max.
-			if (maxSpeedLow != null && MPUseLowGear) {
-				setPIDF(kPMP, kIMP, kDMP, maxSpeedLow, 0, 0, 1);
-			} else {
-				//Otherwise, use high gear.
-				setPIDF(kPMP, kIMP, kDMP, maxSpeed, 0, 0, 1);
+			//Add Motion Profile PID constants if we have them.
+			if (MotionProfilePID != null) {
+				//If we have a low gear and want to use it for MP, set the MP max speed to the low gear max.
+				if (maxSpeedLow != null && MPUseLowGear) {
+					setPIDF(MotionProfilePID.getP(), MotionProfilePID.getI(), MotionProfilePID.getD(), maxSpeedLow, 0, 0, 1);
+				} else {
+					//Otherwise, use high gear.
+					setPIDF(MotionProfilePID.getP(), MotionProfilePID.getI(), MotionProfilePID.getD(), maxSpeed, 0, 0, 1);
+				}
 			}
 		}
 
@@ -372,10 +365,16 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * Switch to using the high gear PID constants.
 	 */
 	public void switchToHighGear() {
-		//Switch max speed to high gear max speed
-		maxSpeed = maxSpeedHigh;
-		//Set the slot 0 constants to the high gear ones.
-		setPIDF(kPHigh, kIHigh, kDHigh, maxSpeed, 0, 0, 0);
+		if (maxSpeedHigh != null) {
+			//Switch max speed to high gear max speed
+			maxSpeed = maxSpeedHigh;
+			//Set the slot 0 constants to the high gear ones.
+			setPIDF(highGearPID.getP(), highGearPID.getI(), highGearPID.getD(), maxSpeed, 0, 0, 0);
+		} else {
+			//Warn the user if they're trying to do this but don't have the PID constants in the map.
+			Logger.addEvent("You're trying to switch your PIDF constants to high gear, but you don't have high gear " +
+					"constants.", this.getClass());
+		}
 	}
 
 	/**
@@ -387,7 +386,7 @@ public class RotPerSecCANTalonSRX extends Component {
 			//Switch max speed to low gear max speed
 			maxSpeed = maxSpeedLow;
 			//Set the slot 0 constants to the low gear ones.
-			setPIDF(kPLow, kILow, kDLow, maxSpeed, 0, 0, 0);
+			setPIDF(lowGearPID.getP(), lowGearPID.getI(), lowGearPID.getD(), maxSpeed, 0, 0, 0);
 		} else {
 			//Warn the user if they're trying to do this but don't have the low gear constants in the map.
 			Logger.addEvent("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +

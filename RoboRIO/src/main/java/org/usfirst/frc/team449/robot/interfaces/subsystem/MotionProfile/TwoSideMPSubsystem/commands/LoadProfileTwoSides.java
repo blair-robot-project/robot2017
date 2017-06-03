@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -28,7 +32,10 @@ public class LoadProfileTwoSides extends Command {
 	 * @param left      The profile for the left side to run.
 	 * @param right     The profile for the right side to run.
 	 */
-	public LoadProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right) {
+	@JsonCreator
+	public LoadProfileTwoSides(@JsonProperty(required = true) TwoSideMPSubsystem subsystem,
+	                           @JsonProperty(required = true) MotionProfileData left,
+	                           @JsonProperty(required = true) MotionProfileData right) {
 		this.subsystem = subsystem;
 		this.left = left;
 		this.right = right;

@@ -89,8 +89,8 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 */
 	@Override
 	public String[] getHeader() {
-		return new String[]{"current,",
-				"voltage,",
+		return new String[]{"current",
+				"voltage",
 				"power"};
 	}
 

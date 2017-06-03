@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
@@ -17,9 +21,13 @@ public class RunProfileTwoSides extends CommandGroup {
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param left      The motion profile for the left side to load and execute.
 	 * @param right     The motion profile for the right side to load and execute.
-	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds..
+	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
 	 */
-	public RunProfileTwoSides(TwoSideMPSubsystem subsystem, MotionProfileData left, MotionProfileData right, double timeout) {
+	@JsonCreator
+	public RunProfileTwoSides(@JsonProperty(required = true) TwoSideMPSubsystem subsystem,
+	                          @JsonProperty(required = true) MotionProfileData left,
+	                          @JsonProperty(required = true) MotionProfileData right,
+	                          @JsonProperty(required = true) double timeout) {
 		addSequential(new LoadProfileTwoSides(subsystem, left, right));
 		addSequential(new RunLoadedProfile(subsystem, timeout, true));
 	}

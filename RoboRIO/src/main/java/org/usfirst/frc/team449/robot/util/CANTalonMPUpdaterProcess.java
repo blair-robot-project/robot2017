@@ -9,7 +9,6 @@ import java.util.Queue;
  * Thread that can be spawned by motion profile executing commands that processes the motion profile buffer.
  * This is so that you can update the buffer faster than the main robot loop could.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class CANTalonMPUpdaterProcess implements Runnable {
 	/**
 	 * The queue of talons to update

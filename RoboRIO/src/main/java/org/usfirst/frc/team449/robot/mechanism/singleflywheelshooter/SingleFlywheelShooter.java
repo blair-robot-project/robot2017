@@ -113,10 +113,10 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 */
 	@Override
 	public String[] getHeader() {
-		return new String[]{"speed,",
-				"setpoint,",
-				"error,",
-				"voltage,",
+		return new String[]{"speed",
+				"setpoint",
+				"error",
+				"voltage",
 				"current"};
 	}
 

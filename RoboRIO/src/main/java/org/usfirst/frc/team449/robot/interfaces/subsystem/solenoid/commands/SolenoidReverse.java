@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
@@ -21,7 +25,8 @@ public class SolenoidReverse extends Command {
 	 *
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
-	public SolenoidReverse(SolenoidSubsystem subsystem) {
+	@JsonCreator
+	public SolenoidReverse(@JsonProperty(required = true) SolenoidSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

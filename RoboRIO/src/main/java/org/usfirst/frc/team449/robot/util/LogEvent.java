@@ -5,7 +5,6 @@ import org.usfirst.frc.team449.robot.Robot;
 /**
  * An logged event with a message, timestamp, and calling class.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
 public class LogEvent {
 	/**
 	 * The time, in milliseconds, at which this event was created.

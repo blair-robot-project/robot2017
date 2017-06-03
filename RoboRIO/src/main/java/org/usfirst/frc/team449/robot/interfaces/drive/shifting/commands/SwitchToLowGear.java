@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -20,7 +24,8 @@ public class SwitchToLowGear extends Command {
 	 *
 	 * @param subsystem The drive subsystem to execute this command on
 	 */
-	public SwitchToLowGear(ShiftingDrive subsystem) {
+	@JsonCreator
+	public SwitchToLowGear(@JsonProperty(required = true) ShiftingDrive subsystem) {
 		this.subsystem = subsystem;
 	}
 

@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -27,7 +31,9 @@ public class LoadProfile extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param profile   The profile to run.
 	 */
-	public LoadProfile(MPSubsystem subsystem, MotionProfileData profile) {
+	@JsonCreator
+	public LoadProfile(@JsonProperty(required = true) MPSubsystem subsystem,
+	                   @JsonProperty(required = true) MotionProfileData profile) {
 		this.subsystem = subsystem;
 		this.profile = profile;
 	}

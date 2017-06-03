@@ -1,6 +1,9 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -43,21 +46,35 @@ public class Logger implements Runnable {
 	private String[][] itemNames;
 
 	/**
-	 * Construct a logger from a map and a list of subsystems to log telemetry data from.
-	 *
-	 * @param map        The config map.
+	 * The period of the loop running this logger, in seconds.
+	 */
+	private double loopTimeSecs;
+
+	/**
+	 * Default constructor.
 	 * @param subsystems The subsystems to log telemetry data from.
+	 * @param loopTimeSecs The period of the loop for collecting telemetry data, in seconds.
+	 * @param eventLogFilename The filepath of the log for events. Will have the timestamp and file extension appended
+	 *                           onto the end.
+	 * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
+	 *                                extension appended onto the end.
 	 * @throws IOException If the file names provided from the log can't be written to.
 	 */
-	public Logger(LoggerMap.Logger map, List<Loggable> subsystems) throws IOException {
+	@JsonCreator
+	public Logger(@JsonProperty(required = true) Loggable[] subsystems,
+	              @JsonProperty(required = true) double loopTimeSecs,
+	              @JsonProperty(required = true) String eventLogFilename,
+	              @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
 		//Set up the file names, using a time stamp to avoid overwriting old log files.
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-		eventLogWriter = new FileWriter(map.getEventLogFilename() + timeStamp + ".csv");
-		telemetryLogWriter = new FileWriter(map.getTelemetryLogFilename() + timeStamp + ".csv");
+		eventLogWriter = new FileWriter(eventLogFilename + timeStamp + ".csv");
+		telemetryLogWriter = new FileWriter(telemetryLogFilename + timeStamp + ".csv");
+
+		//Set the loop time variable
+		this.loopTimeSecs = loopTimeSecs;
 
 		//Set up the list of loggable subsystems.
-		this.subsystems = new Loggable[subsystems.size()];
-		subsystems.toArray(this.subsystems);
+		this.subsystems = subsystems;
 
 		//Construct itemNames.
 		itemNames = new String[this.subsystems.length][];
@@ -79,6 +96,9 @@ public class Logger implements Runnable {
 				telemetryHeader.append(",");
 			}
 		}
+		//Delete the trailing comma
+		telemetryHeader.deleteCharAt(telemetryHeader.length()-1);
+
 		telemetryHeader.append("\n");
 		//Write the telemetry file header
 		telemetryLogWriter.write(telemetryHeader.toString());
@@ -158,5 +178,9 @@ public class Logger implements Runnable {
 	public void close() throws IOException {
 		eventLogWriter.close();
 		telemetryLogWriter.close();
+	}
+
+	public double getLoopTimeSecs() {
+		return loopTimeSecs;
 	}
 }

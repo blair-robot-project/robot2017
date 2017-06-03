@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
@@ -40,7 +44,10 @@ public class RunLoadedProfile extends Command {
 	 * @param timeout   The max amount of time this subsystem is allowed to run for, in seconds.
 	 * @param require   Whether or not to require the subsystem this command is running on.
 	 */
-	public RunLoadedProfile(MPSubsystem subsystem, double timeout, boolean require) {
+	@JsonCreator
+	public RunLoadedProfile(@JsonProperty(required = true) MPSubsystem subsystem,
+	                        @JsonProperty(required = true) double timeout,
+	                        @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;
 		//Require if specified.
 		if (require) {

@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -39,7 +43,10 @@ public class DriveStraight extends Command {
 	 * @param oi      The oi to get input from.
 	 * @param useLeft true to use the left stick to drive straight, false to use the right.
 	 */
-	public DriveStraight(UnidirectionalDrive drive, TankOI oi, boolean useLeft) {
+	@JsonCreator
+	public DriveStraight(@JsonProperty(required = true) UnidirectionalDrive drive,
+	                     @JsonProperty(required = true) TankOI oi,
+	                     @JsonProperty(required = true) boolean useLeft) {
 		subsystem = drive;
 		this.oi = oi;
 		this.useLeft = useLeft;
@@ -77,6 +84,14 @@ public class DriveStraight extends Command {
 	@Override
 	protected boolean isFinished() {
 		return false;
+	}
+
+	/**
+	 * Do nothing, this never gets called because this command never finishes.
+	 */
+	@Override
+	protected void end() {
+
 	}
 
 	/**

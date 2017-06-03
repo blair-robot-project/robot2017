@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -28,7 +32,9 @@ public class SimpleUnidirectionalDrive extends Command {
 	 * @param drive The drive to execute this command on
 	 * @param oi    The OI that gives the input to this command.
 	 */
-	public SimpleUnidirectionalDrive(UnidirectionalDrive drive, UnidirectionalOI oi) {
+	@JsonCreator
+	public SimpleUnidirectionalDrive(@JsonProperty(required = true) UnidirectionalDrive drive,
+	                                 @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.
@@ -59,6 +65,14 @@ public class SimpleUnidirectionalDrive extends Command {
 	@Override
 	protected boolean isFinished() {
 		return false;
+	}
+
+	/**
+	 * Do nothing, never gets called because this command never finishes.
+	 */
+	@Override
+	protected void end() {
+
 	}
 
 	/**

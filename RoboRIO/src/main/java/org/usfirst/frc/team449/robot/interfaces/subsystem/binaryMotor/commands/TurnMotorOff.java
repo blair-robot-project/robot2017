@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -20,7 +24,8 @@ public class TurnMotorOff extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public TurnMotorOff(BinaryMotorSubsystem subsystem) {
+	@JsonCreator
+	public TurnMotorOff(@JsonProperty(required = true) BinaryMotorSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

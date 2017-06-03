@@ -1,8 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -43,29 +47,31 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
 	 */
-	private double maxAngularVel;
+	private double maxAngularVelToEnterLoop;
 
 	/**
 	 * A bufferTimer so we only switch to driving straight when the conditions are met for a certain period of time.
 	 */
-	private BufferTimer driveStraightTimer;
+	private BufferTimer driveStraightLoopEntryTimer;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param map   The angle PID map containing PID and other tuning constants.
+	 * @param PID   The angle PID.
 	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public UnidirectionalNavXArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
-	                                     ArcadeOI oi) {
+	@JsonCreator
+	public UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                                     @JsonProperty(required = true) UnidirectionalDrive drive,
+	                                     @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff
-		super(map, (NavxSubsystem) drive);
-		maxAngularVel = map.getMaxAngularVel();
+		super(PID, (NavxSubsystem) drive);
+		maxAngularVelToEnterLoop = PID.getMaxAngularVelToEnterLoop();
 		this.oi = oi;
 		driveSubsystem = drive;
 
-		driveStraightTimer = new BufferTimer(map.getDriveStraightDelay());
+		driveStraightLoopEntryTimer = new BufferTimer(PID.getLoopEntryDelay());
 
 		//Needs a requires because it's a default command.
 		requires((Subsystem) drive);
@@ -106,7 +112,8 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (driveStraightTimer.get(!(((NavxSubsystem) driveSubsystem).getOverrideNavX()) && !(drivingStraight) && rot == 0 && Math.abs(((NavxSubsystem) driveSubsystem).getNavX().getRate()) <= maxAngularVel)) {
+		else if (driveStraightLoopEntryTimer.get(!(((NavxSubsystem) driveSubsystem).getOverrideNavX()) && !(drivingStraight) &&
+				rot == 0 && Math.abs(((NavxSubsystem) driveSubsystem).getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the NavX

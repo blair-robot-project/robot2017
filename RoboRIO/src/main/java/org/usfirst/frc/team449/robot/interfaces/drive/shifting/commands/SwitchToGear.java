@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -26,7 +30,9 @@ public class SwitchToGear extends Command {
 	 * @param subsystem The drive to execute this command on
 	 * @param switchTo  The gear to switch to.
 	 */
-	public SwitchToGear(ShiftingDrive subsystem, ShiftingDrive.gear switchTo) {
+	@JsonCreator
+	public SwitchToGear(@JsonProperty(required = true) ShiftingDrive subsystem,
+	                    @JsonProperty(required = true) ShiftingDrive.gear switchTo) {
 		this.subsystem = subsystem;
 		this.switchTo = switchTo;
 	}

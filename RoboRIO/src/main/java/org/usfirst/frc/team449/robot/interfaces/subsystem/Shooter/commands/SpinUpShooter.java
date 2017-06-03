@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -20,7 +24,8 @@ public class SpinUpShooter extends Command {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public SpinUpShooter(ShooterSubsystem subsystem) {
+	@JsonCreator
+	public SpinUpShooter(@JsonProperty(required = true) ShooterSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

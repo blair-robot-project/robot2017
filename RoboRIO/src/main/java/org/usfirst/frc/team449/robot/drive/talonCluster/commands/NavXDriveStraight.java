@@ -1,8 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -33,15 +37,18 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map     A map with the PID constants for controlling the angular PID loop.
+	 * @param PID     The PID constants for controlling the angular PID loop.
 	 * @param drive   The unidirectional drive to execute this command on.
 	 * @param oi      The tank OI to take input from.
 	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for
 	 *                right.
 	 */
-	public NavXDriveStraight(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive,
-	                         TankOI oi, boolean useLeft) {
-		super(map, (NavxSubsystem) drive);
+	@JsonCreator
+	public NavXDriveStraight(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                         @JsonProperty(required = true) UnidirectionalDrive drive,
+	                         @JsonProperty(required = true) TankOI oi,
+	                         @JsonProperty(required = true) boolean useLeft) {
+		super(PID, (NavxSubsystem) drive);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;

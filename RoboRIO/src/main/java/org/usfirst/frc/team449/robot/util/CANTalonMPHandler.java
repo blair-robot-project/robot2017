@@ -1,6 +1,10 @@
 package org.usfirst.frc.team449.robot.util;
 
 import com.ctre.CANTalon;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Notifier;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
@@ -44,7 +48,10 @@ public class CANTalonMPHandler {
 	 * @param minNumPointsInBtmBuffer  The minimum number of points that must be in the bottom MP buffer to start a
 	 *                                 profile.
 	 */
-	public CANTalonMPHandler(RotPerSecCANTalonSRX[] talons, double updaterProcessPeriodSecs, int minNumPointsInBtmBuffer) {
+	@JsonCreator
+	public CANTalonMPHandler(@JsonProperty(required = true) RotPerSecCANTalonSRX[] talons,
+	                         @JsonProperty(required = true) double updaterProcessPeriodSecs,
+	                         @JsonProperty(required = true) int minNumPointsInBtmBuffer) {
 		this.RPStalons = talons;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;

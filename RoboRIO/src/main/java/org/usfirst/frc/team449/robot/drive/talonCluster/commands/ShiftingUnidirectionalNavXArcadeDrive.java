@@ -1,6 +1,9 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
@@ -18,7 +21,9 @@ public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArc
 	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem and a ShiftingDrive.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public ShiftingUnidirectionalNavXArcadeDrive(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, UnidirectionalDrive drive, ArcadeOI oi) {
+	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID map,
+	                                             @JsonProperty(required = true) UnidirectionalDrive drive,
+	                                             @JsonProperty(required = true) ArcadeOI oi) {
 		super(map, drive, oi);
 	}
 

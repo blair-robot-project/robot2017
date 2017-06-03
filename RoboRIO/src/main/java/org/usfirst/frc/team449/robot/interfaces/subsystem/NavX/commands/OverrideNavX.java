@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -26,7 +30,9 @@ public class OverrideNavX extends Command {
 	 * @param subsystem The subsystem to execute this command on
 	 * @param override  Whether or not to override the NavX.
 	 */
-	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
+	@JsonCreator
+	public OverrideNavX(@JsonProperty(required = true) NavxSubsystem subsystem,
+	                    @JsonProperty(required = true) boolean override) {
 		this.override = override;
 		this.subsystem = subsystem;
 	}

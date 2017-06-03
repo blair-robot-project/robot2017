@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 
@@ -15,7 +19,8 @@ public class ToggleShooting extends CommandGroup {
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public ToggleShooting(ShooterSubsystem subsystem) {
+	@JsonCreator
+	public ToggleShooting(@JsonProperty(required = true) ShooterSubsystem subsystem) {
 		switch (subsystem.getShooterState()) {
 			case OFF:
 				addSequential(new SpinUpThenShoot(subsystem));

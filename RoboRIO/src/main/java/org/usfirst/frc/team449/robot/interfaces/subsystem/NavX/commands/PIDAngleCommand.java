@@ -1,7 +1,10 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
@@ -13,11 +16,6 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 * The minimum the robot should be able to output, to overcome friction.
 	 */
 	protected double minimumOutput;
-
-	/**
-	 * Whether or not to use minimumOutput.
-	 */
-	protected boolean minimumOutputEnabled;
 
 	/**
 	 * The subsystem to execute this command on.
@@ -37,12 +35,14 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map       The map with this command's constants.
+	 * @param PID       The map with this command's constants.
 	 * @param subsystem The NavX subsystem.
 	 */
-	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
+	@JsonCreator
+	public PIDAngleCommand(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                       @JsonProperty(required = true) NavxSubsystem subsystem) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
-		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
+		super(PID.getPID().getP(), PID.getPID().getI(), PID.getPID().getD());
 		this.subsystem = subsystem;
 
 		//Navx reads from -180 to 180.
@@ -52,33 +52,27 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		this.getPIDController().setContinuous(true);
 
 		//Set the absolute tolerance to be considered on target within.
-		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
+		this.getPIDController().setAbsoluteTolerance(PID.getAbsoluteTolerance());
 
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
-		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
+		this.getPIDController().setToleranceBuffer(PID.getToleranceBuffer());
 
 		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
 		//TODO test and implement that Talon nominalOutputVoltage and then get rid of this.
-		minimumOutput = map.getMinimumOutput();
-		minimumOutputEnabled = map.getMinimumOutputEnabled();
+		minimumOutput = PID.getMinimumOutput();
 
 		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
 		// prevent overshoot.
-		if (map.getMaximumOutputEnabled()) {
-			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
+		if (PID.getMaximumOutput() != null) {
+			this.getPIDController().setOutputRange(-PID.getMaximumOutput(), PID.getMaximumOutput());
 		}
 
 		//Set a deadband around the setpoint, in degrees, within which don't move, to avoid "dancing"
-		if (map.getDeadbandEnabled()) {
-			deadband = map.getDeadband();
-		} else {
-			//Deadband of zero is equivalent to no deadband at all.
-			deadband = 0;
-		}
+		deadband = PID.getDeadband();
 
 		//Set whether or not to invert the loop.
-		inverted = map.getInverted();
+		inverted = PID.isInverted();
 	}
 
 	/**
@@ -89,14 +83,11 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 * right side.
 	 */
 	protected double processPIDOutput(double output) {
-		//If we're using minimumOutput..
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput) {
-				output = minimumOutput;
-			} else if (output < 0 && output > -minimumOutput) {
-				output = -minimumOutput;
-			}
+		//Set the output to the minimum if it's too small.
+		if (output > 0 && output < minimumOutput) {
+			output = minimumOutput;
+		} else if (output < 0 && output > -minimumOutput) {
+			output = -minimumOutput;
 		}
 		//Set the output to 0 if we're within the deadband.
 		if (Math.abs(this.getPIDController().getError()) < deadband) {
