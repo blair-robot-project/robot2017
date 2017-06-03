@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.vision.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
@@ -20,7 +24,8 @@ public class ChangeCam extends ReferencingCommand {
 	 *
 	 * @param cameraSubsystem The cameraSubsystem to execute this command on.
 	 */
-	public ChangeCam(CameraSubsystem cameraSubsystem) {
+	@JsonCreator
+	public ChangeCam(@JsonProperty(required = true) CameraSubsystem cameraSubsystem) {
 		super(cameraSubsystem);
 		requires(cameraSubsystem);
 		this.cameraSubsystem = cameraSubsystem;

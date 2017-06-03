@@ -1,9 +1,13 @@
 package org.usfirst.frc.team449.robot.vision;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.components.MappedUsbCamera;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.ArrayList;
@@ -13,7 +17,7 @@ import java.util.List;
  * Subsystem to initialize and push video to SmartDashboard
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class CameraSubsystem extends MappedSubsystem {
+public class CameraSubsystem extends Subsystem {
 
 	/**
 	 * Video server to view on SmartDashboard
@@ -23,7 +27,7 @@ public class CameraSubsystem extends MappedSubsystem {
 	/**
 	 * List of cameras used on robot
 	 */
-	public List<UsbCamera> cameras;
+	public List<MappedUsbCamera> cameras;
 
 	/**
 	 * Total number of cameras
@@ -31,40 +35,27 @@ public class CameraSubsystem extends MappedSubsystem {
 	public int camNum;
 
 	/**
-	 * Instantiates a new CameraSubsystem with the map
+	 * Default constructor
+	 * @param serverPort The port of the {@link MjpegServer} this subsystem uses.
+	 * @param serverName The human-friendly name of the {@link MjpegServer} this subsystem uses.
+	 * @param cameras The cameras this subsystem controls.
 	 */
-	public CameraMap.Camera map;
-
-	/**
-	 * Construct a CameraSubsystem
-	 *
-	 * @param map The config map
-	 */
-	public CameraSubsystem(CameraMap.Camera map) {
-		super(map);
-		this.map = map;
+	@JsonCreator
+	public CameraSubsystem(@JsonProperty(required = true) int serverPort,
+	                       @JsonProperty(required = true) String serverName,
+	                       @JsonProperty(required = true) List<MappedUsbCamera> cameras) {
+		super();
 
 		//Logging
 		Logger.addEvent("CameraSubsystem construct start", this.getClass());
-		Logger.addEvent("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + map.getServer().getPort() +
+		Logger.addEvent("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + serverPort +
 				"/stream.mjpg\"", this.getClass());
 
 		//Instantiates server
-		server = new MjpegServer(map.getServer().getName(), map.getServer().getPort());
+		server = new MjpegServer(serverName, serverPort);
 
 		//Instantiates cameras
-		cameras = new ArrayList<>();
-
-		//Searches for each camera, then places them into camera list.
-		for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()) {
-			UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
-			tmp.setResolution(camera.getWidth(), camera.getHeight());
-			tmp.setFPS(camera.getFps());
-			//If we don't make the exposure automatic, it lags like crazy. No idea why.
-			tmp.setExposureAuto();
-			Logger.addEvent("Added " + camera.getName() + " to camera list.", this.getClass());
-			cameras.add(tmp);
-		}
+		this.cameras = cameras;
 
 		//Starts streaming video from first camera, marks that via camNum
 		server.setSource(cameras.get(0));
