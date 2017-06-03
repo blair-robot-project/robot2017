@@ -1,14 +1,12 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class dPadButton extends Button {
+public class dPadButton extends FactoryButton {
 
 	/**
 	 * The angle that the D-pad must be pushed to to trigger this button.
@@ -23,21 +21,12 @@ public class dPadButton extends Button {
 	/**
 	 * Explicit argument constructor.
 	 *
-	 * @param port  The port the relevant joystick is plugged into.
+	 * @param joystick  The joystick with the D-pad.
 	 * @param angle The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	public dPadButton(int port, int angle) {
+	dPadButton(Joystick joystick, int angle) {
 		this.angle = angle;
-		this.joystick = new Joystick(port);
-	}
-
-	/**
-	 * Map-based constructor
-	 *
-	 * @param map Map containing constants defining this object.
-	 */
-	public dPadButton(JoystickButtonMap.JoystickButton map) {
-		this(map.getPort(), map.getAngle());
+		this.joystick = joystick;
 	}
 
 	/**

@@ -15,11 +15,6 @@ public abstract class ArcadeOI implements UnidirectionalOI {
 	public abstract double getFwd();
 
 	/**
-	 * Map all buttons to commands. Should only be run after all subsystems have been instantiated.
-	 */
-	public abstract void mapButtons();
-
-	/**
 	 * The output to be given to the left side of the drive.
 	 *
 	 * @return Output to left side from [-1, 1]

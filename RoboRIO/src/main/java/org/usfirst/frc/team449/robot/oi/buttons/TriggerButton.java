@@ -1,6 +1,5 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
@@ -9,8 +8,7 @@ import org.usfirst.frc.team449.robot.oi.components.Throttle;
 /**
  * A button that gets triggered by a specific throttle being held down at or over a certain amount.
  */
-@JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class TriggerButton extends Button {
+public class TriggerButton extends FactoryButton {
 
 	/**
 	 * The relevant throttle.
@@ -25,22 +23,13 @@ public class TriggerButton extends Button {
 	/**
 	 * Argument-based constructor.
 	 *
-	 * @param port      The port of the joystick containing the throttle.
+	 * @param joystick      The the joystick containing the throttle.
 	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
-	public TriggerButton(int port, int axis, double triggerAt) {
-		throttle = new SmoothedThrottle(new Joystick(port), axis);
+	TriggerButton(Joystick joystick, int axis, double triggerAt) {
+		throttle = new SmoothedThrottle(joystick, axis);
 		this.triggerAt = triggerAt;
-	}
-
-	/**
-	 * Map-based constructor
-	 *
-	 * @param map config map
-	 */
-	public TriggerButton(JoystickButtonMap.JoystickButton map) {
-		this(map.getPort(), map.getButtonIndex(), map.getTriggerAt());
 	}
 
 	/**
