@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands;
+package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -6,21 +6,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently
- * controlling the subsystem.
+ * Turn off the shooter and feeder, using requires() to interrupt any other commands that may be telling them to
+ * continue running.
  */
 @JsonIdentityInfo(generator=ObjectIdGenerators.StringIdGenerator.class)
-public class TurnMotorOffWithRequires extends Command {
+public class TurnAllOffWithRequires extends Command {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private BinaryMotorSubsystem subsystem;
+	private ShooterSubsystem subsystem;
 
 	/**
 	 * Default constructor
@@ -28,9 +27,9 @@ public class TurnMotorOffWithRequires extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & BinaryMotorSubsystem> TurnMotorOffWithRequires(@JsonProperty(required = true) T subsystem) {
-		this.subsystem = subsystem;
+	public <T extends Subsystem & ShooterSubsystem> TurnAllOffWithRequires(@JsonProperty(required = true) T subsystem) {
 		requires(subsystem);
+		this.subsystem = subsystem;
 	}
 
 	/**
@@ -38,15 +37,17 @@ public class TurnMotorOffWithRequires extends Command {
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("TurnMotorOffWithRequires init.", this.getClass());
+		Logger.addEvent("TurnAllOffWithRequires init.", this.getClass());
 	}
 
 	/**
-	 * Turn the motor off.
+	 * Turn off the shooter and feeder.
 	 */
 	@Override
 	protected void execute() {
-		subsystem.turnMotorOff();
+		subsystem.turnFeederOff();
+		subsystem.turnShooterOff();
+		subsystem.setShooterState(ShooterSubsystem.ShooterState.OFF);
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class TurnMotorOffWithRequires extends Command {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("TurnMotorOffWithRequires end.", this.getClass());
+		Logger.addEvent("TurnAllOffWithRequires end.", this.getClass());
 	}
 
 	/**
@@ -72,6 +73,6 @@ public class TurnMotorOffWithRequires extends Command {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("TurnMotorOffWithRequires Interrupted!", this.getClass());
+		Logger.addEvent("TurnAllOffWithRequires Interrupted!", this.getClass());
 	}
 }

@@ -33,12 +33,12 @@ public class SimpleUnidirectionalDrive extends Command {
 	 * @param oi    The OI that gives the input to this command.
 	 */
 	@JsonCreator
-	public SimpleUnidirectionalDrive(@JsonProperty(required = true) UnidirectionalDrive drive,
+	public <T extends Subsystem & UnidirectionalDrive> SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
 	                                 @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.
-		requires((Subsystem) drive);
+		requires(drive);
 	}
 
 	/**

@@ -38,22 +38,22 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 * Default constructor.
 	 *
 	 * @param PID     The PID constants for controlling the angular PID loop.
-	 * @param drive   The unidirectional drive to execute this command on.
+	 * @param drive   The drive to execute this command on.
 	 * @param oi      The tank OI to take input from.
 	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for
 	 *                right.
 	 */
 	@JsonCreator
-	public NavXDriveStraight(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
-	                         @JsonProperty(required = true) UnidirectionalDrive drive,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                         @JsonProperty(required = true) T drive,
 	                         @JsonProperty(required = true) TankOI oi,
 	                         @JsonProperty(required = true) boolean useLeft) {
-		super(PID, (NavxSubsystem) drive);
+		super(PID, drive);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;
 		//This is likely to need to interrupt the DefaultCommand and therefore should require its subsystem.
-		requires((Subsystem) drive);
+		requires(drive);
 	}
 
 	/**

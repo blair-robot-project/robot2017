@@ -1,5 +1,9 @@
 package org.usfirst.frc.team449.robot.mechanism.climber.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
@@ -20,11 +24,11 @@ public class RunMotorWhileConditonMet extends Command {
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The BinaryMotor subsystem to execute this command on. Must also be a {@link
-	 *                  ConditionalSubsystem}.
+	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public RunMotorWhileConditonMet(BinaryMotorSubsystem subsystem) {
-		requires((Subsystem) subsystem);
+	@JsonCreator
+	public <T extends Subsystem & BinaryMotorSubsystem & ConditionalSubsystem> RunMotorWhileConditonMet(@JsonProperty(required = true) T subsystem) {
+		requires(subsystem);
 		this.subsystem = subsystem;
 		Logger.addEvent("RunMotorWhileConditonMet constructed", this.getClass());
 	}

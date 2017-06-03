@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -43,13 +44,14 @@ public class DriveAtSpeed extends Command {
 	 * @param seconds How long to drive for.
 	 */
 	@JsonCreator
-	public DriveAtSpeed(@JsonProperty(required = true) UnidirectionalDrive drive,
-	                    @JsonProperty(required = true) double speed,
-	                    @JsonProperty(required = true) double seconds) {
+	public <T extends Subsystem & UnidirectionalDrive> DriveAtSpeed(@JsonProperty(required = true) T drive,
+	                                         @JsonProperty(required = true) double speed,
+	                                         @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
 		this.subsystem = drive;
 		this.speed = speed;
 		this.seconds = seconds;
+		requires(drive);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 

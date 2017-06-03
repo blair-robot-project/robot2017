@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
@@ -20,9 +21,9 @@ public class PIDBackAndForth extends CommandGroup {
 	 * @param timeInSecs How long to drive in each direction for, in seconds.
 	 */
 	@JsonCreator
-	public PIDBackAndForth(@JsonProperty(required = true) UnidirectionalDrive subsystem,
-	                       @JsonProperty(required = true) double speed,
-	                       @JsonProperty(required = true) double timeInSecs) {
+	public <T extends Subsystem & UnidirectionalDrive> PIDBackAndForth(@JsonProperty(required = true) T subsystem,
+	                                                                   @JsonProperty(required = true) double speed,
+	                                                                   @JsonProperty(required = true) double timeInSecs) {
 		//Drive forwards
 		addSequential(new DriveAtSpeed(subsystem, speed, timeInSecs));
 		//Drive backwards

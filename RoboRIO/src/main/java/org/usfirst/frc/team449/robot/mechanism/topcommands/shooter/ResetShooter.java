@@ -22,16 +22,16 @@ public class ResetShooter extends CommandGroup {
 	 * Constructs a ResetShooter command group
 	 *
 	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem  intake subsystem. Must also be a {@link SolenoidSubsystem}.
+	 * @param intakeSubsystem  intake subsystem.
 	 */
 	@JsonCreator
-	public ResetShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                    @JsonProperty(required = true) IntakeSubsystem intakeSubsystem) {
+	public <T extends IntakeSubsystem & SolenoidSubsystem> ResetShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
+	                    @JsonProperty(required = true) T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));
 		}
 		if (intakeSubsystem != null) {
-			addParallel(new SolenoidReverse((SolenoidSubsystem) intakeSubsystem));
+			addParallel(new SolenoidReverse(intakeSubsystem));
 			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.OFF));
 		}
 	}

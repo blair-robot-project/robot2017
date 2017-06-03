@@ -44,13 +44,13 @@ public class DriveStraight extends Command {
 	 * @param useLeft true to use the left stick to drive straight, false to use the right.
 	 */
 	@JsonCreator
-	public DriveStraight(@JsonProperty(required = true) UnidirectionalDrive drive,
+	public <T extends Subsystem & UnidirectionalDrive> DriveStraight(@JsonProperty(required = true) T drive,
 	                     @JsonProperty(required = true) TankOI oi,
 	                     @JsonProperty(required = true) boolean useLeft) {
 		subsystem = drive;
 		this.oi = oi;
 		this.useLeft = useLeft;
-		requires((Subsystem) subsystem);
+		requires(drive);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 

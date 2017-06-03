@@ -3,10 +3,12 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
@@ -18,12 +20,12 @@ public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArc
 	 * Default constructor
 	 *
 	 * @param map   The angle PID map containing PID and other tuning constants.
-	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem and a ShiftingDrive.
+	 * @param drive The drive to execute this command on.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID map,
-	                                             @JsonProperty(required = true) UnidirectionalDrive drive,
-	                                             @JsonProperty(required = true) ArcadeOI oi) {
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID map,
+	                                                                                                        @JsonProperty(required = true) T drive,
+	                                                                                                        @JsonProperty(required = true) ArcadeOI oi) {
 		super(map, drive, oi);
 	}
 

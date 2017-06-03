@@ -22,16 +22,17 @@ public class LoadShooter extends CommandGroup {
 	 * Constructs a LoadShooter command group
 	 *
 	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem  intake subsystem. Must also be a {@link SolenoidSubsystem}.
+	 * @param intakeSubsystem  intake subsystem.
 	 */
 	@JsonCreator
-	public LoadShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                   @JsonProperty(required = true) IntakeSubsystem intakeSubsystem) {
+	public <T extends IntakeSubsystem & SolenoidSubsystem> LoadShooter(
+			@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
+			@JsonProperty(required = true) T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));
 		}
 		if (intakeSubsystem != null) {
-			addParallel(new SolenoidReverse((SolenoidSubsystem) intakeSubsystem));
+			addParallel(new SolenoidReverse(intakeSubsystem));
 			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.IN_FAST));
 		}
 	}

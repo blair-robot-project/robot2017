@@ -43,20 +43,20 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 *
 	 * @param PID      The PID values, an absolute tolerance, and minimum output.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
-	 * @param drive    The drive subsystem to execute this command on. Must also be a NavX subsystem.
+	 * @param drive    The drive subsystem to execute this command on.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public NavXTurnToAngle(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXTurnToAngle(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
 	                       @JsonProperty(required = true) double setpoint,
-	                       @JsonProperty(required = true) UnidirectionalDrive drive,
+	                       @JsonProperty(required = true) T drive,
 	                       @JsonProperty(required = true) double timeout) {
-		super(PID, (NavxSubsystem) drive);
+		super(PID, drive);
 		this.drive = drive;
 		this.setpoint = setpoint;
 		//Convert from seconds to milliseconds
 		this.timeout = (long) (timeout * 1000);
-		requires((Subsystem) drive);
+		requires(drive);
 	}
 
 	/**

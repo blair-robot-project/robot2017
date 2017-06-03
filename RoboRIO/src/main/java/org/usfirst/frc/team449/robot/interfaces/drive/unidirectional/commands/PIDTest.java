@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
@@ -21,9 +22,9 @@ public class PIDTest extends CommandGroup {
 	 * @param speed The speed to drive at, from [0, 1].
 	 */
 	@JsonCreator
-	public PIDTest(@JsonProperty(required = true) UnidirectionalDrive subsystem,
-	               @JsonProperty(required = true) double driveTime,
-	               @JsonProperty(required = true) double speed) {
+	public <T extends Subsystem & UnidirectionalDrive> PIDTest(@JsonProperty(required = true) T subsystem,
+	                                                          @JsonProperty(required = true) double driveTime,
+	                                                          @JsonProperty(required = true) double speed) {
 		//Drive forward for a bit
 		addSequential(new DriveAtSpeed(subsystem, speed, driveTime));
 		//Stop actively to see how the PID responds.

@@ -58,15 +58,15 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 * Default constructor
 	 *
 	 * @param PID   The angle PID.
-	 * @param drive The drive to execute this command on. Must also be a NavXSubsystem.
+	 * @param drive The drive to execute this command on.
 	 * @param oi    The OI controlling the robot.
 	 */
 	@JsonCreator
-	public UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
-	                                     @JsonProperty(required = true) UnidirectionalDrive drive,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	                                     @JsonProperty(required = true) T drive,
 	                                     @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff
-		super(PID, (NavxSubsystem) drive);
+		super(PID, drive);
 		maxAngularVelToEnterLoop = PID.getMaxAngularVelToEnterLoop();
 		this.oi = oi;
 		driveSubsystem = drive;
@@ -74,7 +74,7 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 		driveStraightLoopEntryTimer = new BufferTimer(PID.getLoopEntryDelay());
 
 		//Needs a requires because it's a default command.
-		requires((Subsystem) drive);
+		requires(drive);
 
 		//Logging, but in Spanish.
 		Logger.addEvent("Drive Robot bueno", this.getClass());
