@@ -19,7 +19,6 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class TalonClusterDrive extends Subsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**

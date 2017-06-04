@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * An object that logs telemetry data every loop.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface Loggable {
 
 	/**

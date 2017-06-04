@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * A subsystem with a shooter and feeder.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface ShooterSubsystem {
 	/**
 	 * Turn the shooter on to a map-specified speed.

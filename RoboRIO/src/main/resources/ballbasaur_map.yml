@@ -2,90 +2,90 @@
 doMP: false
 testMP: false
 nonShiftingDrive:
-    '@class': org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive
-    '@id': drive
-    turnPID:
-        '@id': turnPID
-        PID:
-            '@id': turnPIDConstants
-            kP: 0.01
-        toleranceBuffer: 25
-        absoluteTolerance: 1
-        minimumOutput: 0.1
-        deadband: 0.75
-        inverted: false
-    straightPID:
-        '@id': straightPID
-        PID:
-            *turnPIDConstants
-        toleranceBuffer: 25
-        absoluteTolerance: 1
-        maximumOutput: 0.3333
-        maxAngularVelToEnterLoop: 1
-        loopEntryDelay: 0.15
-        inverted: false
-    leftMaster:
-        '@id': leftMaster
-        port: 6
-        inverted: false
-        enableBrakeMode: true
-        fwdPeakOutputVoltage: 12
-        fwdNominalOutputVoltage: 0
-        wheelDiameterInches: 3.75
-        currentLimit: 40
-        feedbackDevice: QuadEncoder
-        encoderCPR: 512
-        reverseSensor: false
-        maxSpeedHigh: 12.0127
-        highGearPID:
-            '@id': driveTalonPID
-            kP: 0.3
-            kI: 0.0
-            kD: 3.0
-        MotionProfilePID:
-            '@id': driveMPPID
-            kP: 1.5
-            kI: 0.0
-            kD: 0.0
-        slaves:
-            - '@id': talon1
-              port: 1
-              inverted: false
-            - '@id': talon2
-              port: 2
-              inverted: false
-    rightMaster:
-        '@id': rightMaster
-        port: 6
-        inverted: true
-        enableBrakeMode: true
-        fwdPeakOutputVoltage: 12
-        fwdNominalOutputVoltage: 0
-        wheelDiameterInches: 3.75
-        currentLimit: 40
-        feedbackDevice: QuadEncoder
-        encoderCPR: 512
-        reverseSensor: false
-        maxSpeedHigh: 12.0127
-        highGearPID:
-            *driveTalonPID
-        MotionProfilePID:
-            *driveMPPID
-        slaves:
-            - '@id': talon3
-              port: 3
-              inverted: false
-            - '@id': talon5
-              port: 5
-              inverted: false
-    MPHandler:
-        '@id': driveMPHandler
-        talons:
-            - *leftMaster
-            - *rightMaster
-        updaterProcessPeriodSecs: 0.005
-        minNumPointsInBtmBuffer: 10
-    PIDScale: 0.9
+    org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+        '@id': drive
+        turnPID:
+            '@id': turnPID
+            PID:
+                '@id': turnPIDConstants
+                kP: 0.01
+            toleranceBuffer: 25
+            absoluteTolerance: 1
+            minimumOutput: 0.1
+            deadband: 0.75
+            inverted: false
+        straightPID:
+            '@id': straightPID
+            PID:
+                *turnPIDConstants
+            toleranceBuffer: 25
+            absoluteTolerance: 1
+            maximumOutput: 0.3333
+            maxAngularVelToEnterLoop: 1
+            loopEntryDelay: 0.15
+            inverted: false
+        leftMaster:
+            '@id': leftMaster
+            port: 6
+            inverted: false
+            enableBrakeMode: true
+            fwdPeakOutputVoltage: 12
+            fwdNominalOutputVoltage: 0
+            wheelDiameterInches: 3.75
+            currentLimit: 40
+            feedbackDevice: QuadEncoder
+            encoderCPR: 512
+            reverseSensor: false
+            maxSpeedHigh: 12.0127
+            highGearPID:
+                '@id': driveTalonPID
+                kP: 0.3
+                kI: 0.0
+                kD: 3.0
+            MotionProfilePID:
+                '@id': driveMPPID
+                kP: 1.5
+                kI: 0.0
+                kD: 0.0
+            slaves:
+                - '@id': talon1
+                  port: 1
+                  inverted: false
+                - '@id': talon2
+                  port: 2
+                  inverted: false
+        rightMaster:
+            '@id': rightMaster
+            port: 6
+            inverted: true
+            enableBrakeMode: true
+            fwdPeakOutputVoltage: 12
+            fwdNominalOutputVoltage: 0
+            wheelDiameterInches: 3.75
+            currentLimit: 40
+            feedbackDevice: QuadEncoder
+            encoderCPR: 512
+            reverseSensor: false
+            maxSpeedHigh: 12.0127
+            highGearPID:
+                *driveTalonPID
+            MotionProfilePID:
+                *driveMPPID
+            slaves:
+                - '@id': talon3
+                  port: 3
+                  inverted: false
+                - '@id': talon5
+                  port: 5
+                  inverted: false
+        MPHandler:
+            '@id': driveMPHandler
+            talons:
+                - *leftMaster
+                - *rightMaster
+            updaterProcessPeriodSecs: 0.005
+            minNumPointsInBtmBuffer: 10
+        PIDScale: 0.9
 oi:
     '@id': oi
     gamepad:
@@ -116,8 +116,8 @@ oi:
                 '@id': overrideNavX
                 '@class': org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX
                 subsystem:
-                    *drive
-                    '@class': org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive
+                    org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+                        *drive
                 override: true
             action: WHEN_PRESSED
         -   '@id': unoverrideNavXButton
@@ -126,14 +126,16 @@ oi:
             command:
                 '@id': unoverrideNavX
                 '@class': org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX
-                subsystem: !<org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive>
-                    *drive
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+                        *drive
                 override: false
             action: WHEN_RELEASED
 logger:
     '@id': logger
     subsystems:
-        - *drive
+        - org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+            *drive
     loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"

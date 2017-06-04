@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Intake;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * A subsystem used for intaking and possibly ejecting game pieces.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface IntakeSubsystem {
 	/**
 	 * Get the mode of the intake

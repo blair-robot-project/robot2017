@@ -1,11 +1,13 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.usfirst.frc.team449.robot.interfaces.drive.DriveSubsystem;
 
 /**
  * A drive with a left side and a right side. "Unidirectional" because it can only move forwards or backwards, not
  * sideways.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface UnidirectionalDrive extends DriveSubsystem {
 
 	/**

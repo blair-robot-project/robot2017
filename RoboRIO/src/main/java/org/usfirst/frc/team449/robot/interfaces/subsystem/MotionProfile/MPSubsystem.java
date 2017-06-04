@@ -1,10 +1,12 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 
 /**
  * A subsystem that can have motion profiles run on it.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface MPSubsystem {
 	/**
 	 * Loads a profile into the MP buffer.
