@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Drives straight when using a tank drive.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveStraight extends Command {
+public class DriveStraight extends YamlCommandWrapper {
 
 	/**
 	 * The oi that this command gets input from.

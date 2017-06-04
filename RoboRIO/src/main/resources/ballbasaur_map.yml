@@ -1,54 +1,9 @@
 ---
 doMP: false
 testMP: false
-oi:
-    '@id': oi
-    gamepad:
-        '@id': driverGamepad
-        port: 1
-    rotThrottle:
-        '@id': rotThrottle
-        stick: &driverGamepad
-        axis: 0
-        deadband: 0.05
-        inverted: false
-    fwdThrottle:
-        '@id': fwdThrottle
-        stick: &driverGamepad
-        axis: 5
-        deadband: 0.05
-        inverted: false
-    invertDPad: false
-    dPadShift: 0.1
-    scaleFwdByRotCoefficient: 0.2
-    buttons:
-        - '@id': overrideNavXButton
-        button:
-            '@id': gamepad10
-            joystick: &driverGamepad
-            buttonNumber: 10
-        command:
-            '@id': overrideNavX
-            subsystem: &drive
-            override: true
-        action: WHEN_PRESSED
-        - '@id': unoverrideNavXButton
-        button:
-            &gamepad10
-        command:
-            '@id': unoverrideNavX
-            subsystem: &drive
-            override: false
-        action: WHEN_RELEASED
-logger:
-    '@id': logger
-    subsystems:
-        - &drive
-    loopTimeSecs: 0.02
-    eventLogFilename: "/home/lvuser/logs/eventLog-"
-    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 nonShiftingDrive:
     '@id': drive
+    '@class': org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive
     turnPID:
         '@id': turnPID
         PID:
@@ -62,7 +17,7 @@ nonShiftingDrive:
     straightPID:
         '@id': straightPID
         PID:
-            &turnPIDConstants
+            *turnPIDConstants
         toleranceBuffer: 25
         absoluteTolerance: 1
         maximumOutput: 0.3333
@@ -94,11 +49,11 @@ nonShiftingDrive:
             kD: 0.0
         slaves:
             - '@id': talon1
-            port: 1
-            inverted: false
+              port: 1
+              inverted: false
             - '@id': talon2
-            port: 2
-            inverted: false
+              port: 2
+              inverted: false
     rightMaster:
         '@id': rightMaster
         port: 6
@@ -113,23 +68,76 @@ nonShiftingDrive:
         reverseSensor: false
         maxSpeedHigh: 12.0127
         highGearPID:
-            &driveTalonPID
+            *driveTalonPID
         MotionProfilePID:
-            &driveMPPID
+            *driveMPPID
         slaves:
             - '@id': talon3
-            port: 3
-            inverted: false
+              port: 3
+              inverted: false
             - '@id': talon5
-            port: 5
-            inverted: false
+              port: 5
+              inverted: false
     MPHandler:
+        '@id': driveMPHandler
         talons:
-            - &leftMaster
-            - &rightMaster
+            - *leftMaster
+            - *rightMaster
         updaterProcessPeriodSecs: 0.005
         minNumPointsInBtmBuffer: 10
     PIDScale: 0.9
+oi:
+    '@id': oi
+    gamepad:
+        '@id': driverGamepad
+        port: 1
+    rotThrottle:
+        '@id': rotThrottle
+        stick: *driverGamepad
+        axis: 0
+        deadband: 0.05
+        inverted: false
+    fwdThrottle:
+        '@id': fwdThrottle
+        stick: *driverGamepad
+        axis: 5
+        deadband: 0.05
+        inverted: false
+    invertDPad: false
+    dPadShift: 0.1
+    scaleFwdByRotCoefficient: 0.2
+    buttons:
+        - '@id': overrideNavXButton
+          button:
+              '@id': gamepad10
+              joystick: *driverGamepad
+              buttonNumber: 10
+          command:
+              '@id': overrideNavX
+              '@class': org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX
+              subsystem:
+                *drive
+                #'@class': org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive
+              override: true
+          action: WHEN_PRESSED
+        - '@id': unoverrideNavXButton
+          button:
+              *gamepad10
+          command:
+              '@id': unoverrideNavX
+              '@class': org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX
+              subsystem:
+                *drive
+                '@class': org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive
+              override: false
+          action: WHEN_RELEASED
+logger:
+    '@id': logger
+    subsystems:
+        - *drive
+    loopTimeSecs: 0.02
+    eventLogFilename: "/home/lvuser/logs/eventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 allianceSwitch:
     ports: [3]
 dropGearSwitch:

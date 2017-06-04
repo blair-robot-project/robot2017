@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Turns off the motor of the specified subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnMotorOff extends Command {
+public class TurnMotorOff extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.

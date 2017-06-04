@@ -2,7 +2,8 @@ package org.usfirst.frc.team449.robot.oi.buttons;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * A button mapped to a command.
@@ -18,23 +19,23 @@ public class CommandButton {
 	 */
 	@JsonCreator
 	public CommandButton(@JsonProperty(required = true) FactoryButton button,
-	                     @JsonProperty(required = true) Command command,
+	                     @JsonProperty(required = true) YamlCommand command,
 	                     @JsonProperty(required = true) Action action) {
 		switch (action) {
 			case WHILE_HELD:
-				button.whileHeld(command);
+				button.whileHeld(command.getCommand());
 				break;
 			case WHEN_PRESSED:
-				button.whenPressed(command);
+				button.whenPressed(command.getCommand());
 				break;
 			case WHEN_RELEASED:
-				button.whenReleased(command);
+				button.whenReleased(command.getCommand());
 				break;
 			case CANCEL_WHEN_PRESSED:
-				button.cancelWhenPressed(command);
+				button.cancelWhenPressed(command.getCommand());
 				break;
 			case TOGGLE_WHEN_PRESSED:
-				button.toggleWhenPressed(command);
+				button.toggleWhenPressed(command.getCommand());
 				break;
 		}
 	}

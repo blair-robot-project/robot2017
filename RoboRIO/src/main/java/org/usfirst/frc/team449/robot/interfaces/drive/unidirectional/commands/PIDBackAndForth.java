@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
  * Drive back and forth to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDBackAndForth extends CommandGroup {
+public class PIDBackAndForth extends YamlCommandGroupWrapper {
 	/**
 	 * Instantiate the CommandGroup
 	 *

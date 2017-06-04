@@ -561,7 +561,7 @@ public class RotPerSecCANTalonSRX extends Component {
 	 * An object representing a slave {@link CANTalon} for use in the map.
 	 */
 	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-	private class SlaveTalon {
+	private static class SlaveTalon {
 
 		/**
 		 * The port number of this Talon.

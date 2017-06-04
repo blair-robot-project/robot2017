@@ -28,6 +28,7 @@ import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -146,8 +147,8 @@ public class Robot extends IterativeRobot {
 			YAMLMapper mapper = new YAMLMapper();
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			//Try to construct map from the cfg file
-//			cfg = mapper.readValue(RESOURCES_PATH+"ballbasaur_map.yml", RobotMap.class);
-			cfg = mapper.readValue(RESOURCES_PATH + "calcifer_map.yml", RobotMap.class);
+			cfg = mapper.readValue(new File(RESOURCES_PATH+"ballbasaur_map.yml"), RobotMap.class);
+//			cfg = mapper.readValue(RESOURCES_PATH + "calcifer_map.yml", RobotMap.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");

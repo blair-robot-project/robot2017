@@ -1,11 +1,13 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX;
 
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kauailabs.navx.frc.AHRS;
 
 /**
  * A subsystem that has a NavX on it.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public interface NavxSubsystem {
 	/**
 	 * Get the output of the NavX

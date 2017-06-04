@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Go at a certain speed for a set number of seconds
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveAtSpeed extends Command {
+public class DriveAtSpeed extends YamlCommandWrapper {
 
 	/**
 	 * Speed to go at

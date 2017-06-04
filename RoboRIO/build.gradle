@@ -1,5 +1,5 @@
 plugins {
-	id 'org.hidetake.ssh' version "2.7.2"
+	id 'org.hidetake.ssh' version "2.9.0"
 	id "java"
 	id "eclipse"
 	id "idea"
@@ -99,13 +99,13 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task('copyResources', dependsOn: convertFiles) {
+task('copyResources') {
 	doLast {
 		ssh.run {
 			session(remotes.rio) {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
-				put from: 'src/main/resources/*', into: './449_resources/'
+				put from: fileTree("./src/main/resources"), into: './449_resources/'
 			}
 		}
 	}
@@ -114,3 +114,6 @@ task('copyResources', dependsOn: convertFiles) {
 artifacts {
 	archives genJavadoc
 }
+/*
+
+ */

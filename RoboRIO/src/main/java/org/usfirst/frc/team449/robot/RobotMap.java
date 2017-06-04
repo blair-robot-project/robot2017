@@ -17,6 +17,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.util.Map;
@@ -136,7 +137,7 @@ public class RobotMap {
 	                FeederAuto2017 feederAuto,
 	                MotionProfileData leftTestProfile, MotionProfileData rightTestProfile,
 	                Map<String, MotionProfileData> leftProfiles, Map<String, MotionProfileData> rightProfiles,
-	                Command nonMPAutoCommand,
+	                YamlCommand nonMPAutoCommand,
 	                boolean testMP,
 	                Boolean doMP) {
 		this.oi = oi;
@@ -160,7 +161,7 @@ public class RobotMap {
 		this.rightTestProfile = rightTestProfile;
 		this.leftProfiles = leftProfiles;
 		this.rightProfiles = rightProfiles;
-		this.nonMPAutoCommand = nonMPAutoCommand;
+		this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
 		this.testMP = testMP;
 		if (doMP == null) {
 			doMP = true;

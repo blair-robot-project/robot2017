@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive extends Command {
+public class SimpleUnidirectionalDrive extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.

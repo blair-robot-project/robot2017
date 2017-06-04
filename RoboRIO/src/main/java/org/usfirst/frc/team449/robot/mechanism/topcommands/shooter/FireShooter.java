@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnA
  * Runs flywheel, runs static intake, stops dynamic intake, raises intake, and runs feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FireShooter extends CommandGroup {
+public class FireShooter extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a FireShooter command group
 	 *
