@@ -161,7 +161,9 @@ public class RobotMap {
 		this.rightTestProfile = rightTestProfile;
 		this.leftProfiles = leftProfiles;
 		this.rightProfiles = rightProfiles;
-		this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
+		if (nonMPAutoCommand != null) {
+			this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
+		}
 		this.testMP = testMP;
 		if (doMP == null) {
 			doMP = true;

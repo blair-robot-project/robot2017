@@ -7,7 +7,7 @@ import com.kauailabs.navx.frc.AHRS;
 /**
  * A subsystem that has a NavX on it.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT)
 public interface NavxSubsystem {
 	/**
 	 * Get the output of the NavX

@@ -3,7 +3,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.1"
+	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
 }
 
 group 'org.usfirst.frc.team449.robot2017'
@@ -42,19 +42,20 @@ repositories {
 
 dependencies {
 	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
-	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.0.0'
+	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.7'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.3'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.3'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0.pr3'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.3'
-	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.8.3'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.0.pr3'
+	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
 	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
-	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.8.3'
+	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
 	compile 'com.github.blair-robot-project:449-central-repo:v5.0.1-YAML'
 	compile wpilib()
 	compile talonSrx()
+	compile navx()
 	compile fileTree(dir: "lib", include: "*.jar")
 }
 
@@ -80,7 +81,6 @@ wpi {
 	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
 	opencvVersion = "+"                   // The OpenCV version to use
 	cscoreVersion = "+"                   // The CSCore version to use
-
 	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
@@ -114,6 +114,3 @@ task('copyResources') {
 artifacts {
 	archives genJavadoc
 }
-/*
-
- */

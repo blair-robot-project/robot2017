@@ -1,9 +1,6 @@
 package org.usfirst.frc.team449.robot.components;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ public class MappedDigitalInput {
 	/**
 	 * The digitalInputs this class represents
 	 */
+	@JsonIgnore
 	private List<DigitalInput> digitalInputs;
 
 	/**
@@ -26,7 +24,7 @@ public class MappedDigitalInput {
 	 * @param ports The ports to read from, in order.
 	 */
 	@JsonCreator
-	public MappedDigitalInput(@JsonProperty(required = true) List<Integer> ports) {
+	public MappedDigitalInput(@JsonProperty(required = true) int[] ports) {
 		digitalInputs = new ArrayList<>();
 		for (int portNum : ports) {
 			DigitalInput tmp = new DigitalInput(portNum);
@@ -39,6 +37,7 @@ public class MappedDigitalInput {
 	 *
 	 * @return A list of booleans where 1 represents the input receiving a signal and 0 represents no signal.
 	 */
+	@JsonIgnore
 	public List<Boolean> getStatus() {
 		List<Boolean> digitalValues = new ArrayList<>();
 		for (DigitalInput digitalInput : digitalInputs) {

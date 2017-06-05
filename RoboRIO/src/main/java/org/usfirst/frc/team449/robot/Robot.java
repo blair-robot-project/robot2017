@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.wpilibj.I2C;
@@ -146,6 +147,7 @@ public class Robot extends IterativeRobot {
 		try {
 			YAMLMapper mapper = new YAMLMapper();
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 			//Try to construct map from the cfg file
 			cfg = mapper.readValue(new File(RESOURCES_PATH+"ballbasaur_map.yml"), RobotMap.class);
 //			cfg = mapper.readValue(RESOURCES_PATH + "calcifer_map.yml", RobotMap.class);

@@ -141,24 +141,35 @@ public class Logger implements Runnable {
 				Object datum = data[j];
 				//We do this big thing here so we log it to SmartDashboard as the correct data type, so we make each
 				//thing into a booleanBox, graph, etc.
-				if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)) {
-					SmartDashboard.putBoolean(itemNames[i][j], (boolean) datum);
-				} else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)) {
-					SmartDashboard.putNumber(itemNames[i][j], (int) datum);
-				} else if (datum.getClass().equals(double.class) || datum.getClass().equals(Double.class)) {
-					SmartDashboard.putNumber(itemNames[i][j], (double) datum);
-				} else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
-					SmartDashboard.putNumber(itemNames[i][j], (long) datum);
-				} else if (datum.getClass().equals(Sendable.class)) {
-					SmartDashboard.putData(itemNames[i][j], (Sendable) datum);
-				} else if (datum.getClass().equals(String.class)) {
-					SmartDashboard.putString(itemNames[i][j], (String) datum);
+				if (datum != null) {
+					if (datum.getClass().equals(boolean.class) || datum.getClass().equals(Boolean.class)) {
+						SmartDashboard.putBoolean(itemNames[i][j], (boolean) datum);
+					} else if (datum.getClass().equals(int.class) || datum.getClass().equals(Integer.class)) {
+						SmartDashboard.putNumber(itemNames[i][j], (int) datum);
+					} else if (datum.getClass().equals(double.class)) {
+						System.out.println("Double item name: " + itemNames[i][j]);
+						System.out.println("Double: " + datum);
+						System.out.println("Double class: " + datum.getClass());
+						SmartDashboard.putNumber(itemNames[i][j], (double) datum);
+					} else if (datum.getClass().equals(Double.class)){
+						SmartDashboard.putNumber(itemNames[i][j], (Double) datum);
+					} else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
+						SmartDashboard.putNumber(itemNames[i][j], (long) datum);
+					} else if (datum.getClass().equals(Sendable.class)) {
+						SmartDashboard.putData(itemNames[i][j], (Sendable) datum);
+					} else if (datum.getClass().equals(String.class)) {
+						SmartDashboard.putString(itemNames[i][j], (String) datum);
+					} else {
+						SmartDashboard.putString(itemNames[i][j], datum.toString());
+					}
+					telemetryData.append(datum.toString());
 				} else {
-					SmartDashboard.putString(itemNames[i][j], datum.toString());
+					SmartDashboard.putString(itemNames[i][j], "null");
+					telemetryData.append("null");
 				}
 
+
 				//Build up the line of data
-				telemetryData.append(datum.toString());
 				telemetryData.append(",");
 			}
 		}
