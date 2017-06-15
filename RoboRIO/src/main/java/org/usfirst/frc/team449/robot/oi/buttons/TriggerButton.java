@@ -1,8 +1,8 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import edu.wpi.first.wpilibj.Joystick;
-import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
-import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.usfirst.frc.team449.robot.components.MappedJoystick;
+import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
+import org.usfirst.frc.team449.robot.components.MappedThrottle;
 
 /**
  * A button that gets triggered by a specific throttle being held down at or over a certain amount.
@@ -12,7 +12,7 @@ public class TriggerButton extends FactoryButton {
 	/**
 	 * The relevant throttle.
 	 */
-	private Throttle throttle;
+	private MappedThrottle throttle;
 
 	/**
 	 * The percentage pressed to trigger at, from (0, 1]
@@ -26,8 +26,8 @@ public class TriggerButton extends FactoryButton {
 	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
-	TriggerButton(Joystick joystick, int axis, double triggerAt) {
-		throttle = new SmoothedThrottle(joystick, axis);
+	TriggerButton(MappedJoystick joystick, int axis, double triggerAt) {
+		throttle = new MappedSmoothedThrottle(joystick, axis, 0, false);
 		this.triggerAt = triggerAt;
 	}
 

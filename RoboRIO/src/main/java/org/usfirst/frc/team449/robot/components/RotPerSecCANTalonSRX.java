@@ -14,7 +14,7 @@ import java.util.List;
  * non-unit-conversion in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RotPerSecCANTalonSRX extends Component {
+public class RotPerSecCANTalonSRX {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on

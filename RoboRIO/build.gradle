@@ -29,11 +29,9 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
 	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
-	compile 'com.github.blair-robot-project:449-central-repo:v5.0.1-YAML'
 	compile wpilib()
 	compile talonSrx()
 	compile navx()
-	compile fileTree(dir: "lib", include: "*.jar")
 }
 
 task convertFiles {
@@ -101,4 +99,8 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 
 artifacts {
 	archives genJavadoc
+}
+
+compileJava {
+	options.compilerArgs << '-parameters'
 }

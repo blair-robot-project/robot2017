@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.ReferencingCommand;
+import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
  * Toggles camera on button press.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ChangeCam extends ReferencingCommand {
+public class ChangeCam extends Command {
 
 	/**
 	 * The cameraSubsystem to execute this command on
@@ -26,7 +26,7 @@ public class ChangeCam extends ReferencingCommand {
 	 */
 	@JsonCreator
 	public ChangeCam(@JsonProperty(required = true) CameraSubsystem cameraSubsystem) {
-		super(cameraSubsystem);
+		super();
 		requires(cameraSubsystem);
 		this.cameraSubsystem = cameraSubsystem;
 	}

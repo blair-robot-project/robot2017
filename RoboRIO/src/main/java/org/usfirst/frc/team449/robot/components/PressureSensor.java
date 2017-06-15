@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  * Wrapper for an {@link AnalogInput} pressure sensor that returns a voltage linearly proportional to pressure.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PressureSensor extends Component {
+public class PressureSensor {
 	/**
 	 * The AnalogInput this is a wrapper on.
 	 */
