@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -24,12 +24,12 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 	/**
 	 * The PIDAngleCommand constants for turning to an angle with the NavX
 	 */
-	public final ToleranceBufferAnglePID turnPID;
+	public final AnglePID turnPID;
 
 	/**
 	 * The PIDAngleCommand constants for using the NavX to drive straight
 	 */
-	public final ToleranceBufferAnglePID straightPID;
+	public final AnglePID straightPID;
 
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
@@ -73,8 +73,8 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
 	@JsonCreator
-	public TalonClusterDrive(@JsonProperty(required = true) ToleranceBufferAnglePID turnPID,
-	                         @JsonProperty(required = true) ToleranceBufferAnglePID straightPID,
+	public TalonClusterDrive(@JsonProperty(required = true) AnglePID turnPID,
+	                         @JsonProperty(required = true) AnglePID straightPID,
 	                         @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
 	                         @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
 	                         @JsonProperty(required = true) CANTalonMPHandler MPHandler,

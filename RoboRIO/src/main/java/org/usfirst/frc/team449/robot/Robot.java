@@ -28,10 +28,12 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywh
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
@@ -146,11 +148,14 @@ public class Robot extends IterativeRobot {
 
 		try {
 			YAMLMapper mapper = new YAMLMapper();
+			Yaml yaml = new Yaml();
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(RESOURCES_PATH+"ballbasaur_map.yml");
+			//Map<?, ?> normalized = (Map<?, ?>) yaml.load(RESOURCES_PATH+"calcifer_map.yml");
+			String fixed = mapper.writeValueAsString(normalized);
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 			//Try to construct map from the cfg file
-			cfg = mapper.readValue(new File(RESOURCES_PATH+"ballbasaur_map.yml"), RobotMap.class);
-//			cfg = mapper.readValue(RESOURCES_PATH + "calcifer_map.yml", RobotMap.class);
+			cfg = mapper.readValue(fixed, RobotMap.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");

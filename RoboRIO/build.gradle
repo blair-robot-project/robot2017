@@ -29,6 +29,8 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.0.pr3'
 	//com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.0.pr3
 	compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.9.0.pr3'
+	// https://mvnrepository.com/artifact/org.yaml/snakeyaml
+	compile group: 'org.yaml', name: 'snakeyaml', version: '1.18'
 	compile wpilib()
 	compile talonSrx()
 	compile navx()

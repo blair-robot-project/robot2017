@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
@@ -47,7 +47,7 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXTurnToAngle(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXTurnToAngle(@JsonProperty(required = true) AnglePID PID,
 	                                                                                   @JsonProperty(required = true) double setpoint,
 	                                                                                   @JsonProperty(required = true) T drive,
 	                                                                                   @JsonProperty(required = true) double timeout) {

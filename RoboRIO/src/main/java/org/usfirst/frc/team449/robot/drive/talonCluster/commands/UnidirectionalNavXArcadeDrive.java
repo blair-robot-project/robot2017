@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -62,7 +62,7 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 * @param oi    The OI controlling the robot.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) AnglePID PID,
 	                                                                                                 @JsonProperty(required = true) T drive,
 	                                                                                                 @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff

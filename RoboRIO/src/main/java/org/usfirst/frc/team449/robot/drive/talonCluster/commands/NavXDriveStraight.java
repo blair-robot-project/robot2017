@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -44,7 +44,7 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 *                right.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) AnglePID PID,
 	                                                                                     @JsonProperty(required = true) T drive,
 	                                                                                     @JsonProperty(required = true) TankOI oi,
 	                                                                                     @JsonProperty(required = true) boolean useLeft) {

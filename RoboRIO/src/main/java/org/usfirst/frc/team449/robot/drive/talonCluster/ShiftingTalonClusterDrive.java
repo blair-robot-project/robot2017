@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
@@ -118,8 +118,8 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 * @param startingGear                     The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
-	public ShiftingTalonClusterDrive(@JsonProperty(required = true) ToleranceBufferAnglePID turnPID,
-	                                 @JsonProperty(required = true) ToleranceBufferAnglePID straightPID,
+	public ShiftingTalonClusterDrive(@JsonProperty(required = true) AnglePID turnPID,
+	                                 @JsonProperty(required = true) AnglePID straightPID,
 	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
 	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
 	                                 @JsonProperty(required = true) CANTalonMPHandler MPHandler,

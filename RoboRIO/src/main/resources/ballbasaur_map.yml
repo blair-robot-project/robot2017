@@ -26,7 +26,7 @@ nonShiftingDrive:
         straightPID:
             '@id': straightPID
             PID:
-                *turnPIDConstants
+                turnPIDConstants
             toleranceBuffer: 25
             absoluteTolerance: 1
             maximumOutput: 0.3333
@@ -77,9 +77,9 @@ nonShiftingDrive:
             reverseSensor: false
             maxSpeedHigh: 12.0127
             highGearPID:
-                *driveTalonPID
+                driveTalonPID
             MotionProfilePID:
-                *driveMPPID
+                driveMPPID
             slaves:
                 - '@id': talon3
                   port: 3
@@ -90,8 +90,8 @@ nonShiftingDrive:
         MPHandler:
             '@id': driveMPHandler
             talons:
-                - *leftMaster
-                - *rightMaster
+                - leftMaster
+                - rightMaster
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
         PIDScale: 0.9
@@ -99,7 +99,7 @@ logger:
     '@id': logger
     subsystems:
         - org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
-            *drive
+            drive
     loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
@@ -111,13 +111,13 @@ oi:
             port: 1
         rotThrottle:
             '@id': rotThrottle
-            stick: *driverGamepad
+            stick: driverGamepad
             axis: 0
             deadband: 0.05
             inverted: false
         fwdThrottle:
             '@id': fwdThrottle
-            stick: *driverGamepad
+            stick: driverGamepad
             axis: 5
             deadband: 0.05
             inverted: false
@@ -128,24 +128,24 @@ oi:
             -   '@id': overrideNavXButton
                 button:
                     '@id': gamepad10
-                    joystick: *driverGamepad
+                    joystick: driverGamepad
                     buttonNumber: 10
                 command:
                     org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
                         '@id': overrideNavX
                         subsystem:
                             org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
-                                *drive
+                                drive
                         override: true
                 action: WHEN_PRESSED
             -   '@id': unoverrideNavXButton
                 button:
-                    *gamepad10
+                    gamepad10
                 command:
                     org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
                         '@id': unoverrideNavX
                         subsystem:
                             org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
-                                *drive
+                                drive
                         override: false
                 action: WHEN_RELEASED

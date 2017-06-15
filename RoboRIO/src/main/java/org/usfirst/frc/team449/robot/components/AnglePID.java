@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
  * An object that holds the constants for an angular PID loop.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ToleranceBufferAnglePID {
+public class AnglePID {
 	/**
 	 * The PID gains for this loop.
 	 */
@@ -61,7 +61,7 @@ public class ToleranceBufferAnglePID {
 	 *
 	 * @param PID                      The PID gains for this loop.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
-	 *                                 on target. Multiply by loop period of ~20 milliseconds for time.
+	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
 	 *                                 within tolerance.
 	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
@@ -76,14 +76,14 @@ public class ToleranceBufferAnglePID {
 	 *                                 zero.
 	 */
 	@JsonCreator
-	public ToleranceBufferAnglePID(@JsonProperty(required = true) PID PID,
-	                               @JsonProperty(required = true) int toleranceBuffer,
-	                               @JsonProperty(required = true) double absoluteTolerance,
-	                               double minimumOutput, Double maximumOutput,
-	                               double deadband,
-	                               Double maxAngularVelToEnterLoop,
-	                               boolean inverted,
-	                               double loopEntryDelay) {
+	public AnglePID(@JsonProperty(required = true) PID PID,
+	                @JsonProperty(required = true) double absoluteTolerance,
+	                int toleranceBuffer,
+	                double minimumOutput, Double maximumOutput,
+	                double deadband,
+	                Double maxAngularVelToEnterLoop,
+	                boolean inverted,
+	                double loopEntryDelay) {
 		this.PID = PID;
 		this.toleranceBuffer = toleranceBuffer;
 		this.absoluteTolerance = absoluteTolerance;

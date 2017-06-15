@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.usfirst.frc.team449.robot.components.ToleranceBufferAnglePID;
+import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
 /**
@@ -39,7 +39,7 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 * @param subsystem The NavX subsystem.
 	 */
 	@JsonCreator
-	public PIDAngleCommand(@JsonProperty(required = true) ToleranceBufferAnglePID PID,
+	public PIDAngleCommand(@JsonProperty(required = true) AnglePID PID,
 	                       @JsonProperty(required = true) NavxSubsystem subsystem) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
 		super(PID.getPID().getP(), PID.getPID().getI(), PID.getPID().getD());
