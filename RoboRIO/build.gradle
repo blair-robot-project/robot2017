@@ -9,27 +9,6 @@ plugins {
 group 'org.usfirst.frc.team449.robot2017'
 version '1.0'
 
-allprojects {
-	tasks.withType(Javadoc).all { enabled = false }
-	repositories {
-		maven {
-			url 'https://jitpack.io'
-		}
-	}
-}
-
-compileJava {
-	options.compilerArgs << '-parameters'
-}
-
-remotes {
-	rio {
-		host = 'roboRIO-449-frc.local'
-		user = 'lvuser'
-		knownHosts = allowAnyHosts
-	}
-}
-
 repositories {
 	mavenCentral()
 	maven {
@@ -41,8 +20,6 @@ repositories {
 }
 
 dependencies {
-	compile group: 'edu.wpi.first.wpilibj', name: 'wpilibJavaFinal', version: '2016.5.1'
-	compile group: 'edu.wpi.first.wpilib.networktables.java', name: 'NetworkTables', version: '3.1.7'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
@@ -61,12 +38,21 @@ dependencies {
 
 task convertFiles {
 	doLast {
-		fileTree("./src/main/resources").matching { include "*" }.each { aFile ->
+		fileTree("src/main/resources").matching { include "*.txt" }.each { aFile ->
 			exec {
 				commandLine 'dos2unix'
 				args aFile.absolutePath
 			}
 		}
+	}
+}
+
+/* GradleRIO stuff */
+remotes {
+	rio {
+		host = 'roboRIO-449-frc.local'
+		user = 'lvuser'
+		knownHosts = allowAnyHosts
 	}
 }
 
@@ -81,6 +67,7 @@ wpi {
 	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
 	opencvVersion = "+"                   // The OpenCV version to use
 	cscoreVersion = "+"                   // The CSCore version to use
+
 	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
@@ -89,6 +76,19 @@ def robotManifest = {
 	attributes 'Robot-Class': frc.robotClass
 }
 
+task('copyResources', dependsOn: convertFiles) {
+	doLast {
+		ssh.run {
+			session(remotes.rio) {
+				execute 'mkdir ~/449_resources', ignoreError: true
+				execute 'mkdir ~/logs', ignoreError: true
+				put from: fileTree('src/main/resources'), into: './449_resources/'
+			}
+		}
+	}
+}
+
+/* Generic artifact gen stuff */
 jar {
 	from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
 	manifest robotManifest
@@ -97,18 +97,6 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
-}
-
-task('copyResources') {
-	doLast {
-		ssh.run {
-			session(remotes.rio) {
-				execute 'mkdir ~/449_resources', ignoreError: true
-				execute 'mkdir ~/logs', ignoreError: true
-				put from: fileTree("./src/main/resources"), into: './449_resources/'
-			}
-		}
-	}
 }
 
 artifacts {
