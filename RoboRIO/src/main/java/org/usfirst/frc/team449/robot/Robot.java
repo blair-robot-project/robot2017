@@ -31,6 +31,7 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -149,8 +150,8 @@ public class Robot extends IterativeRobot {
 		try {
 			YAMLMapper mapper = new YAMLMapper();
 			Yaml yaml = new Yaml();
-			Map<?, ?> normalized = (Map<?, ?>) yaml.load(RESOURCES_PATH+"ballbasaur_map.yml");
-			//Map<?, ?> normalized = (Map<?, ?>) yaml.load(RESOURCES_PATH+"calcifer_map.yml");
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
+			//Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"calcifer_map.yml"));
 			String fixed = mapper.writeValueAsString(normalized);
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
