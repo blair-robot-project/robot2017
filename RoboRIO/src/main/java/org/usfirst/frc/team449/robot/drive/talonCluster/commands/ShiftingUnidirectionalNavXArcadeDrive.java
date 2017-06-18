@@ -1,8 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -13,6 +11,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
  * alignment.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXArcadeDrive {
 
@@ -41,6 +40,7 @@ public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & Un
 	 * @param drive The drive to execute this command on.
 	 * @param oi    The OI controlling the robot.
 	 */
+	@JsonCreator
 	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
 	                                             int toleranceBuffer,
                                                  double minimumOutput, Double maximumOutput,

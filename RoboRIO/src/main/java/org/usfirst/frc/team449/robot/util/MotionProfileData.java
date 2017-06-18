@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -37,7 +38,7 @@ public class MotionProfileData {
 	                         @JsonProperty(required = true) boolean inverted) {
 		this.inverted = inverted;
 		try {
-			readFile(filename);
+			readFile(Robot.RESOURCES_PATH+filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

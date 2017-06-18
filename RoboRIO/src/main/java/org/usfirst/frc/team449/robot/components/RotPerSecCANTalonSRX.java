@@ -283,30 +283,32 @@ public class RotPerSecCANTalonSRX {
 			}
 		}
 
-		//Set up slaves.
-		for (SlaveTalon slave : slaves) {
-			CANTalon tmp = new CANTalon(slave.getPort());
-			//To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
-			tmp.reverseOutput(slave.isInverted());
-			//Don't use the other inversion options
-			tmp.reverseSensor(false);
-			tmp.setInverted(false);
+		if (slaves != null) {
+			//Set up slaves.
+			for (SlaveTalon slave : slaves) {
+				CANTalon tmp = new CANTalon(slave.getPort());
+				//To invert slaves, use reverseOutput. See section 9.1.4 of the TALON SRX Software Reference Manual.
+				tmp.reverseOutput(slave.isInverted());
+				//Don't use the other inversion options
+				tmp.reverseSensor(false);
+				tmp.setInverted(false);
 
-			//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
-			tmp.enableBrakeMode(enableBrakeMode);
-			if (currentLimit != null) {
-				canTalon.setCurrentLimit(currentLimit);
-				canTalon.EnableCurrentLimit(true);
-			} else {
-				//If we don't have a current limit, disable current limiting.
-				canTalon.EnableCurrentLimit(false);
+				//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
+				tmp.enableBrakeMode(enableBrakeMode);
+				if (currentLimit != null) {
+					canTalon.setCurrentLimit(currentLimit);
+					canTalon.EnableCurrentLimit(true);
+				} else {
+					//If we don't have a current limit, disable current limiting.
+					canTalon.EnableCurrentLimit(false);
+				}
+
+				//Don't forget to enable!
+				tmp.enable();
+				//Set the slave up to follow this talon.
+				tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
+				tmp.set(port);
 			}
-
-			//Don't forget to enable!
-			tmp.enable();
-			//Set the slave up to follow this talon.
-			tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
-			tmp.set(port);
 		}
 	}
 

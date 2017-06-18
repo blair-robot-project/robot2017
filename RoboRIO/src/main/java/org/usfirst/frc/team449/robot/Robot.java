@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * The absolute filepath to the resources folder containing the config files.
 	 */
-	private static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
+	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
 	/**
 	 * The current time in milliseconds as it was stored the last time a method in robot was run.
@@ -147,11 +147,11 @@ public class Robot extends IterativeRobot {
 		Yaml yaml = new Yaml();
 		try {
 			YAMLMapper mapper = new YAMLMapper();
-			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
-			//Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"calcifer_map.yml"));
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"calcifer_map.yml"));
 			String fixed = mapper.writeValueAsString(normalized);
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 //			System.out.println(fixed);
 			//Try to construct map from the cfg file
 			cfg = mapper.readValue(fixed, RobotMap.class);
@@ -245,7 +245,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.enableMotors();
 
 		//Set the default command
-		driveSubsystem.setDefaultCommandManual(cfg.getDriveDefaultCommand());
+		driveSubsystem.setDefaultCommandManual(cfg.getDefaultDriveCommand());
 
 		//Do the startup tasks
 		doStartupTasks();

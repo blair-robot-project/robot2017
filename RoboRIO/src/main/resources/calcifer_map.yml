@@ -1,0 +1,303 @@
+---
+doMP: true
+testMP: false
+leftTestProfile:
+    &leftTest
+    '@id': leftTest
+    filename: "100InchProfile.csv"
+    inverted: false
+rightTestProfile:
+    <<: *leftTest
+    '@id': rightTest
+leftProfiles: !!map
+    "blue_center" :
+        '@id': blueLeftCenter
+        filename: "calciferLeftBlueMidProfile.csv"
+        inverted: false
+    "blue_left" :
+        '@id': blueLeftLeft
+        filename: "calciferLeftBlueLeftProfile.csv"
+        inverted: false
+    "blue_right" :
+        '@id': blueLeftRight
+        filename: "calciferLeftBlueRightProfile.csv"
+        inverted: false
+    "blue_shoot" :
+        '@id': blueLeftShoot
+        filename: "calciferLeftBlueShootProfile.csv"
+        inverted: true
+    "blue_backup" :
+        '@id': blueLeftBackup
+        filename: "calciferLeftBlueBackupProfile.csv"
+        inverted: true
+    "red_center" :
+        '@id': redLeftCenter
+        filename: "calciferLeftRedMidProfile.csv"
+        inverted: false
+    "red_left" :
+        '@id': redLeftLeft
+        filename: "calciferLeftRedLeftProfile.csv"
+        inverted: false
+    "red_right" :
+        '@id': redLeftRight
+        filename: "calciferLeftRedRightProfile.csv"
+        inverted: false
+    "red_shoot" :
+        '@id': redLeftShoot
+        filename: "calciferLeftRedShootProfile.csv"
+        inverted: true
+    "red_backup" :
+        '@id': redLeftBackup
+        filename: "calciferLeftRedBackupProfile.csv"
+        inverted: true
+    "forward" :
+        '@id': leftForward
+        filename: "forwardProfile.csv"
+        inverted: false
+rightProfiles: !!map
+    "blue_center" :
+        '@id': blueRightCenter
+        filename: "calciferRightBlueMidProfile.csv"
+        inverted: false
+    "blue_left" :
+        '@id': blueRightLeft
+        filename: "calciferRightBlueLeftProfile.csv"
+        inverted: false
+    "blue_right" :
+        '@id': blueRightRight
+        filename: "calciferRightBlueRightProfile.csv"
+        inverted: false
+    "blue_shoot" :
+        '@id': blueRightShoot
+        filename: "calciferRightBlueShootProfile.csv"
+        inverted: true
+    "blue_backup" :
+        '@id': blueRightBackup
+        filename: "calciferRightBlueBackupProfile.csv"
+        inverted: true
+    "red_center" :
+        '@id': redRightCenter
+        filename: "calciferRightRedMidProfile.csv"
+        inverted: false
+    "red_left" :
+        '@id': redRightLeft
+        filename: "calciferRightRedLeftProfile.csv"
+        inverted: false
+    "red_right" :
+        '@id': redRightRight
+        filename: "calciferRightRedRightProfile.csv"
+        inverted: false
+    "red_shoot" :
+        '@id': redRightShoot
+        filename: "calciferRightRedShootProfile.csv"
+        inverted: true
+    "red_backup" :
+        '@id': redRightBackup
+        filename: "calciferRightRedBackupProfile.csv"
+        inverted: true
+    "forward" :
+        '@id': rightForward
+        filename: "forwardProfile.csv"
+        inverted: false
+allianceSwitch:
+    '@id': allianceSwitch
+    ports: [3]
+dropGearSwitch:
+    '@id': dropGearSwitch
+    ports: [2]
+locationDial:
+    '@id': locationDial
+    ports: [0, 1]
+RIOduinoPort: 4
+oi:
+    org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+        '@id': oi
+        gamepad:
+            '@id': driverGamepad
+            port: 1
+        rotThrottle:
+            &rotThrottle
+            '@id': rotThrottle
+            stick: driverGamepad
+            axis: 0
+            deadband: 0.0
+            inverted: true
+        fwdThrottle:
+            <<: *rotThrottle
+            '@id': fwdThrottle
+            axis: 5
+        invertDPad: true
+        dPadShift: 0.1
+        scaleFwdByRotCoefficient: 0.2
+drive:
+    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+        '@id': drive
+        leftMaster:
+            &leftMaster
+            '@id': leftMaster
+            port: 7
+            inverted: true
+            enableBrakeMode: false
+            fwdPeakOutputVoltage: 12
+            fwdNominalOutputVoltage: 0
+            inchesPerRotation: 11.78097
+            currentLimit: 40
+            feedbackDevice: QuadEncoder
+            encoderCPR: 512
+            reverseSensor: false
+            currentLimit: 35
+            maxSpeedHigh: 17.5
+            highGearP: 0.5
+            highGearI: 0.0
+            highGearD: 3.0
+            maxSpeedLow: 6
+            lowGearP: 0.17
+            lowGearI: 0.0
+            lowGearD: 0.0
+            motionProfileP: 1.5
+            motionProfileI: 0.0
+            motionProfileD: 0.0
+            slaves:
+                - '@id': talon8
+                  port: 8
+                  inverted: true
+                - '@id': talon6
+                  port: 6
+                  inverted: true
+        rightMaster:
+            <<: *leftMaster
+            '@id': rightMaster
+            inverted: false
+            slaves:
+                - '@id': talon1
+                  port: 1
+                  inverted: true
+                - '@id': talon3
+                  port: 3
+                  inverted: true
+        MPHandler:
+            '@id': driveMPHandler
+            talons:
+                - leftMaster
+                - rightMaster
+            updaterProcessPeriodSecs: 0.005
+            minNumPointsInBtmBuffer: 10
+        PIDScale: 0.9
+        oi:
+            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+                oi
+        upshiftSpeed: 4
+        downshiftSpeed: 2
+        shifter:
+            '@id': driveShifter
+            module: 15
+            forward: 2
+            reverse: 3
+        delayAfterUpshiftConditionsMet: 0.25
+        delayAfterDownshiftConditionsMet: 0.0
+        upshiftFwdThresh: 0.3
+        startingGear: LOW
+defaultDriveCommand:
+    org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive:
+        '@id': defaultDriveCommand
+        kP: 0.012
+        kI: 0.0
+        kD: 0.0
+        absoluteTolerance: 1
+        maximumOutput: 0.33333
+        deadband: 1
+        maxAngularVelToEnterLoop: 0.05
+        inverted: true
+        loopEntryDelay: 0.15
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                drive
+        oi:
+            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+                oi
+climber:
+    org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
+        '@id': climber
+        talonSRX:
+            '@id': climberTalon
+            port: 5
+            inverted: false
+            enableBrakeMode: false
+            fwdPeakOutputVoltage: 12
+            fwdNominalOutputVoltage: 0
+        maxPower: 500
+        victor:
+            '@id': climberVictor
+            port: 0
+            inverted: false
+        millisAboveMaxPower: 5
+shooter:
+    org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+        '@id': shooter
+        shooterTalon:
+            '@id': shooterTalon
+            port: 4
+            inverted: false
+            reverseSensor: true
+            enableBrakeMode: false
+            fwdPeakOutputVoltage: 12
+            fwdNominalOutputVoltage: 0
+            closedLoopRampRate: 12
+            feedbackDevice: QuadEncoder
+            encoderCPR: 1024
+            maxSpeedHigh: 90
+            highGearP: 0.15
+            highGearI: 0.0
+            highGearD: 0.0
+        shooterThrottle: 0.72
+        spinUpTimeSecs: 1
+        feederVictor:
+            '@id': feederVictor
+            port: 1
+            inverted: true
+        feederThrottle: 0.66
+gearHandler:
+    org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+        '@id': gearHandler
+        piston:
+            '@id': gearHandlerPiston
+            module: 15
+            forward: 4
+            reverse: 5
+camera:
+    org.usfirst.frc.team449.robot.vision.CameraSubsystem:
+        '@id': cameras
+        serverPort: 5800
+        serverName: "Cameras"
+        cameras:
+            - '@id': cam0
+              name: "cam0"
+              devAddress: 0
+              width: 200
+              height: 112
+              fps: 30
+pneumatics:
+    org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem:
+        '@id': pneumatics
+        nodeID: 15
+        pressureSensor:
+            '@id': pressureSensor
+            port: 0
+            oversampleBits: 0
+            averageBits: 0
+logger:
+    '@id': logger
+    subsystems:
+        - org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+            drive
+        - org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem:
+            pneumatics
+        - org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
+            climber
+        - org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+            shooter
+    loopTimeSecs: 0.05
+    eventLogFilename: "/home/lvuser/logs/eventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
+
+

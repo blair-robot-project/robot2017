@@ -7,7 +7,6 @@ import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
 import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
-import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
@@ -31,7 +30,7 @@ public class RobotMap {
 
 	private TalonClusterDrive drive;
 
-	private UnidirectionalNavXArcadeDrive driveDefaultCommand;
+	private UnidirectionalNavXArcadeDrive defaultDriveCommand;
 
 	private ClimberSubsystem climber;
 
@@ -159,6 +158,7 @@ public class RobotMap {
 		this.rightTestProfile = rightTestProfile;
 		this.leftProfiles = leftProfiles;
 		this.rightProfiles = rightProfiles;
+		this.defaultDriveCommand = defaultDriveCommand;
 		if (nonMPAutoCommand != null) {
 			this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
 		}
@@ -261,7 +261,7 @@ public class RobotMap {
 		return nonMPAutoCommand;
 	}
 
-	public UnidirectionalNavXArcadeDrive getDriveDefaultCommand() {
-		return driveDefaultCommand;
+	public UnidirectionalNavXArcadeDrive getDefaultDriveCommand() {
+		return defaultDriveCommand;
 	}
 }

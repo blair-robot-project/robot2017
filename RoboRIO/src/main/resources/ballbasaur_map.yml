@@ -1,15 +1,6 @@
 ---
 doMP: false
 testMP: false
-allianceSwitch:
-    '@id': allianceSwitch
-    ports: [3]
-dropGearSwitch:
-    '@id': dropGearSwitch
-    ports: [2]
-locationDial:
-    '@id': locationDial
-    ports: [0, 1]
 drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
         '@id': drive
