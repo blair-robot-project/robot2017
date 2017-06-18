@@ -14,6 +14,7 @@ drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
         '@id': drive
         leftMaster:
+            &leftMaster
             '@id': leftMaster
             port: 6
             inverted: false
@@ -40,24 +41,10 @@ drive:
                   port: 2
                   inverted: false
         rightMaster:
+            <<: *leftMaster
             '@id': rightMaster
             port: 6
             inverted: true
-            enableBrakeMode: true
-            fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 0
-            wheelDiameterInches: 3.75
-            currentLimit: 40
-            feedbackDevice: QuadEncoder
-            encoderCPR: 512
-            reverseSensor: false
-            maxSpeedHigh: 12.0127
-            highGearP: 0.3
-            highGearI: 0.0
-            highGearD: 3.0
-            motionProfileP: 1.5
-            motionProfileI: 0.0
-            motionProfileD: 0.0
             slaves:
                 - '@id': talon3
                   port: 3
@@ -88,17 +75,16 @@ oi:
             '@id': driverGamepad
             port: 1
         rotThrottle:
+            &rotThrottle
             '@id': rotThrottle
             stick: driverGamepad
             axis: 0
             deadband: 0.05
             inverted: false
         fwdThrottle:
+            <<: *rotThrottle
             '@id': fwdThrottle
-            stick: driverGamepad
             axis: 5
-            deadband: 0.05
-            inverted: false
         invertDPad: false
         dPadShift: 0.1
         scaleFwdByRotCoefficient: 0.2
