@@ -43,10 +43,10 @@ public class RotPerSecCANTalonSRX {
 	private double postEncoderGearing;
 
 	/**
-	 * The diameter of the wheel this is attached to. Only used for Motion Profile unit conversions.
+	 * The number of inches travelled per rotation of the motor this is attached to. Only used for Motion Profile unit conversions.
 	 * {@link Double} so it throws a nullPointer if you try to use it without a value in the map.
 	 */
-	private Double wheelDiameterInches;
+	private Double inchesPerRotation;
 
 	/**
 	 * The max speed of this motor, in RPS, when in high gear, or if the output motor doesn't have gears,
@@ -107,8 +107,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param closedLoopRampRate         The voltage ramp rate for closed-loop velocity control. Can be null, and if it
 	 *                                   is, no
 	 *                                   ramp rate is used.
-	 * @param wheelDiameterInches        The diameter of the wheel attached to this motor, used for motion profiles. Can
-	 *                                   be null.
+	 * @param inchesPerRotation          The number of inches travelled per rotation of the motor this is attached to.
 	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
 	 * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
 	 *                                   null if there
@@ -155,7 +154,7 @@ public class RotPerSecCANTalonSRX {
 	                            Double revSoftLimit,
 	                            Double postEncoderGearing,
 	                            Double closedLoopRampRate,
-	                            Double wheelDiameterInches,
+	                            Double inchesPerRotation,
 	                            Integer currentLimit,
 	                            CANTalon.FeedbackDevice feedbackDevice,
 	                            Integer encoderCPR,
@@ -249,7 +248,7 @@ public class RotPerSecCANTalonSRX {
 		}
 
 		//We can set this directly because the field is also a Double and can be null.
-		this.wheelDiameterInches = wheelDiameterInches;
+		this.inchesPerRotation = inchesPerRotation;
 
 		//Set fields
 		this.maxSpeedHigh = maxSpeedHigh;
@@ -532,7 +531,7 @@ public class RotPerSecCANTalonSRX {
 	 */
 	public double nativeToFeet(double nativeUnits) {
 		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * (wheelDiameterInches * Math.PI);
+		return rotations * (inchesPerRotation /12.);
 	}
 
 	/**
@@ -543,7 +542,7 @@ public class RotPerSecCANTalonSRX {
 	 * @return That distance in native units as measured by the encoder.
 	 */
 	public double feetToNative(double feet) {
-		double rotations = feet / (wheelDiameterInches * Math.PI);
+		double rotations = feet / (inchesPerRotation / 12.);
 		return rotations * (encoderCPR * 4) / postEncoderGearing;
 	}
 
@@ -555,7 +554,7 @@ public class RotPerSecCANTalonSRX {
 	 * @return That velocity in either native units or RPS, depending on the type of encoder.
 	 */
 	public double feetPerSecToNative(double fps) {
-		return RPSToEncoder(fps / (wheelDiameterInches * Math.PI));
+		return RPSToEncoder(fps / (inchesPerRotation/12.));
 	}
 
 	/**
@@ -566,7 +565,7 @@ public class RotPerSecCANTalonSRX {
 	 * @return That velocity in feet per second.
 	 */
 	public double nativeToFeetPerSec(double nativeUnits) {
-		return encoderToRPS(nativeUnits) * (wheelDiameterInches * Math.PI);
+		return encoderToRPS(nativeUnits) * inchesPerRotation / 12.;
 	}
 
 	/**

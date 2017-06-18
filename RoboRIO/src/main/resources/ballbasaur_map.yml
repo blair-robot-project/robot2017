@@ -21,7 +21,7 @@ drive:
             enableBrakeMode: true
             fwdPeakOutputVoltage: 12
             fwdNominalOutputVoltage: 0
-            wheelDiameterInches: 3.75
+            inchesPerRotation: 11.78097
             currentLimit: 40
             feedbackDevice: QuadEncoder
             encoderCPR: 512

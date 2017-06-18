@@ -152,7 +152,7 @@ public class Robot extends IterativeRobot {
 			String fixed = mapper.writeValueAsString(normalized);
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			System.out.println(fixed);
+//			System.out.println(fixed);
 			//Try to construct map from the cfg file
 			cfg = mapper.readValue(fixed, RobotMap.class);
 		} catch (IOException e) {
