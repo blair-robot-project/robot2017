@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -37,7 +36,6 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param PID                      The PID gains for this loop.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
 	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
@@ -49,22 +47,27 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 *                                 the motors. Defaults to zero.
 	 *                                 Defaults to 180.
 	 * @param inverted                 Whether the loop is inverted. Defaults to false.
+	 * @param kP Proportional gain. Defaults to zero.
+	 * @param kI Integral gain. Defaults to zero.
+	 * @param kD Derivative gain. Defaults to zero.
 	 * @param drive   The drive to execute this command on.
 	 * @param oi      The tank OI to take input from.
 	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for
 	 *                right.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) PID PID,
-	                                                                                     @JsonProperty(required = true) double absoluteTolerance,
-	                                                                                     int toleranceBuffer,
-	                                                                                     double minimumOutput, Double maximumOutput,
-	                                                                                     double deadband,
-	                                                                                     boolean inverted,
-	                                                                                     @JsonProperty(required = true) T drive,
-	                                                                                     @JsonProperty(required = true) TankOI oi,
-	                                                                                     @JsonProperty(required = true) boolean useLeft) {
-		super(PID, absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive);
+	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) double absoluteTolerance,
+	                                                                                         int toleranceBuffer,
+	                                                                                         double minimumOutput, Double maximumOutput,
+	                                                                                         double deadband,
+	                                                                                         boolean inverted,
+	                                                                                         int kP,
+	                                                                                         int kI,
+	                                                                                         int kD,
+	                                                                                         @JsonProperty(required = true) T drive,
+	                                                                                         @JsonProperty(required = true) TankOI oi,
+	                                                                                         @JsonProperty(required = true) boolean useLeft) {
+		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive, kP, kI, kD);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;

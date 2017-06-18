@@ -1,15 +1,14 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.fasterxml.jackson.annotation.*;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -55,7 +54,6 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	/**
 	 * Default constructor
 	 *
-	 * @param PID                      The PID gains for this loop.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
 	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
@@ -68,24 +66,29 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 * @param maxAngularVelToEnterLoop The maximum angular velocity, in degrees/sec, at which the loop will be entered.
 	 *                                 Defaults to 180.
 	 * @param inverted                 Whether the loop is inverted. Defaults to false.
+	 * @param kP Proportional gain. Defaults to zero.
+	 * @param kI Integral gain. Defaults to zero.
+	 * @param kD Derivative gain. Defaults to zero.
 	 * @param loopEntryDelay           The delay to enter the loop after conditions for entry are met. Defaults to
 	 *                                 zero.
 	 * @param drive The drive to execute this command on.
 	 * @param oi    The OI controlling the robot.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) PID PID,
-	                                                                                                 @JsonProperty(required = true) double absoluteTolerance,
+	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
 	                                                                                                 int toleranceBuffer,
 	                                                                                                 double minimumOutput, Double maximumOutput,
 	                                                                                                 double deadband,
 	                                                                                                 Double maxAngularVelToEnterLoop,
 	                                                                                                 boolean inverted,
+                                                                                                     int kP,
+                                                                                                     int kI,
+                                                                                                     int kD,
 	                                                                                                 double loopEntryDelay,
 	                                                                                                 @JsonProperty(required = true) T drive,
 	                                                                                                 @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff
-		super(PID, absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive);
+		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive, kP, kI, kD);
 		this.oi = oi;
 		driveSubsystem = drive;
 

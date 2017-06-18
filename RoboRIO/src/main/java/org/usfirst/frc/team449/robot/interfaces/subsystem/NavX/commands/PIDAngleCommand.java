@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 
@@ -38,29 +37,29 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand{
 
 	/**
 	 * Default constructor.
-	 *
-	 * @param PID                      The PID gains for this loop.
+	 *  @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
+	 *                                 within tolerance.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
 	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
-	 *                                 within tolerance.
 	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
 	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                                 used.
+*                                 used.
 	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
-	 *                                 the motors. Defaults to zero.
+*                                 the motors. Defaults to zero.
 	 * @param inverted                 Whether the loop is inverted. Defaults to false.
+	 * @param kP Proportional gain. Defaults to zero.
+	 * @param kI Integral gain. Defaults to zero.
+	 * @param kD Derivative gain. Defaults to zero.
 	 */
 	@JsonCreator
-	public PIDAngleCommand(@JsonProperty(required = true) PID PID,
-	                       @JsonProperty(required = true) double absoluteTolerance,
+	public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,
 	                       int toleranceBuffer,
 	                       double minimumOutput, Double maximumOutput,
 	                       double deadband,
 	                       boolean inverted,
-	                       @JsonProperty(required = true) NavxSubsystem subsystem) {
+	                       @JsonProperty(required = true) NavxSubsystem subsystem, int kP, int kI, int kD) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
-		super(PID.getP(), PID.getI(), PID.getD());
+		super(kP, kI, kD);
 		this.subsystem = subsystem;
 
 		//Navx reads from -180 to 180.

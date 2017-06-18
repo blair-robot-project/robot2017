@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -20,7 +19,6 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	/**
 	 * Default constructor.
 	 *
-	 * @param PID                      The PID gains for this loop.
 	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
 	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
@@ -31,21 +29,27 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
 	 *                                 the motors. Defaults to zero.
 	 * @param inverted                 Whether the loop is inverted. Defaults to false.
+	 * @param kP Proportional gain. Defaults to zero.
+	 * @param kI Integral gain. Defaults to zero.
+	 * @param kD Derivative gain. Defaults to zero.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
 	 * @param drive    The drive subsystem to execute this command on.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXRelativeTTA(@JsonProperty(required = true) PID PID,
-	                                                                                   @JsonProperty(required = true) double absoluteTolerance,
-	                                                                                   int toleranceBuffer,
-	                                                                                   double minimumOutput, Double maximumOutput,
-	                                                                                   double deadband,
-	                                                                                   boolean inverted,
-	                                                                                   double setpoint, T drive,
-	                                                                                   double timeout) {
-		super(PID, absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, setpoint, drive, timeout);
+	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXRelativeTTA(@JsonProperty(required = true) double absoluteTolerance,
+	                                                                                       int toleranceBuffer,
+	                                                                                       double minimumOutput, Double maximumOutput,
+	                                                                                       double deadband,
+	                                                                                       boolean inverted,
+	                                                                                       int kP,
+	                                                                                       int kI,
+	                                                                                       int kD,
+	                                                                                       double setpoint,
+	                                                                                       T drive,
+	                                                                                       double timeout) {
+		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, setpoint, drive, timeout);
 	}
 
 	/**

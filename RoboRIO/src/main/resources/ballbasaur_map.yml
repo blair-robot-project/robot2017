@@ -26,16 +26,12 @@ drive:
             encoderCPR: 512
             reverseSensor: false
             maxSpeedHigh: 12.0127
-            highGearPID:
-                '@id': driveTalonPID
-                kP: 0.3
-                kI: 0.0
-                kD: 3.0
-            MotionProfilePID:
-                '@id': driveMPPID
-                kP: 1.5
-                kI: 0.0
-                kD: 0.0
+            highGearP: 0.3
+            highGearI: 0.0
+            highGearD: 3.0
+            motionProfileP: 1.5
+            motionProfileI: 0.0
+            motionProfileD: 0.0
             slaves:
                 - '@id': talon1
                   port: 1
@@ -56,10 +52,12 @@ drive:
             encoderCPR: 512
             reverseSensor: false
             maxSpeedHigh: 12.0127
-            highGearPID:
-                driveTalonPID
-            MotionProfilePID:
-                driveMPPID
+            highGearP: 0.3
+            highGearI: 0.0
+            highGearD: 3.0
+            motionProfileP: 1.5
+            motionProfileI: 0.0
+            motionProfileD: 0.0
             slaves:
                 - '@id': talon3
                   port: 3
@@ -132,9 +130,7 @@ oi:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive:
         '@id': defaultDriveCommand
-        PID:
-            '@id': angularPID
-            kP: 0.01
+        kP: 0.01
         toleranceBuffer: 25
         absoluteTolerance: 1
         maximumOutput: 0.3333
