@@ -14,12 +14,12 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Run a BinaryMotor while a condition is true.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunMotorWhileConditonMet extends YamlCommandWrapper {
+public class RunMotorWhileConditonMet <T extends YamlSubsystem & BinaryMotorSubsystem & ConditionalSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on
 	 */
-	private BinaryMotorSubsystem subsystem;
+	private T subsystem;
 
 	/**
 	 * Default constructor
@@ -27,7 +27,7 @@ public class RunMotorWhileConditonMet extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & BinaryMotorSubsystem & ConditionalSubsystem> RunMotorWhileConditonMet(@JsonProperty(required = true) T subsystem) {
+	public RunMotorWhileConditonMet(@JsonProperty(required = true) T subsystem) {
 		requires(subsystem);
 		this.subsystem = subsystem;
 		Logger.addEvent("RunMotorWhileConditonMet constructed", this.getClass());
@@ -56,7 +56,7 @@ public class RunMotorWhileConditonMet extends YamlCommandWrapper {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return ((ConditionalSubsystem) subsystem).isConditionTrue();
+		return subsystem.isConditionTrue();
 	}
 
 	/**

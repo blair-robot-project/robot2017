@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -15,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngle extends PIDAngleCommand {
+public class NavXTurnToAngle  <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to execute this command on and to get the gyro reading from.
@@ -58,17 +59,18 @@ public class NavXTurnToAngle extends PIDAngleCommand {
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
-	                                                                                       int toleranceBuffer,
-	                                                                                       double minimumOutput, Double maximumOutput,
-	                                                                                       double deadband,
-	                                                                                       boolean inverted,
-	                                                                                       int kP,
-	                                                                                       int kI,
-	                                                                                       int kD,
-	                                                                                       @JsonProperty(required = true) double setpoint,
-	                                                                                       @JsonProperty(required = true) T drive,
-	                                                                                       @JsonProperty(required = true) double timeout) {
+	@JsonCreator
+	public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
+	                       int toleranceBuffer,
+                           double minimumOutput, Double maximumOutput,
+                           double deadband,
+                           boolean inverted,
+                           int kP,
+                           int kI,
+                           int kD,
+                           @JsonProperty(required = true) double setpoint,
+                           @JsonProperty(required = true) T drive,
+                           @JsonProperty(required = true) double timeout) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive, kP, kI, kD);
 		this.drive = drive;
 		this.setpoint = setpoint;

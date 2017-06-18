@@ -15,11 +15,11 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
+public class UnidirectionalNavXArcadeDrive  <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 	/**
 	 * The UnidirectionalDrive this command is controlling.
 	 */
-	protected UnidirectionalDrive driveSubsystem;
+	protected T driveSubsystem;
 
 	/**
 	 * The OI giving the vel and turn stick values.
@@ -75,18 +75,18 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 	 * @param oi    The OI controlling the robot.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
-	                                                                                                 int toleranceBuffer,
-	                                                                                                 double minimumOutput, Double maximumOutput,
-	                                                                                                 double deadband,
-	                                                                                                 Double maxAngularVelToEnterLoop,
-	                                                                                                 boolean inverted,
-                                                                                                     int kP,
-                                                                                                     int kI,
-                                                                                                     int kD,
-	                                                                                                 double loopEntryDelay,
-	                                                                                                 @JsonProperty(required = true) T drive,
-	                                                                                                 @JsonProperty(required = true) ArcadeOI oi) {
+	public UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
+	                                     int toleranceBuffer,
+                                         double minimumOutput, Double maximumOutput,
+                                         double deadband,
+                                         Double maxAngularVelToEnterLoop,
+                                         boolean inverted,
+                                         int kP,
+                                         int kI,
+                                         int kD,
+                                         double loopEntryDelay,
+                                         @JsonProperty(required = true) T drive,
+                                         @JsonProperty(required = true) ArcadeOI oi) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive, kP, kI, kD);
 		this.oi = oi;
@@ -96,7 +96,7 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 		this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop;
 
 		//Needs a requires because it's a default command.
-		requires(drive);
+		requires(driveSubsystem);
 
 		//Logging, but in Spanish.
 		Logger.addEvent("Drive Robot bueno", this.getClass());
@@ -128,14 +128,14 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 		rot = oi.getRot();
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
-		if (drivingStraight && (rot != 0 || ((NavxSubsystem) driveSubsystem).getOverrideNavX())) {
+		if (drivingStraight && (rot != 0 || driveSubsystem.getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver lets go of the turn stick:
-		else if (driveStraightLoopEntryTimer.get(!(((NavxSubsystem) driveSubsystem).getOverrideNavX()) && !(drivingStraight) &&
-				rot == 0 && Math.abs(((NavxSubsystem) driveSubsystem).getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
+		else if (driveStraightLoopEntryTimer.get(!(driveSubsystem.getOverrideNavX()) && !(drivingStraight) &&
+				rot == 0 && Math.abs(driveSubsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the NavX
@@ -147,7 +147,7 @@ public class UnidirectionalNavXArcadeDrive extends PIDAngleCommand {
 
 		//Log data and stuff
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
-		SmartDashboard.putBoolean("Override Navx", ((NavxSubsystem) driveSubsystem).getOverrideNavX());
+		SmartDashboard.putBoolean("Override Navx", driveSubsystem.getOverrideNavX());
 		SmartDashboard.putNumber("Vel Axis", vel);
 		SmartDashboard.putNumber("Rot axis", rot);
 	}

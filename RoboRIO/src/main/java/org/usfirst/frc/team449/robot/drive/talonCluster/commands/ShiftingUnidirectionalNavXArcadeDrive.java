@@ -14,7 +14,10 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
  * alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArcadeDrive {
+public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXArcadeDrive {
+
+	protected T driveSubsystem;
+
 	/**
 	 * Default constructor
 	 *
@@ -38,18 +41,18 @@ public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArc
 	 * @param drive The drive to execute this command on.
 	 * @param oi    The OI controlling the robot.
 	 */
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
-	                                                                                                                             int toleranceBuffer,
-	                                                                                                                             double minimumOutput, Double maximumOutput,
-	                                                                                                                             double deadband,
-	                                                                                                                             Double maxAngularVelToEnterLoop,
-	                                                                                                                             boolean inverted,
-	                                                                                                                             int kP,
-	                                                                                                                             int kI,
-	                                                                                                                             int kD,
-	                                                                                                                             double loopEntryDelay,
-	                                                                                                                             @JsonProperty(required = true) T drive,
-	                                                                                                                             @JsonProperty(required = true) ArcadeOI oi) {
+	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
+	                                             int toleranceBuffer,
+                                                 double minimumOutput, Double maximumOutput,
+                                                 double deadband,
+                                                 Double maxAngularVelToEnterLoop,
+                                                 boolean inverted,
+                                                 int kP,
+                                                 int kI,
+                                                 int kD,
+                                                 double loopEntryDelay,
+                                                 @JsonProperty(required = true) T drive,
+                                                 @JsonProperty(required = true) ArcadeOI oi) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop, inverted, kP, kI, kD, loopEntryDelay, drive, oi);
 	}
 
@@ -59,7 +62,7 @@ public class ShiftingUnidirectionalNavXArcadeDrive extends UnidirectionalNavXArc
 	@Override
 	public void execute() {
 		//Auto-shifting
-		((ShiftingDrive) driveSubsystem).autoshift();
+		driveSubsystem.autoshift();
 		super.execute();
 	}
 }

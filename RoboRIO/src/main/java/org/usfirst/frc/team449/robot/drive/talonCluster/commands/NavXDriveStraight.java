@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight extends PIDAngleCommand {
+public class NavXDriveStraight <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 
 	/**
 	 * The tank OI to get input from.
@@ -56,17 +56,17 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	 *                right.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) double absoluteTolerance,
-	                                                                                         int toleranceBuffer,
-	                                                                                         double minimumOutput, Double maximumOutput,
-	                                                                                         double deadband,
-	                                                                                         boolean inverted,
-	                                                                                         int kP,
-	                                                                                         int kI,
-	                                                                                         int kD,
-	                                                                                         @JsonProperty(required = true) T drive,
-	                                                                                         @JsonProperty(required = true) TankOI oi,
-	                                                                                         @JsonProperty(required = true) boolean useLeft) {
+	public NavXDriveStraight(@JsonProperty(required = true) double absoluteTolerance,
+	                         int toleranceBuffer,
+                             double minimumOutput, Double maximumOutput,
+                             double deadband,
+                             boolean inverted,
+                             int kP,
+                             int kI,
+                             int kD,
+                             @JsonProperty(required = true) T drive,
+                             @JsonProperty(required = true) TankOI oi,
+                             @JsonProperty(required = true) boolean useLeft) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive, kP, kI, kD);
 		this.oi = oi;
 		this.drive = drive;
