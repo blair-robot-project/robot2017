@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
@@ -30,7 +28,6 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -147,9 +144,9 @@ public class Robot extends IterativeRobot {
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
 
+		Yaml yaml = new Yaml();
 		try {
 			YAMLMapper mapper = new YAMLMapper();
-			Yaml yaml = new Yaml();
 			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
 			//Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"calcifer_map.yml"));
 			String fixed = mapper.writeValueAsString(normalized);
@@ -173,11 +170,7 @@ public class Robot extends IterativeRobot {
 		this.pneumaticsSubsystem = cfg.getPneumatics();
 		this.gearSubsystem = cfg.getGearHandler();
 
-		if (cfg.getShiftingDrive() != null) {
-			driveSubsystem = cfg.getShiftingDrive();
-		} else {
-			driveSubsystem = cfg.getNonShiftingDrive();
-		}
+		driveSubsystem = cfg.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.
 		if (cfg.getRIOduinoPort() != null) {
@@ -251,11 +244,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.enableMotors();
 
 		//Set the default command
-		if (driveSubsystem.getClass().equals(ShiftingTalonClusterDrive.class)) {
-			driveSubsystem.setDefaultCommandManual(new ShiftingUnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, ((ShiftingTalonClusterDrive) driveSubsystem), oiSubsystem));
-		} else {
-			driveSubsystem.setDefaultCommandManual(new UnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
-		}
+		driveSubsystem.setDefaultCommandManual(cfg.getDriveDefaultCommand());
 
 		//Do the startup tasks
 		doStartupTasks();

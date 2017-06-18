@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * A subsystem that picks up balls from the ground.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Intake2017 extends Subsystem implements SolenoidSubsystem, IntakeSubsystem {
+public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
 	 * Whether intake is currently up
 	 */

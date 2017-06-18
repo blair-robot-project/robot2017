@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedUsbCamera;
 import org.usfirst.frc.team449.robot.util.Logger;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * Subsystem to initialize and push video to SmartDashboard
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class CameraSubsystem extends Subsystem {
+public class CameraSubsystem extends YamlSubsystem {
 
 	/**
 	 * Video server to view on SmartDashboard

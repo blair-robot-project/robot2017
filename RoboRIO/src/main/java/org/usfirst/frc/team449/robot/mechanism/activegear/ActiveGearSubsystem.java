@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsy
  * The subsystem that carries and pushes gears.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ActiveGearSubsystem extends Subsystem implements SolenoidSubsystem {
+public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsystem {
 	/**
 	 * Whether piston is currently contracted
 	 */

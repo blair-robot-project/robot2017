@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -33,7 +33,7 @@ public class SimpleUnidirectionalDrive extends YamlCommandWrapper {
 	 * @param oi    The OI that gives the input to this command.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive> SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
+	public <T extends YamlSubsystem & UnidirectionalDrive> SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
 	                                                                             @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;

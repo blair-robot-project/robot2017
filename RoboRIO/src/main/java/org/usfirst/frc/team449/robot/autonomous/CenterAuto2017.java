@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
@@ -30,7 +30,7 @@ public class CenterAuto2017 extends YamlCommandGroupWrapper {
 	 * @param driveBackTime How long, in seconds, to drive back from the peg for.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive & TwoSideMPSubsystem> CenterAuto2017(
+	public <T extends YamlSubsystem & UnidirectionalDrive & TwoSideMPSubsystem> CenterAuto2017(
 			@JsonProperty(required = true) T drive,
 			@JsonProperty(required = true) ActiveGearSubsystem gearHandler,
 			@JsonProperty(required = true) boolean dropGear,

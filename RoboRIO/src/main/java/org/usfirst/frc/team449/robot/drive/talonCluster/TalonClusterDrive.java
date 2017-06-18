@@ -4,32 +4,23 @@ import com.fasterxml.jackson.annotation.*;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.CANTalonMPHandler;
 import org.usfirst.frc.team449.robot.util.Loggable;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TalonClusterDrive extends Subsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
-
-	/**
-	 * The PIDAngleCommand constants for turning to an angle with the NavX
-	 */
-	public final AnglePID turnPID;
-
-	/**
-	 * The PIDAngleCommand constants for using the NavX to drive straight
-	 */
-	public final AnglePID straightPID;
+public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
@@ -65,17 +56,13 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 	/**
 	 * Default constructor.
 	 *
-	 * @param turnPID     The angular PID for turning in place.
-	 * @param straightPID The angular PID for driving straight.
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
 	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
 	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
 	@JsonCreator
-	public TalonClusterDrive(@JsonProperty(required = true) AnglePID turnPID,
-	                         @JsonProperty(required = true) AnglePID straightPID,
-	                         @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
+	public TalonClusterDrive(@JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
 	                         @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
 	                         @JsonProperty(required = true) CANTalonMPHandler MPHandler,
 	                         Double PIDScale) {
@@ -85,8 +72,6 @@ public class TalonClusterDrive extends Subsystem implements NavxSubsystem, Unidi
 			PIDScale = 1.;
 		}
 		PID_SCALE = PIDScale;
-		this.turnPID = turnPID;
-		this.straightPID = straightPID;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.mpHandler = MPHandler;

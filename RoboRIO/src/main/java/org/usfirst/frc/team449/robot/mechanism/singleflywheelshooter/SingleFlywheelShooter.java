@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Class for the flywheel
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SingleFlywheelShooter extends Subsystem implements Loggable, ShooterSubsystem {
+public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, ShooterSubsystem {
 	/**
 	 * The flywheel's Talon
 	 */

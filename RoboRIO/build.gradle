@@ -105,4 +105,5 @@ artifacts {
 
 compileJava {
 	options.compilerArgs << '-parameters'
+	options.compilerArgs.addAll(['-profile','compact2'])
 }

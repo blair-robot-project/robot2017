@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -45,7 +45,7 @@ public class RunLoadedProfile extends YamlCommandWrapper {
 	 * @param require   Whether or not to require the subsystem this command is running on.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & MPSubsystem> RunLoadedProfile(@JsonProperty(required = true) T subsystem,
+	public <T extends YamlSubsystem & MPSubsystem> RunLoadedProfile(@JsonProperty(required = true) T subsystem,
 	                                                            @JsonProperty(required = true) double timeout,
 	                                                            @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;

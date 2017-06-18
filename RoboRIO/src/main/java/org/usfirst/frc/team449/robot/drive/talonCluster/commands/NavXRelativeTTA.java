@@ -1,10 +1,12 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.AnglePID;
+import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -18,15 +20,32 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	/**
 	 * Default constructor.
 	 *
-	 * @param map      An turnPID map with PID values, an absolute tolerance, and minimum output.
+	 * @param PID                      The PID gains for this loop.
+	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
+	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
+	 *                                 within tolerance.
+	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
+	 *                                 used.
+	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
+	 *                                 the motors. Defaults to zero.
+	 * @param inverted                 Whether the loop is inverted. Defaults to false.
 	 * @param setpoint The setpoint, in degrees from 180 to -180.
 	 * @param drive    The drive subsystem to execute this command on.
 	 * @param timeout  How long this command is allowed to run for, in seconds. Needed because sometimes floating-point
 	 *                 errors prevent termination.
 	 */
-	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXRelativeTTA(AnglePID map, double setpoint, T drive,
+	@JsonCreator
+	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXRelativeTTA(@JsonProperty(required = true) PID PID,
+	                                                                                   @JsonProperty(required = true) double absoluteTolerance,
+	                                                                                   int toleranceBuffer,
+	                                                                                   double minimumOutput, Double maximumOutput,
+	                                                                                   double deadband,
+	                                                                                   boolean inverted,
+	                                                                                   double setpoint, T drive,
 	                                                                                   double timeout) {
-		super(map, setpoint, drive, timeout);
+		super(PID, absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, setpoint, drive, timeout);
 	}
 
 	/**

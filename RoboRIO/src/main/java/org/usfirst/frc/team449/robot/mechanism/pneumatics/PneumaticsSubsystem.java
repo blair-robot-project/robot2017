@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.PressureSensor;
 import org.usfirst.frc.team449.robot.util.Loggable;
 
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PneumaticsSubsystem extends Subsystem implements Loggable {
+public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
 	 */

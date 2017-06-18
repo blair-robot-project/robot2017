@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
@@ -32,7 +32,7 @@ public class FeederAuto2017 extends YamlCommandGroupWrapper {
 	 * @param forwardsProfile    The motion profile for both sides to drive forwards after backing up from the peg.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & TwoSideMPSubsystem> FeederAuto2017(@JsonProperty(required = true) T drive,
+	public <T extends YamlSubsystem & TwoSideMPSubsystem> FeederAuto2017(@JsonProperty(required = true) T drive,
 	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
 	                                                                 @JsonProperty(required = true) boolean dropGear,
 	                                                                 @JsonProperty(required = true) MotionProfileData leftBackupProfile,

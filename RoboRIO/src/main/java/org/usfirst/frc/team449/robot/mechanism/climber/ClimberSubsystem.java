@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.Loggable;
  * A climber subsystem that uses power monitoring to stop climbing.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ClimberSubsystem extends Subsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
+public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
 	/**
 	 * The CANTalon controlling one of the climber motors.
 	 */

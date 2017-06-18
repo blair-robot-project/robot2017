@@ -10,29 +10,9 @@ dropGearSwitch:
 locationDial:
     '@id': locationDial
     ports: [0, 1]
-nonShiftingDrive:
+drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
         '@id': drive
-        turnPID:
-            '@id': turnPID
-            PID:
-                '@id': turnPIDConstants
-                kP: 0.01
-            toleranceBuffer: 25
-            absoluteTolerance: 1
-            minimumOutput: 0.1
-            deadband: 0.75
-            inverted: false
-        straightPID:
-            '@id': straightPID
-            PID:
-                turnPIDConstants
-            toleranceBuffer: 25
-            absoluteTolerance: 1
-            maximumOutput: 0.3333
-            maxAngularVelToEnterLoop: 1
-            loopEntryDelay: 0.15
-            inverted: false
         leftMaster:
             '@id': leftMaster
             port: 6
@@ -149,3 +129,21 @@ oi:
                                 drive
                         override: false
                 action: WHEN_RELEASED
+defaultDriveCommand:
+    org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive:
+        '@id': defaultDriveCommand
+        PID:
+            '@id': angularPID
+            kP: 0.01
+        toleranceBuffer: 25
+        absoluteTolerance: 1
+        maximumOutput: 0.3333
+        maxAngularVelToEnterLoop: 1
+        loopEntryDelay: 0.15
+        inverted: false
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+                drive
+        oi:
+            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+                oi

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
@@ -15,6 +13,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnA
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * The autonomous routine to deliver a gear to the center gear.
@@ -36,12 +36,12 @@ public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 	 * @param shooter              The shooter subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & TwoSideMPSubsystem> BoilerAuto2017(@JsonProperty(required = true) T drive,
-	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
-	                                                                 @JsonProperty(required = true) boolean dropGear,
-	                                                                 @JsonProperty(required = true) MotionProfileData leftPegToKeyProfile,
-	                                                                 @JsonProperty(required = true) MotionProfileData rightPegToKeyProfile,
-	                                                                 @JsonProperty(required = true) ShooterSubsystem shooter) {
+	public <T extends YamlSubsystem & TwoSideMPSubsystem> BoilerAuto2017(@JsonProperty(required = true) T drive,
+	                                                                     @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
+	                                                                     @JsonProperty(required = true) boolean dropGear,
+	                                                                     @JsonProperty(required = true) MotionProfileData leftPegToKeyProfile,
+	                                                                     @JsonProperty(required = true) MotionProfileData rightPegToKeyProfile,
+	                                                                     @JsonProperty(required = true) ShooterSubsystem shooter) {
 		addParallel(new SpinUpShooter(shooter));
 		addSequential(new RunLoadedProfile(drive, 15, true));
 		if (dropGear) {

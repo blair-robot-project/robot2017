@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
-import org.usfirst.frc.team449.robot.components.AnglePID;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
@@ -90,8 +89,6 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	/**
 	 * Default constructor.
 	 *
-	 * @param turnPID                          The angular PID for turning in place.
-	 * @param straightPID                      The angular PID for driving straight.
 	 * @param leftMaster                       The master talon on the left side of the drive.
 	 * @param rightMaster                      The master talon on the right side of the drive.
 	 * @param MPHandler                        The motion profile handler that runs this drive's motion profiles.
@@ -118,9 +115,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 * @param startingGear                     The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
-	public ShiftingTalonClusterDrive(@JsonProperty(required = true) AnglePID turnPID,
-	                                 @JsonProperty(required = true) AnglePID straightPID,
-	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
+	public ShiftingTalonClusterDrive(@JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
 	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
 	                                 @JsonProperty(required = true) CANTalonMPHandler MPHandler,
 	                                 Double PIDScale,
@@ -134,7 +129,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	                                 double cooldownAfterUpshift,
 	                                 double upshiftFwdThresh,
 	                                 gear startingGear) {
-		super(turnPID, straightPID, leftMaster, rightMaster, MPHandler, PIDScale);
+		super(leftMaster, rightMaster, MPHandler, PIDScale);
 		//Initialize stuff
 		this.oi = oi;
 		upshiftBufferTimer = new BufferTimer(delayAfterUpshiftConditionsMet);

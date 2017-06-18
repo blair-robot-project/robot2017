@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -28,9 +29,9 @@ import java.util.Map;
 public class RobotMap {
 	private OI2017ArcadeGamepad oi;
 
-	private ShiftingTalonClusterDrive shiftingDrive;
+	private TalonClusterDrive drive;
 
-	private TalonClusterDrive nonShiftingDrive;
+	private UnidirectionalNavXArcadeDrive driveDefaultCommand;
 
 	private ClimberSubsystem climber;
 
@@ -79,10 +80,8 @@ public class RobotMap {
 	 *
 	 * @param oi               The oi for controlling this robot.
 	 * @param logger           The logger for recording events and telemetry data.
-	 * @param shiftingDrive    The drive, if it can shift. Must be null if nonShiftingDrive isn't, but otherwise must
-	 *                         have a value.
-	 * @param nonShiftingDrive The drive, if it can shift. Must be null if shiftingDrive isn't, but otherwise must have
-	 *                         a value.
+	 * @param drive The drive.
+	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.
 	 * @param climber          The climber for boarding the airship. Can be null.
 	 * @param shooter          The shooter for shooting fuel. Can be null.
 	 * @param camera           The cameras on this robot. Can be null.
@@ -120,8 +119,8 @@ public class RobotMap {
 	@JsonCreator
 	public RobotMap(@JsonProperty(required = true) OI2017ArcadeGamepad oi,
 	                @JsonProperty(required = true) Logger logger,
-	                ShiftingTalonClusterDrive shiftingDrive,
-	                TalonClusterDrive nonShiftingDrive,
+	                @JsonProperty(required = true) TalonClusterDrive drive,
+	                @JsonProperty(required = true) UnidirectionalNavXArcadeDrive defaultDriveCommand,
 	                ClimberSubsystem climber,
 	                SingleFlywheelShooter shooter,
 	                CameraSubsystem camera,
@@ -141,8 +140,7 @@ public class RobotMap {
 	                boolean testMP,
 	                Boolean doMP) {
 		this.oi = oi;
-		this.shiftingDrive = shiftingDrive;
-		this.nonShiftingDrive = nonShiftingDrive;
+		this.drive = drive;
 		this.climber = climber;
 		this.shooter = shooter;
 		this.camera = camera;
@@ -175,12 +173,8 @@ public class RobotMap {
 		return oi;
 	}
 
-	public ShiftingTalonClusterDrive getShiftingDrive() {
-		return shiftingDrive;
-	}
-
-	public TalonClusterDrive getNonShiftingDrive() {
-		return nonShiftingDrive;
+	public TalonClusterDrive getDrive() {
+		return drive;
 	}
 
 	public ClimberSubsystem getClimber() {
@@ -265,5 +259,9 @@ public class RobotMap {
 
 	public Command getNonMPAutoCommand() {
 		return nonMPAutoCommand;
+	}
+
+	public UnidirectionalNavXArcadeDrive getDriveDefaultCommand() {
+		return driveDefaultCommand;
 	}
 }

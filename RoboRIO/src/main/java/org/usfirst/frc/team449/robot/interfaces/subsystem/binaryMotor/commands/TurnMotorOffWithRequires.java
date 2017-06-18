@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
@@ -27,7 +27,7 @@ public class TurnMotorOffWithRequires extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & BinaryMotorSubsystem> TurnMotorOffWithRequires(@JsonProperty(required = true) T subsystem) {
+	public <T extends YamlSubsystem & BinaryMotorSubsystem> TurnMotorOffWithRequires(@JsonProperty(required = true) T subsystem) {
 		this.subsystem = subsystem;
 		requires(subsystem);
 	}

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team449.robot.components.AnglePID;
+import org.usfirst.frc.team449.robot.components.PID;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
@@ -37,18 +37,34 @@ public class NavXDriveStraight extends PIDAngleCommand {
 	/**
 	 * Default constructor.
 	 *
-	 * @param PID     The PID constants for controlling the angular PID loop.
+	 * @param PID                      The PID gains for this loop.
+	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
+	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
+	 *                                 within tolerance.
+	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
+	 *                                 used.
+	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
+	 *                                 the motors. Defaults to zero.
+	 *                                 Defaults to 180.
+	 * @param inverted                 Whether the loop is inverted. Defaults to false.
 	 * @param drive   The drive to execute this command on.
 	 * @param oi      The tank OI to take input from.
 	 * @param useLeft Which joystick to use to get the forward component to drive straight. True for left, false for
 	 *                right.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) AnglePID PID,
+	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXDriveStraight(@JsonProperty(required = true) PID PID,
+	                                                                                     @JsonProperty(required = true) double absoluteTolerance,
+	                                                                                     int toleranceBuffer,
+	                                                                                     double minimumOutput, Double maximumOutput,
+	                                                                                     double deadband,
+	                                                                                     boolean inverted,
 	                                                                                     @JsonProperty(required = true) T drive,
 	                                                                                     @JsonProperty(required = true) TankOI oi,
 	                                                                                     @JsonProperty(required = true) boolean useLeft) {
-		super(PID, drive);
+		super(PID, absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, drive);
 		this.oi = oi;
 		this.drive = drive;
 		this.useLeft = useLeft;

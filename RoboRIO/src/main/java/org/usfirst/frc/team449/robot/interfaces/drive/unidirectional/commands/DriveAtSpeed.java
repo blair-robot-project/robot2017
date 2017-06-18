@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -44,7 +44,7 @@ public class DriveAtSpeed extends YamlCommandWrapper {
 	 * @param seconds How long to drive for.
 	 */
 	@JsonCreator
-	public <T extends Subsystem & UnidirectionalDrive> DriveAtSpeed(@JsonProperty(required = true) T drive,
+	public <T extends YamlSubsystem & UnidirectionalDrive> DriveAtSpeed(@JsonProperty(required = true) T drive,
 	                                                                @JsonProperty(required = true) double speed,
 	                                                                @JsonProperty(required = true) double seconds) {
 		//Initialize stuff

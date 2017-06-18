@@ -9,5 +9,9 @@ import edu.wpi.first.wpilibj.command.Command;
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 public interface YamlCommand {
 
+	/**
+	 * Get the command object this object is.
+	 * @return this.
+	 */
 	Command getCommand();
 }
