@@ -109,40 +109,28 @@ locationDial:
     '@id': locationDial
     ports: [0, 1]
 RIOduinoPort: 4
-oi:
-    org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+arcadeOI:
+    org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad:
         '@id': oi
         gamepad:
             '@id': driverGamepad
             port: 1
         rotThrottle:
-            &rotThrottle
-            '@id': rotThrottle
-            stick: driverGamepad
-            axis: 0
-            deadband: 0.0
-            inverted: true
+            org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle:
+                &rotThrottle
+                '@id': rotThrottle
+                stick: driverGamepad
+                axis: 0
+                deadband: 0.0
+                inverted: true
         fwdThrottle:
-            <<: *rotThrottle
-            '@id': fwdThrottle
-            axis: 5
+            org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle:
+                <<: *rotThrottle
+                '@id': fwdThrottle
+                axis: 5
         invertDPad: true
         dPadShift: 0.1
-        scaleFwdByRotCoefficient: 0.2
-        buttons:
-            -   '@id': switchToLow
-                button:
-                    '@id': switchToLowButton
-                    joystick:
-                        '@id': gunnerGamepad
-                        port: 3
-                    angle: 180
-                command:
-                    org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToHighGear:
-                        subsystem:
-                            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-                                drive
-                action: WHEN_PRESSED
+        rotScale: 0.2
 drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
         '@id': drive
@@ -197,19 +185,11 @@ drive:
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
         PIDScale: 0.9
-        oi:
-            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
-                oi
-        upshiftSpeed: 4
-        downshiftSpeed: 2
         shifter:
             '@id': driveShifter
             module: 15
             forward: 2
             reverse: 3
-        delayAfterUpshiftConditionsMet: 0.25
-        delayAfterDownshiftConditionsMet: 0.0
-        upshiftFwdThresh: 0.3
         startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive:
@@ -227,8 +207,15 @@ defaultDriveCommand:
             org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                 drive
         oi:
-            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+            org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad:
                 oi
+        autoshiftProcessor:
+            '@id': autoshiftProcessor
+            upshiftSpeed: 4
+            downshiftSpeed: 2
+            delayAfterUpshiftConditionsMet: 0.25
+            delayAfterDownshiftConditionsMet: 0.0
+            upshiftFwdThresh: 0.3
 climber:
     org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
         '@id': climber
@@ -313,5 +300,17 @@ logger:
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
-
-
+buttons:
+    -   button:
+            '@id': switchToLowButton
+            joystick:
+                '@id': gunnerGamepad
+                port: 3
+            angle: 180
+        command:
+            org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToHighGear:
+                '@id': switchToLowCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+        action: WHEN_PRESSED

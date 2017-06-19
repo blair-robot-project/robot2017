@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.oi;
 
 import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.Joystick;
+import org.usfirst.frc.team449.robot.components.MappedJoystick;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 
@@ -57,7 +58,7 @@ public class ArcadeOIWithDPad extends ArcadeOI{
 			double rotScale,
 			double dPadShift,
 			boolean invertDPad,
-			Joystick gamepad) {
+			MappedJoystick gamepad) {
 		this.dPadShift = (invertDPad? -1 : 1) * dPadShift;
 		this.rotThrottle = rotThrottle;
 		this.fwdThrottle = fwdThrottle;

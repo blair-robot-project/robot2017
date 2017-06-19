@@ -15,7 +15,6 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
-import org.usfirst.frc.team449.robot.oi.ButtonMapOI;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;

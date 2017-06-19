@@ -22,7 +22,6 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.ButtonMapOI;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
@@ -77,11 +76,6 @@ public class Robot extends IterativeRobot {
 	 * The drive
 	 */
 	private TalonClusterDrive driveSubsystem;
-
-	/**
-	 * OI, using an Xbox-style controller and arcade drive.
-	 */
-	private ButtonMapOI oiSubsystem;
 
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
@@ -159,8 +153,6 @@ public class Robot extends IterativeRobot {
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
-
-		this.oiSubsystem = cfg.getButtonMapOI();
 		this.logger = cfg.getLogger();
 		this.loggerNotifier = new Notifier(logger);
 		this.climberSubsystem = cfg.getClimber();
