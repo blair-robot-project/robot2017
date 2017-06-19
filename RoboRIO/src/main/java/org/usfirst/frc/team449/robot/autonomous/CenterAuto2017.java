@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class CenterAuto2017 extends YamlCommandGroupWrapper {
+public class CenterAuto2017 <T extends YamlSubsystem & UnidirectionalDrive & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -30,7 +30,7 @@ public class CenterAuto2017 extends YamlCommandGroupWrapper {
 	 * @param driveBackTime How long, in seconds, to drive back from the peg for.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & TwoSideMPSubsystem> CenterAuto2017(
+	public CenterAuto2017(
 			@JsonProperty(required = true) T drive,
 			@JsonProperty(required = true) ActiveGearSubsystem gearHandler,
 			@JsonProperty(required = true) MappedDigitalInput dropGear,

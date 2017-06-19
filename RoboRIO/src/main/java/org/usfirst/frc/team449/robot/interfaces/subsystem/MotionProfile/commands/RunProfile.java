@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
  * Loads and runs the given profile into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfile extends YamlCommandGroupWrapper {
+public class RunProfile <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -21,7 +21,7 @@ public class RunProfile extends YamlCommandGroupWrapper {
 	 * @param profile   The motion profile to load and execute.
 	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
 	 */
-	public <T extends YamlSubsystem & TwoSideMPSubsystem> RunProfile(@JsonProperty(required = true) T subsystem,
+	public RunProfile(@JsonProperty(required = true) T subsystem,
 	                                                             @JsonProperty(required = true) MotionProfileData profile,
 	                                                             @JsonProperty(required = true) double timeout) {
 		addSequential(new LoadProfile(subsystem, profile));

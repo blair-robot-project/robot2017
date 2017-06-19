@@ -21,7 +21,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class BoilerAuto2017 extends YamlCommandGroupWrapper {
+public class BoilerAuto2017 <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -42,7 +42,7 @@ public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 	 * @param shooter              The shooter subsystem to execute this command on. Can be null.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & TwoSideMPSubsystem> BoilerAuto2017(@JsonProperty(required = true) T drive,
+	public BoilerAuto2017(@JsonProperty(required = true) T drive,
 	                                                                     @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
 	                                                                     @JsonProperty(required = true) MappedDigitalInput dropGear,
 	                                                                     @JsonProperty(required = true) MappedDigitalInput allianceSwitch,

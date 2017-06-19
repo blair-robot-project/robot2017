@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RackShooter extends YamlCommandGroupWrapper {
+public class RackShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a RackShooter command group
 	 *
@@ -25,7 +25,7 @@ public class RackShooter extends YamlCommandGroupWrapper {
 	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public <T extends IntakeSubsystem & SolenoidSubsystem> RackShooter(ShooterSubsystem shooterSubsystem,
+	public RackShooter(ShooterSubsystem shooterSubsystem,
 	                                                                   T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new SpinUpShooter(shooterSubsystem));

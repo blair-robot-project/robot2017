@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class JiggleRobot extends YamlCommandGroupWrapper {
+public class JiggleRobot <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends YamlCommandGroupWrapper {
 	/**
 	 * Instantiate the CommandGroup
 	 *
@@ -31,7 +31,7 @@ public class JiggleRobot extends YamlCommandGroupWrapper {
 	 * @param subsystem The drive to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> JiggleRobot(@JsonProperty(required = true) double absoluteTolerance,
+	public JiggleRobot(@JsonProperty(required = true) double absoluteTolerance,
 	                                                                                   int toleranceBuffer,
 	                                                                                   double minimumOutput, Double maximumOutput,
 	                                                                                   double deadband,

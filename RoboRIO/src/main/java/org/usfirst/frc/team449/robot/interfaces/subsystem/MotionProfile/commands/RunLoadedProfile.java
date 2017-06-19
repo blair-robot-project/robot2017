@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile extends YamlCommandWrapper {
+public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.
@@ -45,7 +45,7 @@ public class RunLoadedProfile extends YamlCommandWrapper {
 	 * @param require   Whether or not to require the subsystem this command is running on.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & MPSubsystem> RunLoadedProfile(@JsonProperty(required = true) T subsystem,
+	public RunLoadedProfile(@JsonProperty(required = true) T subsystem,
 	                                                            @JsonProperty(required = true) double timeout,
 	                                                            @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;

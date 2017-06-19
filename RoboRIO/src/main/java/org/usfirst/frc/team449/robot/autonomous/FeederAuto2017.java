@@ -19,7 +19,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FeederAuto2017 extends YamlCommandGroupWrapper {
+public class FeederAuto2017 <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -36,7 +36,7 @@ public class FeederAuto2017 extends YamlCommandGroupWrapper {
 	 * @param forwardsProfile    The motion profile for both sides to drive forwards after backing up from the peg.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & TwoSideMPSubsystem> FeederAuto2017(@JsonProperty(required = true) T drive,
+	public FeederAuto2017(@JsonProperty(required = true) T drive,
 	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
 	                                                                 @JsonProperty(required = true) MappedDigitalInput dropGear,
 	                                                                 @JsonProperty(required = true) MappedDigitalInput allianceSwitch,

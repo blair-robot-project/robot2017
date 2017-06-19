@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsyst
  * continue running.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnAllOffWithRequires extends TurnAllOff {
+public class TurnAllOffWithRequires <T extends YamlSubsystem & ShooterSubsystem> extends TurnAllOff {
 
 	/**
 	 * Default constructor
@@ -20,7 +20,7 @@ public class TurnAllOffWithRequires extends TurnAllOff {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & ShooterSubsystem> TurnAllOffWithRequires(@JsonProperty(required = true) T subsystem) {
+	public TurnAllOffWithRequires(@JsonProperty(required = true) T subsystem) {
 		super(subsystem);
 		requires(subsystem);
 	}

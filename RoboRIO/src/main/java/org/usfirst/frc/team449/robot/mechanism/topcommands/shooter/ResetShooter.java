@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Turns everything off, raises intake
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetShooter extends YamlCommandGroupWrapper {
+public class ResetShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a ResetShooter command group
 	 *
@@ -25,7 +25,7 @@ public class ResetShooter extends YamlCommandGroupWrapper {
 	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public <T extends IntakeSubsystem & SolenoidSubsystem> ResetShooter(ShooterSubsystem shooterSubsystem,
+	public ResetShooter(ShooterSubsystem shooterSubsystem,
 	                                                                    T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));

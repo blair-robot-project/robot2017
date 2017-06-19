@@ -19,6 +19,7 @@ import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 import java.util.List;
@@ -57,11 +58,11 @@ public class RobotMap {
 
 	private MappedDigitalInput locationDial;
 
-	private BoilerAuto2017 boilerAuto;
+	private YamlCommand boilerAuto;
 
-	private CenterAuto2017 centerAuto;
+	private YamlCommand centerAuto;
 
-	private FeederAuto2017 feederAuto;
+	private YamlCommand feederAuto;
 
 	private MotionProfileData leftTestProfile;
 
@@ -136,9 +137,9 @@ public class RobotMap {
 	                MappedDigitalInput allianceSwitch,
 	                MappedDigitalInput dropGearSwitch,
 	                MappedDigitalInput locationDial,
-	                BoilerAuto2017 boilerAuto,
-	                CenterAuto2017 centerAuto,
-	                FeederAuto2017 feederAuto,
+	                YamlCommand boilerAuto,
+	                YamlCommand centerAuto,
+	                YamlCommand feederAuto,
 	                MotionProfileData leftTestProfile, MotionProfileData rightTestProfile,
 	                Map<String, MotionProfileData> leftProfiles, Map<String, MotionProfileData> rightProfiles,
 	                YamlCommand nonMPAutoCommand,
@@ -248,15 +249,15 @@ public class RobotMap {
 		return rightProfiles;
 	}
 
-	public BoilerAuto2017 getBoilerAuto() {
+	public YamlCommand getBoilerAuto() {
 		return boilerAuto;
 	}
 
-	public CenterAuto2017 getCenterAuto() {
+	public YamlCommand getCenterAuto() {
 		return centerAuto;
 	}
 
-	public FeederAuto2017 getFeederAuto() {
+	public YamlCommand getFeederAuto() {
 		return feederAuto;
 	}
 

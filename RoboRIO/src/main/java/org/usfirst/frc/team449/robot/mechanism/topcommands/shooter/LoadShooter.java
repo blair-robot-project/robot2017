@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
  * Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoadShooter extends YamlCommandGroupWrapper {
+public class LoadShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a LoadShooter command group
 	 *
@@ -25,7 +25,7 @@ public class LoadShooter extends YamlCommandGroupWrapper {
 	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public <T extends IntakeSubsystem & SolenoidSubsystem> LoadShooter(
+	public LoadShooter(
 			ShooterSubsystem shooterSubsystem,
 			T intakeSubsystem) {
 		if (shooterSubsystem != null) {

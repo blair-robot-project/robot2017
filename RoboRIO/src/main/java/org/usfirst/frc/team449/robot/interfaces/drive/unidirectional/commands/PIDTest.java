@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
  * Drive forward at constant speed then stop to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDTest extends YamlCommandGroupWrapper {
+public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor
@@ -22,7 +22,7 @@ public class PIDTest extends YamlCommandGroupWrapper {
 	 * @param speed     The speed to drive at, from [0, 1].
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive> PIDTest(@JsonProperty(required = true) T subsystem,
+	public PIDTest(@JsonProperty(required = true) T subsystem,
 	                                                           @JsonProperty(required = true) double driveTime,
 	                                                           @JsonProperty(required = true) double speed) {
 		//Drive forward for a bit

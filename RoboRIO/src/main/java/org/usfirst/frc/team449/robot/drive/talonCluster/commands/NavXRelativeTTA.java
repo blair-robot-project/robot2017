@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Turn a certain number of degrees from the current heading.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXRelativeTTA extends NavXTurnToAngle {
+public class NavXRelativeTTA <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends NavXTurnToAngle {
 
 	/**
 	 * Default constructor.
@@ -38,7 +38,7 @@ public class NavXRelativeTTA extends NavXTurnToAngle {
 	 *                 errors prevent termination.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> NavXRelativeTTA(@JsonProperty(required = true) double absoluteTolerance,
+	public NavXRelativeTTA(@JsonProperty(required = true) double absoluteTolerance,
 	                                                                                       int toleranceBuffer,
 	                                                                                       double minimumOutput, Double maximumOutput,
 	                                                                                       double deadband,

@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * controlling the subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnMotorOffWithRequires extends YamlCommandWrapper {
+public class TurnMotorOffWithRequires <T extends YamlSubsystem & BinaryMotorSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
@@ -27,7 +27,7 @@ public class TurnMotorOffWithRequires extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & BinaryMotorSubsystem> TurnMotorOffWithRequires(@JsonProperty(required = true) T subsystem) {
+	public TurnMotorOffWithRequires(@JsonProperty(required = true) T subsystem) {
 		this.subsystem = subsystem;
 		requires(subsystem);
 	}

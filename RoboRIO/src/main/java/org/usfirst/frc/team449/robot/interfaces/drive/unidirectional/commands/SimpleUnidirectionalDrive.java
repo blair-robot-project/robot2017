@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.Logger;
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive extends YamlCommandWrapper {
+public class SimpleUnidirectionalDrive <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.
@@ -33,7 +33,7 @@ public class SimpleUnidirectionalDrive extends YamlCommandWrapper {
 	 * @param oi    The OI that gives the input to this command.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive> SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
+	public SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
 	                                                                             @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;

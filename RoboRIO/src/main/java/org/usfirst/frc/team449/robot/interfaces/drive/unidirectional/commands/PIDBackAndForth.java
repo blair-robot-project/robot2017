@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
  * Drive back and forth to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDBackAndForth extends YamlCommandGroupWrapper {
+public class PIDBackAndForth <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 	/**
 	 * Instantiate the CommandGroup
 	 *
@@ -21,7 +21,7 @@ public class PIDBackAndForth extends YamlCommandGroupWrapper {
 	 * @param timeInSecs How long to drive in each direction for, in seconds.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive> PIDBackAndForth(@JsonProperty(required = true) T subsystem,
+	public PIDBackAndForth(@JsonProperty(required = true) T subsystem,
 	                                                                   @JsonProperty(required = true) double speed,
 	                                                                   @JsonProperty(required = true) double timeInSecs) {
 		//Drive forwards
