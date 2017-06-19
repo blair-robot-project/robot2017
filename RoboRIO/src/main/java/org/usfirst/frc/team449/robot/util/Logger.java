@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,14 +27,14 @@ public class Logger implements Runnable {
 	private static List<LogEvent> events = new ArrayList<>();
 
 	/**
-	 * The filewriter for the event log.
+	 * The file path for the event log.
 	 */
-	private FileWriter eventLogWriter;
+	private String eventLogFilename;
 
 	/**
-	 * The filewriter for the telemetry data log.
+	 * The file path for the telemetry data log.
 	 */
-	private FileWriter telemetryLogWriter;
+	private String telemetryLogFilename;
 
 	/**
 	 * An array of all the subsystems with telemetry data to log.
@@ -69,8 +70,8 @@ public class Logger implements Runnable {
 	              @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
 		//Set up the file names, using a time stamp to avoid overwriting old log files.
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-		eventLogWriter = new FileWriter(eventLogFilename + timeStamp + ".csv");
-		telemetryLogWriter = new FileWriter(telemetryLogFilename + timeStamp + ".csv");
+		this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
+		this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
 
 		//Set the loop time variable
 		this.loopTimeSecs = loopTimeSecs;
@@ -81,10 +82,13 @@ public class Logger implements Runnable {
 		//Construct itemNames.
 		itemNames = new String[this.subsystems.length][];
 
+		FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
+		FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
 		//Write the file headers
 		eventLogWriter.write("time,class,message");
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryHeader = new StringBuilder();
+		telemetryHeader.append("time,");
 		for (int i = 0; i < this.subsystems.length; i++) {
 			String[] items = this.subsystems[i].getHeader();
 			//Initialize itemNames rows
@@ -104,6 +108,8 @@ public class Logger implements Runnable {
 		telemetryHeader.append("\n");
 		//Write the telemetry file header
 		telemetryLogWriter.write(telemetryHeader.toString());
+		eventLogWriter.close();
+		telemetryLogWriter.close();
 	}
 
 	/**
@@ -121,6 +127,20 @@ public class Logger implements Runnable {
 	 */
 	@Override
 	public void run() {
+		FileWriter eventLogWriter = null;
+		try {
+			eventLogWriter = new FileWriter(eventLogFilename, true);
+		} catch (IOException e) {
+			System.out.println("Event log not found!");
+			e.printStackTrace();
+		}
+		FileWriter telemetryLogWriter = null;
+		try {
+			telemetryLogWriter = new FileWriter(telemetryLogFilename, true);
+		} catch (IOException e) {
+			System.out.println("Telemetry log not found!");
+			e.printStackTrace();
+		}
 		try {
 			//Log each event to a file
 			for (LogEvent event : events) {
@@ -135,6 +155,7 @@ public class Logger implements Runnable {
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryData = new StringBuilder();
 		//Loop through each datum
+		telemetryData.append(System.currentTimeMillis()).append(",");
 		for (int i = 0; i < subsystems.length; i++) {
 			Object[] data = subsystems[i].getData();
 			for (int j = 0; j < data.length; j++) {
@@ -181,16 +202,16 @@ public class Logger implements Runnable {
 			System.out.println("Logging failed!");
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Close all IO writers.
-	 *
-	 * @throws IOException if any of the writers throw an exception while being closed.
-	 */
-	public void close() throws IOException {
-		eventLogWriter.close();
-		telemetryLogWriter.close();
+		try {
+			telemetryLogWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			eventLogWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public double getLoopTimeSecs() {

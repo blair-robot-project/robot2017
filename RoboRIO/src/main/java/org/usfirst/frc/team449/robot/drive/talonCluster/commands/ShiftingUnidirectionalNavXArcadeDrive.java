@@ -59,6 +59,7 @@ public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & Un
 	                                             @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop, inverted, kP, kI, kD, loopEntryDelay, drive, oi);
 		this.autoshiftProcessor = autoshiftProcessor;
+		this.driveSubsystem = drive;
 	}
 
 	/**
