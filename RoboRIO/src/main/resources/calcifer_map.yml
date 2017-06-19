@@ -129,6 +129,20 @@ oi:
         invertDPad: true
         dPadShift: 0.1
         scaleFwdByRotCoefficient: 0.2
+        buttons:
+            -   '@id': switchToLow
+                button:
+                    '@id': switchToLowButton
+                    joystick:
+                        '@id': gunnerGamepad
+                        port: 3
+                    angle: 180
+                command:
+                    org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToHighGear:
+                        subsystem:
+                            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                                drive
+                action: WHEN_PRESSED
 drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
         '@id': drive

@@ -14,7 +14,8 @@ import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
+import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
+import org.usfirst.frc.team449.robot.oi.ButtonMapOI;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
@@ -26,7 +27,9 @@ import java.util.Map;
  * The Jackson-compatible object representing the entire robot.
  */
 public class RobotMap {
-	private OI2017ArcadeGamepad oi;
+	private ButtonMapOI buttonMapOI;
+
+	private ArcadeOIWithDPad arcadeOI;
 
 	private TalonClusterDrive drive;
 
@@ -77,7 +80,7 @@ public class RobotMap {
 	/**
 	 * Default constructor.
 	 *
-	 * @param oi               The oi for controlling this robot.
+	 * @param buttonMapOI      The oi containing the buttons for this robot..
 	 * @param logger           The logger for recording events and telemetry data.
 	 * @param drive The drive.
 	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.
@@ -116,7 +119,8 @@ public class RobotMap {
 	 * @param doMP             Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap(@JsonProperty(required = true) OI2017ArcadeGamepad oi,
+	public RobotMap(@JsonProperty(required = true) ButtonMapOI buttonMapOI,
+	                @JsonProperty(required = true) ArcadeOIWithDPad arcadeOI,
 	                @JsonProperty(required = true) Logger logger,
 	                @JsonProperty(required = true) TalonClusterDrive drive,
 	                @JsonProperty(required = true) UnidirectionalNavXArcadeDrive defaultDriveCommand,
@@ -138,7 +142,8 @@ public class RobotMap {
 	                YamlCommand nonMPAutoCommand,
 	                boolean testMP,
 	                Boolean doMP) {
-		this.oi = oi;
+		this.buttonMapOI = buttonMapOI;
+		this.arcadeOI = arcadeOI;
 		this.drive = drive;
 		this.climber = climber;
 		this.shooter = shooter;
@@ -169,8 +174,8 @@ public class RobotMap {
 		this.doMP = doMP;
 	}
 
-	public OI2017ArcadeGamepad getOi() {
-		return oi;
+	public ButtonMapOI getButtonMapOI() {
+		return buttonMapOI;
 	}
 
 	public TalonClusterDrive getDrive() {
@@ -263,5 +268,9 @@ public class RobotMap {
 
 	public UnidirectionalNavXArcadeDrive getDefaultDriveCommand() {
 		return defaultDriveCommand;
+	}
+
+	public ArcadeOIWithDPad getArcadeOI() {
+		return arcadeOI;
 	}
 }

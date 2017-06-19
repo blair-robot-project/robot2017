@@ -24,7 +24,7 @@ public class UnidirectionalNavXArcadeDrive  <T extends YamlSubsystem & Unidirect
 	/**
 	 * The OI giving the vel and turn stick values.
 	 */
-	private ArcadeOI oi;
+	protected ArcadeOI oi;
 
 	/**
 	 * Whether or not we should be using the NavX to drive straight stably.

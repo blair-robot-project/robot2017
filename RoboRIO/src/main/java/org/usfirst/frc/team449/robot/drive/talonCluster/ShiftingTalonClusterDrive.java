@@ -5,12 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
-import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.CANTalonMPHandler;
 
 
@@ -31,55 +28,9 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	private boolean overrideAutoshift;
 
 	/**
-	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
-	 */
-	private double upshiftFwdThresh;
-
-	/**
-	 * The time we last upshifted (milliseconds)
-	 */
-	private long timeLastUpshifted;
-
-	/**
-	 * The time we last downshifted (milliseconds)
-	 */
-	private long timeLastDownshifted;
-
-	/**
 	 * What gear we're in
 	 */
 	private gear currentGear;
-
-	/**
-	 * The speed setpoint at the upshift break
-	 */
-	private double upshiftSpeed;
-
-	/**
-	 * The speed setpoint at the downshift break
-	 */
-	private double downshiftSpeed;
-
-	/**
-	 * The robot isn't eligible to shift again for this many milliseconds after upshifting.
-	 */
-	private long cooldownAfterUpshift;
-
-	/**
-	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
-	 */
-	private long cooldownAfterDownshift;
-
-	/**
-	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time
-	 * before shifting actually happens.
-	 */
-	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
-
-	/**
-	 * The OI controlling this drive.
-	 */
-	private ArcadeOI oi;
 
 	/**
 	 * The gear to start teleop and autonomous in.
@@ -93,25 +44,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 * @param rightMaster                      The master talon on the right side of the drive.
 	 * @param MPHandler                        The motion profile handler that runs this drive's motion profiles.
 	 * @param PIDScale                         The amount to scale the output to the PID loop by. Defaults to 1.
-	 * @param oi                               The ArcadeOI used to control this drive.
-	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high
-	 *                                         gear.
-	 * @param downshiftSpeed                   The maximum speed both sides must be going at to shift to low gear.
 	 * @param shifter                          The piston that shifts between gears.
-	 * @param delayAfterUpshiftConditionsMet   How long, in seconds, the conditions to upshift have to be met for
-	 *                                         before
-	 *                                         upshifting happens. Defaults to 0.
-	 * @param delayAfterDownshiftConditionsMet How long, in seconds, the conditions to downshift have to be met for
-	 *                                         before downshifting happens. Defaults to 0.
-	 * @param cooldownAfterDownshift           The minimum time, in seconds, between downshifting and then upshifting
-	 *                                         again.
-	 *                                         Defaults to 0.
-	 * @param cooldownAfterUpshift             The minimum time, in seconds, between upshifting and then downshifting
-	 *                                         again.
-	 *                                         Defaults to 0.
-	 * @param upshiftFwdThresh                 The minimum amount the forward joystick must be pushed forward in order
-	 *                                         to upshift, on
-	 *                                         [0, 1]. Defaults to 0.
 	 * @param startingGear                     The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
@@ -119,26 +52,10 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
 	                                 @JsonProperty(required = true) CANTalonMPHandler MPHandler,
 	                                 Double PIDScale,
-	                                 @JsonProperty(required = true) ArcadeOI oi,
-	                                 @JsonProperty(required = true) double upshiftSpeed,
-	                                 @JsonProperty(required = true) double downshiftSpeed,
 	                                 @JsonProperty(required = true) MappedDoubleSolenoid shifter,
-	                                 double delayAfterUpshiftConditionsMet,
-	                                 double delayAfterDownshiftConditionsMet,
-	                                 double cooldownAfterDownshift,
-	                                 double cooldownAfterUpshift,
-	                                 double upshiftFwdThresh,
 	                                 gear startingGear) {
 		super(leftMaster, rightMaster, MPHandler, PIDScale);
 		//Initialize stuff
-		this.oi = oi;
-		upshiftBufferTimer = new BufferTimer(delayAfterUpshiftConditionsMet);
-		downshiftBufferTimer = new BufferTimer(delayAfterDownshiftConditionsMet);
-		this.cooldownAfterDownshift = (long) (cooldownAfterDownshift * 1000.);
-		this.cooldownAfterUpshift = (long) (cooldownAfterUpshift * 1000.);
-		this.upshiftFwdThresh = upshiftFwdThresh;
-		this.upshiftSpeed = upshiftSpeed;
-		this.downshiftSpeed = downshiftSpeed;
 		this.shifter = shifter;
 
 		//Default to low
@@ -151,8 +68,6 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 
 		// Initialize shifting constants, assuming robot is stationary.
 		overrideAutoshift = false;
-		timeLastUpshifted = 0;
-		timeLastDownshifted = 0;
 	}
 
 	/**
@@ -183,8 +98,8 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 */
 	@Override
 	protected void setPIDThrottle(double left, double right) {
-		//If we're not shifting, scale by the max speed in the current gear
-		if (overrideAutoshift || oi.getFwd() == 0) {
+		//If we're not shifting or we're just turning in place, scale by the max speed in the current gear
+		if (overrideAutoshift || left == right) {
 			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
 			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
 		}
@@ -218,7 +133,6 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 			rightMaster.switchToLowGear();
 			leftMaster.switchToLowGear();
 			//Record the current time
-			timeLastDownshifted = Robot.currentTimeMillis();
 		} else {
 			//Physically shift gears
 			shifter.set(DoubleSolenoid.Value.kReverse);
@@ -226,66 +140,9 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 			rightMaster.switchToHighGear();
 			leftMaster.switchToHighGear();
 			//Record the current time.
-			timeLastUpshifted = Robot.currentTimeMillis();
 		}
 		//Set logging var
 		currentGear = gear;
-	}
-
-	/**
-	 * @return whether the robot should downshift
-	 */
-	private boolean shouldDownshift() {
-		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.max(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) < downshiftSpeed;
-		//Or if we're just turning in place.
-		okToShift = okToShift || (oi.getFwd() == 0 && oi.getRot() != 0);
-		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs(oi.getFwd()) < upshiftFwdThresh);
-		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
-		//And there's no need to downshift if we're already in low gear.
-		okToShift = okToShift && currentGear == gear.HIGH;
-		//And we don't want to shift if autoshifting is turned off.
-		okToShift = okToShift && !overrideAutoshift;
-
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		return downshiftBufferTimer.get(okToShift);
-	}
-
-	/**
-	 * @return whether the robot should upshift
-	 */
-	private boolean shouldUpshift() {
-		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.min(Math.abs(leftMaster.getSpeed()), Math.abs(rightMaster.getSpeed())) > upshiftSpeed;
-		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs(oi.getFwd()) > upshiftFwdThresh;
-		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
-		//And there's no need to upshift if we're already in high gear.
-		okToShift = okToShift && currentGear == gear.LOW;
-		//And we don't want to shift if autoshifting is turned off.
-		okToShift = okToShift && !overrideAutoshift;
-
-		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
-		// This avoids brief blips causing shifting.
-		return upshiftBufferTimer.get(okToShift);
-	}
-
-	/**
-	 * Check if we should autoshift, then, if so, shift.
-	 */
-	@Override
-	public void autoshift() {
-		if (shouldUpshift()) {
-			//Upshift if we should
-			setGear(gear.HIGH);
-		} else if (shouldDownshift()) {
-			//Downshift if we should
-			setGear(gear.LOW);
-		}
 	}
 
 	public gear getStartingGear() {

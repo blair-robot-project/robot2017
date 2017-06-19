@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 
 import com.fasterxml.jackson.annotation.*;
+import org.usfirst.frc.team449.robot.util.AutoshiftProcessor;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -16,6 +17,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXArcadeDrive {
 
 	protected T driveSubsystem;
+
+	protected AutoshiftProcessor autoshiftProcessor;
 
 	/**
 	 * Default constructor
@@ -43,17 +46,19 @@ public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & Un
 	@JsonCreator
 	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
 	                                             int toleranceBuffer,
-                                                 double minimumOutput, Double maximumOutput,
-                                                 double deadband,
-                                                 Double maxAngularVelToEnterLoop,
-                                                 boolean inverted,
-                                                 int kP,
-                                                 int kI,
-                                                 int kD,
-                                                 double loopEntryDelay,
-                                                 @JsonProperty(required = true) T drive,
-                                                 @JsonProperty(required = true) ArcadeOI oi) {
+	                                             double minimumOutput, Double maximumOutput,
+	                                             double deadband,
+	                                             Double maxAngularVelToEnterLoop,
+	                                             boolean inverted,
+	                                             int kP,
+	                                             int kI,
+	                                             int kD,
+	                                             double loopEntryDelay,
+	                                             @JsonProperty(required = true) T drive,
+	                                             @JsonProperty(required = true) ArcadeOI oi,
+	                                             @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop, inverted, kP, kI, kD, loopEntryDelay, drive, oi);
+		this.autoshiftProcessor = autoshiftProcessor;
 	}
 
 	/**
@@ -62,7 +67,13 @@ public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & Un
 	@Override
 	public void execute() {
 		//Auto-shifting
-		driveSubsystem.autoshift();
+		if (!driveSubsystem.getOverrideAutoshift()){
+			if (autoshiftProcessor.arcadeShouldUpshift(oi.getFwd(), driveSubsystem.getLeftVel(), driveSubsystem.getRightVel())){
+				driveSubsystem.setGear(ShiftingDrive.gear.HIGH);
+			} else if (autoshiftProcessor.arcadeShouldDownshift(oi.getRot(), oi.getFwd(), driveSubsystem.getLeftVel(), driveSubsystem.getRightVel())){
+				driveSubsystem.setGear(ShiftingDrive.gear.LOW);
+			}
+		}
 		super.execute();
 	}
 }

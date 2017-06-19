@@ -17,4 +17,16 @@ public interface UnidirectionalDrive extends DriveSubsystem {
 	 * @param right the output for the right side of the drive, from [-1, 1]
 	 */
 	void setOutput(double left, double right);
+
+	/**
+	 * Get the velocity of the left side of the drive.
+	 * @return The signed velocity in rotations per second.
+	 */
+	double getLeftVel();
+
+	/**
+	 * Get the velocity of the right side of the drive.
+	 * @return The signed velocity in rotations per second.
+	 */
+	double getRightVel();
 }

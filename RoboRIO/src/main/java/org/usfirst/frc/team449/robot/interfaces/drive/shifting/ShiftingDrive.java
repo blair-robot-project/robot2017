@@ -9,11 +9,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public interface ShiftingDrive {
 
 	/**
-	 * Check if we should autoshift, then, if so, shift.
-	 */
-	void autoshift();
-
-	/**
 	 * @return The gear this subsystem is currently in.
 	 */
 	gear getGear();

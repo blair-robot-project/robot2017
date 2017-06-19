@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
@@ -125,6 +124,26 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 		//Clip to one to avoid anything strange.
 		setPIDThrottle(clipToOne(left), clipToOne(right));
 //		setVBusThrottle(left, right);
+	}
+
+	/**
+	 * Get the velocity of the left side of the drive.
+	 *
+	 * @return The signed velocity in rotations per second.
+	 */
+	@Override
+	public double getLeftVel() {
+		return leftMaster.getSpeed();
+	}
+
+	/**
+	 * Get the velocity of the right side of the drive.
+	 *
+	 * @return The signed velocity in rotations per second.
+	 */
+	@Override
+	public double getRightVel() {
+		return rightMaster.getSpeed();
 	}
 
 	/**

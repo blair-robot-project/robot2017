@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.wpilibj.I2C;
@@ -23,7 +22,7 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
+import org.usfirst.frc.team449.robot.oi.ButtonMapOI;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
@@ -82,7 +81,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * OI, using an Xbox-style controller and arcade drive.
 	 */
-	private OI2017ArcadeGamepad oiSubsystem;
+	private ButtonMapOI oiSubsystem;
 
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
@@ -161,7 +160,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 
-		this.oiSubsystem = cfg.getOi();
+		this.oiSubsystem = cfg.getButtonMapOI();
 		this.logger = cfg.getLogger();
 		this.loggerNotifier = new Notifier(logger);
 		this.climberSubsystem = cfg.getClimber();
