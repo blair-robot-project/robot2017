@@ -262,76 +262,82 @@ logger:
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 boilerAuto:
-    drive:
-        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-            drive
-    gearHandler:
-        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-            gearHandler
-    shooter:
-        org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
-            shooter
-    dropGear:
-        dropGearSwitch
-    allianceSwitch:
-        allianceSwitch
-    blueLeftPegToKeyProfile:
-        '@id': blueLeftShoot
-        filename: "calciferLeftBlueShootProfile.csv"
-        inverted: true
-    blueRightPegToKeyProfile:
-        '@id': blueRightShoot
-        filename: "calciferRightBlueShootProfile.csv"
-        inverted: true
-    redLeftPegToKeyProfile:
-        '@id': redLeftShoot
-        filename: "calciferLeftRedShootProfile.csv"
-        inverted: true
-    redRightPegToKeyProfile:
-        '@id': redRightShoot
-        filename: "calciferRightRedShootProfile.csv"
-        inverted: true
+    org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017:
+        '@id': boilerAuto
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                drive
+        gearHandler:
+            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                gearHandler
+        shooter:
+            org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+                shooter
+        dropGear:
+            dropGearSwitch
+        allianceSwitch:
+            allianceSwitch
+        blueLeftPegToKeyProfile:
+            '@id': blueLeftShoot
+            filename: "calciferLeftBlueShootProfile.csv"
+            inverted: true
+        blueRightPegToKeyProfile:
+            '@id': blueRightShoot
+            filename: "calciferRightBlueShootProfile.csv"
+            inverted: true
+        redLeftPegToKeyProfile:
+            '@id': redLeftShoot
+            filename: "calciferLeftRedShootProfile.csv"
+            inverted: true
+        redRightPegToKeyProfile:
+            '@id': redRightShoot
+            filename: "calciferRightRedShootProfile.csv"
+            inverted: true
 feederAuto:
-    drive:
-        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-            drive
-    gearHandler:
-        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-            gearHandler
-    dropGear:
-        dropGearSwitch
-    allianceSwitch:
-        allianceSwitch
-    redLeftBackupProfile:
-        '@id': redLeftBackup
-        filename: "calciferLeftRedBackupProfile.csv"
-        inverted: true
-    redRightBackupProfile:
-        '@id': redRightBackup
-        filename: "calciferRightRedBackupProfile.csv"
-        inverted: true
-    blueLeftBackupProfile:
-        '@id': blueLeftBackup
-        filename: "calciferLeftBlueBackupProfile.csv"
-        inverted: true
-    blueRightBackupProfile:
-        '@id': blueRightBackup
-        filename: "calciferRightBlueBackupProfile.csv"
-        inverted: true
-    forwardsProfile:
-        '@id': forwardsProfile
-        filename: "forwardProfile.csv"
-        inverted: false
+    org.usfirst.frc.team449.robot.autonomous.FeederAuto2017:
+        '@id': feederAuto
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                drive
+        gearHandler:
+            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                gearHandler
+        dropGear:
+            dropGearSwitch
+        allianceSwitch:
+            allianceSwitch
+        redLeftBackupProfile:
+            '@id': redLeftBackup
+            filename: "calciferLeftRedBackupProfile.csv"
+            inverted: true
+        redRightBackupProfile:
+            '@id': redRightBackup
+            filename: "calciferRightRedBackupProfile.csv"
+            inverted: true
+        blueLeftBackupProfile:
+            '@id': blueLeftBackup
+            filename: "calciferLeftBlueBackupProfile.csv"
+            inverted: true
+        blueRightBackupProfile:
+            '@id': blueRightBackup
+            filename: "calciferRightBlueBackupProfile.csv"
+            inverted: true
+        forwardsProfile:
+            '@id': forwardsProfile
+            filename: "forwardProfile.csv"
+            inverted: false
 centerAuto:
-    drive:
-        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-            drive
-    gearHandler:
-        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-            gearHandler
-    dropGear:
-        dropGearSwitch
-    driveBackTime: 0.5
+    org.usfirst.frc.team449.robot.autonomous.CenterAuto2017:
+        '@id': centerAuto
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                drive
+        gearHandler:
+            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                gearHandler
+        dropGear:
+            dropGearSwitch
+        driveBackTime: 0.5
 buttons:
     -   button:
             '@id': switchToLowButton
@@ -372,7 +378,7 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-            overrideNavxButton
+            overrideNavXButton
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
                 '@id': unoverrideNavXCommand
@@ -404,7 +410,7 @@ buttons:
             '@id': climbButton
             joystick:
                 driverGamepad
-            axis: 2
+            triggerAxis: 2
             triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.mechanism.climber.commands.RunMotorWhileConditonMet:
@@ -456,7 +462,7 @@ buttons:
             '@id': pushGearButton
             joystick:
                 driverGamepad
-            axis: 3
+            triggerAxis: 3
             triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
@@ -484,20 +490,20 @@ buttons:
                 '@id': fireShooterCommand
                 shooterSubsystem:
                     org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
-                        '@id': shooter
+                        shooter
         action: WHEN_PRESSED
     -   button:
             '@id': rackShooterButton
             joystick:
                 gunnerGamepad
-            axis: 3
+            triggerAxis: 3
             triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter:
                 '@id': rackShooterCommand
                 shooterSubsystem:
                     org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
-                        '@id': shooter
+                        shooter
         action: WHEN_PRESSED
     -   button:
             '@id': resetShooterButton
@@ -509,5 +515,5 @@ buttons:
                 '@id': resetShooterCommand
                 shooterSubsystem:
                     org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
-                        '@id': shooter
+                        shooter
         action: WHEN_PRESSED
