@@ -16,18 +16,19 @@ import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
 import org.usfirst.frc.team449.robot.oi.ButtonMapOI;
+import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * The Jackson-compatible object representing the entire robot.
  */
 public class RobotMap {
-	private ButtonMapOI buttonMapOI;
 
 	private ArcadeOIWithDPad arcadeOI;
 
@@ -77,10 +78,12 @@ public class RobotMap {
 
 	private boolean doMP;
 
+	private List<CommandButton> buttons;
+
 	/**
 	 * Default constructor.
 	 *
-	 * @param buttonMapOI      The oi containing the buttons for this robot..
+	 * @param buttons The buttons for controlling this robot.
 	 * @param logger           The logger for recording events and telemetry data.
 	 * @param drive The drive.
 	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.
@@ -119,7 +122,7 @@ public class RobotMap {
 	 * @param doMP             Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap(@JsonProperty(required = true) ButtonMapOI buttonMapOI,
+	public RobotMap(@JsonProperty(required = true) List<CommandButton> buttons,
 	                @JsonProperty(required = true) ArcadeOIWithDPad arcadeOI,
 	                @JsonProperty(required = true) Logger logger,
 	                @JsonProperty(required = true) TalonClusterDrive drive,
@@ -142,7 +145,7 @@ public class RobotMap {
 	                YamlCommand nonMPAutoCommand,
 	                boolean testMP,
 	                Boolean doMP) {
-		this.buttonMapOI = buttonMapOI;
+		this.buttons = buttons;
 		this.arcadeOI = arcadeOI;
 		this.drive = drive;
 		this.climber = climber;
@@ -172,10 +175,6 @@ public class RobotMap {
 			doMP = true;
 		}
 		this.doMP = doMP;
-	}
-
-	public ButtonMapOI getButtonMapOI() {
-		return buttonMapOI;
 	}
 
 	public TalonClusterDrive getDrive() {
@@ -272,5 +271,9 @@ public class RobotMap {
 
 	public ArcadeOIWithDPad getArcadeOI() {
 		return arcadeOI;
+	}
+
+	public List<CommandButton> getButtons() {
+		return buttons;
 	}
 }
