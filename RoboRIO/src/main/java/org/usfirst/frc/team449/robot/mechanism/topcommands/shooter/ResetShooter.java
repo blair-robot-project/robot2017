@@ -21,12 +21,12 @@ public class ResetShooter extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a ResetShooter command group
 	 *
-	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem  intake subsystem.
+	 * @param shooterSubsystem shooter subsystem. Can be null.
+	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public <T extends IntakeSubsystem & SolenoidSubsystem> ResetShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                                                                    @JsonProperty(required = true) T intakeSubsystem) {
+	public <T extends IntakeSubsystem & SolenoidSubsystem> ResetShooter(ShooterSubsystem shooterSubsystem,
+	                                                                    T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));
 		}

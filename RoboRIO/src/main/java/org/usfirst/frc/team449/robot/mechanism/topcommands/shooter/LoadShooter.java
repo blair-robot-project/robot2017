@@ -21,13 +21,13 @@ public class LoadShooter extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a LoadShooter command group
 	 *
-	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem  intake subsystem.
+	 * @param shooterSubsystem shooter subsystem. Can be null.
+	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
 	public <T extends IntakeSubsystem & SolenoidSubsystem> LoadShooter(
-			@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-			@JsonProperty(required = true) T intakeSubsystem) {
+			ShooterSubsystem shooterSubsystem,
+			T intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOff(shooterSubsystem));
 		}

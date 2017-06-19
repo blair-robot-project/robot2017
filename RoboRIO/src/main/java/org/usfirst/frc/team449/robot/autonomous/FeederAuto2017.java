@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
@@ -26,23 +27,33 @@ public class FeederAuto2017 extends YamlCommandGroupWrapper {
 	 * @param drive              The drive subsystem to execute this command on. Must have the profile to drive up to
 	 *                           the peg already loaded into it.
 	 * @param gearHandler        The gear handler to execute this command on.
-	 * @param dropGear           Whether or not to drop the gear.
-	 * @param leftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg.
-	 * @param rightBackupProfile The motion profile for the right side of the drive to execute to back up from the peg.
+	 * @param dropGear           The switch deciding whether or not to drop the gear.
+	 * @param allianceSwitch The switch indicating which alliance we're on.
+	 * @param redLeftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg on the red alliance.
+	 * @param redRightBackupProfile The motion profile for the right side of the drive to execute to back up from the peg on the red alliance.
+	 * @param blueLeftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg on the blue alliance.
+	 * @param blueRightBackupProfile The motion profile for the right side of the drive to execute to back up from the peg on the blue alliance.
 	 * @param forwardsProfile    The motion profile for both sides to drive forwards after backing up from the peg.
 	 */
 	@JsonCreator
 	public <T extends YamlSubsystem & TwoSideMPSubsystem> FeederAuto2017(@JsonProperty(required = true) T drive,
 	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
-	                                                                 @JsonProperty(required = true) boolean dropGear,
-	                                                                 @JsonProperty(required = true) MotionProfileData leftBackupProfile,
-	                                                                 @JsonProperty(required = true) MotionProfileData rightBackupProfile,
+	                                                                 @JsonProperty(required = true) MappedDigitalInput dropGear,
+	                                                                 @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
+	                                                                 @JsonProperty(required = true) MotionProfileData redLeftBackupProfile,
+	                                                                 @JsonProperty(required = true) MotionProfileData redRightBackupProfile,
+                                                                     @JsonProperty(required = true) MotionProfileData blueLeftBackupProfile,
+                                                                     @JsonProperty(required = true) MotionProfileData blueRightBackupProfile,
 	                                                                 @JsonProperty(required = true) MotionProfileData forwardsProfile) {
 		addSequential(new RunLoadedProfile(drive, 15, true));
-		if (dropGear) {
+		if (dropGear.getStatus().get(0)) {
 			addSequential(new SolenoidReverse(gearHandler));
 		}
-		addSequential(new RunProfileTwoSides(drive, leftBackupProfile, rightBackupProfile, 10));
+		if (allianceSwitch.getStatus().get(0)) {
+			addSequential(new RunProfileTwoSides(drive, redLeftBackupProfile, redRightBackupProfile, 10));
+		} else {
+			addSequential(new RunProfileTwoSides(drive, blueLeftBackupProfile, blueRightBackupProfile, 10));
+		}
 		addSequential(new RunProfile(drive, forwardsProfile, 5));
 	}
 }

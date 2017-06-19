@@ -19,12 +19,12 @@ public class FireShooter extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a FireShooter command group
 	 *
-	 * @param shooterSubsystem shooter subsystem
-	 * @param intakeSubsystem  intake subsystem
+	 * @param shooterSubsystem shooter subsystem. Can be null.
+	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public FireShooter(@JsonProperty(required = true) ShooterSubsystem shooterSubsystem,
-	                   @JsonProperty(required = true) IntakeSubsystem intakeSubsystem) {
+	public FireShooter(ShooterSubsystem shooterSubsystem,
+	                   IntakeSubsystem intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOn(shooterSubsystem));
 		}

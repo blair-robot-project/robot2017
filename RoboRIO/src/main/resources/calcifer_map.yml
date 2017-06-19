@@ -22,14 +22,6 @@ leftProfiles: !!map
         '@id': blueLeftRight
         filename: "calciferLeftBlueRightProfile.csv"
         inverted: false
-    "blue_shoot" :
-        '@id': blueLeftShoot
-        filename: "calciferLeftBlueShootProfile.csv"
-        inverted: true
-    "blue_backup" :
-        '@id': blueLeftBackup
-        filename: "calciferLeftBlueBackupProfile.csv"
-        inverted: true
     "red_center" :
         '@id': redLeftCenter
         filename: "calciferLeftRedMidProfile.csv"
@@ -41,18 +33,6 @@ leftProfiles: !!map
     "red_right" :
         '@id': redLeftRight
         filename: "calciferLeftRedRightProfile.csv"
-        inverted: false
-    "red_shoot" :
-        '@id': redLeftShoot
-        filename: "calciferLeftRedShootProfile.csv"
-        inverted: true
-    "red_backup" :
-        '@id': redLeftBackup
-        filename: "calciferLeftRedBackupProfile.csv"
-        inverted: true
-    "forward" :
-        '@id': leftForward
-        filename: "forwardProfile.csv"
         inverted: false
 rightProfiles: !!map
     "blue_center" :
@@ -67,14 +47,6 @@ rightProfiles: !!map
         '@id': blueRightRight
         filename: "calciferRightBlueRightProfile.csv"
         inverted: false
-    "blue_shoot" :
-        '@id': blueRightShoot
-        filename: "calciferRightBlueShootProfile.csv"
-        inverted: true
-    "blue_backup" :
-        '@id': blueRightBackup
-        filename: "calciferRightBlueBackupProfile.csv"
-        inverted: true
     "red_center" :
         '@id': redRightCenter
         filename: "calciferRightRedMidProfile.csv"
@@ -86,18 +58,6 @@ rightProfiles: !!map
     "red_right" :
         '@id': redRightRight
         filename: "calciferRightRedRightProfile.csv"
-        inverted: false
-    "red_shoot" :
-        '@id': redRightShoot
-        filename: "calciferRightRedShootProfile.csv"
-        inverted: true
-    "red_backup" :
-        '@id': redRightBackup
-        filename: "calciferRightRedBackupProfile.csv"
-        inverted: true
-    "forward" :
-        '@id': rightForward
-        filename: "forwardProfile.csv"
         inverted: false
 allianceSwitch:
     '@id': allianceSwitch
@@ -199,6 +159,7 @@ defaultDriveCommand:
         kD: 0.0
         absoluteTolerance: 1
         maximumOutput: 0.33333
+        toleranceBuffer: 25
         deadband: 1
         maxAngularVelToEnterLoop: 0.05
         inverted: true
@@ -300,6 +261,77 @@ logger:
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
+boilerAuto:
+    drive:
+        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+            drive
+    gearHandler:
+        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+            gearHandler
+    shooter:
+        org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+            shooter
+    dropGear:
+        dropGearSwitch
+    allianceSwitch:
+        allianceSwitch
+    blueLeftPegToKeyProfile:
+        '@id': blueLeftShoot
+        filename: "calciferLeftBlueShootProfile.csv"
+        inverted: true
+    blueRightPegToKeyProfile:
+        '@id': blueRightShoot
+        filename: "calciferRightBlueShootProfile.csv"
+        inverted: true
+    redLeftPegToKeyProfile:
+        '@id': redLeftShoot
+        filename: "calciferLeftRedShootProfile.csv"
+        inverted: true
+    redRightPegToKeyProfile:
+        '@id': redRightShoot
+        filename: "calciferRightRedShootProfile.csv"
+        inverted: true
+feederAuto:
+    drive:
+        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+            drive
+    gearHandler:
+        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+            gearHandler
+    dropGear:
+        dropGearSwitch
+    allianceSwitch:
+        allianceSwitch
+    redLeftBackupProfile:
+        '@id': redLeftBackup
+        filename: "calciferLeftRedBackupProfile.csv"
+        inverted: true
+    redRightBackupProfile:
+        '@id': redRightBackup
+        filename: "calciferRightRedBackupProfile.csv"
+        inverted: true
+    blueLeftBackupProfile:
+        '@id': blueLeftBackup
+        filename: "calciferLeftBlueBackupProfile.csv"
+        inverted: true
+    blueRightBackupProfile:
+        '@id': blueRightBackup
+        filename: "calciferRightBlueBackupProfile.csv"
+        inverted: true
+    forwardsProfile:
+        '@id': forwardsProfile
+        filename: "forwardProfile.csv"
+        inverted: false
+centerAuto:
+    drive:
+        org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+            drive
+    gearHandler:
+        org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+            gearHandler
+    dropGear:
+        dropGearSwitch
+    driveBackTime: 0.5
 buttons:
     -   button:
             '@id': switchToLowButton
@@ -308,9 +340,174 @@ buttons:
                 port: 3
             angle: 180
         command:
-            org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToHighGear:
+            org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToLowGear:
                 '@id': switchToLowCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                         drive
+        action: WHEN_PRESSED
+    -   button:
+            '@id': switchToHighButton
+            joystick:
+                gunnerGamepad
+            angle: 0
+        command:
+            org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToHighGear:
+                '@id': switchToHighCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+        action: WHEN_PRESSED
+    -   button:
+            '@id': overrideNavXButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 1
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
+                '@id': overrideNavXCommand
+                override: true
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+        action: WHEN_PRESSED
+    -   button:
+            overrideNavxButton
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
+                '@id': unoverrideNavXCommand
+                override: false
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+        action: WHEN_RELEASED
+    -   button:
+            '@id': jiggleRobotButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 8
+        command:
+            org.usfirst.frc.team449.robot.drive.talonCluster.commands.JiggleRobot:
+                '@id': jiggleRobotCommand
+                kP: 0.007
+                kI: 0.0
+                kD: 0.0
+                toleranceBuffer: 25
+                absoluteTolerance: 1
+                deadband: 0.75
+                inverted: false
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+        action: WHEN_PRESSED
+    -   button:
+            '@id': climbButton
+            joystick:
+                driverGamepad
+            axis: 2
+            triggerAt: 0.9
+        command:
+            org.usfirst.frc.team449.robot.mechanism.climber.commands.RunMotorWhileConditonMet:
+                '@id': climbCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
+                        climber
+        action: WHEN_PRESSED
+    -   button:
+            climbButton
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOffWithRequires:
+                '@id': stopClimbCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
+                        climber
+        action: WHEN_RELEASED
+    -   button:
+            '@id': manualClimbButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 3
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn:
+                '@id': manuaClimbCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
+                        climber
+        action: WHEN_PRESSED
+    -   button:
+            manualClimbButton
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOffWithRequires:
+                stopClimbCommand
+        action: WHEN_RELEASED
+    -   button:
+            '@id': switchCameraButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 9
+        command:
+            org.usfirst.frc.team449.robot.vision.commands.ChangeCam:
+                '@id': switchCameraCommand
+                cameraSubsystem:
+                    org.usfirst.frc.team449.robot.vision.CameraSubsystem:
+                        cameras
+        action: WHEN_PRESSED
+    -   button:
+            '@id': pushGearButton
+            joystick:
+                driverGamepad
+            axis: 3
+            triggerAt: 0.9
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
+                '@id': openGearHandlerCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                        gearHandler
+        action: WHEN_PRESSED
+    -   button:
+            pushGearButton
+        command:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward:
+                '@id': closeGearHandlerCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                        gearHandler
+        action: WHEN_RELEASED
+    -   button:
+            '@id': fireShooterButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 6
+        command:
+            org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter:
+                '@id': fireShooterCommand
+                shooterSubsystem:
+                    org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+                        '@id': shooter
+        action: WHEN_PRESSED
+    -   button:
+            '@id': rackShooterButton
+            joystick:
+                gunnerGamepad
+            axis: 3
+            triggerAt: 0.9
+        command:
+            org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter:
+                '@id': rackShooterCommand
+                shooterSubsystem:
+                    org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+                        '@id': shooter
+        action: WHEN_PRESSED
+    -   button:
+            '@id': resetShooterButton
+            joystick:
+                gunnerGamepad
+            buttonNumber: 5
+        command:
+            org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.ResetShooter:
+                '@id': resetShooterCommand
+                shooterSubsystem:
+                    org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
+                        '@id': shooter
         action: WHEN_PRESSED
