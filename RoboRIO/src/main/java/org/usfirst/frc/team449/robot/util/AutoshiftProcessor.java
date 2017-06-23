@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+
+import java.util.function.Consumer;
 
 /**
  * A helper class for autoshifting.
@@ -141,5 +144,13 @@ public class AutoshiftProcessor {
 			timeLastUpshifted = Robot.currentTimeMillis();
 		}
 		return okToShift;
+	}
+
+	public void arcadeAutoshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift){
+		if (arcadeShouldDownshift(rotThrottle, fwdThrottle, leftVel, rightVel)){
+			shift.accept(ShiftingDrive.gear.LOW);
+		} else if (arcadeShouldUpshift(fwdThrottle, leftVel, rightVel)){
+			shift.accept(ShiftingDrive.gear.HIGH);
+		}
 	}
 }

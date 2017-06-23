@@ -8,6 +8,8 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 
+import java.util.function.Consumer;
+
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
  * alignment.
@@ -68,13 +70,9 @@ public class ShiftingUnidirectionalNavXArcadeDrive <T extends YamlSubsystem & Un
 	@Override
 	public void execute() {
 		//Auto-shifting
-		if (!driveSubsystem.getOverrideAutoshift()){
-			if (autoshiftProcessor.arcadeShouldUpshift(oi.getFwd(), driveSubsystem.getLeftVel(), driveSubsystem.getRightVel())){
-				driveSubsystem.setGear(ShiftingDrive.gear.HIGH);
-			} else if (autoshiftProcessor.arcadeShouldDownshift(oi.getRot(), oi.getFwd(), driveSubsystem.getLeftVel(), driveSubsystem.getRightVel())){
-				driveSubsystem.setGear(ShiftingDrive.gear.LOW);
-			}
-		}
+		autoshiftProcessor.arcadeAutoshift(oi.getRot(), oi.getFwd(), driveSubsystem.getLeftVel(),
+				driveSubsystem.getRightVel(), gear -> driveSubsystem.setGear(gear));
+
 		super.execute();
 	}
 }
