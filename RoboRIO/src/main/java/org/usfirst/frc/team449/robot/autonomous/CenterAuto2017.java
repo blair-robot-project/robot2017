@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -18,27 +19,26 @@ import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class CenterAuto2017 <T extends YamlSubsystem & UnidirectionalDrive & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
+public class CenterAuto2017 extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param drive         The drive subsystem to execute this command on. Must have the profile to drive up to the
-	 *                      peg already loaded into it.
-	 * @param gearHandler   The gear handler to execute this command on.
-	 * @param dropGear      The switch deciding whether or not to drop the gear.
-	 * @param driveBackTime How long, in seconds, to drive back from the peg for.
+	 * @param runWallToPegProfile The command for running the profile for going from the wall to the peg, which has already been loaded.
+	 * @param dropGear The command for dropping the held gear.
+	 * @param dropGearSwitch      The switch deciding whether or not to drop the gear.
+	 * @param driveBack The command for backing up away from the peg.
 	 */
 	@JsonCreator
 	public CenterAuto2017(
-			@JsonProperty(required = true) T drive,
-			@JsonProperty(required = true) ActiveGearSubsystem gearHandler,
-			@JsonProperty(required = true) MappedDigitalInput dropGear,
-			@JsonProperty(required = true) double driveBackTime) {
-		addSequential(new RunLoadedProfile(drive, 15, true));
-		if (dropGear.getStatus().get(0)) {
-			addSequential(new SolenoidReverse(gearHandler));
+			@JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+			@JsonProperty(required = true) YamlCommand dropGear,
+			@JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+			@JsonProperty(required = true) YamlCommand driveBack) {
+		addSequential(runWallToPegProfile);
+		if (dropGearSwitch.getStatus().get(0)) {
+			addSequential(dropGear.getCommand());
 		}
-		addSequential(new DriveAtSpeed(drive, -0.3, driveBackTime));
+		addSequential(driveBack.getCommand());
 	}
 }

@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.util.Logger;
 
 /**
- * Go at a certain speed for a set number of seconds
+ * Go at a certain velocity for a set number of seconds
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
@@ -19,7 +19,7 @@ public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extend
 	/**
 	 * Speed to go at
 	 */
-	private double speed;
+	private double velocity;
 
 	/**
 	 * How long to run for
@@ -40,16 +40,16 @@ public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extend
 	 * Default constructor
 	 *
 	 * @param drive   The drive to execute this command on
-	 * @param speed   How fast to go, in RPS
+	 * @param velocity   How fast to go, in RPS
 	 * @param seconds How long to drive for.
 	 */
 	@JsonCreator
 	public DriveAtSpeed(@JsonProperty(required = true) T drive,
-	                                                                @JsonProperty(required = true) double speed,
+	                                                                @JsonProperty(required = true) double velocity,
 	                                                                @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
 		this.subsystem = drive;
-		this.speed = speed;
+		this.velocity = velocity;
 		this.seconds = seconds;
 		requires(drive);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
@@ -62,7 +62,7 @@ public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extend
 	protected void initialize() {
 		//Set up start time
 		startTime = Robot.currentTimeMillis();
-		//Reset drive speed (for safety reasons)
+		//Reset drive velocity (for safety reasons)
 		subsystem.fullStop();
 		Logger.addEvent("DriveAtSpeed init", this.getClass());
 	}
@@ -72,8 +72,8 @@ public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extend
 	 */
 	@Override
 	protected void execute() {
-		//Set the speed
-		subsystem.setOutput(speed, speed);
+		//Set the velocity
+		subsystem.setOutput(velocity, velocity);
 	}
 
 	/**

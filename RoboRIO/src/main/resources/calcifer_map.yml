@@ -261,83 +261,134 @@ logger:
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
-boilerAuto:
-    org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017:
-        '@id': boilerAuto
-        drive:
-            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-                drive
-        gearHandler:
-            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-                gearHandler
-#        shooter:
-#            org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter:
-#                shooter
-        dropGear:
-            dropGearSwitch
-        allianceSwitch:
-            allianceSwitch
-        blueLeftPegToKeyProfile:
-            '@id': blueLeftShoot
-            filename: "calciferLeftBlueShootProfile.csv"
-            inverted: true
-        blueRightPegToKeyProfile:
-            '@id': blueRightShoot
-            filename: "calciferRightBlueShootProfile.csv"
-            inverted: true
-        redLeftPegToKeyProfile:
-            '@id': redLeftShoot
-            filename: "calciferLeftRedShootProfile.csv"
-            inverted: true
-        redRightPegToKeyProfile:
-            '@id': redRightShoot
-            filename: "calciferRightRedShootProfile.csv"
-            inverted: true
-feederAuto:
-    org.usfirst.frc.team449.robot.autonomous.FeederAuto2017:
-        '@id': feederAuto
-        drive:
-            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-                drive
-        gearHandler:
-            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-                gearHandler
-        dropGear:
-            dropGearSwitch
-        allianceSwitch:
-            allianceSwitch
-        redLeftBackupProfile:
-            '@id': redLeftBackup
-            filename: "calciferLeftRedBackupProfile.csv"
-            inverted: true
-        redRightBackupProfile:
-            '@id': redRightBackup
-            filename: "calciferRightRedBackupProfile.csv"
-            inverted: true
-        blueLeftBackupProfile:
-            '@id': blueLeftBackup
-            filename: "calciferLeftBlueBackupProfile.csv"
-            inverted: true
-        blueRightBackupProfile:
-            '@id': blueRightBackup
-            filename: "calciferRightBlueBackupProfile.csv"
-            inverted: true
-        forwardsProfile:
-            '@id': forwardsProfile
-            filename: "forwardProfile.csv"
-            inverted: false
 centerAuto:
     org.usfirst.frc.team449.robot.autonomous.CenterAuto2017:
         '@id': centerAuto
-        drive:
-            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
-                drive
-        gearHandler:
-            org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-                gearHandler
+        runWallToPegProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
+                '@id': runLoadedDriveProfile
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                timeout: 10
+                require: true
         dropGear:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
+                '@id': openGearHandlerCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
+                        gearHandler
+        dropGearSwitch:
             dropGearSwitch
-        driveBackTime: 0.5
+        driveBack:
+            org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed:
+                '@id': driveBackCommand
+                drive:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                velocity: -0.5
+                seconds: 0.5
+boilerAuto:
+    org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017:
+        '@id': boilerAuto
+        runWallToPegProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
+                runLoadedDriveProfile
+        dropGear:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
+                openGearHandlerCommand
+        dropGearSwitch:
+            dropGearSwitch
+        allianceSwitch:
+            allianceSwitch
+        runRedPegToKeyProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': runRedPegToKeyProfile
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                left:
+                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
+                    '@id': redRightShoot
+                    filename: "calciferRightRedShootProfile.csv"
+                    inverted: true
+                right:
+                    '@id': redLeftShoot
+                    filename: "calciferLeftRedShootProfile.csv"
+                    inverted: true
+                timeout: 10
+        runBluePegToKeyProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': runBluePegToKeyProfile
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                left:
+                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
+                    '@id': blueRightShoot
+                    filename: "calciferRightBlueShootProfile.csv"
+                    inverted: true
+                right:
+                    '@id': blueLeftShoot
+                    filename: "calciferLeftBlueShootProfile.csv"
+                    inverted: true
+                timeout: 10
+feederAuto:
+    org.usfirst.frc.team449.robot.autonomous.FeederAuto2017:
+        '@id': feederAuto
+        runWallToPegProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
+                runLoadedDriveProfile
+        dropGear:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
+                openGearHandlerCommand
+        dropGearSwitch:
+            dropGearSwitch
+        allianceSwitch:
+            allianceSwitch
+        runRedBackupProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': runRedBackupProfile
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                left:
+                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
+                    '@id': redRightBackup
+                    filename: "calciferRightRedBackupProfile.csv"
+                    inverted: true
+                right:
+                    '@id': redLeftBackup
+                    filename: "calciferLeftRedBackupProfile.csv"
+                    inverted: true
+                timeout: 10
+        runBlueBackupProfile:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': runBlueBackupProfile
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                left:
+                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
+                    '@id': blueRightBackup
+                    filename: "calciferRightBlueBackupProfile.csv"
+                    inverted: true
+                right:
+                    '@id': blueLeftBackup
+                    filename: "calciferLeftBlueBackupProfile.csv"
+                    inverted: true
+                timeout: 10
+        driveForwards:
+            org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunProfile:
+                '@id': driveForwardsMP
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                        drive
+                profile:
+                    '@id': forwardsProfile
+                    filename: "forwardProfile.csv"
+                    inverted: false
+                timeout: 5
 buttons:
     -   button:
             '@id': switchToLowButton
@@ -435,7 +486,7 @@ buttons:
             buttonNumber: 3
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOn:
-                '@id': manuaClimbCommand
+                '@id': manualClimbCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem:
                         climber
@@ -466,10 +517,7 @@ buttons:
             triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
-                '@id': openGearHandlerCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
-                        gearHandler
+                openGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
             pushGearButton

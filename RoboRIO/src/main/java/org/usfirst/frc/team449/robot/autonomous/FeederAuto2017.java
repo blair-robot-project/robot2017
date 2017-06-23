@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
@@ -24,36 +25,31 @@ public class FeederAuto2017 <T extends YamlSubsystem & TwoSideMPSubsystem> exten
 	/**
 	 * Default constructor.
 	 *
-	 * @param drive              The drive subsystem to execute this command on. Must have the profile to drive up to
-	 *                           the peg already loaded into it.
-	 * @param gearHandler        The gear handler to execute this command on.
-	 * @param dropGear           The switch deciding whether or not to drop the gear.
+	 * @param runWallToPegProfile The command for running the profile for going from the wall to the peg, which has already been loaded.
+	 * @param dropGear The command for dropping the held gear.
+	 * @param dropGearSwitch      The switch deciding whether or not to drop the gear.
 	 * @param allianceSwitch The switch indicating which alliance we're on.
-	 * @param redLeftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg on the red alliance.
-	 * @param redRightBackupProfile The motion profile for the right side of the drive to execute to back up from the peg on the red alliance.
-	 * @param blueLeftBackupProfile  The motion profile for the left side of the drive to execute to back up from the peg on the blue alliance.
-	 * @param blueRightBackupProfile The motion profile for the right side of the drive to execute to back up from the peg on the blue alliance.
-	 * @param forwardsProfile    The motion profile for both sides to drive forwards after backing up from the peg.
+	 * @param runRedBackupProfile The command for away from the peg, on the red side of the field.
+	 * @param runBlueBackupProfile The command for moving away from the peg, on the blue side of the field.
+	 * @param driveForwards    The command for moving forwards towards the feeder station..
 	 */
 	@JsonCreator
-	public FeederAuto2017(@JsonProperty(required = true) T drive,
-	                                                                 @JsonProperty(required = true) ActiveGearSubsystem gearHandler,
-	                                                                 @JsonProperty(required = true) MappedDigitalInput dropGear,
-	                                                                 @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
-	                                                                 @JsonProperty(required = true) MotionProfileData redLeftBackupProfile,
-	                                                                 @JsonProperty(required = true) MotionProfileData redRightBackupProfile,
-                                                                     @JsonProperty(required = true) MotionProfileData blueLeftBackupProfile,
-                                                                     @JsonProperty(required = true) MotionProfileData blueRightBackupProfile,
-	                                                                 @JsonProperty(required = true) MotionProfileData forwardsProfile) {
-		addSequential(new RunLoadedProfile(drive, 15, true));
-		if (dropGear.getStatus().get(0)) {
-			addSequential(new SolenoidReverse(gearHandler));
+	public FeederAuto2017(@JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+	                      @JsonProperty(required = true) YamlCommand dropGear,
+	                      @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+	                      @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
+	                      @JsonProperty(required = true) RunProfileTwoSides runRedBackupProfile,
+	                      @JsonProperty(required = true) RunProfileTwoSides runBlueBackupProfile,
+	                      @JsonProperty(required = true) YamlCommand driveForwards) {
+		addSequential(runWallToPegProfile);
+		if (dropGearSwitch.getStatus().get(0)) {
+			addSequential(dropGear.getCommand());
 		}
 		if (allianceSwitch.getStatus().get(0)) {
-			addSequential(new RunProfileTwoSides(drive, redLeftBackupProfile, redRightBackupProfile, 10));
+			addSequential(runRedBackupProfile);
 		} else {
-			addSequential(new RunProfileTwoSides(drive, blueLeftBackupProfile, blueRightBackupProfile, 10));
+			addSequential(runBlueBackupProfile);
 		}
-		addSequential(new RunProfile(drive, forwardsProfile, 5));
+		addSequential(driveForwards.getCommand());
 	}
 }
