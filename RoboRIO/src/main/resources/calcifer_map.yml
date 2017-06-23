@@ -130,6 +130,7 @@ drive:
             <<: *leftMaster
             '@id': rightMaster
             inverted: false
+            port: 2
             slaves:
                 - '@id': talon1
                   port: 1
@@ -266,7 +267,8 @@ centerAuto:
         '@id': centerAuto
         runWallToPegProfile:
             org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
-                '@id': runLoadedDriveProfile
+                &runLoadedProfile
+                '@id': runCenterWallToPegProfile
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                         drive
@@ -274,6 +276,7 @@ centerAuto:
                 require: true
         dropGear:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
+                &openGearHandler
                 '@id': openGearHandlerCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
@@ -293,10 +296,12 @@ boilerAuto:
         '@id': boilerAuto
         runWallToPegProfile:
             org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
-                runLoadedDriveProfile
+                <<: *runLoadedProfile
+                '@id': runBoilerPegToWallProfile
         dropGear:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
-                openGearHandlerCommand
+                <<: *openGearHandler
+                '@id': boilerOpenGearHandler
         dropGearSwitch:
             dropGearSwitch
         allianceSwitch:
@@ -338,10 +343,12 @@ feederAuto:
         '@id': feederAuto
         runWallToPegProfile:
             org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile:
-                runLoadedDriveProfile
+                <<: *runLoadedProfile
+                '@id': runFeederWallToPegProfile
         dropGear:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
-                openGearHandlerCommand
+                <<: *openGearHandler
+                '@id': feederOpenGearHandler
         dropGearSwitch:
             dropGearSwitch
         allianceSwitch:
