@@ -79,9 +79,6 @@ public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends Ya
 		if (subsystem.readyToRunProfile() && !runningProfile) {
 			subsystem.startRunningLoadedProfile();
 			runningProfile = true;
-			System.out.println("Started running profile!");
-		} else if (!subsystem.readyToRunProfile()){
-			System.out.println("Not ready to run profile!");
 		}
 	}
 

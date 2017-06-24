@@ -102,9 +102,6 @@ public class CANTalonMPHandler {
 		for (CANTalon talon : talons) {
 			CANTalon.MotionProfileStatus status = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(status);
-			System.out.println("Active point vel: "+status.activePoint.velocity);
-			System.out.println("Active point pos: "+status.activePoint.position);
-			System.out.println("Active point delta time: "+status.activePoint.timeDurMs);
 			//We check if the current point is the final one to see if the profile is finished.
 			finished = finished && status.activePoint.isLastPoint;
 		}
@@ -125,7 +122,7 @@ public class CANTalonMPHandler {
 		}
 		//Actually start running them in another loop so they start as simultaneously as possible.
 		for (CANTalon talon : talons) {
-			talon.setControlMode(CANTalon.SetValueMotionProfile.Enable.value);
+			talon.set(CANTalon.SetValueMotionProfile.Enable.value);
 		}
 	}
 
