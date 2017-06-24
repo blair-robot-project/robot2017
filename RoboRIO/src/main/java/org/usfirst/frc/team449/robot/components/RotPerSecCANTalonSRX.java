@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.Contract;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.List;
@@ -427,6 +428,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param RPS The RPS velocity you want to convert.
 	 * @return That velocity in CANTalon native units.
 	 */
+	@Contract(pure = true)
 	private double RPSToNative(double RPS) {
 		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
 	}
@@ -438,6 +440,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param nat A velocity in CANTalon native units.
 	 * @return That velocity in RPS.
 	 */
+	@Contract(pure = true)
 	private double nativeToRPS(double nat) {
 		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
 	}
@@ -448,6 +451,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param rpm A velocity in RPM.
 	 * @return That velocity in RPS.
 	 */
+	@Contract(pure = true)
 	private double RPMToRPS(double rpm) {
 		return rpm / 60.;
 	}
@@ -458,6 +462,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param rps A velocity in RPS.
 	 * @return That velocity in RPM.
 	 */
+	@Contract(pure = true)
 	private double RPSToRPM(double rps) {
 		return rps * 60.;
 	}

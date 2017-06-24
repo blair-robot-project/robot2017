@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An exponentially-scaled throttle.
@@ -14,7 +15,7 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	/**
 	 * The base that is raised to the power of the joystick input.
 	 */
-	protected double base;
+	protected final double base;
 
 
 	/**
@@ -29,10 +30,11 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	@JsonCreator
 	public MappedExpThrottle(@JsonProperty(required = true) MappedJoystick stick,
 	                         @JsonProperty(required = true) int axis,
+	                         double scalingTimeConstantSecs,
 	                         double deadband,
 	                         boolean inverted,
 	                         @JsonProperty(required = true) int base) {
-		super(stick, axis, deadband, inverted);
+		super(stick, axis, scalingTimeConstantSecs, deadband, inverted);
 		this.base = base;
 	}
 
@@ -44,9 +46,12 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	@Override
 	public double getValue() {
 		double input = super.getValue();
-		if (input > 0) {
-			return (Math.pow(base, input) - 1) / (base - 1);
-		}
-		return -1 * (Math.pow(base, input * -1) - 1) / (base - 1);
+		double sign = Math.signum(input);
+
+		input = Math.abs(input);
+		//Exponentially scale
+		input = (Math.pow(base, input) - 1.) / (base - 1.);
+
+		return sign * input;
 	}
 }

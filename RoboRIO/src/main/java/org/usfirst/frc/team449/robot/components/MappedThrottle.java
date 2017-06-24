@@ -2,13 +2,15 @@ package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * A class representing a single axis on a joystick.
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedThrottle {
+public class MappedThrottle implements PIDSource{
 	//The stick we're using
 	protected Joystick stick;
 
@@ -41,5 +43,33 @@ public class MappedThrottle {
 	 */
 	public double getValue() {
 		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
+	}
+
+	/**
+	 * Set which parameter of the device you are using as a process control variable. We don't use this.
+	 *
+	 * @param pidSource An enum to select the parameter.
+	 */
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {}
+
+	/**
+	 * Get which parameter of the device you are using as a process control variable. We don't use this.
+	 *
+	 * @return the currently selected PID source parameter
+	 */
+	@Override
+	public PIDSourceType getPIDSourceType() {
+		return null;
+	}
+
+	/**
+	 * Get the result to use in PIDController.
+	 *
+	 * @return the result to use in PIDController
+	 */
+	@Override
+	public double pidGet() {
+		return getValue();
 	}
 }

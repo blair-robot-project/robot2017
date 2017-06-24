@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.*;
+import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 
 /**
  * A smoothed throttle with a deadband.
@@ -9,7 +10,9 @@ import com.fasterxml.jackson.annotation.*;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedSmoothedThrottle extends MappedThrottle {
 
-	private double deadband;
+	protected final double deadband;
+
+	private final LinearDigitalFilter filter;
 
 	/**
 	 * A basic constructor.
@@ -22,10 +25,12 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	@JsonCreator
 	public MappedSmoothedThrottle(@JsonProperty(required = true) MappedJoystick stick,
 	                              @JsonProperty(required = true) int axis,
+	                              double scalingTimeConstantSecs,
 	                              double deadband,
 	                              boolean inverted) {
 		super(stick, axis, inverted);
 		this.deadband = deadband;
+		filter = LinearDigitalFilter.singlePoleIIR(this, scalingTimeConstantSecs, 20./1000.);
 	}
 
 	/**
@@ -35,16 +40,20 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	 */
 	@Override
 	public double getValue() {
-		double input = super.getValue();
-		int sign = (input < 0) ? -1 : 1; // get the sign of the input
-		input *= sign; // get the absolute value
+		//Get the smoothed value
+		double input = filter.get();
+
+		double sign = Math.signum(input);
+		input = Math.abs(input);
 
 		//apply the deadband.
 		if (input < deadband) {
-			input = 0;
+			return 0;
 		}
 
-		//do some smoothing math
-		return sign * (1 / (1 - Math.pow(deadband, 2))) * (Math.pow(input, 2) - Math.pow(deadband, 2));
+		//scale so f(deadband) is 0 and f(1) is 1.
+		input = (input-deadband)/(1.-deadband);
+
+		return sign*input;
 	}
 }

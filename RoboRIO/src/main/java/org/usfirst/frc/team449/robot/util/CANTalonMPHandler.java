@@ -17,7 +17,7 @@ public class CANTalonMPHandler {
 	/**
 	 * The talons with the RPSCANTalonSRX wrapper to convert from feet to native units.
 	 */
-	private RotPerSecCANTalonSRX[] RPStalons;
+	private RotPerSecCANTalonSRX[] RPSTalons;
 
 	/**
 	 * The talons without any wrapper.
@@ -52,15 +52,15 @@ public class CANTalonMPHandler {
 	public CANTalonMPHandler(@JsonProperty(required = true) RotPerSecCANTalonSRX[] talons,
 	                         @JsonProperty(required = true) double updaterProcessPeriodSecs,
 	                         @JsonProperty(required = true) int minNumPointsInBtmBuffer) {
-		this.RPStalons = talons;
+		this.RPSTalons = talons;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;
 		//Instantiate the CANTalon list
-		this.talons = new CANTalon[RPStalons.length];
+		this.talons = new CANTalon[RPSTalons.length];
 		//Set up the talon list
-		for (int i = 0; i < this.RPStalons.length; i++) {
+		for (int i = 0; i < this.RPSTalons.length; i++) {
 			//Make a list of the inner talon class.
-			this.talons[i] = this.RPStalons[i].canTalon;
+			this.talons[i] = this.RPSTalons[i].canTalon;
 		}
 		//Set up the notifier.
 		MPNotifier = new Notifier(this::processMPBuffer);
@@ -193,7 +193,7 @@ public class CANTalonMPHandler {
 		//Stop the updater while we load the API-level buffer
 		stopUpdaterProcess();
 		//Load the profile into each talon.
-		for (RotPerSecCANTalonSRX talon : RPStalons) {
+		for (RotPerSecCANTalonSRX talon : RPSTalons) {
 			loadTopLevel(data, talon);
 		}
 		//Resume the updater.
@@ -223,8 +223,8 @@ public class CANTalonMPHandler {
 		//Stop the updater while we load the API-level buffer
 		stopUpdaterProcess();
 		//Load each profile
-		for (int i = 0; i < RPStalons.length; i++) {
-			loadTopLevel(profiles[i], RPStalons[i]);
+		for (int i = 0; i < RPSTalons.length; i++) {
+			loadTopLevel(profiles[i], RPSTalons[i]);
 		}
 		//Resume the updater.
 		startUpdaterProcess();

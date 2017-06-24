@@ -4,19 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * The autonomous routine to deliver a gear to the center gear.
@@ -37,14 +31,14 @@ public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 	 * @param fireShooter The command for firing the shooter. Can be null.
 	 */
 	@JsonCreator
-	public BoilerAuto2017(@JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
-	                      @JsonProperty(required = true) YamlCommand dropGear,
-	                      @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
-	                      @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
-	                      @JsonProperty(required = true) RunProfileTwoSides runRedPegToKeyProfile,
-	                      @JsonProperty(required = true) RunProfileTwoSides runBluePegToKeyProfile,
-	                      YamlCommand spinUpShooter,
-	                      YamlCommand fireShooter) {
+	public BoilerAuto2017(@JsonProperty(required = true) @NotNull RunLoadedProfile runWallToPegProfile,
+	                      @JsonProperty(required = true) @NotNull YamlCommand dropGear,
+	                      @JsonProperty(required = true) @NotNull MappedDigitalInput dropGearSwitch,
+	                      @JsonProperty(required = true) @NotNull MappedDigitalInput allianceSwitch,
+	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runRedPegToKeyProfile,
+	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runBluePegToKeyProfile,
+	                      @Nullable YamlCommand spinUpShooter,
+	                      @Nullable YamlCommand fireShooter) {
 		if (spinUpShooter != null) {
 			addParallel(spinUpShooter.getCommand());
 		}

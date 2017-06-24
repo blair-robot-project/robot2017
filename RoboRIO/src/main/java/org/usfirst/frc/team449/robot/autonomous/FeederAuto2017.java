@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
@@ -20,7 +21,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
  * The autonomous routine to deliver a gear to the center gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FeederAuto2017 <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
+public class FeederAuto2017 extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -34,13 +35,13 @@ public class FeederAuto2017 <T extends YamlSubsystem & TwoSideMPSubsystem> exten
 	 * @param driveForwards    The command for moving forwards towards the feeder station..
 	 */
 	@JsonCreator
-	public FeederAuto2017(@JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
-	                      @JsonProperty(required = true) YamlCommand dropGear,
-	                      @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
-	                      @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
-	                      @JsonProperty(required = true) RunProfileTwoSides runRedBackupProfile,
-	                      @JsonProperty(required = true) RunProfileTwoSides runBlueBackupProfile,
-	                      @JsonProperty(required = true) YamlCommand driveForwards) {
+	public FeederAuto2017(@JsonProperty(required = true) @NotNull RunLoadedProfile runWallToPegProfile,
+	                      @JsonProperty(required = true) @NotNull YamlCommand dropGear,
+	                      @JsonProperty(required = true) @NotNull MappedDigitalInput dropGearSwitch,
+	                      @JsonProperty(required = true) @NotNull MappedDigitalInput allianceSwitch,
+	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runRedBackupProfile,
+	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runBlueBackupProfile,
+	                      @JsonProperty(required = true) @NotNull YamlCommand driveForwards) {
 		addSequential(runWallToPegProfile);
 		if (dropGearSwitch.getStatus().get(0)) {
 			addSequential(dropGear.getCommand());
