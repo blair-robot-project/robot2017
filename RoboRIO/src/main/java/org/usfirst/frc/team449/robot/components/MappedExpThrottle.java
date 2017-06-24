@@ -33,7 +33,7 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	                         double scalingTimeConstantSecs,
 	                         double deadband,
 	                         boolean inverted,
-	                         @JsonProperty(required = true) int base) {
+	                         @JsonProperty(required = true) double base) {
 		super(stick, axis, scalingTimeConstantSecs, deadband, inverted);
 		this.base = base;
 	}
