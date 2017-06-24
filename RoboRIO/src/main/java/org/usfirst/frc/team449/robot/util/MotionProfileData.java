@@ -9,6 +9,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
@@ -18,7 +19,7 @@ public class MotionProfileData {
 	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
 	 */
-	public double data[][];
+	private double data[][];
 
 	/**
 	 * Whether or not the profile is inverted because we're driving it backwards.
@@ -84,5 +85,9 @@ public class MotionProfileData {
 		}
 		//Close the reader
 		br.close();
+	}
+
+	public double[][] getData() {
+		return data;
 	}
 }

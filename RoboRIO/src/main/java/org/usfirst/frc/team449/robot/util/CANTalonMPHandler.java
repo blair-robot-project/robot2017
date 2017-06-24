@@ -102,6 +102,9 @@ public class CANTalonMPHandler {
 		for (CANTalon talon : talons) {
 			CANTalon.MotionProfileStatus status = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(status);
+			System.out.println("Active point vel: "+status.activePoint.velocity);
+			System.out.println("Active point pos: "+status.activePoint.position);
+			System.out.println("Active point delta time: "+status.activePoint.timeDurMs);
 			//We check if the current point is the final one to see if the profile is finished.
 			finished = finished && status.activePoint.isLastPoint;
 		}
@@ -163,24 +166,25 @@ public class CANTalonMPHandler {
 		talon.canTalon.clearMotionProfileTrajectories();
 
 		//Instantiate the point outside the loop to avoid garbage collection.
-		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
+		CANTalon.TrajectoryPoint point;
 
-		//Set parameters that are true for all points
-		point.profileSlotSelect = 1;    // gain selection
-		point.velocityOnly = false;  // true => no position servo just velocity feedforward
-
-		for (int i = 0; i < data.data.length; ++i) {
+		for (int i = 0; i < data.getData().length; ++i) {
+			point = new CANTalon.TrajectoryPoint();
+			//Set parameters that are true for all points
+			point.profileSlotSelect = 1;    // gain selection
+			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			// Set all the fields of the profile point
-			point.position = talon.feetToNative(data.data[i][0]);
-			point.velocity = talon.feetPerSecToNative(data.data[i][1]);
-			point.timeDurMs = (int) (data.data[i][2] * 1000.);
+			point.position = talon.feetToNative(data.getData()[i][0]);
+			point.velocity = talon.feetPerSecToNative(data.getData()[i][1]);
+			point.timeDurMs = (int) (data.getData()[i][2] * 1000.);
 			point.zeroPos = i == 0; // If its the first point, set the encoder position to 0.
-			point.isLastPoint = (i + 1) == data.data.length; // If its the last point, isLastPoint = true
+			point.isLastPoint = (i + 1) == data.getData().length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
 			if (!talon.canTalon.pushMotionProfileTrajectory(point)) {
 				//If sending the point doesn't work, log an error and exit.
 				Logger.addEvent("Buffer full!", CANTalonMPHandler.class);
+				System.out.println("Buffer full!");
 				break;
 			}
 		}
@@ -193,7 +197,7 @@ public class CANTalonMPHandler {
 	 */
 	public void loadTopLevel(MotionProfileData data) {
 		//Stop the updater while we load the API-level buffer
-		startUpdaterProcess();
+		stopUpdaterProcess();
 		//Load the profile into each talon.
 		for (RotPerSecCANTalonSRX talon : RPStalons) {
 			loadTopLevel(data, talon);

@@ -119,6 +119,7 @@ drive:
             motionProfileP: 1.5
             motionProfileI: 0.0
             motionProfileD: 0.0
+            MPUseLowGear: true
             slaves:
                 - '@id': talon8
                   port: 8
