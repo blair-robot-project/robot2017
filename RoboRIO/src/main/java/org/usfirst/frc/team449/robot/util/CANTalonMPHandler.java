@@ -57,16 +57,13 @@ public class CANTalonMPHandler {
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;
 		//Instantiate the CANTalon list
 		this.talons = new CANTalon[RPStalons.length];
-		//Set up the updater
-		CANTalonMPUpdaterProcess updaterProcess = new CANTalonMPUpdaterProcess();
+		//Set up the talon list
 		for (int i = 0; i < this.RPStalons.length; i++) {
-			//Add the talon to the updater
-			updaterProcess.addTalon(this.RPStalons[i].canTalon);
 			//Make a list of the inner talon class.
 			this.talons[i] = this.RPStalons[i].canTalon;
 		}
 		//Set up the notifier.
-		MPNotifier = new Notifier(updaterProcess);
+		MPNotifier = new Notifier(this::processMPBuffer);
 	}
 
 	/**
@@ -271,5 +268,11 @@ public class CANTalonMPHandler {
 	 */
 	public void holdTalons() {
 		holdTalons(talons);
+	}
+
+	private void processMPBuffer(){
+		for (CANTalon talon : talons){
+			talon.processMotionProfileBuffer();
+		}
 	}
 }
