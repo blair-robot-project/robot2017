@@ -342,7 +342,7 @@ public class Robot extends IterativeRobot {
 
 		//Close the gear handler if it exists
 		if (gearSubsystem != null) {
-			//Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
+			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
 		}
 	}
 }

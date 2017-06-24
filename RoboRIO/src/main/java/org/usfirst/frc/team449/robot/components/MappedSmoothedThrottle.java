@@ -30,7 +30,7 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	                              boolean inverted) {
 		super(stick, axis, inverted);
 		this.deadband = deadband;
-		filter = LinearDigitalFilter.singlePoleIIR(this, scalingTimeConstantSecs, 20./1000.);
+		filter = LinearDigitalFilter.singlePoleIIR(this, scalingTimeConstantSecs, 0.02);
 	}
 
 	/**
@@ -41,7 +41,8 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	@Override
 	public double getValue() {
 		//Get the smoothed value
-		double input = filter.get();
+		double input = filter.pidGet();
+		System.out.println("Filtered value: "+input);
 
 		double sign = Math.signum(input);
 		input = Math.abs(input);

@@ -70,6 +70,6 @@ public class MappedThrottle implements PIDSource{
 	 */
 	@Override
 	public double pidGet() {
-		return getValue();
+		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
 	}
 }

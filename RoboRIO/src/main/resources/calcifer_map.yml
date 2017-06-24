@@ -81,7 +81,8 @@ arcadeOI:
                 '@id': rotThrottle
                 stick: driverGamepad
                 axis: 0
-                deadband: 0.0
+                scalingTimeConstantSecs: 0.04
+                deadband: 0.05
                 inverted: true
         fwdThrottle:
             org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle:
@@ -278,7 +279,7 @@ centerAuto:
         dropGear:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
                 &openGearHandler
-                '@id': openGearHandlerCommand
+                '@id': centerOpenGearHandlerCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem:
                         gearHandler
@@ -525,7 +526,8 @@ buttons:
             triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
-                openGearHandlerCommand
+                <<: *openGearHandler
+                '@id': openGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
             pushGearButton
