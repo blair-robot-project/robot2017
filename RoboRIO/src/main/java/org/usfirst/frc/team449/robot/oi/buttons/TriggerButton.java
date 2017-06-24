@@ -27,7 +27,7 @@ public class TriggerButton extends FactoryButton {
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
 	TriggerButton(MappedJoystick joystick, int axis, double triggerAt) {
-		throttle = new MappedSmoothedThrottle(joystick, axis, 0, false);
+		throttle = new MappedSmoothedThrottle(joystick, axis, 0, 0, false);
 		this.triggerAt = triggerAt;
 	}
 
