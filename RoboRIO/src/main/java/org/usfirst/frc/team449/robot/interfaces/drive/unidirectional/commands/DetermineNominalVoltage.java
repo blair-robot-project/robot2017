@@ -1,7 +1,9 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
@@ -10,6 +12,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 /**
  * Created by noah on 6/24/17.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class DetermineNominalVoltage <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper{
 
 	/**
@@ -71,6 +74,7 @@ public class DetermineNominalVoltage <T extends YamlSubsystem & UnidirectionalDr
 	protected void end() {
 		//Brake on exit. Yes this should be setOutput because often we'll be testing how well the PID loop handles a full stop.
 		subsystem.fullStop();
+		System.out.println("it moved!");
 		Logger.addEvent("DetermineNominalVoltage end.", this.getClass());
 	}
 

@@ -102,7 +102,7 @@ drive:
             inverted: true
             enableBrakeMode: false
             fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 0
+            fwdNominalOutputVoltage: 1.5
             inchesPerRotation: 11.78097
             currentLimit: 40
             feedbackDevice: QuadEncoder
