@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.util.Polynomial;
 
 /**
  * Created by noahg on 18-Jun-17.
@@ -45,7 +46,10 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	 * Scaling, from [0, 1], that the rotational throttle decreases the forwards throttle by. Used so that turning while
 	 * at high speed still has an impact.
 	 */
-	private final double rotScale;
+	private final double scaleFwdByRotCoefficient;
+
+	@Nullable
+	private final Polynomial scaleRotByFwdPoly;
 
 	/**
 	 * Default constructor
@@ -55,7 +59,7 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	 * @param fwdThrottle The throttle for driving the robot straight.
 	 * @param invertDPad  Whether or not to invert the D-pad. Defaults to false.
 	 * @param dPadShift   How fast the dPad should turn the robot, on [0, 1]. Defaults to 0.
-	 * @param rotScale    Scaling, from [0, 1], that the rotational throttle decreases the forwards
+	 * @param scaleFwdByRotCoefficient    Scaling, from [0, 1], that the rotational throttle decreases the forwards
 	 *                    throttle by. Used so that turning while at high speed still has an impact.
 	 *                    Defaults to 0.
 	 */
@@ -63,15 +67,17 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	public ArcadeOIWithDPad(
 			@NotNull @JsonProperty(required = true) MappedThrottle rotThrottle,
 			@NotNull @JsonProperty(required = true) MappedThrottle fwdThrottle,
-			double rotScale,
+			double scaleFwdByRotCoefficient,
 			double dPadShift,
 			boolean invertDPad,
-			@Nullable MappedJoystick gamepad) {
+			@Nullable MappedJoystick gamepad,
+			@Nullable Polynomial scaleRotByFwdPoly) {
 		this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
 		this.rotThrottle = rotThrottle;
 		this.fwdThrottle = fwdThrottle;
 		this.gamepad = gamepad;
-		this.rotScale = rotScale;
+		this.scaleFwdByRotCoefficient = scaleFwdByRotCoefficient;
+		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 	}
 
 	/**
@@ -82,7 +88,7 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	 */
 	public double getFwd() {
 		//Scale based on rotational throttle for more responsive turning at high speed
-		return fwdThrottle.getValue() * (1 - rotScale * rotThrottle.getValue());
+		return fwdThrottle.getValue() * (1 - scaleFwdByRotCoefficient * getRot());
 	}
 
 	/**
@@ -98,6 +104,9 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
 		} else {
 			//Return the throttle value if it's outside of the deadband.
+			if (scaleRotByFwdPoly != null){
+				return rotThrottle.getValue() * scaleRotByFwdPoly.get(fwdThrottle.getValue());
+			}
 			return rotThrottle.getValue();
 		}
 	}

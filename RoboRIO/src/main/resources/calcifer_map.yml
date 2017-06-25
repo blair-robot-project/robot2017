@@ -91,7 +91,7 @@ arcadeOI:
                 axis: 5
         invertDPad: true
         dPadShift: 0.1
-        rotScale: 0.2
+        scaleFwdByRotCoefficient: 0.2
 drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
         '@id': drive

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.util.Polynomial;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,7 +19,8 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	/**
 	 * The power that X is raised to.
 	 */
-	protected final Map<Double, Double> powerToCoefficientMap;
+	@NotNull
+	protected final Polynomial polynomial;
 
 	private double input;
 
@@ -38,17 +40,14 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	                          double smoothingTimeConstantSecs,
 	                          double deadband,
 	                          boolean inverted,
-	                          @JsonProperty(required = true) Map<Double, Double> powerToCoefficientMap) {
+	                          @NotNull @JsonProperty(required = true) Polynomial polynomial) {
 		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
-		if (powerToCoefficientMap.size() == 0) {
-			powerToCoefficientMap.put(1., 1.);
-		}
 		double sum = 0;
-		for (Double power : powerToCoefficientMap.keySet()) {
+		for (Double power : polynomial.getPowerToCoefficientMap().keySet()) {
 			if (power < 0) {
 				throw new IllegalArgumentException("Negative exponents are not allowed!");
 			}
-			sum += powerToCoefficientMap.get(power);
+			sum += polynomial.getPowerToCoefficientMap().get(power);
 		}
 		//Round the sum to avoid floating-point errors
 		BigDecimal bd = new BigDecimal(sum);
@@ -56,7 +55,7 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 		if (bd.doubleValue() != 1) {
 			throw new IllegalArgumentException("Polynomial coefficients don't add up to 1!");
 		}
-		this.powerToCoefficientMap = powerToCoefficientMap;
+		this.polynomial = polynomial;
 	}
 
 	/**
@@ -66,14 +65,6 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	 */
 	@Override
 	public double getValue() {
-		input = super.getValue();
-		sign = Math.signum(input);
-		input = Math.abs(input);
-
-		double toRet = 0;
-		for (Double power : powerToCoefficientMap.keySet()) {
-			toRet += Math.pow(input, power) * powerToCoefficientMap.get(power);
-		}
-		return toRet * sign;
+		return polynomial.get(super.getValue());
 	}
 }
