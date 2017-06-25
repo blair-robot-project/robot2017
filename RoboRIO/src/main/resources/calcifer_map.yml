@@ -102,7 +102,8 @@ drive:
             inverted: true
             enableBrakeMode: false
             fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 1.5
+            highGearFwdNominalOutputVoltage: 0
+            lowGearFwdNominalOutputVoltage: 1.5
             inchesPerRotation: 11.78097
             currentLimit: 40
             feedbackDevice: QuadEncoder
@@ -158,7 +159,7 @@ drive:
             reverse: 3
         startingGear: LOW
 defaultDriveCommand:
-    org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive:
+    org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXDefaultDrive:
         '@id': defaultDriveCommand
         kP: 0.012
         kI: 0.0

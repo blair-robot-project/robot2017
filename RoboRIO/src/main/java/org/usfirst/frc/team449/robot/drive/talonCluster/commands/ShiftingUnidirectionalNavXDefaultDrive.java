@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.AutoshiftProcessor;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ShiftingUnidirectionalNavXArcadeDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXArcadeDrive {
+public class ShiftingUnidirectionalNavXDefaultDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXDefaultDrive {
 
 	@NotNull
 	protected final T subsystem;
@@ -49,19 +49,19 @@ public class ShiftingUnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Uni
 	 * @param oi                       The OI controlling the robot.
 	 */
 	@JsonCreator
-	public ShiftingUnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
-	                                             int toleranceBuffer,
-	                                             double minimumOutput, @Nullable Double maximumOutput,
-	                                             double deadband,
-	                                             @Nullable Double maxAngularVelToEnterLoop,
-	                                             boolean inverted,
-	                                             int kP,
-	                                             int kI,
-	                                             int kD,
-	                                             double loopEntryDelay,
-	                                             @NotNull @JsonProperty(required = true) T subsystem,
-	                                             @NotNull @JsonProperty(required = true) ArcadeOI oi,
-	                                             @NotNull @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
+	public ShiftingUnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
+	                                              int toleranceBuffer,
+	                                              double minimumOutput, @Nullable Double maximumOutput,
+	                                              double deadband,
+	                                              @Nullable Double maxAngularVelToEnterLoop,
+	                                              boolean inverted,
+	                                              int kP,
+	                                              int kI,
+	                                              int kD,
+	                                              double loopEntryDelay,
+	                                              @NotNull @JsonProperty(required = true) T subsystem,
+	                                              @NotNull @JsonProperty(required = true) UnidirectionalOI oi,
+	                                              @NotNull @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop, inverted, kP, kI, kD, loopEntryDelay, subsystem, oi);
 		this.autoshiftProcessor = autoshiftProcessor;
 		this.subsystem = subsystem;
@@ -73,9 +73,8 @@ public class ShiftingUnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Uni
 	@Override
 	public void execute() {
 		//Auto-shifting
-		autoshiftProcessor.arcadeAutoshift(oi.getRot(), oi.getFwd(), subsystem.getLeftVel(),
+		autoshiftProcessor.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
 				subsystem.getRightVel(), subsystem::setGear);
-
 		super.execute();
 	}
 }

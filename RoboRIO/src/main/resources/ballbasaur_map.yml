@@ -105,7 +105,7 @@ oi:
                         override: false
                 action: WHEN_RELEASED
 defaultDriveCommand:
-    org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive:
+    org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXDefaultDrive:
         '@id': defaultDriveCommand
         kP: 0.01
         toleranceBuffer: 25

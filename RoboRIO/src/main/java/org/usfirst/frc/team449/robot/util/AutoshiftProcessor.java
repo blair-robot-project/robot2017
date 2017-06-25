@@ -99,19 +99,19 @@ public class AutoshiftProcessor {
 	/**
 	 * Determine whether the robot should downshift.
 	 *
-	 * @param rotThrottle The rotational throttle, on [-1, 1].
-	 * @param fwdThrottle The velocity throttle, on [-1, 1].
+	 * @param leftThrottle The left side's throttle, on [-1, 1].
+	 * @param rightThrottle The right side's throttle, on [-1, 1].
 	 * @param leftVel     The velocity of the left side of the drive.
 	 * @param rightVel    The velocity of the right side of the drive.
 	 * @return True if the drive should downshift, false otherwise.
 	 */
-	public boolean arcadeShouldDownshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel) {
+	public boolean shouldDownshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going slower than the downshift speed
 		boolean okToShift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
 		//Or if we're just turning in place.
-		okToShift = okToShift || (fwdThrottle == 0 && rotThrottle != 0);
+		okToShift = okToShift || (leftThrottle == -rightThrottle);
 		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs(fwdThrottle) < upshiftFwdThresh);
+		okToShift = okToShift || (Math.abs((leftThrottle+rightThrottle)/2.) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
@@ -129,16 +129,17 @@ public class AutoshiftProcessor {
 	/**
 	 * Determine whether the robot should upshift.
 	 *
-	 * @param fwdThrottle The velocity throttle, on [-1, 1].
+	 * @param leftThrottle The left side's throttle, on [-1, 1].
+	 * @param rightThrottle The right side's throttle, on [-1, 1].
 	 * @param leftVel     The velocity of the left side of the drive.
 	 * @param rightVel    The velocity of the right side of the drive.
 	 * @return True if the drive should upshift, false otherwise.
 	 */
-	public boolean arcadeShouldUpshift(double fwdThrottle, double leftVel, double rightVel) {
+	public boolean shouldUpshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
 		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs(fwdThrottle) > upshiftFwdThresh;
+		okToShift = okToShift && Math.abs((leftThrottle+rightThrottle)/2.) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
@@ -151,10 +152,10 @@ public class AutoshiftProcessor {
 		return okToShift;
 	}
 
-	public void arcadeAutoshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift) {
-		if (arcadeShouldDownshift(rotThrottle, fwdThrottle, leftVel, rightVel)) {
+	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift) {
+		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(ShiftingDrive.gear.LOW);
-		} else if (arcadeShouldUpshift(fwdThrottle, leftVel, rightVel)) {
+		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(ShiftingDrive.gear.HIGH);
 		}
 	}

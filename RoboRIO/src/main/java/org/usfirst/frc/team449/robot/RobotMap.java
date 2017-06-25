@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXDefaultDrive;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -35,7 +35,7 @@ public class RobotMap {
 	private final TalonClusterDrive drive;
 
 	@NotNull
-	private final UnidirectionalNavXArcadeDrive defaultDriveCommand;
+	private final UnidirectionalNavXDefaultDrive defaultDriveCommand;
 
 	@Nullable
 	private final ClimberSubsystem climber;
@@ -156,7 +156,7 @@ public class RobotMap {
 	                @NotNull @JsonProperty(required = true) ArcadeOIWithDPad arcadeOI,
 	                @NotNull @JsonProperty(required = true) Logger logger,
 	                @NotNull @JsonProperty(required = true) TalonClusterDrive drive,
-	                @NotNull @JsonProperty(required = true) UnidirectionalNavXArcadeDrive defaultDriveCommand,
+	                @NotNull @JsonProperty(required = true) UnidirectionalNavXDefaultDrive defaultDriveCommand,
 	                @Nullable ClimberSubsystem climber,
 	                @Nullable SingleFlywheelShooter shooter,
 	                @Nullable CameraSubsystem camera,
@@ -318,7 +318,7 @@ public class RobotMap {
 	}
 
 	@NotNull
-	public UnidirectionalNavXArcadeDrive getDefaultDriveCommand() {
+	public UnidirectionalNavXDefaultDrive getDefaultDriveCommand() {
 		return defaultDriveCommand;
 	}
 

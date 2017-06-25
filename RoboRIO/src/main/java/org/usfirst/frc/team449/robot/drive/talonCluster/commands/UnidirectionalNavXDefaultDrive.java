@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
@@ -17,7 +18,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 	/**
 	 * The UnidirectionalDrive this command is controlling.
 	 */
@@ -25,10 +26,10 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 	protected final T subsystem;
 
 	/**
-	 * The OI giving the vel and turn stick values.
+	 * The OI giving the input stick values.
 	 */
 	@NotNull
-	protected final ArcadeOI oi;
+	protected final UnidirectionalOI oi;
 
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
@@ -45,16 +46,6 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 	 * Whether or not we should be using the NavX to drive straight stably.
 	 */
 	private boolean drivingStraight;
-
-	/**
-	 * The velocity input from OI. Should be between -1 and 1.
-	 */
-	private double vel;
-
-	/**
-	 * The rotation input from OI. Should be between -1 and 1.
-	 */
-	private double rot;
 
 	/**
 	 * Default constructor
@@ -81,18 +72,18 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 	 * @param oi                       The OI controlling the robot.
 	 */
 	@JsonCreator
-	public UnidirectionalNavXArcadeDrive(@JsonProperty(required = true) double absoluteTolerance,
-	                                     int toleranceBuffer,
-	                                     double minimumOutput, @Nullable Double maximumOutput,
-	                                     double deadband,
-	                                     @Nullable Double maxAngularVelToEnterLoop,
-	                                     boolean inverted,
-	                                     int kP,
-	                                     int kI,
-	                                     int kD,
-	                                     double loopEntryDelay,
-	                                     @NotNull @JsonProperty(required = true) T subsystem,
-	                                     @NotNull @JsonProperty(required = true) ArcadeOI oi) {
+	public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
+	                                      int toleranceBuffer,
+	                                      double minimumOutput, @Nullable Double maximumOutput,
+	                                      double deadband,
+	                                      @Nullable Double maxAngularVelToEnterLoop,
+	                                      boolean inverted,
+	                                      int kP,
+	                                      int kI,
+	                                      int kD,
+	                                      double loopEntryDelay,
+	                                      @NotNull @JsonProperty(required = true) T subsystem,
+	                                      @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;
@@ -123,8 +114,6 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 
 		//Initial assignment
 		drivingStraight = false;
-		vel = oi.getFwd();
-		rot = oi.getRot();
 	}
 
 	/**
@@ -133,18 +122,17 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 	@Override
 	protected void execute() {
 		//Set vel and rot to what they should be.
-		vel = oi.getFwd();
-		rot = oi.getRot();
+		boolean commandingStraight = (oi.getLeftOutput() == oi.getRightOutput());
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
-		if (drivingStraight && (rot != 0 || subsystem.getOverrideNavX())) {
+		if (drivingStraight && (!commandingStraight || subsystem.getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver lets go of the turn stick:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
-				rot == 0 && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
+				commandingStraight && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the NavX
@@ -156,9 +144,6 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 
 		//Log data and stuff
 		SmartDashboard.putBoolean("driving straight?", drivingStraight);
-		SmartDashboard.putBoolean("Override Navx", subsystem.getOverrideNavX());
-		SmartDashboard.putNumber("Vel Axis", vel);
-		SmartDashboard.putNumber("Rot axis", rot);
 	}
 
 	/**
@@ -204,7 +189,7 @@ public class UnidirectionalNavXArcadeDrive<T extends YamlSubsystem & Unidirectio
 			SmartDashboard.putNumber("PID output", output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			subsystem.setOutput(vel - output, vel + output);
+			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
 		}
 		//If we're free driving...
 		else {
