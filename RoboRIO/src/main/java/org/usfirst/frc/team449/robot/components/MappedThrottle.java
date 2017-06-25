@@ -4,21 +4,30 @@ import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A class representing a single axis on a joystick.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedThrottle implements PIDSource{
-	//The stick we're using
-	protected Joystick stick;
+public class MappedThrottle implements PIDSource {
+	/**
+	 * The stick we're using
+	 */
+	@NotNull
+	protected final Joystick stick;
 
-	//The axis on the joystick we care about. Usually 1.
-	protected int axis;
+	/**
+	 * The axis on the joystick we care about.
+	 */
+	protected final int axis;
 
-	//Whether or not the controls should be inverted
-	protected boolean inverted;
+	/**
+	 * Whether or not the controls should be inverted
+	 */
+	protected final boolean inverted;
 
 	/**
 	 * A basic constructor.
@@ -28,7 +37,7 @@ public class MappedThrottle implements PIDSource{
 	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
 	 */
 	@JsonCreator
-	public MappedThrottle(@JsonProperty(required = true) MappedJoystick stick,
+	public MappedThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                      @JsonProperty(required = true) int axis,
 	                      boolean inverted) {
 		this.stick = stick;
@@ -46,21 +55,23 @@ public class MappedThrottle implements PIDSource{
 	}
 
 	/**
-	 * Set which parameter of the device you are using as a process control variable. We don't use this.
-	 *
-	 * @param pidSource An enum to select the parameter.
-	 */
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {}
-
-	/**
 	 * Get which parameter of the device you are using as a process control variable. We don't use this.
 	 *
 	 * @return the currently selected PID source parameter
 	 */
 	@Override
+	@Nullable
 	public PIDSourceType getPIDSourceType() {
 		return null;
+	}
+
+	/**
+	 * Set which parameter of the device you are using as a process control variable. We don't use this.
+	 *
+	 * @param pidSource An enum to select the parameter.
+	 */
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
 	}
 
 	/**
@@ -70,6 +81,6 @@ public class MappedThrottle implements PIDSource{
 	 */
 	@Override
 	public double pidGet() {
-		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
+		return getValue();
 	}
 }

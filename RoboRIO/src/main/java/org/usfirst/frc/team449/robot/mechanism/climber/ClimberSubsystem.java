@@ -5,13 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * A climber subsystem that uses power monitoring to stop climbing.
@@ -21,22 +23,25 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	/**
 	 * The CANTalon controlling one of the climber motors.
 	 */
-	private RotPerSecCANTalonSRX canTalonSRX;
+	@NotNull
+	private final RotPerSecCANTalonSRX canTalonSRX;
 
 	/**
 	 * The Victor controlling the other climber motor.
 	 */
-	private VictorSP victor;
+	@Nullable
+	private final VictorSP victor;
 
 	/**
 	 * The maximum allowable power before we stop the motor.
 	 */
-	private double maxPower;
+	private final double maxPower;
 
 	/**
 	 * The bufferTimer controlling how long we can be above the current limit before we stop climbing.
 	 */
-	private BufferTimer currentLimitTimer;
+	@NotNull
+	private final BufferTimer currentLimitTimer;
 
 	/**
 	 * Whether or not the motor is currently spinning.
@@ -54,9 +59,9 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	 *                            current limit. Defaults to 0.
 	 */
 	@JsonCreator
-	public ClimberSubsystem(@JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,
+	public ClimberSubsystem(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,
 	                        @JsonProperty(required = true) double maxPower,
-	                        MappedVictor victor,
+	                        @Nullable MappedVictor victor,
 	                        int millisAboveMaxPower) {
 		super();
 		//Instantiate things
@@ -95,6 +100,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
 		return new String[]{"current",
@@ -107,10 +113,11 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
-		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),
-				canTalonSRX.canTalon.getOutputVoltage(),
+		return new Object[]{canTalonSRX.getCanTalon().getOutputCurrent(),
+				canTalonSRX.getCanTalon().getOutputVoltage(),
 				canTalonSRX.getPower()};
 	}
 
@@ -119,6 +126,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "climber";
@@ -129,7 +137,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	 */
 	@Override
 	public void turnMotorOn() {
-		canTalonSRX.canTalon.enable();
+		canTalonSRX.getCanTalon().enable();
 		setPercentVbus(1);
 		motorSpinning = true;
 	}
@@ -140,7 +148,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	@Override
 	public void turnMotorOff() {
 		setPercentVbus(0);
-		canTalonSRX.canTalon.disable();
+		canTalonSRX.getCanTalon().disable();
 		motorSpinning = false;
 	}
 

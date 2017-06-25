@@ -10,7 +10,7 @@ public class BufferTimer {
 	/**
 	 * How long the condition has to be true for, in milliseconds.
 	 */
-	private long bufferTime;
+	private final long bufferTime;
 
 	/**
 	 * The time at which the condition most recently switched from false to true.

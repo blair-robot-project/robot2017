@@ -4,37 +4,40 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Drives straight when using a tank drive.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveStraight extends YamlCommandWrapper {
+public class DriveStraight<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The oi that this command gets input from.
 	 */
-	private TankOI oi;
+	@NotNull
+	private final TankOI oi;
 
 	/**
 	 * Whether to use the left or right joystick for the forward velocity.
 	 */
-	private boolean useLeft;
+	private final boolean useLeft;
+
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * The throttle gotten from the joystick. This is a field instead of a local variable to avoid garbage collection.
 	 */
 	private double throttle;
-
-	/**
-	 * The drive subsystem to execute this command on.
-	 */
-	private UnidirectionalDrive subsystem;
 
 	/**
 	 * Drive straight without NavX stabilization.
@@ -44,9 +47,9 @@ public class DriveStraight extends YamlCommandWrapper {
 	 * @param useLeft true to use the left stick to drive straight, false to use the right.
 	 */
 	@JsonCreator
-	public <T extends YamlSubsystem & UnidirectionalDrive> DriveStraight(@JsonProperty(required = true) T drive,
-	                                                                 @JsonProperty(required = true) TankOI oi,
-	                                                                 @JsonProperty(required = true) boolean useLeft) {
+	public DriveStraight(@NotNull @JsonProperty(required = true) T drive,
+	                     @NotNull @JsonProperty(required = true) TankOI oi,
+	                     @JsonProperty(required = true) boolean useLeft) {
 		subsystem = drive;
 		this.oi = oi;
 		this.useLeft = useLeft;

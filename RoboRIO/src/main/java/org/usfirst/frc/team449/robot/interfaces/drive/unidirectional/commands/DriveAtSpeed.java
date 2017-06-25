@@ -4,27 +4,34 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Go at a certain velocity for a set number of seconds
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class DriveAtSpeed<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * Speed to go at
 	 */
-	private double velocity;
+	private final double velocity;
 
 	/**
 	 * How long to run for
 	 */
-	private double seconds;
+	private final double seconds;
+
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * When this command was initialized.
@@ -32,21 +39,16 @@ public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extend
 	private long startTime;
 
 	/**
-	 * The drive subsystem to execute this command on.
-	 */
-	private UnidirectionalDrive subsystem;
-
-	/**
 	 * Default constructor
 	 *
-	 * @param drive   The drive to execute this command on
-	 * @param velocity   How fast to go, in RPS
-	 * @param seconds How long to drive for.
+	 * @param drive    The drive to execute this command on
+	 * @param velocity How fast to go, in RPS
+	 * @param seconds  How long to drive for.
 	 */
 	@JsonCreator
-	public DriveAtSpeed(@JsonProperty(required = true) T drive,
-	                                                                @JsonProperty(required = true) double velocity,
-	                                                                @JsonProperty(required = true) double seconds) {
+	public DriveAtSpeed(@NotNull @JsonProperty(required = true) T drive,
+	                    @JsonProperty(required = true) double velocity,
+	                    @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
 		this.subsystem = drive;
 		this.velocity = velocity;

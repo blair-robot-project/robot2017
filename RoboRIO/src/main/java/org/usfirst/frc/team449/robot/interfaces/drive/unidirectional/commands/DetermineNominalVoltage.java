@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
@@ -13,22 +14,23 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Created by noah on 6/24/17.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DetermineNominalVoltage <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper{
+public class DetermineNominalVoltage<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The drive subsystem to execute this command on.
 	 */
-	private T subsystem;
+	@NotNull
+	private final T subsystem;
 
 	private double percentVoltage;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param drive   The drive to execute this command on
+	 * @param drive The drive to execute this command on
 	 */
 	@JsonCreator
-	public DetermineNominalVoltage(@JsonProperty(required = true) T drive) {
+	public DetermineNominalVoltage(@NotNull @JsonProperty(required = true) T drive) {
 		//Initialize stuff
 		this.subsystem = drive;
 		requires(drive);

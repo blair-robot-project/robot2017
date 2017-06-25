@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Turn off the shooter and feeder.
@@ -17,7 +18,8 @@ public class TurnAllOff extends YamlCommandWrapper {
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private ShooterSubsystem subsystem;
+	@NotNull
+	private final ShooterSubsystem subsystem;
 
 	/**
 	 * Default constructor
@@ -25,7 +27,7 @@ public class TurnAllOff extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public TurnAllOff(@JsonProperty(required = true) ShooterSubsystem subsystem) {
+	public TurnAllOff(@NotNull @JsonProperty(required = true) ShooterSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

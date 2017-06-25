@@ -21,22 +21,23 @@ public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 	/**
 	 * Default constructor.
 	 *
-	 * @param runWallToPegProfile The command for running the profile for going from the wall to the peg, which has already been loaded.
-	 * @param dropGear The command for dropping the held gear.
-	 * @param dropGearSwitch      The switch deciding whether or not to drop the gear.
-	 * @param allianceSwitch The switch indicating which alliance we're on.
-	 * @param runRedPegToKeyProfile The command for moving from the peg to the key, on the red side of the field.
+	 * @param runWallToPegProfile    The command for running the profile for going from the wall to the peg, which has
+	 *                               already been loaded.
+	 * @param dropGear               The command for dropping the held gear.
+	 * @param dropGearSwitch         The switch deciding whether or not to drop the gear.
+	 * @param allianceSwitch         The switch indicating which alliance we're on.
+	 * @param runRedPegToKeyProfile  The command for moving from the peg to the key, on the red side of the field.
 	 * @param runBluePegToKeyProfile The command for moving from the peg to the key, on the blue side of the field.
-	 * @param spinUpShooter The command for revving up the shooter. Can be null.
-	 * @param fireShooter The command for firing the shooter. Can be null.
+	 * @param spinUpShooter          The command for revving up the shooter. Can be null.
+	 * @param fireShooter            The command for firing the shooter. Can be null.
 	 */
 	@JsonCreator
-	public BoilerAuto2017(@JsonProperty(required = true) @NotNull RunLoadedProfile runWallToPegProfile,
-	                      @JsonProperty(required = true) @NotNull YamlCommand dropGear,
-	                      @JsonProperty(required = true) @NotNull MappedDigitalInput dropGearSwitch,
-	                      @JsonProperty(required = true) @NotNull MappedDigitalInput allianceSwitch,
-	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runRedPegToKeyProfile,
-	                      @JsonProperty(required = true) @NotNull RunProfileTwoSides runBluePegToKeyProfile,
+	public BoilerAuto2017(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+	                      @NotNull @JsonProperty(required = true) YamlCommand dropGear,
+	                      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
+	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedPegToKeyProfile,
+	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBluePegToKeyProfile,
 	                      @Nullable YamlCommand spinUpShooter,
 	                      @Nullable YamlCommand fireShooter) {
 		if (spinUpShooter != null) {

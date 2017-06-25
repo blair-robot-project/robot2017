@@ -20,11 +20,8 @@ public class MappedVictor extends VictorSP {
 	 */
 	@JsonCreator
 	public MappedVictor(@JsonProperty(required = true) int port,
-	                    Boolean inverted) {
+	                    boolean inverted) {
 		super(port);
-		if (inverted == null) {
-			inverted = false;
-		}
 		this.setInverted(inverted);
 	}
 }

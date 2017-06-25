@@ -2,8 +2,11 @@ package org.usfirst.frc.team449.robot.drive.talonCluster;
 
 import com.fasterxml.jackson.annotation.*;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.MappedAHRS;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
@@ -17,7 +20,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 /**
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
@@ -30,21 +33,25 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	/**
 	 * Right master Talon
 	 */
+	@NotNull
 	protected final RotPerSecCANTalonSRX rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
+	@NotNull
 	protected final RotPerSecCANTalonSRX leftMaster;
 
 	/**
 	 * The NavX gyro
 	 */
-	private final AHRS navx;
+	@NotNull
+	private final AHRS navX;
 
 	/**
 	 * A helper class that loads and runs profiles on the Talons.
 	 */
+	@NotNull
 	private final CANTalonMPHandler mpHandler;
 
 	/**
@@ -61,10 +68,11 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
 	@JsonCreator
-	public TalonClusterDrive(@JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
-	                         @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
-	                         @JsonProperty(required = true) CANTalonMPHandler MPHandler,
-	                         Double PIDScale) {
+	public TalonClusterDrive(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
+	                         @NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
+	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                         @NotNull @JsonProperty(required = true) CANTalonMPHandler MPHandler,
+	                         @Nullable Double PIDScale) {
 		super();
 		//Initialize stuff
 		if (PIDScale == null) {
@@ -76,7 +84,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 		this.mpHandler = MPHandler;
 
 		//We only ever use a NavX on the SPI port because the other ports don't work.
-		navx = new AHRS(SPI.Port.kMXP);
+		this.navX = navX;
 	}
 
 	/**
@@ -95,7 +103,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @param left  The left voltage throttle, [-1, 1]
 	 * @param right The right voltage throttle, [-1, 1]
 	 */
-	private void setVBusThrottle(double left, double right) {
+	protected void setVBusThrottle(double left, double right) {
 		//Set voltage mode throttles
 		leftMaster.setPercentVbus(left);
 		rightMaster.setPercentVbus(-right); //This is negative so PID doesn't have to be. Future people, if your robot goes in circles in voltage mode, this may be why.
@@ -109,8 +117,13 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 */
 	protected void setPIDThrottle(double left, double right) {
 		//scale by the max speed
-		leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-		rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		if (leftMaster.getMaxSpeed() == null || rightMaster.getMaxSpeed() == null) {
+			setVBusThrottle(left, right);
+			System.out.println("You're trying to set PID throttle, but the drive talons don't have PID constants defined. Using voltage control instead.");
+		} else {
+			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
+			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+		}
 	}
 
 	/**
@@ -129,20 +142,22 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second.
+	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
-	public double getLeftVel() {
+	@Nullable
+	public Double getLeftVel() {
 		return leftMaster.getSpeed();
 	}
 
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second.
+	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
-	public double getRightVel() {
+	@Nullable
+	public Double getRightVel() {
 		return rightMaster.getSpeed();
 	}
 
@@ -159,8 +174,8 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 */
 	@Override
 	public void enableMotors() {
-		leftMaster.canTalon.enable();
-		rightMaster.canTalon.enable();
+		leftMaster.getCanTalon().enable();
+		rightMaster.getCanTalon().enable();
 	}
 
 	/**
@@ -188,7 +203,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 */
 	@Override
 	public double getGyroOutput() {
-		return navx.pidGet();
+		return navX.pidGet();
 	}
 
 	/**
@@ -217,8 +232,9 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @return An AHRS object representing this subsystem's NavX.
 	 */
 	@Override
+	@NotNull
 	public AHRS getNavX() {
-		return navx;
+		return navX;
 	}
 
 	/**
@@ -227,6 +243,8 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@Override
+	@NotNull
+	@Contract(pure = true)
 	public String[] getHeader() {
 		return new String[]{"left_vel",
 				"right_vel",
@@ -244,15 +262,16 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
 	@Override
+	@NotNull
 	public Object[] getData() {
 		return new Object[]{leftMaster.getSpeed(),
 				rightMaster.getSpeed(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
-				leftMaster.canTalon.getOutputCurrent(),
-				rightMaster.canTalon.getOutputCurrent(),
-				leftMaster.canTalon.getOutputVoltage(),
-				rightMaster.canTalon.getOutputVoltage()};
+				leftMaster.getCanTalon().getOutputCurrent(),
+				rightMaster.getCanTalon().getOutputCurrent(),
+				leftMaster.getCanTalon().getOutputVoltage(),
+				rightMaster.getCanTalon().getOutputVoltage()};
 	}
 
 	/**
@@ -261,6 +280,8 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @return A string that will identify this object in the log file.
 	 */
 	@Override
+	@NotNull
+	@Contract(pure = true)
 	public String getName() {
 		return "Drive";
 	}

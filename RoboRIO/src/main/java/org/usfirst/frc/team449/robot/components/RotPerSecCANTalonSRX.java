@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.util.Logger;
 
 import java.util.List;
@@ -20,55 +22,63 @@ public class RotPerSecCANTalonSRX {
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
 	 */
-	public CANTalon canTalon;
+	@NotNull
+	private final CANTalon canTalon;
 
 	/**
 	 * The counts per rotation of the encoder being used.
 	 */
-	private int encoderCPR;
-
-	/**
-	 * The maximum speed of the motor, in RPS.
-	 */
-	private double maxSpeed;
+	@Nullable
+	private final Integer encoderCPR;
 
 	/**
 	 * The type of encoder the talon uses.
 	 */
-	private CANTalon.FeedbackDevice feedbackDevice;
+	@Nullable
+	private final CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
 	 * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if
 	 * there was a 70:1 gearing between the encoder and the final output.
 	 */
-	private double postEncoderGearing;
+	private final double postEncoderGearing;
 
 	/**
-	 * The number of inches travelled per rotation of the motor this is attached to. Only used for Motion Profile unit conversions.
+	 * The number of inches travelled per rotation of the motor this is attached to. Only used for Motion Profile unit
+	 * conversions.
 	 * {@link Double} so it throws a nullPointer if you try to use it without a value in the map.
 	 */
-	private Double inchesPerRotation;
+	@Nullable
+	private final Double inchesPerRotation;
 
 	/**
 	 * The max speed of this motor, in RPS, when in high gear, or if the output motor doesn't have gears,
 	 * just the max speed. May be null.
 	 */
-	private Double maxSpeedHigh;
+	@Nullable
+	private final Double maxSpeedHigh;
 
 	/**
 	 * If this motor has a low gear, this is the max speed of this motor when in that gear. Otherwise, null.
 	 */
-	private Double maxSpeedLow;
+	@Nullable
+	private final Double maxSpeedLow;
 
 	/**
 	 * The PID constants for high gear or, if this motor does not have gears, just the PID constants.
 	 */
-	private int highGearP, highGearI, highGearD;
+	private final int highGearP, highGearI, highGearD;
 
 	/**
 	 * The PID constants for low gear if this motor has a low gear.
 	 */
-	private int lowGearP, lowGearI, lowGearD;
+	private final int lowGearP, lowGearI, lowGearD;
+
+	/**
+	 * The maximum speed of the motor, in RPS.
+	 */
+	@Nullable
+	private Double maxSpeed;
 
 	/**
 	 * Default constructor.
@@ -76,7 +86,8 @@ public class RotPerSecCANTalonSRX {
 	 * @param port                       CAN port of this Talon.
 	 * @param inverted                   Whether this Talon is inverted.
 	 * @param enableBrakeMode            Whether to brake or coast when stopped.
-	 * @param fwdPeakOutputVoltage       The peak voltage in the forward direction, in volts. If revPeakOutputVoltage is
+	 * @param fwdPeakOutputVoltage       The peak voltage in the forward direction, in volts. If revPeakOutputVoltage
+	 *                                   is
 	 *                                   null,
 	 *                                   this is used for peak voltage in both directions. Should be a positive or
 	 *                                   zero.
@@ -100,7 +111,8 @@ public class RotPerSecCANTalonSRX {
 	 * @param revSoftLimit               The reverse software limit. If this is null, the reverse software limit is
 	 *                                   disabled.
 	 *                                   TODO figure out units
-	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
+	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder,
+	 *                                   e.g.
 	 *                                   this
 	 *                                   would be 1/70 if there was a 70:1 gearing between the encoder and the final
 	 *                                   output.
@@ -119,24 +131,25 @@ public class RotPerSecCANTalonSRX {
 	 * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Can be
 	 *                                   null if
 	 *                                   feedbackDevice is, but otherwise must have a value.
-	 * @param maxSpeedHigh               The high gear max speed, in RPS. If this motor doesn't have gears, then this is
+	 * @param maxSpeedHigh               The high gear max speed, in RPS. If this motor doesn't have gears, then this
+	 *                                   is
 	 *                                   just the max speed. Used to calculate velocity PIDF feed-forward. Can be null,
 	 *                                   and if it is, it's assumed that this motor won't use velocity closed-loop
 	 *                                   control.
-	 * @param highGearP The proportional gain for high gear. Defaults to 0.
-	 * @param highGearI The integral gain for high gear. Defaults to 0.
-	 * @param highGearD The derivative gain for high gear. Defaults to 0.
+	 * @param highGearP                  The proportional gain for high gear. Defaults to 0.
+	 * @param highGearI                  The integral gain for high gear. Defaults to 0.
+	 * @param highGearD                  The derivative gain for high gear. Defaults to 0.
 	 * @param maxSpeedLow                The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward.
 	 *                                   Can be null, and
 	 *                                   if it is, it's assumed that either this motor doesn't have a low gear or the
 	 *                                   low gear won't
 	 *                                   use velocity closed-loop control.
-	 * @param lowGearP The proportional gain for low gear. Defaults to 0.
-	 * @param lowGearI The integral gain for low gear. Defaults to 0.
-	 * @param lowGearD The derivative gain for low gear. Defaults to 0.
-	 * @param motionProfileP The proportional gain for motion profiles. Defaults to 0.
-	 * @param motionProfileI The integral gain for high motion profiles. Defaults to 0.
-	 * @param motionProfileD The derivative gain for high motion profiles. Defaults to 0.
+	 * @param lowGearP                   The proportional gain for low gear. Defaults to 0.
+	 * @param lowGearI                   The integral gain for low gear. Defaults to 0.
+	 * @param lowGearD                   The derivative gain for low gear. Defaults to 0.
+	 * @param motionProfileP             The proportional gain for motion profiles. Defaults to 0.
+	 * @param motionProfileI             The integral gain for high motion profiles. Defaults to 0.
+	 * @param motionProfileD             The derivative gain for high motion profiles. Defaults to 0.
 	 * @param MPUseLowGear               Whether this motor uses high or low gear for running motion profiles. Defaults
 	 *                                   to false.
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
@@ -146,25 +159,25 @@ public class RotPerSecCANTalonSRX {
 	                            @JsonProperty(required = true) boolean inverted,
 	                            @JsonProperty(required = true) boolean enableBrakeMode,
 	                            @JsonProperty(required = true) double fwdPeakOutputVoltage,
-	                            Double revPeakOutputVoltage,
+	                            @Nullable Double revPeakOutputVoltage,
 	                            @JsonProperty(required = true) double fwdNominalOutputVoltage,
-	                            Double revNominalOutputVoltage,
-	                            Boolean fwdLimitSwitchNormallyOpen,
-	                            Boolean revLimitSwitchNormallyOpen,
-	                            Double fwdSoftLimit,
-	                            Double revSoftLimit,
-	                            Double postEncoderGearing,
-	                            Double closedLoopRampRate,
-	                            Double inchesPerRotation,
-	                            Integer currentLimit,
-	                            CANTalon.FeedbackDevice feedbackDevice,
-	                            Integer encoderCPR,
-	                            Boolean reverseSensor,
-	                            Double maxSpeedHigh,
+	                            @Nullable Double revNominalOutputVoltage,
+	                            @Nullable Boolean fwdLimitSwitchNormallyOpen,
+	                            @Nullable Boolean revLimitSwitchNormallyOpen,
+	                            @Nullable Double fwdSoftLimit,
+	                            @Nullable Double revSoftLimit,
+	                            @Nullable Double postEncoderGearing,
+	                            @Nullable Double closedLoopRampRate,
+	                            @Nullable Double inchesPerRotation,
+	                            @Nullable Integer currentLimit,
+	                            @Nullable CANTalon.FeedbackDevice feedbackDevice,
+	                            @Nullable Integer encoderCPR,
+	                            @Nullable Boolean reverseSensor,
+	                            @Nullable Double maxSpeedHigh,
 	                            int highGearP,
 	                            int highGearI,
 	                            int highGearD,
-	                            Double maxSpeedLow,
+	                            @Nullable Double maxSpeedLow,
 	                            int lowGearP,
 	                            int lowGearI,
 	                            int lowGearD,
@@ -172,7 +185,7 @@ public class RotPerSecCANTalonSRX {
 	                            int motionProfileI,
 	                            int motionProfileD,
 	                            boolean MPUseLowGear,
-	                            List<SlaveTalon> slaves) {
+	                            @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
@@ -214,6 +227,9 @@ public class RotPerSecCANTalonSRX {
 			canTalon.setFeedbackDevice(feedbackDevice);
 			this.encoderCPR = encoderCPR;
 			canTalon.reverseSensor(reverseSensor);
+		} else {
+			this.feedbackDevice = null;
+			this.encoderCPR = null;
 		}
 
 		//postEncoderGearing defaults to 1
@@ -346,7 +362,13 @@ public class RotPerSecCANTalonSRX {
 	 */
 	private void setPIDF(double p, double i, double d, double maxSpeed, int iZone, double closeLoopRampRate, int
 			profile) {
-		this.canTalon.setPID(p, i, d, 1023 / RPSToNative(maxSpeed), iZone, closeLoopRampRate, profile);
+		try {
+			this.canTalon.setPID(p, i, d, 1023 / RPSToNative(maxSpeed), iZone, closeLoopRampRate, profile);
+		} catch (NullPointerException e) {
+			System.out.println("Tried to set F value, but no encoder CPR given!");
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -385,9 +407,10 @@ public class RotPerSecCANTalonSRX {
 	/**
 	 * Get the max speed of the gear the talon is currently in.
 	 *
-	 * @return max speed, in RPS, as given in the map.
+	 * @return max speed, in RPS, as given in the map, or null if no value given.
 	 */
-	public double getMaxSpeed() {
+	@Nullable
+	public Double getMaxSpeed() {
 		return maxSpeed;
 	}
 
@@ -396,13 +419,19 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param encoderReading The velocity read from the encoder with no conversions.
-	 * @return The velocity of the output shaft, in RPS, when the encoder has that reading.
+	 * @return The velocity of the output shaft, in RPS, when the encoder has that reading, or null if no encoder CPR
+	 * was given.
 	 */
-	public double encoderToRPS(double encoderReading) {
+	@Nullable
+	public Double encoderToRPS(double encoderReading) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
 			return RPMToRPS(encoderReading) * postEncoderGearing;
 		} else {
-			return nativeToRPS(encoderReading) * postEncoderGearing;
+			Double RPS = nativeToRPS(encoderReading);
+			if (RPS == null) {
+				return null;
+			}
+			return RPS * postEncoderGearing;
 		}
 	}
 
@@ -411,13 +440,18 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param RPS The velocity of the output shaft, in RPS.
-	 * @return What the raw encoder reading would be at that velocity.
+	 * @return What the raw encoder reading would be at that velocity, or null if no encoder CPR was given.
 	 */
-	public double RPSToEncoder(double RPS) {
+	@Nullable
+	public Double RPSToEncoder(double RPS) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
 			return RPSToRPM(RPS) / postEncoderGearing;
 		} else {
-			return RPSToNative(RPS) / postEncoderGearing;
+			Double encoderReading = RPSToNative(RPS);
+			if (encoderReading == null) {
+				return null;
+			}
+			return encoderReading / postEncoderGearing;
 		}
 	}
 
@@ -426,10 +460,14 @@ public class RotPerSecCANTalonSRX {
 	 * gearing.
 	 *
 	 * @param RPS The RPS velocity you want to convert.
-	 * @return That velocity in CANTalon native units.
+	 * @return That velocity in CANTalon native units, or null if no encoder CPR was given.
 	 */
 	@Contract(pure = true)
-	private double RPSToNative(double RPS) {
+	@Nullable
+	private Double RPSToNative(double RPS) {
+		if (encoderCPR == null) {
+			return null;
+		}
 		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
 	}
 
@@ -438,10 +476,14 @@ public class RotPerSecCANTalonSRX {
 	 * post-encoder gearing.
 	 *
 	 * @param nat A velocity in CANTalon native units.
-	 * @return That velocity in RPS.
+	 * @return That velocity in RPS, or null if no encoder CPR was given.
 	 */
 	@Contract(pure = true)
-	private double nativeToRPS(double nat) {
+	@Nullable
+	private Double nativeToRPS(double nat) {
+		if (encoderCPR == null) {
+			return null;
+		}
 		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
 	}
 
@@ -473,9 +515,10 @@ public class RotPerSecCANTalonSRX {
 	 * Note: This method is called getMode since the TalonControlMode enum is called speed. However, the output
 	 * is signed and is actually a velocity.
 	 *
-	 * @return The CANTalon's velocity in RPS
+	 * @return The CANTalon's velocity in RPS, or null if no encoder CPR was given.
 	 */
-	public double getSpeed() {
+	@Nullable
+	public Double getSpeed() {
 		return encoderToRPS(canTalon.getSpeed());
 	}
 
@@ -490,33 +533,41 @@ public class RotPerSecCANTalonSRX {
 	public void setSpeed(double velocitySp) {
 		//Switch control mode to speed closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		canTalon.set(RPSToEncoder(velocitySp));
+		try {
+			canTalon.set(RPSToEncoder(velocitySp));
+		} catch (NullPointerException e) {
+			System.out.println("Trying to set a closed-loop setpoint, but no encoder CPR defined!");
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Get the current closed-loop velocity error in RPS. WARNING: will give garbage if not in velocity mode.
 	 *
-	 * @return The closed-loop error in RPS
+	 * @return The closed-loop error in RPS, or null if no encoder CPR was given.
 	 */
-	public double getError() {
+	@Nullable
+	public Double getError() {
 		return encoderToRPS(canTalon.getError());
 	}
 
 	/**
 	 * Get the current velocity setpoint of the Talon in RPS. WARNING: will give garbage if not in velocity mode.
 	 *
-	 * @return The closed-loop velocity setpoint in RPS.
+	 * @return The closed-loop velocity setpoint in RPS, or null if no encoder CPR was given.
 	 */
-	public double getSetpoint() {
+	@Nullable
+	public Double getSetpoint() {
 		return encoderToRPS(canTalon.getSetpoint());
 	}
 
 	/**
 	 * Get the high gear max speed. Sometimes useful for scaling joystick output.
 	 *
-	 * @return The high gear max speed in RPS.
+	 * @return The high gear max speed in RPS, or null if none was given.
 	 */
-	public double getMaxSpeedHG() {
+	@Nullable
+	public Double getMaxSpeedHG() {
 		return maxSpeedHigh;
 	}
 
@@ -534,11 +585,15 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param nativeUnits A distance native units as measured by the encoder.
-	 * @return That distance in feet.
+	 * @return That distance in feet, or null if no encoder CPR or inches per rotation was given.
 	 */
-	public double nativeToFeet(double nativeUnits) {
+	@Nullable
+	public Double nativeToFeet(double nativeUnits) {
+		if (encoderCPR == null || inchesPerRotation == null) {
+			return null;
+		}
 		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * (inchesPerRotation /12.);
+		return rotations * (inchesPerRotation / 12.);
 	}
 
 	/**
@@ -546,9 +601,14 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param feet A distance in feet.
-	 * @return That distance in native units as measured by the encoder.
+	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR or inches per
+	 * rotation was given.
 	 */
-	public double feetToNative(double feet) {
+	@Nullable
+	public Double feetToNative(double feet) {
+		if (encoderCPR == null || inchesPerRotation == null) {
+			return null;
+		}
 		double rotations = feet / (inchesPerRotation / 12.);
 		return rotations * (encoderCPR * 4) / postEncoderGearing;
 	}
@@ -558,10 +618,15 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param fps A velocity in feet per second
-	 * @return That velocity in either native units or RPS, depending on the type of encoder.
+	 * @return That velocity in either native units or RPS, depending on the type of encoder, or null if no encoder CPR
+	 * or inches per rotation was given.
 	 */
-	public double feetPerSecToNative(double fps) {
-		return RPSToEncoder(fps / (inchesPerRotation/12.));
+	@Nullable
+	public Double feetPerSecToNative(double fps) {
+		if (inchesPerRotation == null) {
+			return null;
+		}
+		return RPSToEncoder(fps / (inchesPerRotation / 12.));
 	}
 
 	/**
@@ -569,10 +634,20 @@ public class RotPerSecCANTalonSRX {
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param nativeUnits A velocity in either native units or RPS, depending on the type of encoder.
-	 * @return That velocity in feet per second.
+	 * @return That velocity in feet per second, or null if no encoder CPR or inches per rotation was given.
 	 */
-	public double nativeToFeetPerSec(double nativeUnits) {
-		return encoderToRPS(nativeUnits) * inchesPerRotation / 12.;
+	@Nullable
+	public Double nativeToFeetPerSec(double nativeUnits) {
+		Double RPS = encoderToRPS(nativeUnits);
+		if (inchesPerRotation == null || RPS == null) {
+			return null;
+		}
+		return RPS * inchesPerRotation / 12.;
+	}
+
+	@NotNull
+	public CANTalon getCanTalon() {
+		return canTalon;
 	}
 
 	/**
@@ -584,12 +659,12 @@ public class RotPerSecCANTalonSRX {
 		/**
 		 * The port number of this Talon.
 		 */
-		private int port;
+		private final int port;
 
 		/**
 		 * Whether this Talon is inverted compared to its master.
 		 */
-		private boolean inverted;
+		private final boolean inverted;
 
 		/**
 		 * Default constructor.

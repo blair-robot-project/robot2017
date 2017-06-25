@@ -16,7 +16,7 @@ public class WaitForMillis extends YamlCommandWrapper {
 	/**
 	 * How long this command takes to finish, in milliseconds.
 	 */
-	private long timeout;
+	private final long timeout;
 
 	/**
 	 * The time this command started at.

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
@@ -16,20 +15,20 @@ import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 public class ChangeCam extends YamlCommandWrapper {
 
 	/**
-	 * The cameraSubsystem to execute this command on
+	 * The subsystem to execute this command on
 	 */
-	private CameraSubsystem cameraSubsystem;
+	private CameraSubsystem subsystem;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param cameraSubsystem The cameraSubsystem to execute this command on.
+	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public ChangeCam(@JsonProperty(required = true) CameraSubsystem cameraSubsystem) {
+	public ChangeCam(@JsonProperty(required = true) CameraSubsystem subsystem) {
 		super();
-		requires(cameraSubsystem);
-		this.cameraSubsystem = cameraSubsystem;
+		requires(this.subsystem);
+		this.subsystem = subsystem;
 	}
 
 	/**
@@ -46,14 +45,14 @@ public class ChangeCam extends YamlCommandWrapper {
 	@Override
 	protected void execute() {
 		//Switches camNum to next camera, if applicable
-		if (cameraSubsystem.cameras.size() == 1) {
+		if (subsystem.getCameras().size() == 1) {
 			Logger.addEvent("You're trying to switch cameras, but your robot only has one camera!", this.getClass());
 		} else {
-			cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
+			subsystem.setCamNum((subsystem.getCamNum() + 1) % subsystem.getCameras().size());
 		}
 
 		//Switches to set camera
-		cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
+		subsystem.getServer().setSource(subsystem.getCameras().get(subsystem.getCamNum()));
 	}
 
 	/**

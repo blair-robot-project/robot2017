@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
@@ -22,6 +24,7 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
+import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
@@ -40,6 +43,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * The absolute filepath to the resources folder containing the config files.
 	 */
+	@NotNull
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
 
 	/**
@@ -55,21 +59,25 @@ public class Robot extends IterativeRobot {
 	/**
 	 * The shooter subsystem (flywheel and feeder)
 	 */
+	@Nullable
 	private SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
 	/**
 	 * The intake subsystem (intake motors and pistons)
 	 */
+	@Nullable
 	private Intake2017 intakeSubsystem;
 
 	/**
 	 * The climber
 	 */
+	@Nullable
 	private ClimberSubsystem climberSubsystem;
 
 	/**
 	 * The compressor and pressure sensor
 	 */
+	@Nullable
 	private PneumaticsSubsystem pneumaticsSubsystem;
 
 	/**
@@ -77,14 +85,19 @@ public class Robot extends IterativeRobot {
 	 */
 	private TalonClusterDrive driveSubsystem;
 
+
+	private ArcadeOIWithDPad arcadeOI;
+
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
+	@Nullable
 	private CameraSubsystem cameraSubsystem;
 
 	/**
 	 * The active gear subsystem.
 	 */
+	@Nullable
 	private ActiveGearSubsystem gearSubsystem;
 
 	/**
@@ -141,7 +154,7 @@ public class Robot extends IterativeRobot {
 		try {
 			YAMLMapper mapper = new YAMLMapper();
 //			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
-			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"calcifer_map.yml"));
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
 			String fixed = mapper.writeValueAsString(normalized);
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 //			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -161,6 +174,7 @@ public class Robot extends IterativeRobot {
 		this.intakeSubsystem = cfg.getIntake();
 		this.pneumaticsSubsystem = cfg.getPneumatics();
 		this.gearSubsystem = cfg.getGearHandler();
+		this.arcadeOI = cfg.getArcadeOI();
 
 		driveSubsystem = cfg.getDrive();
 
@@ -174,7 +188,7 @@ public class Robot extends IterativeRobot {
 			//Load the test profiles if we just want to run one.
 			if (cfg.getTestMP()) {
 				driveSubsystem.loadMotionProfile(cfg.getLeftTestProfile(), cfg.getRightTestProfile());
-				autonomousCommand = new RunLoadedProfile(driveSubsystem, 15, true);
+				autonomousCommand = new RunLoadedProfile<>(driveSubsystem, 15, true);
 			} else {
 				//Read the data from the input switches
 				boolean redAlliance = cfg.getAllianceSwitch().getStatus().get(0);

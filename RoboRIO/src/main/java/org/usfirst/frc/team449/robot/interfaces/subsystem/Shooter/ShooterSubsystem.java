@@ -1,11 +1,12 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A subsystem with a shooter and feeder.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface ShooterSubsystem {
 	/**
 	 * Turn the shooter on to a map-specified speed.
@@ -32,6 +33,7 @@ public interface ShooterSubsystem {
 	 *
 	 * @return Off, spinning up, or shooting.
 	 */
+	@NotNull
 	ShooterState getShooterState();
 
 	/**
@@ -39,7 +41,7 @@ public interface ShooterSubsystem {
 	 *
 	 * @param state Off, spinning up, or shooting
 	 */
-	void setShooterState(ShooterState state);
+	void setShooterState(@NotNull ShooterState state);
 
 	/**
 	 * How long it takes for the shooter to get up to launch speed. Should be measured experimentally.

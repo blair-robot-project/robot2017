@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.command.Command;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 
@@ -14,7 +15,8 @@ import org.usfirst.frc.team449.robot.util.Logger;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class StartCompressor extends Command {
 
-	private PneumaticsSubsystem subsystem;
+	@NotNull
+	private final PneumaticsSubsystem subsystem;
 
 	/**
 	 * Default constructor
@@ -22,7 +24,7 @@ public class StartCompressor extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public StartCompressor(@JsonProperty(required = true) PneumaticsSubsystem subsystem) {
+	public StartCompressor(@NotNull @JsonProperty(required = true) PneumaticsSubsystem subsystem) {
 		super();
 		this.subsystem = subsystem;
 	}

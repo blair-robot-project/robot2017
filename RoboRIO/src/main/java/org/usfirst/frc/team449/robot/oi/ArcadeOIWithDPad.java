@@ -1,7 +1,12 @@
 package org.usfirst.frc.team449.robot.oi;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
@@ -10,56 +15,59 @@ import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
  * Created by noahg on 18-Jun-17.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ArcadeOIWithDPad extends ArcadeOI{
+public class ArcadeOIWithDPad extends ArcadeOI {
 
 	/**
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
 	 * much of the way
 	 */
-	private double dPadShift;
+	private final double dPadShift;
 
 	/**
 	 * The throttle wrapper for the stick controlling turning velocity
 	 */
-	private MappedThrottle rotThrottle;
+	@NotNull
+	private final MappedThrottle rotThrottle;
 
 	/**
 	 * The throttle wrapper for the stick controlling linear velocity
 	 */
-	private MappedThrottle fwdThrottle;
+	@NotNull
+	private final MappedThrottle fwdThrottle;
 
 	/**
-	 * The controller with the D-pad
+	 * The controller with the D-pad. Can be null if not using D-pad.
 	 */
-	private Joystick gamepad;
+	@Nullable
+	private final Joystick gamepad;
 
 	/**
 	 * Scaling, from [0, 1], that the rotational throttle decreases the forwards throttle by. Used so that turning while
 	 * at high speed still has an impact.
 	 */
-	private double rotScale;
+	private final double rotScale;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param gamepad                  The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
-	 * @param rotThrottle              The throttle for rotating the robot.
-	 * @param fwdThrottle              The throttle for driving the robot straight.
-	 * @param invertDPad               Whether or not to invert the D-pad. Defaults to false.
-	 * @param dPadShift                How fast the dPad should turn the robot, on [0, 1]. Defaults to 0.
-	 * @param rotScale Scaling, from [0, 1], that the rotational throttle decreases the forwards
-	 *                                 throttle by. Used so that turning while at high speed still has an impact.
-	 *                                 Defaults to 0.
+	 * @param gamepad     The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
+	 * @param rotThrottle The throttle for rotating the robot.
+	 * @param fwdThrottle The throttle for driving the robot straight.
+	 * @param invertDPad  Whether or not to invert the D-pad. Defaults to false.
+	 * @param dPadShift   How fast the dPad should turn the robot, on [0, 1]. Defaults to 0.
+	 * @param rotScale    Scaling, from [0, 1], that the rotational throttle decreases the forwards
+	 *                    throttle by. Used so that turning while at high speed still has an impact.
+	 *                    Defaults to 0.
 	 */
 	@JsonCreator
 	public ArcadeOIWithDPad(
-			@JsonProperty(required = true) MappedThrottle rotThrottle,
-			@JsonProperty(required = true) MappedThrottle fwdThrottle,
+			@NotNull @JsonProperty(required = true) MappedThrottle rotThrottle,
+			@NotNull @JsonProperty(required = true) MappedThrottle fwdThrottle,
 			double rotScale,
 			double dPadShift,
 			boolean invertDPad,
-			MappedJoystick gamepad) {
-		this.dPadShift = (invertDPad? -1 : 1) * dPadShift;
+			@Nullable MappedJoystick gamepad) {
+		this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
 		this.rotThrottle = rotThrottle;
 		this.fwdThrottle = fwdThrottle;
 		this.gamepad = gamepad;

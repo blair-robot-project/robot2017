@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
  * Drive forward at constant speed then stop to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
+public class PIDTest<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor
@@ -22,12 +23,12 @@ public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends Yam
 	 * @param speed     The speed to drive at, from [0, 1].
 	 */
 	@JsonCreator
-	public PIDTest(@JsonProperty(required = true) T subsystem,
-	                                                           @JsonProperty(required = true) double driveTime,
-	                                                           @JsonProperty(required = true) double speed) {
+	public PIDTest(@NotNull @JsonProperty(required = true) T subsystem,
+	               @JsonProperty(required = true) double driveTime,
+	               @JsonProperty(required = true) double speed) {
 		//Drive forward for a bit
-		addSequential(new DriveAtSpeed(subsystem, speed, driveTime));
+		addSequential(new DriveAtSpeed<>(subsystem, speed, driveTime));
 		//Stop actively to see how the PID responds.
-		addSequential(new DriveAtSpeed(subsystem, 0, 100));
+		addSequential(new DriveAtSpeed<>(subsystem, 0, 100));
 	}
 }

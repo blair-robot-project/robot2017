@@ -25,7 +25,7 @@ public class MappedDigitalInput {
 	 * @param ports The ports to read from, in order.
 	 */
 	@JsonCreator
-	public MappedDigitalInput(@JsonProperty(required = true) @NotNull int[] ports) {
+	public MappedDigitalInput(@NotNull @JsonProperty(required = true) int[] ports) {
 		digitalInputs = new ArrayList<>();
 		for (int portNum : ports) {
 			DigitalInput tmp = new DigitalInput(portNum);
@@ -43,6 +43,7 @@ public class MappedDigitalInput {
 	public List<Boolean> getStatus() {
 		List<Boolean> digitalValues = new ArrayList<>();
 		for (DigitalInput digitalInput : digitalInputs) {
+			//Negated because, by default, false means signal and true means no signal, and that's dumb.
 			digitalValues.add(!digitalInput.get());
 		}
 		return digitalValues;

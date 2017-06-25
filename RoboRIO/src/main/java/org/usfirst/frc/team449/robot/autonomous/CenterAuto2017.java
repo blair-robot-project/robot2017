@@ -19,17 +19,18 @@ public class CenterAuto2017 extends YamlCommandGroupWrapper {
 	/**
 	 * Default constructor.
 	 *
-	 * @param runWallToPegProfile The command for running the profile for going from the wall to the peg, which has already been loaded.
-	 * @param dropGear The command for dropping the held gear.
+	 * @param runWallToPegProfile The command for running the profile for going from the wall to the peg, which has
+	 *                            already been loaded.
+	 * @param dropGear            The command for dropping the held gear.
 	 * @param dropGearSwitch      The switch deciding whether or not to drop the gear.
-	 * @param driveBack The command for backing up away from the peg.
+	 * @param driveBack           The command for backing up away from the peg.
 	 */
 	@JsonCreator
 	public CenterAuto2017(
-			@JsonProperty(required = true) @NotNull RunLoadedProfile runWallToPegProfile,
-			@JsonProperty(required = true) @NotNull YamlCommand dropGear,
-			@JsonProperty(required = true) @NotNull MappedDigitalInput dropGearSwitch,
-			@JsonProperty(required = true) @NotNull YamlCommand driveBack) {
+			@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+			@NotNull @JsonProperty(required = true) YamlCommand dropGear,
+			@NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+			@NotNull @JsonProperty(required = true) YamlCommand driveBack) {
 		addSequential(runWallToPegProfile);
 		if (dropGearSwitch.getStatus().get(0)) {
 			addSequential(dropGear.getCommand());

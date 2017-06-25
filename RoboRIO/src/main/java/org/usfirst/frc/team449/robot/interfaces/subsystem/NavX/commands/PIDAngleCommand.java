@@ -6,58 +6,65 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 
 /**
  * A command that uses a NavX to turn to a certain angle.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
-public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand{
-
-	/**
-	 * The minimum the robot should be able to output, to overcome friction.
-	 */
-	protected double minimumOutput;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
+public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	protected NavxSubsystem subsystem;
+	@NotNull
+	protected final NavxSubsystem subsystem;
+
+	/**
+	 * The minimum the robot should be able to output, to overcome friction.
+	 */
+	private final double minimumOutput;
 
 	/**
 	 * The range in which output is turned off to prevent "dancing" around the setpoint.
 	 */
-	protected double deadband;
+	private final double deadband;
 
 	/**
 	 * Whether or not the loop is inverted.
 	 */
-	protected boolean inverted;
+	private final boolean inverted;
 
 	/**
 	 * Default constructor.
-	 *  @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
-	 *                                 within tolerance.
-	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be considered
-	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
-*                                 used.
-	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
-*                                 the motors. Defaults to zero.
-	 * @param inverted                 Whether the loop is inverted. Defaults to false.
-	 * @param kP Proportional gain. Defaults to zero.
-	 * @param kI Integral gain. Defaults to zero.
-	 * @param kD Derivative gain. Defaults to zero.
+	 *
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered
+	 *                          within tolerance.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
+	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is
+	 *                          used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to
+	 *                          the motors. Defaults to zero.
+	 * @param inverted          Whether the loop is inverted. Defaults to false.
+	 * @param kP                Proportional gain. Defaults to zero.
+	 * @param kI                Integral gain. Defaults to zero.
+	 * @param kD                Derivative gain. Defaults to zero.
 	 */
 	@JsonCreator
 	public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,
 	                       int toleranceBuffer,
-	                       double minimumOutput, Double maximumOutput,
+	                       double minimumOutput, @Nullable Double maximumOutput,
 	                       double deadband,
 	                       boolean inverted,
-	                       @JsonProperty(required = true) NavxSubsystem subsystem, int kP, int kI, int kD) {
+	                       @NotNull @JsonProperty(required = true) NavxSubsystem subsystem,
+	                       int kP,
+	                       int kI,
+	                       int kD) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
 		super(kP, kI, kD);
 		this.subsystem = subsystem;
@@ -76,7 +83,6 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand{
 
 		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
-		//TODO test and implement that Talon nominalOutputVoltage and then get rid of this.
 		this.minimumOutput = minimumOutput;
 
 		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
@@ -147,10 +153,12 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand{
 
 	/**
 	 * Get the command object this object is.
+	 *
 	 * @return this.
 	 */
 	@Override
-	public Command getCommand(){
+	@NotNull
+	public Command getCommand() {
 		return this;
 	}
 }

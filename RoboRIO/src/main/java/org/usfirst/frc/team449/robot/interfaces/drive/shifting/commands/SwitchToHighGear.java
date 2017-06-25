@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * A command that switches to high gear.
@@ -17,7 +18,8 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	/**
 	 * The drive subsystem to execute this command on.
 	 */
-	private ShiftingDrive subsystem;
+	@NotNull
+	private final ShiftingDrive subsystem;
 
 	/**
 	 * Default constructor
@@ -25,7 +27,7 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public SwitchToHighGear(@JsonProperty(required = true) ShiftingDrive subsystem) {
+	public SwitchToHighGear(@NotNull @JsonProperty(required = true) ShiftingDrive subsystem) {
 		this.subsystem = subsystem;
 	}
 

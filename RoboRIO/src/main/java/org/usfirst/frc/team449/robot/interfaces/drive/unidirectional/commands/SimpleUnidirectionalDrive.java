@@ -4,27 +4,30 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class SimpleUnidirectionalDrive<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.
 	 */
-	public UnidirectionalOI oi;
+	@NotNull
+	public final UnidirectionalOI oi;
 
 	/**
 	 * The drive subsystem to execute this command on.
 	 */
-	private UnidirectionalDrive subsystem;
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * Default constructor
@@ -33,8 +36,8 @@ public class SimpleUnidirectionalDrive <T extends YamlSubsystem & Unidirectional
 	 * @param oi    The OI that gives the input to this command.
 	 */
 	@JsonCreator
-	public SimpleUnidirectionalDrive(@JsonProperty(required = true) T drive,
-	                                                                             @JsonProperty(required = true) UnidirectionalOI oi) {
+	public SimpleUnidirectionalDrive(@NotNull @JsonProperty(required = true) T drive,
+	                                 @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
 		this.subsystem = drive;
 		//Default commands need to require their subsystems.

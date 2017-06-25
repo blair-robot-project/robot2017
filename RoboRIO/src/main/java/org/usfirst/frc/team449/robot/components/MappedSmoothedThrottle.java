@@ -2,6 +2,7 @@ package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A smoothed throttle with a deadband.
@@ -14,9 +15,9 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 
 	private final LinearDigitalFilter filter;
 
-	double input;
+	private double input;
 
-	double sign;
+	private double sign;
 
 	/**
 	 * A basic constructor.
@@ -27,7 +28,7 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
 	 */
 	@JsonCreator
-	public MappedSmoothedThrottle(@JsonProperty(required = true) MappedJoystick stick,
+	public MappedSmoothedThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                              @JsonProperty(required = true) int axis,
 	                              double smoothingTimeConstantSecs,
 	                              double deadband,

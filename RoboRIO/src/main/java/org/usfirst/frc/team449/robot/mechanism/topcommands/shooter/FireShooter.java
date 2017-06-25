@@ -2,13 +2,13 @@ package org.usfirst.frc.team449.robot.mechanism.topcommands.shooter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
 /**
  * Command group for firing the shooter.
@@ -23,8 +23,8 @@ public class FireShooter extends YamlCommandGroupWrapper {
 	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public FireShooter(ShooterSubsystem shooterSubsystem,
-	                   IntakeSubsystem intakeSubsystem) {
+	public FireShooter(@Nullable ShooterSubsystem shooterSubsystem,
+	                   @Nullable IntakeSubsystem intakeSubsystem) {
 		if (shooterSubsystem != null) {
 			addParallel(new TurnAllOn(shooterSubsystem));
 		}

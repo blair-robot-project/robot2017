@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 
@@ -18,33 +19,34 @@ public class AutoshiftProcessor {
 	/**
 	 * The speed setpoint at the upshift break
 	 */
-	private double upshiftSpeed;
+	private final double upshiftSpeed;
 
 	/**
 	 * The speed setpoint at the downshift break
 	 */
-	private double downshiftSpeed;
+	private final double downshiftSpeed;
 
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after upshifting.
 	 */
-	private long cooldownAfterUpshift;
+	private final long cooldownAfterUpshift;
 
 	/**
 	 * The robot isn't eligible to shift again for this many milliseconds after downshifting.
 	 */
-	private long cooldownAfterDownshift;
+	private final long cooldownAfterDownshift;
 
 	/**
 	 * BufferTimers for shifting that make it so all the other conditions to shift must be met for some amount of time
 	 * before shifting actually happens.
 	 */
-	private BufferTimer upshiftBufferTimer, downshiftBufferTimer;
+	@NotNull
+	private final BufferTimer upshiftBufferTimer, downshiftBufferTimer;
 
 	/**
 	 * The forward velocity setpoint (on a 0-1 scale) below which we stay in low gear
 	 */
-	private double upshiftFwdThresh;
+	private final double upshiftFwdThresh;
 
 	/**
 	 * The time we last upshifted (milliseconds)
@@ -58,6 +60,7 @@ public class AutoshiftProcessor {
 
 	/**
 	 * Default constructor
+	 *
 	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high
 	 *                                         gear.
 	 * @param downshiftSpeed                   The maximum speed both sides must be going at to shift to low gear.
@@ -83,25 +86,26 @@ public class AutoshiftProcessor {
 	                          double cooldownAfterUpshift,
 	                          double cooldownAfterDownshift,
 	                          double delayAfterUpshiftConditionsMet,
-	                          double delayAfterDownshiftConditionsMet){
+	                          double delayAfterDownshiftConditionsMet) {
 		this.upshiftSpeed = upshiftSpeed;
 		this.downshiftSpeed = downshiftSpeed;
 		this.upshiftFwdThresh = upshiftFwdThresh;
-		this.cooldownAfterUpshift = (long) (cooldownAfterUpshift*1000.);
-		this.cooldownAfterDownshift = (long) (cooldownAfterDownshift*1000.);
+		this.cooldownAfterUpshift = (long) (cooldownAfterUpshift * 1000.);
+		this.cooldownAfterDownshift = (long) (cooldownAfterDownshift * 1000.);
 		this.upshiftBufferTimer = new BufferTimer(delayAfterUpshiftConditionsMet);
 		this.downshiftBufferTimer = new BufferTimer(delayAfterDownshiftConditionsMet);
 	}
 
 	/**
 	 * Determine whether the robot should downshift.
+	 *
 	 * @param rotThrottle The rotational throttle, on [-1, 1].
 	 * @param fwdThrottle The velocity throttle, on [-1, 1].
-	 * @param leftVel The velocity of the left side of the drive.
-	 * @param rightVel The velocity of the right side of the drive.
+	 * @param leftVel     The velocity of the left side of the drive.
+	 * @param rightVel    The velocity of the right side of the drive.
 	 * @return True if the drive should downshift, false otherwise.
 	 */
-	public boolean arcadeShouldDownshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel){
+	public boolean arcadeShouldDownshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going slower than the downshift speed
 		boolean okToShift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
 		//Or if we're just turning in place.
@@ -116,7 +120,7 @@ public class AutoshiftProcessor {
 		okToShift = downshiftBufferTimer.get(okToShift);
 
 		//Record the time if we do decide to shift.
-		if (okToShift){
+		if (okToShift) {
 			timeLastDownshifted = Robot.currentTimeMillis();
 		}
 		return okToShift;
@@ -124,12 +128,13 @@ public class AutoshiftProcessor {
 
 	/**
 	 * Determine whether the robot should upshift.
+	 *
 	 * @param fwdThrottle The velocity throttle, on [-1, 1].
-	 * @param leftVel The velocity of the left side of the drive.
-	 * @param rightVel The velocity of the right side of the drive.
+	 * @param leftVel     The velocity of the left side of the drive.
+	 * @param rightVel    The velocity of the right side of the drive.
 	 * @return True if the drive should upshift, false otherwise.
 	 */
-	public boolean arcadeShouldUpshift(double fwdThrottle, double leftVel, double rightVel){
+	public boolean arcadeShouldUpshift(double fwdThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
 		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
@@ -140,16 +145,16 @@ public class AutoshiftProcessor {
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
 		okToShift = upshiftBufferTimer.get(okToShift);
-		if (okToShift){
+		if (okToShift) {
 			timeLastUpshifted = Robot.currentTimeMillis();
 		}
 		return okToShift;
 	}
 
-	public void arcadeAutoshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift){
-		if (arcadeShouldDownshift(rotThrottle, fwdThrottle, leftVel, rightVel)){
+	public void arcadeAutoshift(double rotThrottle, double fwdThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift) {
+		if (arcadeShouldDownshift(rotThrottle, fwdThrottle, leftVel, rightVel)) {
 			shift.accept(ShiftingDrive.gear.LOW);
-		} else if (arcadeShouldUpshift(fwdThrottle, leftVel, rightVel)){
+		} else if (arcadeShouldUpshift(fwdThrottle, leftVel, rightVel)) {
 			shift.accept(ShiftingDrive.gear.HIGH);
 		}
 	}

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.MappedAHRS;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
@@ -20,7 +23,14 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	/**
 	 * The solenoid that shifts between gears
 	 */
-	private DoubleSolenoid shifter;
+	@NotNull
+	private final DoubleSolenoid shifter;
+
+	/**
+	 * The gear to start teleop and autonomous in.
+	 */
+	@NotNull
+	private final gear startingGear;
 
 	/**
 	 * Whether not to override auto shifting
@@ -30,41 +40,38 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	/**
 	 * What gear we're in
 	 */
+	@NotNull
 	private gear currentGear;
-
-	/**
-	 * The gear to start teleop and autonomous in.
-	 */
-	private gear startingGear;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param leftMaster                       The master talon on the left side of the drive.
-	 * @param rightMaster                      The master talon on the right side of the drive.
-	 * @param MPHandler                        The motion profile handler that runs this drive's motion profiles.
-	 * @param PIDScale                         The amount to scale the output to the PID loop by. Defaults to 1.
-	 * @param shifter                          The piston that shifts between gears.
-	 * @param startingGear                     The gear the drive starts in. Defaults to low.
+	 * @param leftMaster   The master talon on the left side of the drive.
+	 * @param rightMaster  The master talon on the right side of the drive.
+	 * @param MPHandler    The motion profile handler that runs this drive's motion profiles.
+	 * @param PIDScale     The amount to scale the output to the PID loop by. Defaults to 1.
+	 * @param shifter      The piston that shifts between gears.
+	 * @param startingGear The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
-	public ShiftingTalonClusterDrive(@JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
-	                                 @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
-	                                 @JsonProperty(required = true) CANTalonMPHandler MPHandler,
-	                                 Double PIDScale,
-	                                 @JsonProperty(required = true) MappedDoubleSolenoid shifter,
-	                                 gear startingGear) {
-		super(leftMaster, rightMaster, MPHandler, PIDScale);
+	public ShiftingTalonClusterDrive(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX leftMaster,
+	                                 @NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX rightMaster,
+	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                                 @NotNull @JsonProperty(required = true) CANTalonMPHandler MPHandler,
+	                                 @Nullable Double PIDScale,
+	                                 @NotNull @JsonProperty(required = true) MappedDoubleSolenoid shifter,
+	                                 @Nullable gear startingGear) {
+		super(leftMaster, rightMaster, navX, MPHandler, PIDScale);
 		//Initialize stuff
 		this.shifter = shifter;
 
 		//Default to low
 		if (startingGear == null) {
-			startingGear = gear.LOW;
+			this.startingGear = gear.LOW;
+		} else {
+			this.startingGear = startingGear;
 		}
-
-		this.startingGear = startingGear;
-		currentGear = startingGear;
+		currentGear = this.startingGear;
 
 		// Initialize shifting constants, assuming robot is stationary.
 		overrideAutoshift = false;
@@ -100,13 +107,17 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	protected void setPIDThrottle(double left, double right) {
 		//If we're not shifting or we're just turning in place, scale by the max speed in the current gear
 		if (overrideAutoshift || left == right) {
-			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
+			super.setPIDThrottle(left, right);
 		}
 		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.
 		else {
-			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
-			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
+			if (leftMaster.getMaxSpeedHG() == null || rightMaster.getMaxSpeedHG() == null) {
+				setVBusThrottle(left, right);
+				System.out.println("You're trying to set PID throttle, but the drive talons don't have PID constants defined. Using voltage control instead.");
+			} else {
+				leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
+				rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
+			}
 		}
 	}
 
@@ -114,6 +125,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 * @return The gear this subsystem is currently in.
 	 */
 	@Override
+	@NotNull
 	public gear getGear() {
 		return currentGear;
 	}
@@ -124,7 +136,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 * @param gear Which gear to shift to.
 	 */
 	@Override
-	public void setGear(gear gear) {
+	public void setGear(@NotNull gear gear) {
 		//If we want to downshift
 		if (gear == ShiftingDrive.gear.LOW) {
 			//Physically shift gears
@@ -145,6 +157,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 		currentGear = gear;
 	}
 
+	@NotNull
 	public gear getStartingGear() {
 		return startingGear;
 	}

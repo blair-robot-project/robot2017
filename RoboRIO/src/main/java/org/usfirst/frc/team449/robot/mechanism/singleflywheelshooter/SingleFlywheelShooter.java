@@ -5,12 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Loggable;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Class for the flywheel
@@ -20,32 +21,35 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	/**
 	 * The flywheel's Talon
 	 */
-	private RotPerSecCANTalonSRX shooterTalon;
+	@NotNull
+	private final RotPerSecCANTalonSRX shooterTalon;
 
 	/**
 	 * The feeder's Victor
 	 */
-	private VictorSP feederVictor;
+	@NotNull
+	private final VictorSP feederVictor;
 
 	/**
 	 * How fast to run the feeder, from [-1, 1]
 	 */
-	private double feederThrottle;
-
-	/**
-	 * Whether the flywheel is currently commanded to spin
-	 */
-	private ShooterState state;
+	private final double feederThrottle;
 
 	/**
 	 * Throttle at which to run the shooter, from [-1, 1]
 	 */
-	private double shooterThrottle;
+	private final double shooterThrottle;
 
 	/**
 	 * How long it takes the shooter to get up to speed, in milliseconds.
 	 */
-	private long spinUpTime;
+	private final long spinUpTime;
+
+	/**
+	 * Whether the flywheel is currently commanded to spin
+	 */
+	@NotNull
+	private ShooterState state;
 
 	/**
 	 * Default constructor
@@ -58,9 +62,9 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 *                        0.
 	 */
 	@JsonCreator
-	public SingleFlywheelShooter(@JsonProperty(required = true) RotPerSecCANTalonSRX shooterTalon,
+	public SingleFlywheelShooter(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX shooterTalon,
 	                             @JsonProperty(required = true) double shooterThrottle,
-	                             @JsonProperty(required = true) MappedVictor feederVictor,
+	                             @NotNull @JsonProperty(required = true) MappedVictor feederVictor,
 	                             @JsonProperty(required = true) double feederThrottle,
 	                             double spinUpTimeSecs) {
 		super();
@@ -70,7 +74,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 		this.feederThrottle = feederThrottle;
 		state = ShooterState.OFF;
 		spinUpTime = (long) (spinUpTimeSecs * 1000.);
-		Logger.addEvent("Shooter F: " + shooterTalon.canTalon.getF(), this.getClass());
+		Logger.addEvent("Shooter F: " + shooterTalon.getCanTalon().getF(), this.getClass());
 	}
 
 	/**
@@ -88,7 +92,12 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 * @param sp percent PID velocity setpoint [-1, 1]
 	 */
 	private void setFlywheelPIDSpeed(double sp) {
-		shooterTalon.setSpeed(shooterTalon.getMaxSpeed() * sp);
+		if (shooterTalon.getMaxSpeed() == null) {
+			setFlywheelVBusSpeed(sp);
+			System.out.println("You're trying to set PID throttle, but the shooter talon doesn't have PID constants defined. Using voltage control instead.");
+		} else {
+			shooterTalon.setSpeed(shooterTalon.getMaxSpeed() * sp);
+		}
 	}
 
 	/**
@@ -122,6 +131,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
 		return new String[]{"speed",
@@ -136,13 +146,14 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
 		return new Object[]{shooterTalon.getSpeed(),
 				shooterTalon.getSetpoint(),
 				shooterTalon.getError(),
-				shooterTalon.canTalon.getOutputVoltage(),
-				shooterTalon.canTalon.getOutputCurrent()};
+				shooterTalon.getCanTalon().getOutputVoltage(),
+				shooterTalon.getCanTalon().getOutputCurrent()};
 	}
 
 	/**
@@ -150,6 +161,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "shooter";
@@ -160,7 +172,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 */
 	@Override
 	public void turnShooterOn() {
-		shooterTalon.canTalon.enable();
+		shooterTalon.getCanTalon().enable();
 		setFlywheelDefaultSpeed(shooterThrottle);
 	}
 
@@ -170,7 +182,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	@Override
 	public void turnShooterOff() {
 		setFlywheelVBusSpeed(0);
-		shooterTalon.canTalon.disable();
+		shooterTalon.getCanTalon().disable();
 	}
 
 	/**
@@ -194,6 +206,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 *
 	 * @return Off, spinning up, or shooting.
 	 */
+	@NotNull
 	@Override
 	public ShooterState getShooterState() {
 		return state;
@@ -205,7 +218,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	 * @param state Off, spinning up, or shooting
 	 */
 	@Override
-	public void setShooterState(ShooterState state) {
+	public void setShooterState(@NotNull ShooterState state) {
 		this.state = state;
 	}
 

@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
@@ -35,11 +35,11 @@ public class MotionProfileData {
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */
 	@JsonCreator
-	public MotionProfileData(@JsonProperty(required = true) String filename,
+	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
 	                         @JsonProperty(required = true) boolean inverted) {
 		this.inverted = inverted;
 		try {
-			readFile(Robot.RESOURCES_PATH+filename);
+			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -51,7 +51,7 @@ public class MotionProfileData {
 	 * @param filename The name of the .csv file containing the motion profile data.
 	 * @throws IOException if that file doesn't exist.
 	 */
-	private void readFile(String filename) throws IOException {
+	private void readFile(@NotNull String filename) throws IOException {
 		//Instantiate the reader
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		int numLines = Integer.parseInt(br.readLine());
@@ -87,6 +87,7 @@ public class MotionProfileData {
 		br.close();
 	}
 
+	@NotNull
 	public double[][] getData() {
 		return data;
 	}

@@ -4,15 +4,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 
 /**
  * Drive back and forth to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDBackAndForth <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
+public class PIDBackAndForth<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 	/**
 	 * Instantiate the CommandGroup
 	 *
@@ -21,12 +22,12 @@ public class PIDBackAndForth <T extends YamlSubsystem & UnidirectionalDrive> ext
 	 * @param timeInSecs How long to drive in each direction for, in seconds.
 	 */
 	@JsonCreator
-	public PIDBackAndForth(@JsonProperty(required = true) T subsystem,
-	                                                                   @JsonProperty(required = true) double speed,
-	                                                                   @JsonProperty(required = true) double timeInSecs) {
+	public PIDBackAndForth(@NotNull @JsonProperty(required = true) T subsystem,
+	                       @JsonProperty(required = true) double speed,
+	                       @JsonProperty(required = true) double timeInSecs) {
 		//Drive forwards
-		addSequential(new DriveAtSpeed(subsystem, speed, timeInSecs));
+		addSequential(new DriveAtSpeed<>(subsystem, speed, timeInSecs));
 		//Drive backwards
-		addSequential(new DriveAtSpeed(subsystem, -speed, timeInSecs));
+		addSequential(new DriveAtSpeed<>(subsystem, -speed, timeInSecs));
 	}
 }

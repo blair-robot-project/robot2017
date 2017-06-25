@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.PressureSensor;
 import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
@@ -17,12 +19,14 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
 	 */
-	private Compressor compressor;
+	@NotNull
+	private final Compressor compressor;
 
 	/**
 	 * The pressure sensor that reads the pneumatic pressure.
 	 */
-	private PressureSensor pressureSensor;
+	@Nullable
+	private final PressureSensor pressureSensor;
 
 	/**
 	 * Default constructor
@@ -32,7 +36,7 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	 */
 	@JsonCreator
 	public PneumaticsSubsystem(@JsonProperty(required = true) int nodeID,
-	                           PressureSensor pressureSensor) {
+	                           @Nullable PressureSensor pressureSensor) {
 		super();
 		compressor = new Compressor(nodeID);
 		this.pressureSensor = pressureSensor;
@@ -59,6 +63,7 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
 		return new String[]{"pressure"};
@@ -69,6 +74,7 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
 		if (pressureSensor == null) {
@@ -83,6 +89,7 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "pneumatics";

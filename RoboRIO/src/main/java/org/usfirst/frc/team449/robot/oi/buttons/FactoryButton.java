@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
 
 /**
@@ -35,11 +37,11 @@ public abstract class FactoryButton extends Button {
 	 * @return A Button constructed from the given parameters.
 	 */
 	@JsonCreator
-	public static FactoryButton constructButton(@JsonProperty(required = true) MappedJoystick joystick,
-	                                            Integer buttonNumber,
-	                                            Integer triggerAxis,
-	                                            Double triggerAt,
-	                                            Integer angle) {
+	public static FactoryButton constructButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
+	                                            @Nullable Integer buttonNumber,
+	                                            @Nullable Integer triggerAxis,
+	                                            @Nullable Double triggerAt,
+	                                            @Nullable Integer angle) {
 		if (triggerAxis != null) {
 			return new TriggerButton(joystick, triggerAxis, triggerAt);
 		} else if (angle != null) {

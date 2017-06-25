@@ -148,6 +148,9 @@ drive:
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
         PIDScale: 0.9
+        navX:
+            '@id': driveNavX
+            port: kMXP
         shifter:
             '@id': driveShifter
             module: 15
@@ -167,7 +170,7 @@ defaultDriveCommand:
         maxAngularVelToEnterLoop: 0.05
         inverted: true
         loopEntryDelay: 0.15
-        drive:
+        subsystem:
             org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                 drive
         oi:
@@ -401,7 +404,7 @@ feederAuto:
 nonMPAutoCommand:
     org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DetermineNominalVoltage:
         '@id': determineNominalVoltage
-        drive:
+        subsystem:
             org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                 drive
 buttons:
@@ -520,7 +523,7 @@ buttons:
         command:
             org.usfirst.frc.team449.robot.vision.commands.ChangeCam:
                 '@id': switchCameraCommand
-                cameraSubsystem:
+                subsystem:
                     org.usfirst.frc.team449.robot.vision.CameraSubsystem:
                         cameras
         action: WHEN_PRESSED

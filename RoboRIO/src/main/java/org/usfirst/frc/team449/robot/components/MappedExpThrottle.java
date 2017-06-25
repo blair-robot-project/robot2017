@@ -17,6 +17,9 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	 */
 	protected final double base;
 
+	private double input;
+
+	private double sign;
 
 	/**
 	 * A basic constructor.
@@ -28,7 +31,7 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	 * @param base     The base that is raised to the power of the joystick input..
 	 */
 	@JsonCreator
-	public MappedExpThrottle(@JsonProperty(required = true) MappedJoystick stick,
+	public MappedExpThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                         @JsonProperty(required = true) int axis,
 	                         double smoothingTimeConstantSecs,
 	                         double deadband,

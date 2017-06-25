@@ -4,21 +4,25 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Map;
 
 /**
- * A polynomically scaled throttle.
+ * A polynomially scaled throttle.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	/**
 	 * The power that X is raised to.
 	 */
-	protected Map<Double, Double> powerToCoefficientMap;
+	protected final Map<Double, Double> powerToCoefficientMap;
+
+	private double input;
+
+	private double sign;
 
 	/**
 	 * A basic constructor.
@@ -29,7 +33,7 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
 	 */
 	@JsonCreator
-	public MappedPolyThrottle(@JsonProperty(required = true) MappedJoystick stick,
+	public MappedPolyThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                          @JsonProperty(required = true) int axis,
 	                          double smoothingTimeConstantSecs,
 	                          double deadband,
@@ -40,8 +44,8 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 			powerToCoefficientMap.put(1., 1.);
 		}
 		double sum = 0;
-		for (Double power : powerToCoefficientMap.keySet()){
-			if (power < 0){
+		for (Double power : powerToCoefficientMap.keySet()) {
+			if (power < 0) {
 				throw new IllegalArgumentException("Negative exponents are not allowed!");
 			}
 			sum += powerToCoefficientMap.get(power);
@@ -49,7 +53,7 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 		//Round the sum to avoid floating-point errors
 		BigDecimal bd = new BigDecimal(sum);
 		bd = bd.setScale(3, RoundingMode.HALF_UP);
-		if (bd.doubleValue() != 1){
+		if (bd.doubleValue() != 1) {
 			throw new IllegalArgumentException("Polynomial coefficients don't add up to 1!");
 		}
 		this.powerToCoefficientMap = powerToCoefficientMap;
@@ -67,9 +71,9 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 		input = Math.abs(input);
 
 		double toRet = 0;
-		for (Double power : powerToCoefficientMap.keySet()){
-			toRet += Math.pow(input, power)*powerToCoefficientMap.get(power);
+		for (Double power : powerToCoefficientMap.keySet()) {
+			toRet += Math.pow(input, power) * powerToCoefficientMap.get(power);
 		}
-		return toRet*sign;
+		return toRet * sign;
 	}
 }

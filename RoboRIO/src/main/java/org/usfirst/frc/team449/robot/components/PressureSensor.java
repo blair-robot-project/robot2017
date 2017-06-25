@@ -14,7 +14,7 @@ public class PressureSensor {
 	/**
 	 * The AnalogInput this is a wrapper on.
 	 */
-	private AnalogInput sensor;
+	private final AnalogInput sensor;
 
 
 	/**

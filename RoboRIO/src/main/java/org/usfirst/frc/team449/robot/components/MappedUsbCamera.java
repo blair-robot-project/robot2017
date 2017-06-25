@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.UsbCamera;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A Jackson-compatible wrapper on the {@link UsbCamera}.
@@ -28,7 +29,7 @@ public class MappedUsbCamera extends UsbCamera {
 	 *                   won't let us go below, but I don't know what it is.
 	 */
 	@JsonCreator
-	public MappedUsbCamera(@JsonProperty(required = true) String name,
+	public MappedUsbCamera(@NotNull @JsonProperty(required = true) String name,
 	                       @JsonProperty(required = true) int devAddress,
 	                       @JsonProperty(required = true) int width,
 	                       @JsonProperty(required = true) int height,

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
 import edu.wpi.first.wpilibj.Joystick;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
@@ -10,12 +11,13 @@ public class dPadButton extends FactoryButton {
 	/**
 	 * The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	private int angle;
+	private final int angle;
 
 	/**
 	 * The joystick with the relevant D-pad on it.
 	 */
-	private Joystick joystick;
+	@NotNull
+	private final Joystick joystick;
 
 	/**
 	 * Explicit argument constructor.
@@ -23,7 +25,7 @@ public class dPadButton extends FactoryButton {
 	 * @param joystick The joystick with the D-pad.
 	 * @param angle    The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	dPadButton(Joystick joystick, int angle) {
+	dPadButton(@NotNull Joystick joystick, int angle) {
 		this.angle = angle;
 		this.joystick = joystick;
 	}

@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * A subsystem that picks up balls from the ground.
@@ -19,43 +21,47 @@ import org.usfirst.frc.team449.robot.util.Logger;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, IntakeSubsystem {
 	/**
+	 * VictorSP for the fixed intake
+	 */
+	@NotNull
+	private final VictorSP fixedVictor;
+
+	/**
+	 * VictorSP for the actuated intake
+	 */
+	@Nullable
+	private final VictorSP actuatedVictor;
+
+	/**
+	 * Piston for raising and lowering the intake
+	 */
+	@Nullable
+	private final DoubleSolenoid piston;
+
+	/**
+	 * How fast the fixed victor should go to pick up balls, on [-1, 1]
+	 */
+	private final double fixedIntakeSpeed;
+
+	/**
+	 * How fast the fixed victor should go to agitate balls while they're being fed into the shooter, on [-1, 1]
+	 */
+	private final double fixedAgitateSpeed;
+
+	/**
+	 * How fast the actuated victor should go to pick up balls, on [-1, 1]
+	 */
+	private final double actuatedSpeed;
+
+	/**
 	 * Whether intake is currently up
 	 */
 	private boolean intakeUp;
 
 	/**
-	 * VictorSP for the fixed intake
-	 */
-	private VictorSP fixedVictor;
-
-	/**
-	 * VictorSP for the actuated intake
-	 */
-	private VictorSP actuatedVictor;
-
-	/**
-	 * Piston for raising and lowering the intake
-	 */
-	private DoubleSolenoid piston;
-
-	/**
-	 * How fast the fixed victor should go to pick up balls, on [-1, 1]
-	 */
-	private double fixedIntakeSpeed;
-
-	/**
-	 * How fast the fixed victor should go to agitate balls while they're being fed into the shooter, on [-1, 1]
-	 */
-	private double fixedAgitateSpeed;
-
-	/**
-	 * How fast the actuated victor should go to pick up balls, on [-1, 1]
-	 */
-	private double actuatedSpeed;
-
-	/**
 	 * The mode the intake's currently in.
 	 */
+	@NotNull
 	private IntakeMode mode;
 
 	/**
@@ -69,13 +75,12 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	 * @param piston            The piston for raising and lowering the actuated intake. Can be null.
 	 */
 	@JsonCreator
-	public Intake2017(@JsonProperty(required = true) MappedVictor fixedVictor,
+	public Intake2017(@NotNull @JsonProperty(required = true) MappedVictor fixedVictor,
 	                  @JsonProperty(required = true) double fixedAgitateSpeed,
 	                  @JsonProperty(required = true) double fixedIntakeSpeed,
-	                  MappedVictor actuatedVictor,
+	                  @Nullable MappedVictor actuatedVictor,
 	                  double actuatedSpeed,
-	                  MappedDoubleSolenoid piston) {
-		super();
+	                  @Nullable MappedDoubleSolenoid piston) {
 		//Instantiate stuff.
 		this.fixedVictor = fixedVictor;
 		this.fixedIntakeSpeed = fixedIntakeSpeed;
@@ -111,7 +116,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	 *
 	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
-	public void setSolenoid(DoubleSolenoid.Value value) {
+	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
 		if (piston != null) {
 			piston.set(value);
 			intakeUp = (value == DoubleSolenoid.Value.kReverse);
@@ -123,6 +128,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	 *
 	 * @return Forward if extended, Reverse if contracted.
 	 */
+	@NotNull
 	public DoubleSolenoid.Value getSolenoidPosition() {
 		return intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
 	}
@@ -143,6 +149,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	 *
 	 * @return off, in slow, in fast, out slow, out fast.
 	 */
+	@NotNull
 	@Override
 	public IntakeMode getMode() {
 		return mode;
@@ -154,7 +161,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	 * @param mode off, in slow, in fast, out slow, out fast.
 	 */
 	@Override
-	public void setMode(IntakeMode mode) {
+	public void setMode(@NotNull IntakeMode mode) {
 		this.mode = mode;
 		switch (mode) {
 			case OFF:

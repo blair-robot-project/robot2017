@@ -4,32 +4,34 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
+public class RunLoadedProfile<T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.
 	 */
-	private long timeout;
+	private final long timeout;
+
+	/**
+	 * The subsystem to execute this command on.
+	 */
+	@NotNull
+	private final MPSubsystem subsystem;
 
 	/**
 	 * The time this command started running at.
 	 */
 	private long startTime;
-
-	/**
-	 * The subsystem to execute this command on.
-	 */
-	private MPSubsystem subsystem;
 
 	/**
 	 * Whether or not we're currently running the profile.
@@ -45,9 +47,9 @@ public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends Ya
 	 * @param require   Whether or not to require the subsystem this command is running on.
 	 */
 	@JsonCreator
-	public RunLoadedProfile(@JsonProperty(required = true) T subsystem,
-	                                                            @JsonProperty(required = true) double timeout,
-	                                                            @JsonProperty(required = true) boolean require) {
+	public RunLoadedProfile(@NotNull @JsonProperty(required = true) T subsystem,
+	                        @JsonProperty(required = true) double timeout,
+	                        @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;
 		//Require if specified.
 		if (require) {

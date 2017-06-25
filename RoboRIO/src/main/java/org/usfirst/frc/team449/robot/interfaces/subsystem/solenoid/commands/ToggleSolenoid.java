@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * A command that toggles the position of a piston.
@@ -18,7 +19,8 @@ public class ToggleSolenoid extends YamlCommandWrapper {
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private SolenoidSubsystem subsystem;
+	@NotNull
+	private final SolenoidSubsystem subsystem;
 
 	/**
 	 * Default constructor
@@ -26,7 +28,7 @@ public class ToggleSolenoid extends YamlCommandWrapper {
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public ToggleSolenoid(@JsonProperty(required = true) SolenoidSubsystem subsystem) {
+	public ToggleSolenoid(@NotNull @JsonProperty(required = true) SolenoidSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

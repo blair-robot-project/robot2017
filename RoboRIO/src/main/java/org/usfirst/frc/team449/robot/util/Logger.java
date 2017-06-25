@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -25,32 +25,37 @@ public class Logger implements Runnable {
 	/**
 	 * A list of all events that subsystems and commands have logged that haven't yet been written to a file.
 	 */
+	@NotNull
 	private static List<LogEvent> events = new ArrayList<>();
 
 	/**
 	 * The file path for the event log.
 	 */
-	private String eventLogFilename;
+	@NotNull
+	private final String eventLogFilename;
 
 	/**
 	 * The file path for the telemetry data log.
 	 */
-	private String telemetryLogFilename;
+	@NotNull
+	private final String telemetryLogFilename;
 
 	/**
 	 * An array of all the subsystems with telemetry data to log.
 	 */
-	private Loggable[] subsystems;
+	@NotNull
+	private final Loggable[] subsystems;
 
 	/**
 	 * A 2d array of the names of the each datum logged by each subsystem. Organized as itemNames[subsystem][dataIndex].
 	 */
-	private String[][] itemNames;
+	@NotNull
+	private final String[][] itemNames;
 
 	/**
 	 * The period of the loop running this logger, in seconds.
 	 */
-	private double loopTimeSecs;
+	private final double loopTimeSecs;
 
 	/**
 	 * Default constructor.
@@ -65,10 +70,10 @@ public class Logger implements Runnable {
 	 * @throws IOException If the file names provided from the log can't be written to.
 	 */
 	@JsonCreator
-	public Logger(@JsonProperty(required = true) Loggable[] subsystems,
+	public Logger(@NotNull @JsonProperty(required = true) Loggable[] subsystems,
 	              @JsonProperty(required = true) double loopTimeSecs,
-	              @JsonProperty(required = true) String eventLogFilename,
-	              @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
+	              @NotNull @JsonProperty(required = true) String eventLogFilename,
+	              @NotNull @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
 		//Set up the file names, using a time stamp to avoid overwriting old log files.
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 		this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
@@ -119,7 +124,7 @@ public class Logger implements Runnable {
 	 * @param message The text of the event to log.
 	 * @param caller  The class causing the event. Almost always will be this.getClass().
 	 */
-	public static void addEvent(String message, Class caller) {
+	public static void addEvent(@NotNull String message, @NotNull Class caller) {
 		events.add(new LogEvent(message, caller));
 	}
 
@@ -173,7 +178,7 @@ public class Logger implements Runnable {
 						System.out.println("Double: " + datum);
 						System.out.println("Double class: " + datum.getClass());
 						SmartDashboard.putNumber(itemNames[i][j], (double) datum);
-					} else if (datum.getClass().equals(Double.class)){
+					} else if (datum.getClass().equals(Double.class)) {
 						SmartDashboard.putNumber(itemNames[i][j], (Double) datum);
 					} else if (datum.getClass().equals(long.class) || datum.getClass().equals(Long.class)) {
 						SmartDashboard.putNumber(itemNames[i][j], (long) datum);

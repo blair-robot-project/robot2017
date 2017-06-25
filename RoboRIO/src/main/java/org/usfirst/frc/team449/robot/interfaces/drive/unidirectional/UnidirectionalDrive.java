@@ -1,13 +1,14 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.drive.DriveSubsystem;
 
 /**
  * A drive with a left side and a right side. "Unidirectional" because it can only move forwards or backwards, not
  * sideways.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface UnidirectionalDrive extends DriveSubsystem {
 
 	/**
@@ -20,13 +21,17 @@ public interface UnidirectionalDrive extends DriveSubsystem {
 
 	/**
 	 * Get the velocity of the left side of the drive.
-	 * @return The signed velocity in rotations per second.
+	 *
+	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
 	 */
-	double getLeftVel();
+	@Nullable
+	Double getLeftVel();
 
 	/**
 	 * Get the velocity of the right side of the drive.
-	 * @return The signed velocity in rotations per second.
+	 *
+	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
 	 */
-	double getRightVel();
+	@Nullable
+	Double getRightVel();
 }

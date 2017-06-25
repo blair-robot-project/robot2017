@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedUsbCamera;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 import java.util.List;
 
@@ -20,17 +21,19 @@ public class CameraSubsystem extends YamlSubsystem {
 	/**
 	 * Video server to view on SmartDashboard
 	 */
-	public MjpegServer server;
+	@NotNull
+	private final MjpegServer server;
 
 	/**
 	 * List of cameras used on robot
 	 */
-	public List<MappedUsbCamera> cameras;
+	@NotNull
+	private final List<MappedUsbCamera> cameras;
 
 	/**
-	 * Total number of cameras
+	 * Camera currently being streamed from.
 	 */
-	public int camNum;
+	private int camNum;
 
 	/**
 	 * Default constructor
@@ -41,8 +44,8 @@ public class CameraSubsystem extends YamlSubsystem {
 	 */
 	@JsonCreator
 	public CameraSubsystem(@JsonProperty(required = true) int serverPort,
-	                       @JsonProperty(required = true) String serverName,
-	                       @JsonProperty(required = true) List<MappedUsbCamera> cameras) {
+	                       @NotNull @JsonProperty(required = true) String serverName,
+	                       @NotNull @JsonProperty(required = true) List<MappedUsbCamera> cameras) {
 		super();
 
 		//Logging
@@ -73,5 +76,23 @@ public class CameraSubsystem extends YamlSubsystem {
 	@Override
 	protected void initDefaultCommand() {
 		//Do nothing!
+	}
+
+	@NotNull
+	public MjpegServer getServer() {
+		return server;
+	}
+
+	@NotNull
+	public List<MappedUsbCamera> getCameras() {
+		return cameras;
+	}
+
+	public int getCamNum() {
+		return camNum;
+	}
+
+	public void setCamNum(int camNum) {
+		this.camNum = camNum;
 	}
 }

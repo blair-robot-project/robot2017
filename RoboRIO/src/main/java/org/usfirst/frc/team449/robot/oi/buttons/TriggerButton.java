@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
 import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
@@ -12,12 +13,13 @@ public class TriggerButton extends FactoryButton {
 	/**
 	 * The relevant throttle.
 	 */
-	private MappedThrottle throttle;
+	@NotNull
+	private final MappedThrottle throttle;
 
 	/**
 	 * The percentage pressed to trigger at, from (0, 1]
 	 */
-	private double triggerAt;
+	private final double triggerAt;
 
 	/**
 	 * Argument-based constructor.
@@ -26,7 +28,7 @@ public class TriggerButton extends FactoryButton {
 	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
-	TriggerButton(MappedJoystick joystick, int axis, double triggerAt) {
+	TriggerButton(@NotNull MappedJoystick joystick, int axis, double triggerAt) {
 		throttle = new MappedSmoothedThrottle(joystick, axis, 0, 0, false);
 		this.triggerAt = triggerAt;
 	}
