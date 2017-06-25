@@ -80,6 +80,14 @@ public class RotPerSecCANTalonSRX {
 	@Nullable
 	private Double maxSpeed;
 
+	private final double highGearFwdNominalOutputVoltage, highGearRevNominalOutputVoltage;
+
+	@Nullable
+	private final Double lowGearFwdNominalOutputVoltage;
+
+	@Nullable
+	private final Double lowGearRevNominalOutputVoltage;
+
 	/**
 	 * Default constructor.
 	 *
@@ -94,12 +102,19 @@ public class RotPerSecCANTalonSRX {
 	 * @param revPeakOutputVoltage       The peak voltage in the reverse direction. Can be null, and if it is,
 	 *                                   fwdPeakOutputVoltage is used as the peak voltage in both directions.
 	 *                                   Should be positive or zero.
-	 * @param fwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction, in volts.
-	 *                                   If revNominalOutputVoltage is null, this is used for nominal voltage in both
+	 * @param highGearFwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction in the high/only gear, in volts.
+	 *                                   If highGearRevNominalOutputVoltage is null, this is used for nominal voltage in both
 	 *                                   directions. Should be a positive or zero.
-	 * @param revNominalOutputVoltage    The minimum non-zero voltage in the reverse direction. Can be null, and if it
+	 * @param highGearRevNominalOutputVoltage    The minimum non-zero voltage in the reverse direction in the high/only gear. Can be null, and if it
 	 *                                   is,
-	 *                                   fwdNominalOutputVoltage is used as the nominal voltage in both directions.
+	 *                                   highGearFwdNominalOutputVoltage is used as the nominal voltage in both directions.
+	 *                                   Should be positive or zero.
+	 * @param lowGearFwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction in the high/only gear, in volts.
+	 *                                   If highGearRevNominalOutputVoltage is null, this is used for nominal voltage in both
+	 *                                   directions. Should be a positive or zero. Can be null if this Talon doesn't have a low gear.
+	 * @param lowGearRevNominalOutputVoltage    The minimum non-zero voltage in the reverse direction in the high/only gear. Can be null, and if it
+	 *                                   is,
+	 *                                   highGearFwdNominalOutputVoltage is used as the nominal voltage in both directions.
 	 *                                   Should be positive or zero.
 	 * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
 	 *                                   the forward limit switch is disabled.
@@ -160,8 +175,10 @@ public class RotPerSecCANTalonSRX {
 	                            @JsonProperty(required = true) boolean enableBrakeMode,
 	                            @JsonProperty(required = true) double fwdPeakOutputVoltage,
 	                            @Nullable Double revPeakOutputVoltage,
-	                            @JsonProperty(required = true) double fwdNominalOutputVoltage,
-	                            @Nullable Double revNominalOutputVoltage,
+	                            @JsonProperty(required = true) double highGearFwdNominalOutputVoltage,
+	                            @Nullable Double highGearRevNominalOutputVoltage,
+	                            @Nullable Double lowGearFwdNominalOutputVoltage,
+	                            @Nullable Double lowGearRevNominalOutputVoltage,
 	                            @Nullable Boolean fwdLimitSwitchNormallyOpen,
 	                            @Nullable Boolean revLimitSwitchNormallyOpen,
 	                            @Nullable Double fwdSoftLimit,
@@ -194,6 +211,18 @@ public class RotPerSecCANTalonSRX {
 		canTalon.setInverted(inverted);
 		//Set brake mode
 		canTalon.enableBrakeMode(enableBrakeMode);
+		this.highGearFwdNominalOutputVoltage = highGearFwdNominalOutputVoltage;
+		if (highGearRevNominalOutputVoltage == null){
+			this.highGearRevNominalOutputVoltage = highGearFwdNominalOutputVoltage;
+		} else {
+			this.highGearRevNominalOutputVoltage = highGearRevNominalOutputVoltage;
+		}
+		this.lowGearFwdNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
+		if (lowGearRevNominalOutputVoltage == null){
+			this.lowGearRevNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
+		} else {
+			this.lowGearRevNominalOutputVoltage = lowGearRevNominalOutputVoltage;
+		}
 
 		//Only enable the limit switches if it was specified if they're normally open or closed.
 		boolean fwdSwitchEnable = false, revSwitchEnable = false;
@@ -239,10 +268,10 @@ public class RotPerSecCANTalonSRX {
 		this.postEncoderGearing = postEncoderGearing;
 
 		//Configure the nominal output voltage. If only forward voltage was given, use it for both forward and reverse.
-		if (revNominalOutputVoltage == null) {
-			revNominalOutputVoltage = fwdNominalOutputVoltage;
+		if (highGearRevNominalOutputVoltage == null) {
+			highGearRevNominalOutputVoltage = highGearFwdNominalOutputVoltage;
 		}
-		canTalon.configNominalOutputVoltage(fwdNominalOutputVoltage, -revNominalOutputVoltage);
+		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
 
 		//Configure the maximum output voltage. If only forward voltage was given, use it for both forward and reverse.
 		if (revPeakOutputVoltage == null) {
@@ -375,15 +404,12 @@ public class RotPerSecCANTalonSRX {
 	 * Switch to using the high gear PID constants.
 	 */
 	public void switchToHighGear() {
+		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
 		if (maxSpeedHigh != null) {
 			//Switch max speed to high gear max speed
 			maxSpeed = maxSpeedHigh;
 			//Set the slot 0 constants to the high gear ones.
 			setPIDF(highGearP, highGearI, highGearD, maxSpeed, 0, 0, 0);
-		} else {
-			//Warn the user if they're trying to do this but don't have the PID constants in the map.
-			Logger.addEvent("You're trying to switch your PIDF constants to high gear, but you don't have high gear " +
-					"constants.", this.getClass());
 		}
 	}
 
@@ -391,16 +417,15 @@ public class RotPerSecCANTalonSRX {
 	 * Switch to using the low gear PID constants if we have them.
 	 */
 	public void switchToLowGear() {
+		if (lowGearFwdNominalOutputVoltage != null){
+			canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
+		}
 		//If there are low gear constants in the map
 		if (maxSpeedLow != null) {
 			//Switch max speed to low gear max speed
 			maxSpeed = maxSpeedLow;
 			//Set the slot 0 constants to the low gear ones.
 			setPIDF(lowGearP, lowGearI, lowGearD, maxSpeed, 0, 0, 0);
-		} else {
-			//Warn the user if they're trying to do this but don't have the low gear constants in the map.
-			Logger.addEvent("You're trying to switch your PIDF constants to low gear, but you don't have low gear " +
-					"constants.", this.getClass());
 		}
 	}
 
