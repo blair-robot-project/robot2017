@@ -1,5 +1,5 @@
 ---
-doMP: true
+doMP: false
 testMP: false
 leftTestProfile:
     &leftTest
@@ -398,6 +398,12 @@ feederAuto:
                     filename: "forwardProfile.csv"
                     inverted: false
                 timeout: 5
+nonMPAutoCommand:
+    org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DetermineNominalVoltage:
+        '@id': determineNominalVoltage
+        drive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
+                drive
 buttons:
     -   button:
             '@id': switchToLowButton
