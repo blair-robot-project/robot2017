@@ -30,11 +30,11 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	@JsonCreator
 	public MappedExpThrottle(@JsonProperty(required = true) MappedJoystick stick,
 	                         @JsonProperty(required = true) int axis,
-	                         double scalingTimeConstantSecs,
+	                         double smoothingTimeConstantSecs,
 	                         double deadband,
 	                         boolean inverted,
 	                         @JsonProperty(required = true) double base) {
-		super(stick, axis, scalingTimeConstantSecs, deadband, inverted);
+		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
 		this.base = base;
 	}
 
@@ -45,8 +45,8 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	 */
 	@Override
 	public double getValue() {
-		double input = super.getValue();
-		double sign = Math.signum(input);
+		input = super.getValue();
+		sign = Math.signum(input);
 
 		input = Math.abs(input);
 		//Exponentially scale

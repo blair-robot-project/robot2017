@@ -6,13 +6,17 @@ import edu.wpi.first.wpilibj.filters.LinearDigitalFilter;
 /**
  * A smoothed throttle with a deadband.
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.WRAPPER_OBJECT, property="@class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedSmoothedThrottle extends MappedThrottle {
 
 	protected final double deadband;
 
 	private final LinearDigitalFilter filter;
+
+	double input;
+
+	double sign;
 
 	/**
 	 * A basic constructor.
@@ -25,12 +29,12 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	@JsonCreator
 	public MappedSmoothedThrottle(@JsonProperty(required = true) MappedJoystick stick,
 	                              @JsonProperty(required = true) int axis,
-	                              double scalingTimeConstantSecs,
+	                              double smoothingTimeConstantSecs,
 	                              double deadband,
 	                              boolean inverted) {
 		super(stick, axis, inverted);
 		this.deadband = deadband;
-		filter = LinearDigitalFilter.singlePoleIIR(this, scalingTimeConstantSecs, 0.02);
+		filter = LinearDigitalFilter.singlePoleIIR(this, smoothingTimeConstantSecs, 0.02);
 	}
 
 	/**
@@ -41,9 +45,9 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	@Override
 	public double getValue() {
 		//Get the smoothed value
-		double input = filter.pidGet();
+		input = filter.pidGet();
 
-		double sign = Math.signum(input);
+		sign = Math.signum(input);
 		input = Math.abs(input);
 
 		//apply the deadband.
@@ -52,8 +56,8 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 		}
 
 		//scale so f(deadband) is 0 and f(1) is 1.
-		input = (input-deadband)/(1.-deadband);
+		input = (input - deadband) / (1. - deadband);
 
-		return sign*input;
+		return sign * input;
 	}
 }

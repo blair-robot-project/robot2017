@@ -31,11 +31,11 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	@JsonCreator
 	public MappedPolyThrottle(@JsonProperty(required = true) MappedJoystick stick,
 	                          @JsonProperty(required = true) int axis,
-	                          double scalingTimeConstantSecs,
+	                          double smoothingTimeConstantSecs,
 	                          double deadband,
 	                          boolean inverted,
 	                          @JsonProperty(required = true) Map<Double, Double> powerToCoefficientMap) {
-		super(stick, axis, scalingTimeConstantSecs, deadband, inverted);
+		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
 		if (powerToCoefficientMap.size() == 0) {
 			powerToCoefficientMap.put(1., 1.);
 		}
@@ -62,8 +62,8 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	 */
 	@Override
 	public double getValue() {
-		double input = super.getValue();
-		double sign = Math.signum(input);
+		input = super.getValue();
+		sign = Math.signum(input);
 		input = Math.abs(input);
 
 		double toRet = 0;

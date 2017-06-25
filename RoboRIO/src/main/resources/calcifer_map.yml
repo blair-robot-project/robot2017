@@ -81,7 +81,7 @@ arcadeOI:
                 '@id': rotThrottle
                 stick: driverGamepad
                 axis: 0
-                scalingTimeConstantSecs: 0.04
+                smoothingTimeConstantSecs: 0.04
                 deadband: 0.05
                 inverted: true
         fwdThrottle:
