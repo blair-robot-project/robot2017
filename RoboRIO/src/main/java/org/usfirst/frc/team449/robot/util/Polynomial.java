@@ -26,12 +26,16 @@ public class Polynomial {
 	private double toRet;
 
 	@JsonCreator
-	public Polynomial(@Nullable Map<Double, Double> powerToCoefficientMap){
+	public Polynomial(@Nullable Map<Double, Double> powerToCoefficientMap,
+	                  @Nullable Double scaleCoefficentSumTo){
 		if (powerToCoefficientMap == null || powerToCoefficientMap.size() == 0){
 			this.powerToCoefficientMap = new HashMap<>(1);
 			this.powerToCoefficientMap.put(1., 1.);
 		} else {
 			this.powerToCoefficientMap = powerToCoefficientMap;
+		}
+		if (scaleCoefficentSumTo != null){
+			scaleCoefficientSum(scaleCoefficentSumTo);
 		}
 	}
 
@@ -43,6 +47,17 @@ public class Polynomial {
 			toRet += Math.pow(abs, power)*powerToCoefficientMap.get(power);
 		}
 		return toRet*sign;
+	}
+
+	public void scaleCoefficientSum(double scaleTo){
+		double coefficientSum = 0;
+		for (double power : powerToCoefficientMap.keySet()){
+			coefficientSum += powerToCoefficientMap.get(power);
+		}
+		double scaleFactor = scaleTo/coefficientSum;
+		for (double power : powerToCoefficientMap.keySet()){
+			powerToCoefficientMap.replace(power, powerToCoefficientMap.get(power)*scaleFactor);
+		}
 	}
 
 	@NotNull

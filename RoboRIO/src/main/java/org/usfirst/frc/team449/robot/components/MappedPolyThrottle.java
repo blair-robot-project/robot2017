@@ -22,10 +22,6 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	@NotNull
 	protected final Polynomial polynomial;
 
-	private double input;
-
-	private double sign;
-
 	/**
 	 * A basic constructor.
 	 *
@@ -42,19 +38,12 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	                          boolean inverted,
 	                          @NotNull @JsonProperty(required = true) Polynomial polynomial) {
 		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
-		double sum = 0;
 		for (Double power : polynomial.getPowerToCoefficientMap().keySet()) {
 			if (power < 0) {
 				throw new IllegalArgumentException("Negative exponents are not allowed!");
 			}
-			sum += polynomial.getPowerToCoefficientMap().get(power);
 		}
-		//Round the sum to avoid floating-point errors
-		BigDecimal bd = new BigDecimal(sum);
-		bd = bd.setScale(3, RoundingMode.HALF_UP);
-		if (bd.doubleValue() != 1) {
-			throw new IllegalArgumentException("Polynomial coefficients don't add up to 1!");
-		}
+		polynomial.scaleCoefficientSum(1);
 		this.polynomial = polynomial;
 	}
 
