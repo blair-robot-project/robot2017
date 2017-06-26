@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 import java.util.List;
 
 /**
- * Subsystem to initialize and push video to SmartDashboard
+ * Subsystem to initialize cameras and put video on SmartDashboard.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CameraSubsystem extends YamlSubsystem {
@@ -46,8 +46,6 @@ public class CameraSubsystem extends YamlSubsystem {
 	public CameraSubsystem(@JsonProperty(required = true) int serverPort,
 	                       @NotNull @JsonProperty(required = true) String serverName,
 	                       @NotNull @JsonProperty(required = true) List<MappedUsbCamera> cameras) {
-		super();
-
 		//Logging
 		Logger.addEvent("CameraSubsystem construct start", this.getClass());
 		Logger.addEvent("Set URL of MJPGServer to \"http://roboRIO-449-frc.local:" + serverPort +
@@ -78,20 +76,36 @@ public class CameraSubsystem extends YamlSubsystem {
 		//Do nothing!
 	}
 
+	/**
+	 * Getter for the server.
+	 * @return The server the camera feed streams to.
+	 */
 	@NotNull
 	public MjpegServer getServer() {
 		return server;
 	}
 
+	/**
+	 * Getter for the list of cameras.
+	 * @return The list of cameras the subsystem reads from.
+	 */
 	@NotNull
 	public List<MappedUsbCamera> getCameras() {
 		return cameras;
 	}
 
+	/**
+	 * Getter for the number of the active camera.
+	 * @return The index of the active camera in the list of cameras.
+	 */
 	public int getCamNum() {
 		return camNum;
 	}
 
+	/**
+	 * Setter for the number of the active camera.
+	 * @param camNum The index of the active camera in the list of cameras.
+	 */
 	public void setCamNum(int camNum) {
 		this.camNum = camNum;
 	}

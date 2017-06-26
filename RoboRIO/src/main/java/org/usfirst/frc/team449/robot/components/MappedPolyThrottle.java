@@ -7,17 +7,14 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.util.Polynomial;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Map;
-
 /**
  * A polynomially scaled throttle.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedPolyThrottle extends MappedSmoothedThrottle {
+
 	/**
-	 * The power that X is raised to.
+	 * The polynomially that scales the throttle.
 	 */
 	@NotNull
 	protected final Polynomial polynomial;
@@ -25,10 +22,13 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	/**
 	 * A basic constructor.
 	 *
-	 * @param stick    The Joystick object being used
-	 * @param axis     The axis being used. 0 is X, 1 is Y, 2 is Z.
-	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
-	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
+	 * @param stick                     The Joystick object being used
+	 * @param axis                      The axis being used. 0 is X, 1 is Y, 2 is Z.
+	 * @param smoothingTimeConstantSecs How many seconds of past input strongly effect the smoothing algorithm.
+	 * @param deadband                  The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param inverted                  Whether or not to invert the joystick input. Defaults to false.
+	 * @param polynomial                The polynomially that scales the throttle. Must not have any negative
+	 *                                  exponents.
 	 */
 	@JsonCreator
 	public MappedPolyThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
@@ -38,17 +38,22 @@ public class MappedPolyThrottle extends MappedSmoothedThrottle {
 	                          boolean inverted,
 	                          @NotNull @JsonProperty(required = true) Polynomial polynomial) {
 		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
+
+		//Check for negative exponents
 		for (Double power : polynomial.getPowerToCoefficientMap().keySet()) {
 			if (power < 0) {
 				throw new IllegalArgumentException("Negative exponents are not allowed!");
 			}
 		}
+
+		//Scale coefficient sum to 1
 		polynomial.scaleCoefficientSum(1);
+
 		this.polynomial = polynomial;
 	}
 
 	/**
-	 * Raises the value of the smoothed joystick output to the degreeth power, while preserving sign.
+	 * Passes the smoothed joystick output to the polynomial, while preserving sign.
 	 *
 	 * @return The processed value of the joystick
 	 */

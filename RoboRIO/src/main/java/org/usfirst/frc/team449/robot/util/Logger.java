@@ -62,11 +62,8 @@ public class Logger implements Runnable {
 	 *
 	 * @param subsystems           The subsystems to log telemetry data from.
 	 * @param loopTimeSecs         The period of the loop for collecting telemetry data, in seconds.
-	 * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension
-	 *                             appended
-	 *                             onto the end.
-	 * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file
-	 *                             extension appended onto the end.
+	 * @param eventLogFilename     The filepath of the log for events. Will have the timestamp and file extension appended onto the end.
+	 * @param telemetryLogFilename The filepath of the log for telemetry data. Will have the timestamp and file extension appended onto the end.
 	 * @throws IOException If the file names provided from the log can't be written to.
 	 */
 	@JsonCreator
@@ -220,6 +217,10 @@ public class Logger implements Runnable {
 		}
 	}
 
+	/**
+	 * Getter for the loop time of this logger.
+	 * @return The map-specified loop period of this logger, in seconds.
+	 */
 	public double getLoopTimeSecs() {
 		return loopTimeSecs;
 	}

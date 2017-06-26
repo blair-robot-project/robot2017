@@ -41,6 +41,7 @@ public class FeederAuto2017 extends YamlCommandGroupWrapper {
 		if (dropGearSwitch.getStatus().get(0)) {
 			addSequential(dropGear.getCommand());
 		}
+		//Red is true
 		if (allianceSwitch.getStatus().get(0)) {
 			addSequential(runRedBackupProfile);
 		} else {

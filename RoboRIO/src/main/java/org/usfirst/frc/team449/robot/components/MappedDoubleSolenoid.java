@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /**
- * A wrapper on the {@link DoubleSolenoid} that can be constructed from a map object.
+ * A Jackson-compatible wrapper on the {@link DoubleSolenoid}.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedDoubleSolenoid extends DoubleSolenoid {

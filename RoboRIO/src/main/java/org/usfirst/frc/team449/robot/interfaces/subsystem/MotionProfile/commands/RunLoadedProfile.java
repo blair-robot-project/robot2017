@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile<T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
+public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.
@@ -34,7 +34,7 @@ public class RunLoadedProfile<T extends YamlSubsystem & MPSubsystem> extends Yam
 	private long startTime;
 
 	/**
-	 * Whether or not we're currently running the profile.
+	 * Whether we're running a profile or waiting for the bottom-level buffer to fill.
 	 */
 	private boolean runningProfile;
 

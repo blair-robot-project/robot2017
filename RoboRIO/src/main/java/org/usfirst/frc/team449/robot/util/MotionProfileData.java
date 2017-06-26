@@ -16,6 +16,7 @@ import java.io.IOException;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MotionProfileData {
+
 	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
 	 */
@@ -29,9 +30,7 @@ public class MotionProfileData {
 	/**
 	 * Default constructor
 	 *
-	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of
-	 *                 other
-	 *                 lines.
+	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */
 	@JsonCreator

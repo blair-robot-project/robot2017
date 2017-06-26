@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Run a BinaryMotor while a condition is true.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunMotorWhileConditonMet<T extends YamlSubsystem & BinaryMotorSubsystem & ConditionalSubsystem> extends YamlCommandWrapper {
+public class RunMotorWhileConditonMet <T extends YamlSubsystem & BinaryMotorSubsystem & ConditionalSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on

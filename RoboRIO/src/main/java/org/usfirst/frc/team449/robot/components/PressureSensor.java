@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class PressureSensor {
+
 	/**
 	 * The AnalogInput this is a wrapper on.
 	 */

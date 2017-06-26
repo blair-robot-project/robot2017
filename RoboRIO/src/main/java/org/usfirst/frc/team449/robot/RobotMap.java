@@ -130,7 +130,8 @@ public class RobotMap {
 	 * @param centerAuto          The command to run in autonomous on the center of the field. Can be null if doMP is
 	 *                            false
 	 *                            or testMP is true, but otherwise must have a value.
-	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be null
+	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be
+	 *                            null
 	 *                            if
 	 *                            doMP is false or testMP is true, but otherwise must have a value.
 	 * @param leftTestProfile     The profile for the left side of the drive to run in test mode. Can be null if either

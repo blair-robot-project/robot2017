@@ -11,10 +11,10 @@ import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
- * Created by noah on 6/24/17.
+ * Run the motors until they move, slowly increasing the voltage up from 0.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DetermineNominalVoltage<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class DetermineNominalVoltage <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The drive subsystem to execute this command on.
@@ -22,61 +22,70 @@ public class DetermineNominalVoltage<T extends YamlSubsystem & UnidirectionalDri
 	@NotNull
 	private final T subsystem;
 
-	private double percentVoltage;
+	/**
+	 * The current percent of max output commanded, on [0, 1].
+	 */
+	private double percentCommanded;
+
+	/**
+	 * The minimum speed, in RPS, at which the drive is considered to be moving.
+	 */
+	private double minSpeed;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param drive The drive to execute this command on
+	 * @param subsystem The subsystem to execute this command on
+	 * @param minSpeed  The minimum speed, in RPS, at which the drive is considered to be moving.
 	 */
 	@JsonCreator
-	public DetermineNominalVoltage(@NotNull @JsonProperty(required = true) T drive) {
+	public DetermineNominalVoltage(@NotNull @JsonProperty(required = true) T subsystem,
+	                               @JsonProperty(required = true) double minSpeed) {
 		//Initialize stuff
-		this.subsystem = drive;
-		requires(drive);
-		Logger.addEvent("Drive Robot bueno", this.getClass());
+		this.subsystem = subsystem;
+		this.minSpeed = minSpeed;
+		requires(subsystem);
 	}
 
 	/**
-	 * Set up start time.
+	 * Log initialization
 	 */
 	@Override
 	protected void initialize() {
-		percentVoltage = 0;
+		percentCommanded = 0;
 		//Reset drive velocity (for safety reasons)
 		subsystem.fullStop();
 		Logger.addEvent("DetermineNominalVoltage init", this.getClass());
 	}
 
 	/**
-	 * Send output to motors and log data
+	 * Send output to motors
 	 */
 	@Override
 	protected void execute() {
 		//Adjust it by 0.01 per second, so 0.01 * 20/1000, which is 0.0002
-		percentVoltage += 0.0002;
+		percentCommanded += 0.0002;
 		//Set the velocity
-		subsystem.setOutput(percentVoltage, percentVoltage);
+		subsystem.setOutput(percentCommanded, percentCommanded);
 	}
 
 	/**
-	 * Exit after the command's been running for long enough
+	 * Exit if the motors are moving.
 	 *
-	 * @return True if timeout has been reached, false otherwise
+	 * @return True if the motors are moving, false otherwise.
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Math.max(subsystem.getLeftVel(), subsystem.getRightVel()) >= 0.5;
+		return Math.max(Math.abs(subsystem.getLeftVel()), Math.abs(subsystem.getRightVel())) >= minSpeed;
 	}
 
 	/**
-	 * Stop the drive when the command ends.
+	 * Stop the drive and log when the command ends.
 	 */
 	@Override
 	protected void end() {
 		//Brake on exit. Yes this should be setOutput because often we'll be testing how well the PID loop handles a full stop.
 		subsystem.fullStop();
-		System.out.println("it moved!");
 		Logger.addEvent("DetermineNominalVoltage end.", this.getClass());
 	}
 

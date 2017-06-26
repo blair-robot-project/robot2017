@@ -292,7 +292,7 @@ centerAuto:
         driveBack:
             org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DriveAtSpeed:
                 '@id': driveBackCommand
-                drive:
+                subsystem:
                     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                         drive
                 velocity: -0.5
@@ -405,6 +405,7 @@ feederAuto:
 nonMPAutoCommand:
     org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.DetermineNominalVoltage:
         '@id': determineNominalVoltage
+        minSpeed: 0.1
         subsystem:
             org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
                 drive

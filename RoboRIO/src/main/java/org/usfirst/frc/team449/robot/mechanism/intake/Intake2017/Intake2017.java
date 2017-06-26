@@ -20,6 +20,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, IntakeSubsystem {
+
 	/**
 	 * VictorSP for the fixed intake
 	 */

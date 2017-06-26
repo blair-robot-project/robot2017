@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
@@ -85,7 +86,9 @@ public class Robot extends IterativeRobot {
 	 */
 	private TalonClusterDrive driveSubsystem;
 
-
+	/**
+	 * The OI containing the joysticks to get input from.
+	 */
 	private ArcadeOIWithDPad arcadeOI;
 
 	/**
@@ -101,9 +104,9 @@ public class Robot extends IterativeRobot {
 	private ActiveGearSubsystem gearSubsystem;
 
 	/**
-	 * The object constructed directly from map.cfg.
+	 * The object constructed directly from the yaml map.
 	 */
-	private RobotMap cfg;
+	private RobotMap robotMap;
 
 	/**
 	 * The Notifier running the logging thread.
@@ -114,11 +117,13 @@ public class Robot extends IterativeRobot {
 	 * The string version of the alliance we're on ("red" or "blue"). Used for string concatenation to pick which
 	 * profile to execute.
 	 */
+	@Nullable
 	private String allianceString;
 
 	/**
 	 * The I2C channel for communicating with the RIOduino.
 	 */
+	@Nullable
 	private I2C robotInfo;
 
 	/**
@@ -136,6 +141,7 @@ public class Robot extends IterativeRobot {
 	 *
 	 * @return current time in milliseconds.
 	 */
+	@Contract(pure = true)
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
 	}
@@ -147,53 +153,55 @@ public class Robot extends IterativeRobot {
 		//Set up start time
 		currentTimeMillis = System.currentTimeMillis();
 		startTime = currentTimeMillis;
+
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
 
 		Yaml yaml = new Yaml();
 		try {
-			YAMLMapper mapper = new YAMLMapper();
+			//Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
 //			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
 			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
+			YAMLMapper mapper = new YAMLMapper();
+			//Turn the Map read by SnakeYaml into a String so Jackson can read it.
 			String fixed = mapper.writeValueAsString(normalized);
+			//Use a parameter name module so we don't have to specify name for every field.
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
-//			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-//			System.out.println(fixed);
-			//Try to construct map from the cfg file
-			cfg = mapper.readValue(fixed, RobotMap.class);
+			//Deserialize the map into an object.
+			robotMap = mapper.readValue(fixed, RobotMap.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
-		this.logger = cfg.getLogger();
-		this.loggerNotifier = new Notifier(logger);
-		this.climberSubsystem = cfg.getClimber();
-		this.singleFlywheelShooterSubsystem = cfg.getShooter();
-		this.cameraSubsystem = cfg.getCamera();
-		this.intakeSubsystem = cfg.getIntake();
-		this.pneumaticsSubsystem = cfg.getPneumatics();
-		this.gearSubsystem = cfg.getGearHandler();
-		this.arcadeOI = cfg.getArcadeOI();
-
-		driveSubsystem = cfg.getDrive();
+		//Set fields from the map.
+		this.logger = robotMap.getLogger();
+		this.loggerNotifier = new Notifier(this.logger);
+		this.climberSubsystem = robotMap.getClimber();
+		this.singleFlywheelShooterSubsystem = robotMap.getShooter();
+		this.cameraSubsystem = robotMap.getCamera();
+		this.intakeSubsystem = robotMap.getIntake();
+		this.pneumaticsSubsystem = robotMap.getPneumatics();
+		this.gearSubsystem = robotMap.getGearHandler();
+		this.arcadeOI = robotMap.getArcadeOI();
+		this.driveSubsystem = robotMap.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.
-		if (cfg.getRIOduinoPort() != null) {
-			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRIOduinoPort());
+		if (robotMap.getRIOduinoPort() != null) {
+			robotInfo = new I2C(I2C.Port.kOnboard, robotMap.getRIOduinoPort());
 		}
 
 		//Set up the motion profiles if we're doing motion profiling
-		if (cfg.getDoMP()) {
-			//Load the test profiles if we just want to run one.
-			if (cfg.getTestMP()) {
-				driveSubsystem.loadMotionProfile(cfg.getLeftTestProfile(), cfg.getRightTestProfile());
+		if (robotMap.getDoMP()) {
+			//Load the test profiles if we're testing.
+			if (robotMap.getTestMP()) {
+				driveSubsystem.loadMotionProfile(robotMap.getLeftTestProfile(), robotMap.getRightTestProfile());
 				autonomousCommand = new RunLoadedProfile<>(driveSubsystem, 15, true);
 			} else {
 				//Read the data from the input switches
-				boolean redAlliance = cfg.getAllianceSwitch().getStatus().get(0);
-				boolean dropGear = cfg.getDropGearSwitch().getStatus().get(0);
-				List<Boolean> tmp = cfg.getLocationDial().getStatus();
+				boolean redAlliance = robotMap.getAllianceSwitch().getStatus().get(0);
+				boolean dropGear = robotMap.getDropGearSwitch().getStatus().get(0);
+				List<Boolean> tmp = robotMap.getLocationDial().getStatus();
 
 				String position;
 				//Interpret the pin input from the three-way side selection switch.
@@ -218,19 +226,19 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("position: " + position, this.getClass());
 
 				//Load the first profile we want to run
-				driveSubsystem.loadMotionProfile(cfg.getLeftProfiles().get(allianceString + "_" + position),
-						cfg.getRightProfiles().get(allianceString + "_" + position));
+				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),
+						robotMap.getRightProfiles().get(allianceString + "_" + position));
 				//Set the autonomousCommand to be the correct command for the current position and alliance.
 				if (position.equals("center")) {
-					autonomousCommand = cfg.getCenterAuto().getCommand();
+					autonomousCommand = robotMap.getCenterAuto().getCommand();
 				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
-					autonomousCommand = cfg.getBoilerAuto().getCommand();
+					autonomousCommand = robotMap.getBoilerAuto().getCommand();
 				} else {
-					autonomousCommand = cfg.getFeederAuto().getCommand();
+					autonomousCommand = robotMap.getFeederAuto().getCommand();
 				}
 			}
 		} else {
-			autonomousCommand = cfg.getNonMPAutoCommand();
+			autonomousCommand = robotMap.getNonMPAutoCommand();
 		}
 
 		//Run the logger to write all the events that happened during initialization to a file.
@@ -250,7 +258,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.enableMotors();
 
 		//Set the default command
-		driveSubsystem.setDefaultCommandManual(cfg.getDefaultDriveCommand());
+		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
 
 		//Do the startup tasks
 		doStartupTasks();
@@ -336,7 +344,7 @@ public class Robot extends IterativeRobot {
 	 */
 	private void doStartupTasks() {
 		//Start running the logger
-		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
+		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
 		//Switch to starting gear

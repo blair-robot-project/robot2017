@@ -12,7 +12,8 @@ import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
  * A simple tank drive, where each joystick controls a side of the robot.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OI2017Tank extends TankOI {
+public class SimpleTankOI extends TankOI {
+
 	/**
 	 * The left throttle
 	 */
@@ -32,8 +33,8 @@ public class OI2017Tank extends TankOI {
 	 * @param rightThrottle The throttle for controlling the velocity of the right side of the drive.
 	 */
 	@JsonCreator
-	public OI2017Tank(@JsonProperty(required = true) MappedSmoothedThrottle leftThrottle,
-	                  @JsonProperty(required = true) MappedSmoothedThrottle rightThrottle) {
+	public SimpleTankOI(@NotNull @JsonProperty(required = true) MappedSmoothedThrottle leftThrottle,
+	                    @NotNull @JsonProperty(required = true) MappedSmoothedThrottle rightThrottle) {
 		this.leftThrottle = leftThrottle;
 		this.rightThrottle = rightThrottle;
 	}

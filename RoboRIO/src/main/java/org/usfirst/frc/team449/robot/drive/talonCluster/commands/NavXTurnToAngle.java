@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +18,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngle<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class NavXTurnToAngle <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to execute this command on and to get the gyro reading from.
@@ -45,15 +44,14 @@ public class NavXTurnToAngle<T extends YamlSubsystem & UnidirectionalDrive & Nav
 	/**
 	 * Default constructor.
 	 *
-	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
-	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered
-	 *                          within tolerance.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
+	 *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
+	 *                          tolerance.
 	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                          used.
-	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to
-	 *                          the motors. Defaults to zero.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
+	 *                          motors. Defaults to zero.
 	 * @param inverted          Whether the loop is inverted. Defaults to false.
 	 * @param kP                Proportional gain. Defaults to zero.
 	 * @param kI                Integral gain. Defaults to zero.
@@ -61,8 +59,7 @@ public class NavXTurnToAngle<T extends YamlSubsystem & UnidirectionalDrive & Nav
 	 * @param setpoint          The setpoint, in degrees from 180 to -180.
 	 * @param subsystem         The drive subsystem to execute this command on.
 	 * @param timeout           How long this command is allowed to run for, in seconds. Needed because sometimes
-	 *                          floating-point
-	 *                          errors prevent termination.
+	 *                          floating-point errors prevent termination.
 	 */
 	@JsonCreator
 	public NavXTurnToAngle(@JsonProperty(required = true) double absoluteTolerance,
@@ -102,17 +99,11 @@ public class NavXTurnToAngle<T extends YamlSubsystem & UnidirectionalDrive & Nav
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		//Logging
-		SmartDashboard.putNumber("Preprocessed output", output);
-		SmartDashboard.putNumber("NavX Turn To Angle Setpoint", getSetpoint());
-
 		//Process the output with deadband, minimum output, etc.
 		output = processPIDOutput(output);
 
-		//More logging
-		SmartDashboard.putNumber("NavXTurnToAngle PID loop output", output);
-
-		subsystem.setOutput(-output, output);    //spin to the right angle
+		//spin to the right angle
+		subsystem.setOutput(-output, output);
 	}
 
 	/**
@@ -128,22 +119,13 @@ public class NavXTurnToAngle<T extends YamlSubsystem & UnidirectionalDrive & Nav
 	}
 
 	/**
-	 * Log data to SmartDashboard.
-	 */
-	@Override
-	protected void execute() {
-		SmartDashboard.putBoolean("onTarget", this.getPIDController().onTarget());
-		SmartDashboard.putNumber("Avg Navx Error", this.getPIDController().getAvgError());
-	}
-
-	/**
 	 * Exit when the robot reaches the setpoint or enough time has passed.
 	 *
 	 * @return True if timeout seconds have passed or the robot is on target, false otherwise.
 	 */
 	@Override
 	protected boolean isFinished() {
-		//The PIDController onTarget() is crap and sometimes never terminates because of floating point errors, so we need a timeout
+		//The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so we need a timeout
 		return this.getPIDController().onTarget() || Robot.currentTimeMillis() - startTime > timeout;
 	}
 

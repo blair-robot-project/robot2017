@@ -26,13 +26,13 @@ public class RotPerSecCANTalonSRX {
 	private final CANTalon canTalon;
 
 	/**
-	 * The counts per rotation of the encoder being used.
+	 * The counts per rotation of the encoder being used, or null if there is no encoder.
 	 */
 	@Nullable
 	private final Integer encoderCPR;
 
 	/**
-	 * The type of encoder the talon uses.
+	 * The type of encoder the talon uses, or null if there is no encoder.
 	 */
 	@Nullable
 	private final CANTalon.FeedbackDevice feedbackDevice;
@@ -44,16 +44,16 @@ public class RotPerSecCANTalonSRX {
 	private final double postEncoderGearing;
 
 	/**
-	 * The number of inches travelled per rotation of the motor this is attached to. Only used for Motion Profile unit
-	 * conversions.
+	 * The number of inches travelled per rotation of the motor this is attached to, or null if there is no encoder.
+	 * Only used for Motion Profile unit conversions.
 	 * {@link Double} so it throws a nullPointer if you try to use it without a value in the map.
 	 */
 	@Nullable
 	private final Double inchesPerRotation;
 
 	/**
-	 * The max speed of this motor, in RPS, when in high gear, or if the output motor doesn't have gears,
-	 * just the max speed. May be null.
+	 * The max speed of this motor, in RPS, when in high gear, or if the output motor doesn't have gears, just the max
+	 * speed. May be null.
 	 */
 	@Nullable
 	private final Double maxSpeedHigh;
@@ -75,99 +75,97 @@ public class RotPerSecCANTalonSRX {
 	private final int lowGearP, lowGearI, lowGearD;
 
 	/**
-	 * The maximum speed of the motor, in RPS.
+	 * The forward and reverse nominal voltages for high gear, or if this motor has no gears, just the nominal voltages.
+	 */
+	private final double highGearFwdNominalOutputVoltage, highGearRevNominalOutputVoltage;
+
+	/**
+	 * The forward and reverse nominal voltages for low gear, or null if this motor has no gears.
+	 */
+	@Nullable
+	private final Double lowGearFwdNominalOutputVoltage, lowGearRevNominalOutputVoltage;
+
+	/**
+	 * The maximum speed of the motor, in RPS, or null if not using PID.
 	 */
 	@Nullable
 	private Double maxSpeed;
 
-	private final double highGearFwdNominalOutputVoltage, highGearRevNominalOutputVoltage;
-
-	@Nullable
-	private final Double lowGearFwdNominalOutputVoltage;
-
-	@Nullable
-	private final Double lowGearRevNominalOutputVoltage;
-
 	/**
 	 * Default constructor.
 	 *
-	 * @param port                       CAN port of this Talon.
-	 * @param inverted                   Whether this Talon is inverted.
-	 * @param enableBrakeMode            Whether to brake or coast when stopped.
-	 * @param fwdPeakOutputVoltage       The peak voltage in the forward direction, in volts. If revPeakOutputVoltage
-	 *                                   is
-	 *                                   null,
-	 *                                   this is used for peak voltage in both directions. Should be a positive or
-	 *                                   zero.
-	 * @param revPeakOutputVoltage       The peak voltage in the reverse direction. Can be null, and if it is,
-	 *                                   fwdPeakOutputVoltage is used as the peak voltage in both directions.
-	 *                                   Should be positive or zero.
-	 * @param highGearFwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction in the high/only gear, in volts.
-	 *                                   If highGearRevNominalOutputVoltage is null, this is used for nominal voltage in both
-	 *                                   directions. Should be a positive or zero.
-	 * @param highGearRevNominalOutputVoltage    The minimum non-zero voltage in the reverse direction in the high/only gear. Can be null, and if it
-	 *                                   is,
-	 *                                   highGearFwdNominalOutputVoltage is used as the nominal voltage in both directions.
-	 *                                   Should be positive or zero.
-	 * @param lowGearFwdNominalOutputVoltage    The minimum non-zero voltage in the forward direction in the high/only gear, in volts.
-	 *                                   If highGearRevNominalOutputVoltage is null, this is used for nominal voltage in both
-	 *                                   directions. Should be a positive or zero. Can be null if this Talon doesn't have a low gear.
-	 * @param lowGearRevNominalOutputVoltage    The minimum non-zero voltage in the reverse direction in the high/only gear. Can be null, and if it
-	 *                                   is,
-	 *                                   highGearFwdNominalOutputVoltage is used as the nominal voltage in both directions.
-	 *                                   Should be positive or zero.
-	 * @param fwdLimitSwitchNormallyOpen Whether the forward limit switch is normally open or closed. If this is null,
-	 *                                   the forward limit switch is disabled.
-	 * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
-	 *                                   the reverse limit switch is disabled.
-	 * @param fwdSoftLimit               The forward software limit. If this is null, the forward software limit is
-	 *                                   disabled.
-	 *                                   TODO figure out units
-	 * @param revSoftLimit               The reverse software limit. If this is null, the reverse software limit is
-	 *                                   disabled.
-	 *                                   TODO figure out units
-	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder,
-	 *                                   e.g.
-	 *                                   this
-	 *                                   would be 1/70 if there was a 70:1 gearing between the encoder and the final
-	 *                                   output.
-	 *                                   Defaults to 1.
-	 * @param closedLoopRampRate         The voltage ramp rate for closed-loop velocity control. Can be null, and if it
-	 *                                   is, no
-	 *                                   ramp rate is used.
-	 * @param inchesPerRotation          The number of inches travelled per rotation of the motor this is attached to.
-	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
-	 * @param feedbackDevice             The type of encoder used to measure the output velocity of this motor. Can be
-	 *                                   null if there
-	 *                                   is no encoder attached to this Talon.
-	 * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
-	 *                                   feedbackDevice is, but
-	 *                                   otherwise must have a value.
-	 * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Can be
-	 *                                   null if
-	 *                                   feedbackDevice is, but otherwise must have a value.
-	 * @param maxSpeedHigh               The high gear max speed, in RPS. If this motor doesn't have gears, then this
-	 *                                   is
-	 *                                   just the max speed. Used to calculate velocity PIDF feed-forward. Can be null,
-	 *                                   and if it is, it's assumed that this motor won't use velocity closed-loop
-	 *                                   control.
-	 * @param highGearP                  The proportional gain for high gear. Defaults to 0.
-	 * @param highGearI                  The integral gain for high gear. Defaults to 0.
-	 * @param highGearD                  The derivative gain for high gear. Defaults to 0.
-	 * @param maxSpeedLow                The low gear max speed in RPS. Used to calculate velocity PIDF feed-forward.
-	 *                                   Can be null, and
-	 *                                   if it is, it's assumed that either this motor doesn't have a low gear or the
-	 *                                   low gear won't
-	 *                                   use velocity closed-loop control.
-	 * @param lowGearP                   The proportional gain for low gear. Defaults to 0.
-	 * @param lowGearI                   The integral gain for low gear. Defaults to 0.
-	 * @param lowGearD                   The derivative gain for low gear. Defaults to 0.
-	 * @param motionProfileP             The proportional gain for motion profiles. Defaults to 0.
-	 * @param motionProfileI             The integral gain for high motion profiles. Defaults to 0.
-	 * @param motionProfileD             The derivative gain for high motion profiles. Defaults to 0.
-	 * @param MPUseLowGear               Whether this motor uses high or low gear for running motion profiles. Defaults
-	 *                                   to false.
-	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
+	 * @param port                            CAN port of this Talon.
+	 * @param inverted                        Whether this Talon is inverted.
+	 * @param enableBrakeMode                 Whether to brake or coast when stopped.
+	 * @param fwdPeakOutputVoltage            The peak voltage in the forward direction, in volts. If
+	 *                                        revPeakOutputVoltage is null, this is used for peak voltage in both
+	 *                                        directions. Should be a positive or zero.
+	 * @param revPeakOutputVoltage            The peak voltage in the reverse direction. Can be null, and if it is,
+	 *                                        fwdPeakOutputVoltage is used as the peak voltage in both directions.
+	 *                                        Should be positive or zero.
+	 * @param highGearFwdNominalOutputVoltage The minimum non-zero voltage in the forward direction in the high/only
+	 *                                        gear, in volts. If highGearRevNominalOutputVoltage is null, this is used
+	 *                                        for nominal voltage in both directions. Should be a positive or zero.
+	 * @param highGearRevNominalOutputVoltage The minimum non-zero voltage in the reverse direction in the high/only
+	 *                                        gear. Can be null, and if it is, highGearFwdNominalOutputVoltage is used
+	 *                                        as the nominal voltage in both directions. Should be positive or zero.
+	 * @param lowGearFwdNominalOutputVoltage  The minimum non-zero voltage in the forward direction in the high/only
+	 *                                        gear, in volts. If highGearRevNominalOutputVoltage is null, this is used
+	 *                                        for nominal voltage in both directions. Should be a positive or zero. Can
+	 *                                        be null if this Talon doesn't have a low gear.
+	 * @param lowGearRevNominalOutputVoltage  The minimum non-zero voltage in the reverse direction in the high/only
+	 *                                        gear. Can be null, and if it is, highGearFwdNominalOutputVoltage is used
+	 *                                        as the nominal voltage in both directions. Should be positive or zero.
+	 * @param fwdLimitSwitchNormallyOpen      Whether the forward limit switch is normally open or closed. If this is
+	 *                                        null, the forward limit switch is disabled.
+	 * @param revLimitSwitchNormallyOpen      Whether the reverse limit switch is normally open or closed. If this is
+	 *                                        null, the reverse limit switch is disabled.
+	 * @param fwdSoftLimit                    The forward software limit. If this is null, the forward software limit
+	 *                                        is
+	 *                                        disabled.
+	 *                                        TODO figure out units
+	 * @param revSoftLimit                    The reverse software limit. If this is null, the reverse software limit
+	 *                                        is
+	 *                                        disabled.
+	 *                                        TODO figure out units
+	 * @param postEncoderGearing              The coefficient the output changes by after being measured by the
+	 *                                        encoder,
+	 *                                        e.g. this would be 1/70 if there was a 70:1 gearing between the encoder
+	 *                                        and the final output. Defaults to 1.
+	 * @param closedLoopRampRate              The voltage ramp rate for closed-loop velocity control. Can be null, and
+	 *                                        if it is, no ramp rate is used.
+	 * @param inchesPerRotation               The number of inches travelled per rotation of the motor this is attached
+	 *                                        to.
+	 * @param currentLimit                    The max amps this device can draw. If this is null, no current limit is
+	 *                                        used.
+	 * @param feedbackDevice                  The type of encoder used to measure the output velocity of this motor.
+	 *                                        Can
+	 *                                        be null if there is no encoder attached to this Talon.
+	 * @param encoderCPR                      The counts per rotation of the encoder on this Talon. Can be null if
+	 *                                        feedbackDevice is, but otherwise must have a value.
+	 * @param reverseSensor                   Whether or not to reverse the reading from the encoder on this Talon. Can
+	 *                                        be null if feedbackDevice is, but otherwise must have a value.
+	 * @param maxSpeedHigh                    The high gear max speed, in RPS. If this motor doesn't have gears, then
+	 *                                        this is just the max speed. Used to calculate velocity PIDF feed-forward.
+	 *                                        Can be null, and if it is, it's assumed that this motor won't use
+	 *                                        velocity
+	 *                                        closed-loop control.
+	 * @param highGearP                       The proportional gain for high gear. Defaults to 0.
+	 * @param highGearI                       The integral gain for high gear. Defaults to 0.
+	 * @param highGearD                       The derivative gain for high gear. Defaults to 0.
+	 * @param maxSpeedLow                     The low gear max speed in RPS. Used to calculate velocity PIDF
+	 *                                        feed-forward. Can be null, and if it is, it's assumed that either this
+	 *                                        motor doesn't have a low gear or the low gear won't use velocity
+	 *                                        closed-loop control.
+	 * @param lowGearP                        The proportional gain for low gear. Defaults to 0.
+	 * @param lowGearI                        The integral gain for low gear. Defaults to 0.
+	 * @param lowGearD                        The derivative gain for low gear. Defaults to 0.
+	 * @param motionProfileP                  The proportional gain for motion profiles. Defaults to 0.
+	 * @param motionProfileI                  The integral gain for high motion profiles. Defaults to 0.
+	 * @param motionProfileD                  The derivative gain for high motion profiles. Defaults to 0.
+	 * @param MPUseLowGear                    Whether this motor uses high or low gear for running motion profiles.
+	 *                                        Defaults to false.
+	 * @param slaves                          The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
 	public RotPerSecCANTalonSRX(@JsonProperty(required = true) int port,
@@ -211,18 +209,27 @@ public class RotPerSecCANTalonSRX {
 		canTalon.setInverted(inverted);
 		//Set brake mode
 		canTalon.enableBrakeMode(enableBrakeMode);
+
+		//Set high/only gear nominal voltages
 		this.highGearFwdNominalOutputVoltage = highGearFwdNominalOutputVoltage;
-		if (highGearRevNominalOutputVoltage == null){
+		//If no reverse nominal voltage is given, assume symmetry.
+		if (highGearRevNominalOutputVoltage == null) {
 			this.highGearRevNominalOutputVoltage = highGearFwdNominalOutputVoltage;
 		} else {
 			this.highGearRevNominalOutputVoltage = highGearRevNominalOutputVoltage;
 		}
+
+		//Set low gear nominal voltages
 		this.lowGearFwdNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
-		if (lowGearRevNominalOutputVoltage == null){
+		//If no reverse nominal voltage is given, assume symmetry.
+		if (lowGearRevNominalOutputVoltage == null) {
 			this.lowGearRevNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
 		} else {
 			this.lowGearRevNominalOutputVoltage = lowGearRevNominalOutputVoltage;
 		}
+
+		//Set to high gear by default.
+		canTalon.configNominalOutputVoltage(this.highGearFwdNominalOutputVoltage, -this.highGearRevNominalOutputVoltage);
 
 		//Only enable the limit switches if it was specified if they're normally open or closed.
 		boolean fwdSwitchEnable = false, revSwitchEnable = false;
@@ -263,15 +270,10 @@ public class RotPerSecCANTalonSRX {
 
 		//postEncoderGearing defaults to 1
 		if (postEncoderGearing == null) {
-			postEncoderGearing = 1.;
+			this.postEncoderGearing = 1.;
+		} else {
+			this.postEncoderGearing = postEncoderGearing;
 		}
-		this.postEncoderGearing = postEncoderGearing;
-
-		//Configure the nominal output voltage. If only forward voltage was given, use it for both forward and reverse.
-		if (highGearRevNominalOutputVoltage == null) {
-			highGearRevNominalOutputVoltage = highGearFwdNominalOutputVoltage;
-		}
-		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
 
 		//Configure the maximum output voltage. If only forward voltage was given, use it for both forward and reverse.
 		if (revPeakOutputVoltage == null) {
@@ -293,9 +295,6 @@ public class RotPerSecCANTalonSRX {
 			canTalon.setCloseLoopRampRate(closedLoopRampRate);
 		}
 
-		//We can set this directly because the field is also a Double and can be null.
-		this.inchesPerRotation = inchesPerRotation;
-
 		//Set fields
 		this.maxSpeedHigh = maxSpeedHigh;
 		this.highGearP = highGearP;
@@ -305,6 +304,7 @@ public class RotPerSecCANTalonSRX {
 		this.lowGearP = lowGearP;
 		this.lowGearI = lowGearI;
 		this.lowGearD = lowGearD;
+		this.inchesPerRotation = inchesPerRotation;
 
 		//Set up PID constants.
 		if (maxSpeedHigh != null) {
@@ -401,7 +401,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Switch to using the high gear PID constants.
+	 * Switch to using the high gear PID constants and nominal voltage.
 	 */
 	public void switchToHighGear() {
 		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
@@ -414,10 +414,10 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Switch to using the low gear PID constants if we have them.
+	 * Switch to using the low gear PID constants and nominal output voltages if we have them.
 	 */
 	public void switchToLowGear() {
-		if (lowGearFwdNominalOutputVoltage != null){
+		if (lowGearFwdNominalOutputVoltage != null) {
 			canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
 		}
 		//If there are low gear constants in the map
@@ -450,8 +450,10 @@ public class RotPerSecCANTalonSRX {
 	@Nullable
 	public Double encoderToRPS(double encoderReading) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
+			//CTRE encoders use RPM
 			return RPMToRPS(encoderReading) * postEncoderGearing;
 		} else {
+			//All other feedback devices use native units.
 			Double RPS = nativeToRPS(encoderReading);
 			if (RPS == null) {
 				return null;
@@ -470,8 +472,10 @@ public class RotPerSecCANTalonSRX {
 	@Nullable
 	public Double RPSToEncoder(double RPS) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
+			//CTRE encoders use RPM
 			return RPSToRPM(RPS) / postEncoderGearing;
 		} else {
+			//All other feedback devices use native units.
 			Double encoderReading = RPSToNative(RPS);
 			if (encoderReading == null) {
 				return null;
@@ -537,8 +541,8 @@ public class RotPerSecCANTalonSRX {
 	/**
 	 * Get the velocity of the CANTalon in RPS
 	 * <p>
-	 * Note: This method is called getMode since the TalonControlMode enum is called speed. However, the output
-	 * is signed and is actually a velocity.
+	 * Note: This method is called getSpeed since the {@link CANTalon} method is called getSpeed. However, the output is
+	 * signed and is actually a velocity.
 	 *
 	 * @return The CANTalon's velocity in RPS, or null if no encoder CPR was given.
 	 */
@@ -550,7 +554,7 @@ public class RotPerSecCANTalonSRX {
 	/**
 	 * Give a velocity closed loop setpoint in RPS
 	 * <p>
-	 * Note: This method is called setSpeed since the TalonControlMode enum is called speed. However, the input
+	 * Note: This method is called setSpeed since the {@link CANTalon} method is called getSpeed. However, the input
 	 * argument is signed and is actually a velocity.
 	 *
 	 * @param velocitySp velocity setpoint in revolutions per second
@@ -558,12 +562,7 @@ public class RotPerSecCANTalonSRX {
 	public void setSpeed(double velocitySp) {
 		//Switch control mode to speed closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		try {
-			canTalon.set(RPSToEncoder(velocitySp));
-		} catch (NullPointerException e) {
-			System.out.println("Trying to set a closed-loop setpoint, but no encoder CPR defined!");
-			e.printStackTrace();
-		}
+		canTalon.set(RPSToEncoder(velocitySp));
 	}
 
 	/**
@@ -587,7 +586,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Get the high gear max speed. Sometimes useful for scaling joystick output.
+	 * Get the high gear max speed. Used for for scaling joystick output.
 	 *
 	 * @return The high gear max speed in RPS, or null if none was given.
 	 */
@@ -670,6 +669,11 @@ public class RotPerSecCANTalonSRX {
 		return RPS * inchesPerRotation / 12.;
 	}
 
+	/**
+	 * Get the CANTalon this is a wrapper on.
+	 *
+	 * @return The canTalon this wraps.
+	 */
 	@NotNull
 	public CANTalon getCanTalon() {
 		return canTalon;

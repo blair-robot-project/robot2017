@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.util.Polynomial;
 
 /**
- * Created by noahg on 18-Jun-17.
+ * An arcade OI with an option to use the D-pad for turning.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ArcadeOIWithDPad extends ArcadeOI {
@@ -93,7 +93,7 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
 		} else {
 			//Return the throttle value if it's outside of the deadband.
-			if (scaleRotByFwdPoly != null){
+			if (scaleRotByFwdPoly != null) {
 				return rotThrottle.getValue() * scaleRotByFwdPoly.get(fwdThrottle.getValue());
 			}
 			return rotThrottle.getValue();

@@ -47,6 +47,8 @@ public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 		if (dropGearSwitch.getStatus().get(0)) {
 			addSequential(dropGear.getCommand());
 		}
+
+		//Red is true, blue is false
 		if (allianceSwitch.getStatus().get(0)) {
 			addSequential(runRedPegToKeyProfile);
 		} else {

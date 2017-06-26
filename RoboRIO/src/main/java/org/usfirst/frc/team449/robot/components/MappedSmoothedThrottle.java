@@ -22,10 +22,11 @@ public class MappedSmoothedThrottle extends MappedThrottle {
 	/**
 	 * A basic constructor.
 	 *
-	 * @param stick    The Joystick object being used
-	 * @param axis     The axis being used. 0 is X, 1 is Y, 2 is Z.
-	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
-	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
+	 * @param stick                     The Joystick object being used
+	 * @param axis                      The axis being used. 0 is X, 1 is Y, 2 is Z.
+	 * @param smoothingTimeConstantSecs How many seconds of past input strongly effect the smoothing algorithm.
+	 * @param deadband                  The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param inverted                  Whether or not to invert the joystick input. Defaults to false.
 	 */
 	@JsonCreator
 	public MappedSmoothedThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,

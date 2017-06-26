@@ -13,12 +13,12 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Drive forward at constant speed then stop to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDTest<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
+public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem the UnidirectionalDrive to execute this command on
+	 * @param subsystem the subsystem to execute this command on
 	 * @param driveTime How long to drive forwards for, in seconds.
 	 * @param speed     The speed to drive at, from [0, 1].
 	 */

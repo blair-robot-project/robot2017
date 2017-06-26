@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * controlling the subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnMotorOffWithRequires<T extends YamlSubsystem & BinaryMotorSubsystem> extends TurnMotorOff {
+public class TurnMotorOffWithRequires <T extends YamlSubsystem & BinaryMotorSubsystem> extends TurnMotorOff {
 
 	/**
 	 * Default constructor

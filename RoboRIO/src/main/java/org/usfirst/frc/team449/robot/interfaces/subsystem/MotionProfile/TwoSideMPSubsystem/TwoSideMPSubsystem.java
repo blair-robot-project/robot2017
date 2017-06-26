@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.util.MotionProfileData;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface TwoSideMPSubsystem extends MPSubsystem {
+
 	/**
 	 * Loads given profiles into the left and right sides of the drive.
 	 *

@@ -17,7 +17,8 @@ import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
  * Turns everything off, raises intake
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetShooter<T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
+public class ResetShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
+
 	/**
 	 * Constructs a ResetShooter command group
 	 *

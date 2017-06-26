@@ -292,7 +292,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @param profile The profile to be loaded.
 	 */
 	@Override
-	public void loadMotionProfile(MotionProfileData profile) {
+	public void loadMotionProfile(@NotNull MotionProfileData profile) {
 		mpHandler.loadTopLevel(profile);
 	}
 
@@ -355,7 +355,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 * @param right The profile to load into the right side.
 	 */
 	@Override
-	public void loadMotionProfile(MotionProfileData left, MotionProfileData right) {
+	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
 		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
 	}
 }

@@ -14,10 +14,11 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
- * Class for the flywheel
+ * A flywheel shooter with a single flywheel and a single-motor feeder system.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, ShooterSubsystem {
+
 	/**
 	 * The flywheel's Talon
 	 */

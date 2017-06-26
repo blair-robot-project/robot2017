@@ -17,7 +17,8 @@ import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
  * Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoadShooter<T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
+public class LoadShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
+
 	/**
 	 * Constructs a LoadShooter command group
 	 *

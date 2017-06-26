@@ -16,6 +16,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
+
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
 	 */

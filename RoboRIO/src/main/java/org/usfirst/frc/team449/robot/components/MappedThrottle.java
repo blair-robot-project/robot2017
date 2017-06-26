@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedThrottle implements PIDSource {
+
 	/**
 	 * The stick we're using
 	 */
@@ -22,12 +23,12 @@ public class MappedThrottle implements PIDSource {
 	/**
 	 * The axis on the joystick we care about.
 	 */
-	protected final int axis;
+	private final int axis;
 
 	/**
 	 * Whether or not the controls should be inverted
 	 */
-	protected final boolean inverted;
+	private final boolean inverted;
 
 	/**
 	 * A basic constructor.
@@ -72,6 +73,7 @@ public class MappedThrottle implements PIDSource {
 	 */
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) {
+		//Do nothing!
 	}
 
 	/**

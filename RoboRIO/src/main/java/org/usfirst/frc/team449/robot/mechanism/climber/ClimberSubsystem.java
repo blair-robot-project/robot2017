@@ -20,6 +20,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
+
 	/**
 	 * The CANTalon controlling one of the climber motors.
 	 */
@@ -63,7 +64,6 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	                        @JsonProperty(required = true) double maxPower,
 	                        @Nullable MappedVictor victor,
 	                        int millisAboveMaxPower) {
-		super();
 		//Instantiate things
 		canTalonSRX = talonSRX;
 		this.maxPower = maxPower;

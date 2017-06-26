@@ -37,6 +37,8 @@ public class MappedUsbCamera extends UsbCamera {
 		super(name, devAddress);
 		setResolution(width, height);
 		setFPS(fps);
+
+		//If we don't have the exposure be automatic, the camera will be super laggy. No idea why.
 		setExposureAuto();
 	}
 }

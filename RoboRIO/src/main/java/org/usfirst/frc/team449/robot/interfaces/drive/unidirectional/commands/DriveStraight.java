@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Drives straight when using a tank drive.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveStraight<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class DriveStraight <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The oi that this command gets input from.
@@ -42,18 +42,18 @@ public class DriveStraight<T extends YamlSubsystem & UnidirectionalDrive> extend
 	/**
 	 * Drive straight without NavX stabilization.
 	 *
-	 * @param drive   The drive subsystem to execute this command on.
-	 * @param oi      The oi to get input from.
-	 * @param useLeft true to use the left stick to drive straight, false to use the right.
+	 * @param subsystem The drive subsystem to execute this command on.
+	 * @param oi        The oi to get input from.
+	 * @param useLeft   true to use the left stick to drive straight, false to use the right.
 	 */
 	@JsonCreator
-	public DriveStraight(@NotNull @JsonProperty(required = true) T drive,
+	public DriveStraight(@NotNull @JsonProperty(required = true) T subsystem,
 	                     @NotNull @JsonProperty(required = true) TankOI oi,
 	                     @JsonProperty(required = true) boolean useLeft) {
-		subsystem = drive;
+		this.subsystem = subsystem;
 		this.oi = oi;
 		this.useLeft = useLeft;
-		requires(drive);
+		requires(subsystem);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 
@@ -87,14 +87,6 @@ public class DriveStraight<T extends YamlSubsystem & UnidirectionalDrive> extend
 	@Override
 	protected boolean isFinished() {
 		return false;
-	}
-
-	/**
-	 * Do nothing, this never gets called because this command never finishes.
-	 */
-	@Override
-	protected void end() {
-
 	}
 
 	/**

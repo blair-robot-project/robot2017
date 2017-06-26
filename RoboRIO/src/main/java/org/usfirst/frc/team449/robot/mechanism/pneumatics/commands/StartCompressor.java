@@ -4,17 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Start up the pneumatic compressor.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class StartCompressor extends Command {
+public class StartCompressor extends YamlCommandWrapper {
 
+	/**
+	 * The subsystem to execute this command on.
+	 */
 	@NotNull
 	private final PneumaticsSubsystem subsystem;
 

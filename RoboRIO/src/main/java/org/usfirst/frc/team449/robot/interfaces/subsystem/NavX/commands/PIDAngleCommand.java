@@ -54,6 +54,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * @param kP                Proportional gain. Defaults to zero.
 	 * @param kI                Integral gain. Defaults to zero.
 	 * @param kD                Derivative gain. Defaults to zero.
+	 * @param subsystem    The subsystem to execute this command on.
 	 */
 	@JsonCreator
 	public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,
@@ -122,13 +123,6 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 
 		return output;
 	}
-
-	/*
-	 NOTE: usePIDOutput() is an abstract method in PIDCommand. Any subclass of PIDAngleCommand must implement it.
-	 It is called from the PIDController in PIDCommand, which will give it the output (i.e. u(t)) of the PID loop.
-	 It's up to the programmer to decide how to use this. For any subclass of PIDAngleCommand, you can generally just
-	 use it as a throttle value, or add it the throttle. Remember that one side is positive and one side is negative!
-	 */
 
 	/**
 	 * Returns the input for the pid loop.

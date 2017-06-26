@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface ShooterSubsystem {
+
 	/**
 	 * Turn the shooter on to a map-specified speed.
 	 */

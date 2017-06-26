@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Loads and runs the given profile into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfile<T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
+public class RunProfile <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.

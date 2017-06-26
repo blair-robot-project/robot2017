@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
@@ -18,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class NavXDriveStraight <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to give output to.
@@ -40,16 +39,14 @@ public class NavXDriveStraight<T extends YamlSubsystem & UnidirectionalDrive & N
 	/**
 	 * Default constructor.
 	 *
-	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
-	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered
-	 *                          within tolerance.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
+	 *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
+	 *                          tolerance.
 	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                          used.
-	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to
-	 *                          the motors. Defaults to zero.
-	 *                          Defaults to 180.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
+	 *                          motors. Defaults to zero.
 	 * @param inverted          Whether the loop is inverted. Defaults to false.
 	 * @param kP                Proportional gain. Defaults to zero.
 	 * @param kI                Integral gain. Defaults to zero.
@@ -57,8 +54,7 @@ public class NavXDriveStraight<T extends YamlSubsystem & UnidirectionalDrive & N
 	 * @param subsystem         The drive to execute this command on.
 	 * @param oi                The tank OI to take input from.
 	 * @param useLeft           Which joystick to use to get the forward component to drive straight. True for left,
-	 *                          false for
-	 *                          right.
+	 *                          false for right.
 	 */
 	@JsonCreator
 	public NavXDriveStraight(@JsonProperty(required = true) double absoluteTolerance,
@@ -90,9 +86,6 @@ public class NavXDriveStraight<T extends YamlSubsystem & UnidirectionalDrive & N
 		//Process the PID output with deadband, minimum output, etc.
 		output = processPIDOutput(output);
 
-		//Log processed output.
-		SmartDashboard.putNumber("NavXDriveStraight PID output", output);
-
 		//Set throttle to the specified stick.
 		double throttle;
 		if (useLeft) {
@@ -115,17 +108,9 @@ public class NavXDriveStraight<T extends YamlSubsystem & UnidirectionalDrive & N
 	}
 
 	/**
-	 * Does nothing, the actual work is done in usePIDOutput.
-	 */
-	@Override
-	protected void execute() {
-		//nada.
-	}
-
-	/**
-	 * Finishes instantaneously.
+	 * Never finishes.
 	 *
-	 * @return true
+	 * @return false
 	 */
 	@Override
 	protected boolean isFinished() {

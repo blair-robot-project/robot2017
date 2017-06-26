@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.Robot;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LogEvent {
+
 	/**
 	 * The time, in milliseconds, at which this event was created.
 	 */

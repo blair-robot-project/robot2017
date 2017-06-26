@@ -9,10 +9,11 @@ import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 
 /**
- * A simple, two-stick arcade drive OI that uses two distinct joysticks
+ * A simple, two-stick arcade drive OI.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OI2017Arcade extends ArcadeOI {
+public class SimpleArcadeOI extends ArcadeOI {
+
 	/**
 	 * Left (rotation control) stick's throttle
 	 */
@@ -32,8 +33,8 @@ public class OI2017Arcade extends ArcadeOI {
 	 * @param velThrottle The throttle for driving straight.
 	 */
 	@JsonCreator
-	public OI2017Arcade(@NotNull @JsonProperty(required = true) MappedSmoothedThrottle rotThrottle,
-	                    @NotNull @JsonProperty(required = true) MappedSmoothedThrottle velThrottle) {
+	public SimpleArcadeOI(@NotNull @JsonProperty(required = true) MappedSmoothedThrottle rotThrottle,
+	                      @NotNull @JsonProperty(required = true) MappedSmoothedThrottle velThrottle) {
 		this.rotThrottle = rotThrottle;
 		this.velThrottle = velThrottle;
 	}

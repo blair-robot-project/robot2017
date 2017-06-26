@@ -61,23 +61,13 @@ public class AutoshiftProcessor {
 	/**
 	 * Default constructor
 	 *
-	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high
-	 *                                         gear.
+	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high gear.
 	 * @param downshiftSpeed                   The maximum speed both sides must be going at to shift to low gear.
-	 * @param delayAfterUpshiftConditionsMet   How long, in seconds, the conditions to upshift have to be met for
-	 *                                         before
-	 *                                         upshifting happens. Defaults to 0.
-	 * @param delayAfterDownshiftConditionsMet How long, in seconds, the conditions to downshift have to be met for
-	 *                                         before downshifting happens. Defaults to 0.
-	 * @param cooldownAfterDownshift           The minimum time, in seconds, between downshifting and then upshifting
-	 *                                         again.
-	 *                                         Defaults to 0.
-	 * @param cooldownAfterUpshift             The minimum time, in seconds, between upshifting and then downshifting
-	 *                                         again.
-	 *                                         Defaults to 0.
-	 * @param upshiftFwdThresh                 The minimum amount the forward joystick must be pushed forward in order
-	 *                                         to upshift, on
-	 *                                         [0, 1]. Defaults to 0.
+	 * @param delayAfterUpshiftConditionsMet   How long, in seconds, the conditions to upshift have to be met for before upshifting happens. Defaults to 0.
+	 * @param delayAfterDownshiftConditionsMet How long, in seconds, the conditions to downshift have to be met for before downshifting happens. Defaults to 0.
+	 * @param cooldownAfterDownshift           The minimum time, in seconds, between downshifting and then upshifting again. Defaults to 0.
+	 * @param cooldownAfterUpshift             The minimum time, in seconds, between upshifting and then downshifting again. Defaults to 0.
+	 * @param upshiftFwdThresh                 The minimum amount the forward joystick must be pushed forward in order to upshift, on [0, 1]. Defaults to 0.
 	 */
 	@JsonCreator
 	public AutoshiftProcessor(@JsonProperty(required = true) double upshiftSpeed,
@@ -99,10 +89,10 @@ public class AutoshiftProcessor {
 	/**
 	 * Determine whether the robot should downshift.
 	 *
-	 * @param leftThrottle The left side's throttle, on [-1, 1].
+	 * @param leftThrottle  The left side's throttle, on [-1, 1].
 	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel     The velocity of the left side of the drive.
-	 * @param rightVel    The velocity of the right side of the drive.
+	 * @param leftVel       The velocity of the left side of the drive.
+	 * @param rightVel      The velocity of the right side of the drive.
 	 * @return True if the drive should downshift, false otherwise.
 	 */
 	public boolean shouldDownshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
@@ -111,7 +101,7 @@ public class AutoshiftProcessor {
 		//Or if we're just turning in place.
 		okToShift = okToShift || (leftThrottle == -rightThrottle);
 		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs((leftThrottle+rightThrottle)/2.) < upshiftFwdThresh);
+		okToShift = okToShift || (Math.abs((leftThrottle + rightThrottle) / 2.) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
@@ -129,17 +119,17 @@ public class AutoshiftProcessor {
 	/**
 	 * Determine whether the robot should upshift.
 	 *
-	 * @param leftThrottle The left side's throttle, on [-1, 1].
+	 * @param leftThrottle  The left side's throttle, on [-1, 1].
 	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel     The velocity of the left side of the drive.
-	 * @param rightVel    The velocity of the right side of the drive.
+	 * @param leftVel       The velocity of the left side of the drive.
+	 * @param rightVel      The velocity of the right side of the drive.
 	 * @return True if the drive should upshift, false otherwise.
 	 */
 	public boolean shouldUpshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
 		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs((leftThrottle+rightThrottle)/2.) > upshiftFwdThresh;
+		okToShift = okToShift && Math.abs((leftThrottle + rightThrottle) / 2.) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
@@ -152,6 +142,14 @@ public class AutoshiftProcessor {
 		return okToShift;
 	}
 
+	/**
+	 * Determine if the subsystem should shift, and if yes, do the shifting.
+	 * @param leftThrottle  The left side's throttle, on [-1, 1].
+	 * @param rightThrottle The right side's throttle, on [-1, 1].
+	 * @param leftVel       The velocity of the left side of the drive.
+	 * @param rightVel      The velocity of the right side of the drive.
+	 * @param shift The function to actually shift gears.
+	 */
 	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift) {
 		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(ShiftingDrive.gear.LOW);

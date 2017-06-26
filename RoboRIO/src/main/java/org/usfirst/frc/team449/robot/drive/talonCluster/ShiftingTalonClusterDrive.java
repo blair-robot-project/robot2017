@@ -48,6 +48,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	 *
 	 * @param leftMaster   The master talon on the left side of the drive.
 	 * @param rightMaster  The master talon on the right side of the drive.
+	 * @param navX         The NavX on this drive.
 	 * @param MPHandler    The motion profile handler that runs this drive's motion profiles.
 	 * @param PIDScale     The amount to scale the output to the PID loop by. Defaults to 1.
 	 * @param shifter      The piston that shifts between gears.
@@ -98,7 +99,8 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	}
 
 	/**
-	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint
+	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint. Defaults to voltage setpoint if the
+	 * talons don't have PID constants.
 	 *
 	 * @param left  The left PID velocity setpoint as a percent [-1, 1]
 	 * @param right The right PID velocity setpoint as a percent [-1, 1]
@@ -157,6 +159,11 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 		currentGear = gear;
 	}
 
+	/**
+	 * A getter for the starting gear.
+	 *
+	 * @return The gear this subsystem starts auto and teleop in.
+	 */
 	@NotNull
 	public gear getStartingGear() {
 		return startingGear;

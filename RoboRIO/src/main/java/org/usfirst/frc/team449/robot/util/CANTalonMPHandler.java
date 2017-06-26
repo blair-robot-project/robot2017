@@ -274,6 +274,9 @@ public class CANTalonMPHandler {
 		holdTalons(talons);
 	}
 
+	/**
+	 * For each talon, move points from the API-level MP buffer to the bottom one.
+	 */
 	private void processMPBuffer() {
 		for (CANTalon talon : talons) {
 			talon.processMotionProfileBuffer();

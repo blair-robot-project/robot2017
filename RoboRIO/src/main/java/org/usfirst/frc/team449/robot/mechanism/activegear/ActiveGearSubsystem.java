@@ -15,6 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsystem {
+
 	/**
 	 * Piston for pushing gears
 	 */
@@ -27,7 +28,7 @@ public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsys
 	private boolean contracted;
 
 	/**
-	 * Creates a mapped subsystem and sets its map
+	 * Default constructor
 	 *
 	 * @param piston The piston that comprises this subsystem.
 	 */

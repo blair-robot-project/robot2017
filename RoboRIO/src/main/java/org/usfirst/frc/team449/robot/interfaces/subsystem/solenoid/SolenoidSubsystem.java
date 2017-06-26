@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface SolenoidSubsystem {
+
 	/**
 	 * Set the solenoid to a certain position.
 	 *

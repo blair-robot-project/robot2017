@@ -42,15 +42,6 @@ public class WaitForMillis extends YamlCommandWrapper {
 	}
 
 	/**
-	 * The execute method is called repeatedly until this Command either finishes
-	 * or is canceled.
-	 */
-	@Override
-	protected void execute() {
-
-	}
-
-	/**
 	 * Finish if the specified amount of time has passed.
 	 *
 	 * @return true if the specified number of milliseconds have passed since this command started, false otherwise.
@@ -58,21 +49,5 @@ public class WaitForMillis extends YamlCommandWrapper {
 	@Override
 	protected boolean isFinished() {
 		return Robot.currentTimeMillis() - startTime >= timeout;
-	}
-
-	/**
-	 * Do nothing.
-	 */
-	@Override
-	protected void end() {
-
-	}
-
-	/**
-	 * Do nothing.
-	 */
-	@Override
-	protected void interrupted() {
-
 	}
 }

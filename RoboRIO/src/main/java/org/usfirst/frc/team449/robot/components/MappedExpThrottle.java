@@ -17,18 +17,25 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	 */
 	protected final double base;
 
+	/**
+	 * The input from the joystick. Declared outside of getValue to avoid garbage collection.
+	 */
 	private double input;
 
+	/**
+	 * The sign of the input from the joystick. Declared outside of getValue to avoid garbage collection.
+	 */
 	private double sign;
 
 	/**
 	 * A basic constructor.
 	 *
-	 * @param stick    The Joystick object being used
-	 * @param axis     The axis being used. 0 is X, 1 is Y, 2 is Z.
-	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
-	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
-	 * @param base     The base that is raised to the power of the joystick input..
+	 * @param stick                     The Joystick object being used
+	 * @param axis                      The axis being used.
+	 * @param smoothingTimeConstantSecs How many seconds of past input strongly effect the smoothing algorithm.
+	 * @param deadband                  The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param inverted                  Whether or not to invert the joystick input. Defaults to false.
+	 * @param base                      The base that is raised to the power of the joystick input.
 	 */
 	@JsonCreator
 	public MappedExpThrottle(@NotNull @JsonProperty(required = true) MappedJoystick stick,
@@ -49,9 +56,11 @@ public class MappedExpThrottle extends MappedSmoothedThrottle {
 	@Override
 	public double getValue() {
 		input = super.getValue();
-		sign = Math.signum(input);
 
+		//Extract the sign
+		sign = Math.signum(input);
 		input = Math.abs(input);
+
 		//Exponentially scale
 		input = (Math.pow(base, input) - 1.) / (base - 1.);
 

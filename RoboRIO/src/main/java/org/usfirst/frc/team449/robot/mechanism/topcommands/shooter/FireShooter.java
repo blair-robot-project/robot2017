@@ -16,6 +16,7 @@ import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FireShooter extends YamlCommandGroupWrapper {
+
 	/**
 	 * Constructs a FireShooter command group
 	 *

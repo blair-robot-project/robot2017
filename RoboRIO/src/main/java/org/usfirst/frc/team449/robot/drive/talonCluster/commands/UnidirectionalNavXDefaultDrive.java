@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.ArcadeOI;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
@@ -18,9 +17,10 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+
 	/**
-	 * The UnidirectionalDrive this command is controlling.
+	 * The drive this command is controlling.
 	 */
 	@NotNull
 	protected final T subsystem;
@@ -48,28 +48,35 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 	private boolean drivingStraight;
 
 	/**
+	 * The difference between left and right input within which the driver is considered to be trying to drive straight.
+	 */
+	private double commandingStraightTolerance;
+
+	/**
 	 * Default constructor
 	 *
-	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be
-	 *                                 considered
-	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
-	 *                                 within tolerance.
-	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                                 used.
-	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
-	 *                                 the motors. Defaults to zero.
-	 * @param maxAngularVelToEnterLoop The maximum angular velocity, in degrees/sec, at which the loop will be entered.
-	 *                                 Defaults to 180.
-	 * @param inverted                 Whether the loop is inverted. Defaults to false.
-	 * @param kP                       Proportional gain. Defaults to zero.
-	 * @param kI                       Integral gain. Defaults to zero.
-	 * @param kD                       Derivative gain. Defaults to zero.
-	 * @param loopEntryDelay           The delay to enter the loop after conditions for entry are met. Defaults to
-	 *                                 zero.
-	 * @param subsystem                The drive to execute this command on.
-	 * @param oi                       The OI controlling the robot.
+	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
+	 *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
+	 *                                    Defaults to 0.
+	 * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
+	 *                                    considered within tolerance.
+	 * @param minimumOutput               The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
+	 *                                    is used.
+	 * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
+	 *                                    to the motors. Defaults to zero.
+	 * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
+	 *                                    entered. Defaults to 180.
+	 * @param inverted                    Whether the loop is inverted. Defaults to false.
+	 * @param kP                          Proportional gain. Defaults to zero.
+	 * @param kI                          Integral gain. Defaults to zero.
+	 * @param kD                          Derivative gain. Defaults to zero.
+	 * @param loopEntryDelay              The delay to enter the loop after conditions for entry are met. Defaults to
+	 *                                    zero.
+	 * @param commandingStraightTolerance The difference between left and right input within which the driver is
+	 *                                    considered to be trying to drive straight. Defaults to 0.
+	 * @param subsystem                   The drive to execute this command on.
+	 * @param oi                          The OI controlling the robot.
 	 */
 	@JsonCreator
 	public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -82,12 +89,14 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 	                                      int kI,
 	                                      int kD,
 	                                      double loopEntryDelay,
+	                                      double commandingStraightTolerance,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
 	                                      @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;
 		this.subsystem = subsystem;
+		this.commandingStraightTolerance = commandingStraightTolerance;
 
 		driveStraightLoopEntryTimer = new BufferTimer(loopEntryDelay);
 		if (maxAngularVelToEnterLoop == null) {
@@ -121,8 +130,8 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 	 */
 	@Override
 	protected void execute() {
-		//Set vel and rot to what they should be.
-		boolean commandingStraight = (oi.getLeftOutput() == oi.getRightOutput());
+		//Check whether we're commanding to drive straight or turn.
+		boolean commandingStraight = (Math.abs(oi.getLeftOutput() - oi.getRightOutput()) <= commandingStraightTolerance);
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
 		if (drivingStraight && (!commandingStraight || subsystem.getOverrideNavX())) {
@@ -130,7 +139,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
-		//If we're free driving and the driver lets go of the turn stick:
+		//If we're free driving and the driver tries to turn:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
 				commandingStraight && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
@@ -170,7 +179,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 	@Override
 	protected void interrupted() {
 		Logger.addEvent("UnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
-		subsystem.setOutput(0.0, 0.0);
+		subsystem.fullStop();
 	}
 
 	/**
@@ -184,9 +193,6 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Unidirecti
 		if (drivingStraight) {
 			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
-
-			//Log stuff
-			SmartDashboard.putNumber("PID output", output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
 			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);

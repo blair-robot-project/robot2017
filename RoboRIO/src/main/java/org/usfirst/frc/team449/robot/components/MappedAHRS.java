@@ -8,11 +8,16 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
 /**
- * Created by noah on 6/25/17.
+ * A Jackson-compatible wrapper for the NavX.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedAHRS extends AHRS {
 
+	/**
+	 * Default constructor.
+	 *
+	 * @param port The port the NavX is plugged into. It seems like only kMXP (the port on the RIO) works.
+	 */
 	@JsonCreator
 	public MappedAHRS(@JsonProperty(required = true) SPI.Port port) {
 		super(port);

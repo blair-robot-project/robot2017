@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Go at a certain velocity for a set number of seconds
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveAtSpeed<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * Speed to go at
@@ -41,19 +41,19 @@ public class DriveAtSpeed<T extends YamlSubsystem & UnidirectionalDrive> extends
 	/**
 	 * Default constructor
 	 *
-	 * @param drive    The drive to execute this command on
-	 * @param velocity How fast to go, in RPS
-	 * @param seconds  How long to drive for.
+	 * @param subsystem The drive to execute this command on
+	 * @param velocity  How fast to go, in RPS
+	 * @param seconds   How long to drive for.
 	 */
 	@JsonCreator
-	public DriveAtSpeed(@NotNull @JsonProperty(required = true) T drive,
+	public DriveAtSpeed(@NotNull @JsonProperty(required = true) T subsystem,
 	                    @JsonProperty(required = true) double velocity,
 	                    @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
-		this.subsystem = drive;
+		this.subsystem = subsystem;
 		this.velocity = velocity;
 		this.seconds = seconds;
-		requires(drive);
+		requires(subsystem);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 

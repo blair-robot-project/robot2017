@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive<T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class SimpleUnidirectionalDrive <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.
@@ -24,7 +24,7 @@ public class SimpleUnidirectionalDrive<T extends YamlSubsystem & UnidirectionalD
 	public final UnidirectionalOI oi;
 
 	/**
-	 * The drive subsystem to execute this command on.
+	 * The subsystem to execute this command on.
 	 */
 	@NotNull
 	private final T subsystem;
@@ -32,16 +32,16 @@ public class SimpleUnidirectionalDrive<T extends YamlSubsystem & UnidirectionalD
 	/**
 	 * Default constructor
 	 *
-	 * @param drive The drive to execute this command on
-	 * @param oi    The OI that gives the input to this command.
+	 * @param subsystem The subsystem to execute this command on
+	 * @param oi        The OI that gives the input to this command.
 	 */
 	@JsonCreator
-	public SimpleUnidirectionalDrive(@NotNull @JsonProperty(required = true) T drive,
+	public SimpleUnidirectionalDrive(@NotNull @JsonProperty(required = true) T subsystem,
 	                                 @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
-		this.subsystem = drive;
+		this.subsystem = subsystem;
 		//Default commands need to require their subsystems.
-		requires(drive);
+		requires(subsystem);
 	}
 
 	/**
@@ -68,14 +68,6 @@ public class SimpleUnidirectionalDrive<T extends YamlSubsystem & UnidirectionalD
 	@Override
 	protected boolean isFinished() {
 		return false;
-	}
-
-	/**
-	 * Do nothing, never gets called because this command never finishes.
-	 */
-	@Override
-	protected void end() {
-
 	}
 
 	/**

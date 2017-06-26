@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.AutoshiftProcessor;
+import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
@@ -16,11 +17,17 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ShiftingUnidirectionalNavXDefaultDrive<T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXDefaultDrive {
+public class ShiftingUnidirectionalNavXDefaultDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem & ShiftingDrive> extends UnidirectionalNavXDefaultDrive {
 
+	/**
+	 * The drive to execute this command on.
+	 */
 	@NotNull
 	protected final T subsystem;
 
+	/**
+	 * The helper object for autoshifting.
+	 */
 	@NotNull
 	protected final AutoshiftProcessor autoshiftProcessor;
 
@@ -47,6 +54,7 @@ public class ShiftingUnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Un
 	 *                                 zero.
 	 * @param subsystem                The drive to execute this command on.
 	 * @param oi                       The OI controlling the robot.
+	 * @param autoshiftProcessor       The helper object for autoshifting.
 	 */
 	@JsonCreator
 	public ShiftingUnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -59,10 +67,12 @@ public class ShiftingUnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Un
 	                                              int kI,
 	                                              int kD,
 	                                              double loopEntryDelay,
+	                                              double commandingStraightTolerance,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) UnidirectionalOI oi,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
-		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop, inverted, kP, kI, kD, loopEntryDelay, subsystem, oi);
+		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
+				inverted, kP, kI, kD, loopEntryDelay, commandingStraightTolerance, subsystem, oi);
 		this.autoshiftProcessor = autoshiftProcessor;
 		this.subsystem = subsystem;
 	}
@@ -76,5 +86,22 @@ public class ShiftingUnidirectionalNavXDefaultDrive<T extends YamlSubsystem & Un
 		autoshiftProcessor.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
 				subsystem.getRightVel(), subsystem::setGear);
 		super.execute();
+	}
+
+	/**
+	 * Log when this command ends
+	 */
+	@Override
+	protected void end() {
+		Logger.addEvent("ShiftingUnidirectionalNavXArcadeDrive End.", this.getClass());
+	}
+
+	/**
+	 * Stop the motors and log when this command is interrupted.
+	 */
+	@Override
+	protected void interrupted() {
+		Logger.addEvent("ShiftingUnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
+		subsystem.fullStop();
 	}
 }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * A Json-compatible wrapper on a {@link Joystick}.
+ * A Jackson-compatible wrapper on a {@link Joystick}.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedJoystick extends Joystick {
