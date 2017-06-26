@@ -91,7 +91,6 @@ arcadeOI:
                 axis: 5
         invertDPad: true
         dPadShift: 0.1
-        scaleFwdByRotCoefficient: 0.2
 drive:
     org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive:
         '@id': drive
@@ -102,7 +101,7 @@ drive:
             inverted: true
             enableBrakeMode: false
             fwdPeakOutputVoltage: 12
-            highGearFwdNominalOutputVoltage: 0
+            highGearFwdNominalOutputVoltage: 1
             lowGearFwdNominalOutputVoltage: 1.5
             inchesPerRotation: 11.78097
             currentLimit: 40
@@ -157,7 +156,7 @@ drive:
             module: 15
             forward: 2
             reverse: 3
-        startingGear: LOW
+        startingGear: HIGH
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXDefaultDrive:
         '@id': defaultDriveCommand
@@ -193,7 +192,7 @@ climber:
             inverted: false
             enableBrakeMode: false
             fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 0
+            highGearFwdNominalOutputVoltage: 0
         maxPower: 500
         victor:
             '@id': climberVictor

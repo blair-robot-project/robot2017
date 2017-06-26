@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
@@ -17,6 +18,7 @@ public class ChangeCam extends YamlCommandWrapper {
 	/**
 	 * The subsystem to execute this command on
 	 */
+	@NotNull
 	private CameraSubsystem subsystem;
 
 	/**
@@ -25,10 +27,9 @@ public class ChangeCam extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public ChangeCam(@JsonProperty(required = true) CameraSubsystem subsystem) {
-		super();
-		requires(this.subsystem);
+	public ChangeCam(@NotNull @JsonProperty(required = true) CameraSubsystem subsystem) {
 		this.subsystem = subsystem;
+		requires(subsystem);
 	}
 
 	/**
