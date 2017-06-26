@@ -1,28 +1,35 @@
 package org.usfirst.frc.team449.robot.vision.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 
 /**
  * Toggles camera on button press.
  */
-public class ChangeCam extends ReferencingCommand {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class ChangeCam extends YamlCommandWrapper {
 
 	/**
-	 * The cameraSubsystem to execute this command on
+	 * The subsystem to execute this command on
 	 */
-	private CameraSubsystem cameraSubsystem;
+	@NotNull
+	private CameraSubsystem subsystem;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param cameraSubsystem The cameraSubsystem to execute this command on.
+	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public ChangeCam(CameraSubsystem cameraSubsystem) {
-		super(cameraSubsystem);
-		requires(cameraSubsystem);
-		this.cameraSubsystem = cameraSubsystem;
+	@JsonCreator
+	public ChangeCam(@NotNull @JsonProperty(required = true) CameraSubsystem subsystem) {
+		this.subsystem = subsystem;
+		requires(subsystem);
 	}
 
 	/**
@@ -39,14 +46,14 @@ public class ChangeCam extends ReferencingCommand {
 	@Override
 	protected void execute() {
 		//Switches camNum to next camera, if applicable
-		if (cameraSubsystem.cameras.size() == 1) {
+		if (subsystem.getCameras().size() == 1) {
 			Logger.addEvent("You're trying to switch cameras, but your robot only has one camera!", this.getClass());
 		} else {
-			cameraSubsystem.camNum = (cameraSubsystem.camNum + 1) % cameraSubsystem.cameras.size();
+			subsystem.setCamNum((subsystem.getCamNum() + 1) % subsystem.getCameras().size());
 		}
 
 		//Switches to set camera
-		cameraSubsystem.server.setSource(cameraSubsystem.cameras.get(cameraSubsystem.camNum));
+		subsystem.getServer().setSource(subsystem.getCameras().get(subsystem.getCamNum()));
 	}
 
 	/**

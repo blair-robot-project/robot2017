@@ -1,18 +1,22 @@
 package org.usfirst.frc.team449.robot.util;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
 
 /**
  * A command that does nothing and finishes after a set number of milliseconds. For use to create a delay in sequential
  * CommandGroups.
  */
-public class WaitForMillis extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class WaitForMillis extends YamlCommandWrapper {
 
 	/**
 	 * How long this command takes to finish, in milliseconds.
 	 */
-	private long timeout;
+	private final long timeout;
 
 	/**
 	 * The time this command started at.
@@ -24,7 +28,8 @@ public class WaitForMillis extends Command {
 	 *
 	 * @param time How long this command will take to finish, in milliseconds.
 	 */
-	public WaitForMillis(long time) {
+	@JsonCreator
+	public WaitForMillis(@JsonProperty(required = true) long time) {
 		timeout = time;
 	}
 

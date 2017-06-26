@@ -1,13 +1,20 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Loads and runs the given profile into the given subsystem.
  */
-public class RunProfile extends CommandGroup {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class RunProfile <T extends YamlSubsystem & TwoSideMPSubsystem> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -16,8 +23,11 @@ public class RunProfile extends CommandGroup {
 	 * @param profile   The motion profile to load and execute.
 	 * @param timeout   The maximum amount of time this command is allowed to take, in seconds.
 	 */
-	public RunProfile(MPSubsystem subsystem, MotionProfileData profile, double timeout) {
+	@JsonCreator
+	public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
+	                  @NotNull @JsonProperty(required = true) MotionProfileData profile,
+	                  @JsonProperty(required = true) double timeout) {
 		addSequential(new LoadProfile(subsystem, profile));
-		addSequential(new RunLoadedProfile(subsystem, timeout, true));
+		addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
 	}
 }

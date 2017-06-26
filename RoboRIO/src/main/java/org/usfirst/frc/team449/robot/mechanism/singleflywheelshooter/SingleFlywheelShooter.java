@@ -1,64 +1,81 @@
 package org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Loggable;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
- * Class for the flywheel
+ * A flywheel shooter with a single flywheel and a single-motor feeder system.
  */
-public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, ShooterSubsystem {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, ShooterSubsystem {
+
 	/**
 	 * The flywheel's Talon
 	 */
-	private RotPerSecCANTalonSRX shooterTalon;
+	@NotNull
+	private final RotPerSecCANTalonSRX shooterTalon;
 
 	/**
 	 * The feeder's Victor
 	 */
-	private VictorSP feederVictor;
+	@NotNull
+	private final VictorSP feederVictor;
 
 	/**
 	 * How fast to run the feeder, from [-1, 1]
 	 */
-	private double feederThrottle;
-
-	/**
-	 * Whether the flywheel is currently commanded to spin
-	 */
-	private ShooterState state;
+	private final double feederThrottle;
 
 	/**
 	 * Throttle at which to run the shooter, from [-1, 1]
 	 */
-	private double shooterThrottle;
+	private final double shooterThrottle;
 
 	/**
 	 * How long it takes the shooter to get up to speed, in milliseconds.
 	 */
-	private long spinUpTime;
+	private final long spinUpTime;
 
 	/**
-	 * Construct a SingleFlywheelShooter
-	 *
-	 * @param map config map
+	 * Whether the flywheel is currently commanded to spin
 	 */
-	public SingleFlywheelShooter(maps.org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter
-			                             .SingleFlywheelShooterMap.SingleFlywheelShooter map) {
-		super(map.getMechanism());
-		this.map = map;
-		shooterTalon = new RotPerSecCANTalonSRX(map.getShooter());
+	@NotNull
+	private ShooterState state;
 
-		shooterThrottle = map.getShooterThrottle();
+	/**
+	 * Default constructor
+	 *
+	 * @param shooterTalon    The TalonSRX controlling the flywheel.
+	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the shooter.
+	 * @param feederVictor    The VictorSP controlling the feeder.
+	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
+	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the shooter to get up to speed. Defaults to
+	 *                        0.
+	 */
+	@JsonCreator
+	public SingleFlywheelShooter(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX shooterTalon,
+	                             @JsonProperty(required = true) double shooterThrottle,
+	                             @NotNull @JsonProperty(required = true) MappedVictor feederVictor,
+	                             @JsonProperty(required = true) double feederThrottle,
+	                             double spinUpTimeSecs) {
+		super();
+		this.shooterTalon = shooterTalon;
+		this.shooterThrottle = shooterThrottle;
+		this.feederVictor = feederVictor;
+		this.feederThrottle = feederThrottle;
 		state = ShooterState.OFF;
-		spinUpTime = (long) (map.getSpinUpTimeSecs() * 1000.);
-		feederVictor = new MappedVictor(map.getFeeder());
-		feederThrottle = map.getFeederThrottle();
-		Logger.addEvent("Shooter F: " + shooterTalon.canTalon.getF(), this.getClass());
+		spinUpTime = (long) (spinUpTimeSecs * 1000.);
+		Logger.addEvent("Shooter F: " + shooterTalon.getCanTalon().getF(), this.getClass());
 	}
 
 	/**
@@ -76,7 +93,12 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 * @param sp percent PID velocity setpoint [-1, 1]
 	 */
 	private void setFlywheelPIDSpeed(double sp) {
-		shooterTalon.setSpeed(shooterTalon.getMaxSpeed() * sp);
+		if (shooterTalon.getMaxSpeed() == null) {
+			setFlywheelVBusSpeed(sp);
+			System.out.println("You're trying to set PID throttle, but the shooter talon doesn't have PID constants defined. Using voltage control instead.");
+		} else {
+			shooterTalon.setSpeed(shooterTalon.getMaxSpeed() * sp);
+		}
 	}
 
 	/**
@@ -110,12 +132,13 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
-		return new String[]{"speed,",
-				"setpoint,",
-				"error,",
-				"voltage,",
+		return new String[]{"speed",
+				"setpoint",
+				"error",
+				"voltage",
 				"current"};
 	}
 
@@ -124,13 +147,14 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
 		return new Object[]{shooterTalon.getSpeed(),
 				shooterTalon.getSetpoint(),
 				shooterTalon.getError(),
-				shooterTalon.canTalon.getOutputVoltage(),
-				shooterTalon.canTalon.getOutputCurrent()};
+				shooterTalon.getCanTalon().getOutputVoltage(),
+				shooterTalon.getCanTalon().getOutputCurrent()};
 	}
 
 	/**
@@ -138,6 +162,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "shooter";
@@ -148,7 +173,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 */
 	@Override
 	public void turnShooterOn() {
-		shooterTalon.canTalon.enable();
+		shooterTalon.getCanTalon().enable();
 		setFlywheelDefaultSpeed(shooterThrottle);
 	}
 
@@ -158,7 +183,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	@Override
 	public void turnShooterOff() {
 		setFlywheelVBusSpeed(0);
-		shooterTalon.canTalon.disable();
+		shooterTalon.getCanTalon().disable();
 	}
 
 	/**
@@ -182,6 +207,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 *
 	 * @return Off, spinning up, or shooting.
 	 */
+	@NotNull
 	@Override
 	public ShooterState getShooterState() {
 		return state;
@@ -193,7 +219,7 @@ public class SingleFlywheelShooter extends MappedSubsystem implements Loggable, 
 	 * @param state Off, spinning up, or shooting
 	 */
 	@Override
-	public void setShooterState(ShooterState state) {
+	public void setShooterState(@NotNull ShooterState state) {
 		this.state = state;
 	}
 

@@ -1,23 +1,34 @@
 package org.usfirst.frc.team449.robot.mechanism.pneumatics.commands;
 
-import org.usfirst.frc.team449.robot.ReferencingCommand;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Start up the pneumatic compressor.
  */
-public class StartCompressor extends ReferencingCommand {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class StartCompressor extends YamlCommandWrapper {
 
-	private PneumaticsSubsystem subsystem;
+	/**
+	 * The subsystem to execute this command on.
+	 */
+	@NotNull
+	private final PneumaticsSubsystem subsystem;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public StartCompressor(PneumaticsSubsystem subsystem) {
-		super(subsystem);
+	@JsonCreator
+	public StartCompressor(@NotNull @JsonProperty(required = true) PneumaticsSubsystem subsystem) {
+		super();
 		this.subsystem = subsystem;
 	}
 

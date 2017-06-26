@@ -1,23 +1,31 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Sets the mode of the intake.
  */
-public class SetIntakeMode extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class SetIntakeMode extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private IntakeSubsystem subsystem;
+	@NotNull
+	private final IntakeSubsystem subsystem;
 
 	/**
 	 * The mode to set this subsystem to.
 	 */
-	private IntakeSubsystem.IntakeMode mode;
+	@NotNull
+	private final IntakeSubsystem.IntakeMode mode;
 
 	/**
 	 * Default constructor
@@ -25,7 +33,9 @@ public class SetIntakeMode extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param mode      The mode to set the intake to.
 	 */
-	public SetIntakeMode(IntakeSubsystem subsystem, IntakeSubsystem.IntakeMode mode) {
+	@JsonCreator
+	public SetIntakeMode(@NotNull @JsonProperty(required = true) IntakeSubsystem subsystem,
+	                     @NotNull @JsonProperty(required = true) IntakeSubsystem.IntakeMode mode) {
 		this.subsystem = subsystem;
 		this.mode = mode;
 	}

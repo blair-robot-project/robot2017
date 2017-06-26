@@ -1,6 +1,10 @@
 package org.usfirst.frc.team449.robot.util;
 
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
@@ -10,11 +14,13 @@ import java.io.IOException;
 /**
  * Data structure containing the array of points for the MP and a method to fill the MP from a csv file
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MotionProfileData {
+
 	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
 	 */
-	public double data[][];
+	private double data[][];
 
 	/**
 	 * Whether or not the profile is inverted because we're driving it backwards.
@@ -22,30 +28,17 @@ public class MotionProfileData {
 	private boolean inverted;
 
 	/**
-	 * Map constructor
+	 * Default constructor
 	 *
-	 * @param map the config map
-	 */
-	public MotionProfileData(MotionProfileMap.MotionProfile map) {
-		inverted = map.getInverted();
-		try {
-			readFile(Robot.RESOURCES_PATH + map.getFilename());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Parameter constructor
-	 *
-	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
-	 *                 lines.
+	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 */
-	public MotionProfileData(String filename, boolean inverted) {
+	@JsonCreator
+	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
+	                         @JsonProperty(required = true) boolean inverted) {
 		this.inverted = inverted;
 		try {
-			readFile(filename);
+			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,7 +50,7 @@ public class MotionProfileData {
 	 * @param filename The name of the .csv file containing the motion profile data.
 	 * @throws IOException if that file doesn't exist.
 	 */
-	private void readFile(String filename) throws IOException {
+	private void readFile(@NotNull String filename) throws IOException {
 		//Instantiate the reader
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		int numLines = Integer.parseInt(br.readLine());
@@ -91,5 +84,10 @@ public class MotionProfileData {
 		}
 		//Close the reader
 		br.close();
+	}
+
+	@NotNull
+	public double[][] getData() {
+		return data;
 	}
 }

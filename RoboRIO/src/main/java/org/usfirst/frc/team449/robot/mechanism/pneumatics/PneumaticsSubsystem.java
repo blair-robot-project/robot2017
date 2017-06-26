@@ -1,31 +1,46 @@
 package org.usfirst.frc.team449.robot.mechanism.pneumatics;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.PressureSensor;
 import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)
  */
-public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
+
 	/**
 	 * The compressor that provides pressure to the robot's pneumatics.
 	 */
-	private Compressor compressor;
+	@NotNull
+	private final Compressor compressor;
 
 	/**
 	 * The pressure sensor that reads the pneumatic pressure.
 	 */
-	private PressureSensor pressureSensor;
+	@Nullable
+	private final PressureSensor pressureSensor;
 
-	public PneumaticsSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticSystemMap
-			                           .PneumaticSystem map) {
-		super(map);
-		compressor = new Compressor(map.getNodeID());
-		if (map.hasPressureSensor()) {
-			pressureSensor = new PressureSensor(map.getPressureSensor());
-		}
+	/**
+	 * Default constructor
+	 *
+	 * @param nodeID         The node ID of the compressor.
+	 * @param pressureSensor The pressure sensor attached to this pneumatics system. Can be null.
+	 */
+	@JsonCreator
+	public PneumaticsSubsystem(@JsonProperty(required = true) int nodeID,
+	                           @Nullable PressureSensor pressureSensor) {
+		super();
+		compressor = new Compressor(nodeID);
+		this.pressureSensor = pressureSensor;
 	}
 
 	/**
@@ -49,6 +64,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
 		return new String[]{"pressure"};
@@ -59,6 +75,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
 		if (pressureSensor == null) {
@@ -73,6 +90,7 @@ public class PneumaticsSubsystem extends MappedSubsystem implements Loggable {
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "pneumatics";

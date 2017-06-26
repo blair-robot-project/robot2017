@@ -1,49 +1,73 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import maps.org.usfirst.frc.team449.robot.util.ToleranceBufferAnglePIDMap;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
 
 /**
  * A command that uses a NavX to turn to a certain angle.
  */
-public abstract class PIDAngleCommand extends PIDCommand {
-
-	/**
-	 * The minimum the robot should be able to output, to overcome friction.
-	 */
-	protected double minimumOutput;
-
-	/**
-	 * Whether or not to use minimumOutput.
-	 */
-	protected boolean minimumOutputEnabled;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
+public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	protected NavxSubsystem subsystem;
+	@NotNull
+	protected final NavxSubsystem subsystem;
+
+	/**
+	 * The minimum the robot should be able to output, to overcome friction.
+	 */
+	private final double minimumOutput;
 
 	/**
 	 * The range in which output is turned off to prevent "dancing" around the setpoint.
 	 */
-	protected double deadband;
+	private final double deadband;
 
 	/**
 	 * Whether or not the loop is inverted.
 	 */
-	protected boolean inverted;
+	private final boolean inverted;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param map       The map with this command's constants.
-	 * @param subsystem The NavX subsystem.
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered
+	 *                          within tolerance.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
+	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is
+	 *                          used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to
+	 *                          the motors. Defaults to zero.
+	 * @param inverted          Whether the loop is inverted. Defaults to false.
+	 * @param kP                Proportional gain. Defaults to zero.
+	 * @param kI                Integral gain. Defaults to zero.
+	 * @param kD                Derivative gain. Defaults to zero.
+	 * @param subsystem    The subsystem to execute this command on.
 	 */
-	public PIDAngleCommand(ToleranceBufferAnglePIDMap.ToleranceBufferAnglePID map, NavxSubsystem subsystem) {
+	@JsonCreator
+	public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,
+	                       int toleranceBuffer,
+	                       double minimumOutput, @Nullable Double maximumOutput,
+	                       double deadband,
+	                       boolean inverted,
+	                       @NotNull @JsonProperty(required = true) NavxSubsystem subsystem,
+	                       int kP,
+	                       int kI,
+	                       int kD) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.
-		super(map.getPID().getP(), map.getPID().getI(), map.getPID().getD());
+		super(kP, kI, kD);
 		this.subsystem = subsystem;
 
 		//Navx reads from -180 to 180.
@@ -53,33 +77,26 @@ public abstract class PIDAngleCommand extends PIDCommand {
 		this.getPIDController().setContinuous(true);
 
 		//Set the absolute tolerance to be considered on target within.
-		this.getPIDController().setAbsoluteTolerance(map.getAbsoluteTolerance());
+		this.getPIDController().setAbsoluteTolerance(absoluteTolerance);
 
 		//This is how long we have to be within the tolerance band. Multiply by loop period for time in ms.
-		this.getPIDController().setToleranceBuffer(map.getToleranceBuffer());
+		this.getPIDController().setToleranceBuffer(toleranceBuffer);
 
 		//Minimum output, the smallest output it's possible to give. One-tenth of your drive's top speed is about
 		// right.
-		//TODO test and implement that Talon nominalOutputVoltage and then get rid of this.
-		minimumOutput = map.getMinimumOutput();
-		minimumOutputEnabled = map.getMinimumOutputEnabled();
+		this.minimumOutput = minimumOutput;
 
 		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
 		// prevent overshoot.
-		if (map.getMaximumOutputEnabled()) {
-			this.getPIDController().setOutputRange(-map.getMaximumOutput(), map.getMaximumOutput());
+		if (maximumOutput != null) {
+			this.getPIDController().setOutputRange(-minimumOutput, maximumOutput);
 		}
 
 		//Set a deadband around the setpoint, in degrees, within which don't move, to avoid "dancing"
-		if (map.getDeadbandEnabled()) {
-			deadband = map.getDeadband();
-		} else {
-			//Deadband of zero is equivalent to no deadband at all.
-			deadband = 0;
-		}
+		this.deadband = deadband;
 
 		//Set whether or not to invert the loop.
-		inverted = map.getInverted();
+		this.inverted = inverted;
 	}
 
 	/**
@@ -90,14 +107,11 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	 * right side.
 	 */
 	protected double processPIDOutput(double output) {
-		//If we're using minimumOutput..
-		if (minimumOutputEnabled) {
-			//Set the output to the minimum if it's too small.
-			if (output > 0 && output < minimumOutput) {
-				output = minimumOutput;
-			} else if (output < 0 && output > -minimumOutput) {
-				output = -minimumOutput;
-			}
+		//Set the output to the minimum if it's too small.
+		if (output > 0 && output < minimumOutput) {
+			output = minimumOutput;
+		} else if (output < 0 && output > -minimumOutput) {
+			output = -minimumOutput;
 		}
 		//Set the output to 0 if we're within the deadband.
 		if (Math.abs(this.getPIDController().getError()) < deadband) {
@@ -109,13 +123,6 @@ public abstract class PIDAngleCommand extends PIDCommand {
 
 		return output;
 	}
-
-	/*
-	 NOTE: usePIDOutput() is an abstract method in PIDCommand. Any subclass of PIDAngleCommand must implement it.
-	 It is called from the PIDController in PIDCommand, which will give it the output (i.e. u(t)) of the PID loop.
-	 It's up to the programmer to decide how to use this. For any subclass of PIDAngleCommand, you can generally just
-	 use it as a throttle value, or add it the throttle. Remember that one side is positive and one side is negative!
-	 */
 
 	/**
 	 * Returns the input for the pid loop.
@@ -136,5 +143,16 @@ public abstract class PIDAngleCommand extends PIDCommand {
 	@Override
 	protected double returnPIDInput() {
 		return subsystem.getGyroOutput();
+	}
+
+	/**
+	 * Get the command object this object is.
+	 *
+	 * @return this.
+	 */
+	@Override
+	@NotNull
+	public Command getCommand() {
+		return this;
 	}
 }

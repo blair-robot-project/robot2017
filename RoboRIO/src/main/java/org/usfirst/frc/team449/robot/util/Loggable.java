@@ -1,8 +1,12 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An object that logs telemetry data every loop.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface Loggable {
 
 	/**
@@ -10,6 +14,7 @@ public interface Loggable {
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	String[] getHeader();
 
 	/**
@@ -17,6 +22,7 @@ public interface Loggable {
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	Object[] getData();
 
 	/**
@@ -24,5 +30,6 @@ public interface Loggable {
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	String getName();
 }

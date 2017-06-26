@@ -1,19 +1,28 @@
 package org.usfirst.frc.team449.robot.components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import maps.org.usfirst.frc.team449.robot.components.ModuleDoubleSolenoidMap;
 
 /**
- * A wrapper on the {@link DoubleSolenoid} that can be constructed from a map object.
+ * A Jackson-compatible wrapper on the {@link DoubleSolenoid}.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedDoubleSolenoid extends DoubleSolenoid {
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param map A map containing module number, forward port, and reverse port.
+	 * @param module  The module number of the PCM. Defaults to 0.
+	 * @param forward The forward port on the PCM.
+	 * @param reverse The reverse port on the PCM.
 	 */
-	public MappedDoubleSolenoid(ModuleDoubleSolenoidMap.ModuleDoubleSolenoid map) {
-		super(map.getModule(), map.getForward(), map.getReverse());
+	@JsonCreator
+	public MappedDoubleSolenoid(int module,
+	                            @JsonProperty(required = true) int forward,
+	                            @JsonProperty(required = true) int reverse) {
+		super(module, forward, reverse);
 	}
 }

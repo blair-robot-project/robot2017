@@ -1,25 +1,32 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 
 /**
  * An logged event with a message, timestamp, and calling class.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LogEvent {
+
 	/**
 	 * The time, in milliseconds, at which this event was created.
 	 */
-	private long timeCalled;
+	private final long timeCalled;
 
 	/**
 	 * The message of this event.
 	 */
-	private String message;
+	private final String message;
 
 	/**
 	 * The class that called this event.
 	 */
-	private Class caller;
+	private final Class caller;
 
 	/**
 	 * Default constructor.
@@ -31,7 +38,9 @@ public class LogEvent {
 	 * @param message The message of this event.
 	 * @param caller  The calling class. Should pretty much always be this.getClass().
 	 */
-	public LogEvent(String message, Class caller) {
+	@JsonCreator
+	public LogEvent(@NotNull @JsonProperty(required = true) String message,
+	                @NotNull @JsonProperty(required = true) Class caller) {
 		timeCalled = Robot.currentTimeMillis();
 		this.message = message;
 		this.caller = caller;
@@ -42,6 +51,7 @@ public class LogEvent {
 	 *
 	 * @return The time called, calling class, and message, comma-separated and in that order.
 	 */
+	@NotNull
 	public String toString() {
 		return timeCalled + "," + caller.toString() + "," + message;
 	}

@@ -1,61 +1,75 @@
 package org.usfirst.frc.team449.robot.mechanism.climber;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedVictor;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.MechanismSubsystem;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * A climber subsystem that uses power monitoring to stop climbing.
  */
-public class ClimberSubsystem extends MechanismSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryMotorSubsystem, ConditionalSubsystem {
+
 	/**
 	 * The CANTalon controlling one of the climber motors.
 	 */
-	private RotPerSecCANTalonSRX canTalonSRX;
+	@NotNull
+	private final RotPerSecCANTalonSRX canTalonSRX;
 
 	/**
 	 * The Victor controlling the other climber motor.
 	 */
-	private VictorSP victor;
+	@Nullable
+	private final VictorSP victor;
 
 	/**
 	 * The maximum allowable power before we stop the motor.
 	 */
-	private double max_power;
+	private final double maxPower;
 
 	/**
 	 * The bufferTimer controlling how long we can be above the current limit before we stop climbing.
 	 */
-	private BufferTimer currentLimitTimer;
+	@NotNull
+	private final BufferTimer currentLimitTimer;
 
 	/**
 	 * Whether or not the motor is currently spinning.
 	 */
 	private boolean motorSpinning;
 
-	/**
-	 * Construct a ClimberSubsystem
-	 *
-	 * @param map the config map
-	 */
-	public ClimberSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.climber.ClimberMap.Climber map) {
-		super(map.getMechanism());
-		//Instantiate things
-		this.map = map;
-		canTalonSRX = new RotPerSecCANTalonSRX(map.getWinch());
-		this.max_power = map.getMaxPower();
-		currentLimitTimer = new BufferTimer(map.getMillisAboveMaxPower());
-		motorSpinning = false;
 
-		//Victor is optional
-		if (map.hasVictor()) {
-			this.victor = new MappedVictor(map.getVictor());
-		}
+	/**
+	 * Default constructor
+	 *
+	 * @param talonSRX            The CANTalon controlling one of the climber motors.
+	 * @param maxPower            The maximum power at which the motor won't shut off.
+	 * @param victor              The VictorSP controlling the other climber motor. Can be null.
+	 * @param millisAboveMaxPower The number of milliseconds it takes to shut off the climber after being above the
+	 *                            current limit. Defaults to 0.
+	 */
+	@JsonCreator
+	public ClimberSubsystem(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,
+	                        @JsonProperty(required = true) double maxPower,
+	                        @Nullable MappedVictor victor,
+	                        int millisAboveMaxPower) {
+		//Instantiate things
+		canTalonSRX = talonSRX;
+		this.maxPower = maxPower;
+		currentLimitTimer = new BufferTimer(millisAboveMaxPower);
+		motorSpinning = false;
+		this.victor = victor;
 	}
 
 	/**
@@ -86,10 +100,11 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 *
 	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
+	@NotNull
 	@Override
 	public String[] getHeader() {
-		return new String[]{"current,",
-				"voltage,",
+		return new String[]{"current",
+				"voltage",
 				"power"};
 	}
 
@@ -98,10 +113,11 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 *
 	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
 	 */
+	@NotNull
 	@Override
 	public Object[] getData() {
-		return new Object[]{canTalonSRX.canTalon.getOutputCurrent(),
-				canTalonSRX.canTalon.getOutputVoltage(),
+		return new Object[]{canTalonSRX.getCanTalon().getOutputCurrent(),
+				canTalonSRX.getCanTalon().getOutputVoltage(),
 				canTalonSRX.getPower()};
 	}
 
@@ -110,6 +126,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 *
 	 * @return A string that will identify this object in the log file.
 	 */
+	@NotNull
 	@Override
 	public String getName() {
 		return "climber";
@@ -120,7 +137,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 */
 	@Override
 	public void turnMotorOn() {
-		canTalonSRX.canTalon.enable();
+		canTalonSRX.getCanTalon().enable();
 		setPercentVbus(1);
 		motorSpinning = true;
 	}
@@ -131,7 +148,7 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	@Override
 	public void turnMotorOff() {
 		setPercentVbus(0);
-		canTalonSRX.canTalon.disable();
+		canTalonSRX.getCanTalon().disable();
 		motorSpinning = false;
 	}
 
@@ -152,6 +169,6 @@ public class ClimberSubsystem extends MechanismSubsystem implements Loggable, Bi
 	 */
 	@Override
 	public boolean isConditionTrue() {
-		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > max_power);
+		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > maxPower);
 	}
 }
