@@ -67,12 +67,11 @@ public class ShiftingUnidirectionalNavXDefaultDrive <T extends YamlSubsystem & U
 	                                              int kI,
 	                                              int kD,
 	                                              double loopEntryDelay,
-	                                              double commandingStraightTolerance,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) UnidirectionalOI oi,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
-				inverted, kP, kI, kD, loopEntryDelay, commandingStraightTolerance, subsystem, oi);
+				inverted, kP, kI, kD, loopEntryDelay, subsystem, oi);
 		this.autoshiftProcessor = autoshiftProcessor;
 		this.subsystem = subsystem;
 	}

@@ -36,4 +36,13 @@ public abstract class ArcadeOI implements UnidirectionalOI {
 	public double getRightOutput() {
 		return getFwd() - getRot();
 	}
+
+	/**
+	 * Whether the driver is trying to drive straight.
+	 * @return True if the driver is trying to drive straight, false otherwise.
+	 */
+	@Override
+	public boolean commandingStraight(){
+		return getRot() == 0;
+	}
 }

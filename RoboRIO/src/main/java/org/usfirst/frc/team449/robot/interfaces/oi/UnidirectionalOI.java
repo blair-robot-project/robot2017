@@ -22,4 +22,10 @@ public interface UnidirectionalOI {
 	 * @return Output to right side from [-1, 1]
 	 */
 	double getRightOutput();
+
+	/**
+	 * Whether the driver is trying to drive straight.
+	 * @return True if the driver is trying to drive straight, false otherwise.
+	 */
+	boolean commandingStraight();
 }

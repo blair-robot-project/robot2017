@@ -48,11 +48,6 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	private boolean drivingStraight;
 
 	/**
-	 * The difference between left and right input within which the driver is considered to be trying to drive straight.
-	 */
-	private double commandingStraightTolerance;
-
-	/**
 	 * Default constructor
 	 *
 	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
@@ -73,8 +68,6 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	 * @param kD                          Derivative gain. Defaults to zero.
 	 * @param loopEntryDelay              The delay to enter the loop after conditions for entry are met. Defaults to
 	 *                                    zero.
-	 * @param commandingStraightTolerance The difference between left and right input within which the driver is
-	 *                                    considered to be trying to drive straight. Defaults to 0.
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
 	 */
@@ -89,14 +82,12 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	                                      int kI,
 	                                      int kD,
 	                                      double loopEntryDelay,
-	                                      double commandingStraightTolerance,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
 	                                      @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;
 		this.subsystem = subsystem;
-		this.commandingStraightTolerance = commandingStraightTolerance;
 
 		driveStraightLoopEntryTimer = new BufferTimer(loopEntryDelay);
 		if (maxAngularVelToEnterLoop == null) {
@@ -131,7 +122,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	@Override
 	protected void execute() {
 		//Check whether we're commanding to drive straight or turn.
-		boolean commandingStraight = (Math.abs(oi.getLeftOutput() - oi.getRightOutput()) <= commandingStraightTolerance);
+		boolean commandingStraight = oi.commandingStraight();
 
 		//If we're driving straight but the driver tries to turn or overrides the NavX:
 		if (drivingStraight && (!commandingStraight || subsystem.getOverrideNavX())) {
