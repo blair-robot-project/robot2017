@@ -13,7 +13,7 @@ public abstract class TankOI implements UnidirectionalOI {
 	public abstract double getLeftThrottle();
 
 	/**
-	 * Get the throttle for the right side og the drive.
+	 * Get the throttle for the right side of the drive.
 	 *
 	 * @return percent of max speed for right motor cluster from [-1.0, 1.0]
 	 */

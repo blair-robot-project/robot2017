@@ -49,18 +49,30 @@ public class SimpleTankOI extends TankOI {
 	}
 
 	/**
-	 * @return throttle to the left motor cluster [-1, 1]
+	 * Get the throttle for the left side of the drive.
+	 *
+	 * @return percent of max speed for left motor cluster from [-1.0, 1.0]
 	 */
 	@Override
 	public double getLeftThrottle() {
+		//If the driver is trying to drive straight, use the average of the two sticks.
+		if (commandingStraight()){
+			return (leftThrottle.getValue()+rightThrottle.getValue())/2.;
+		}
 		return leftThrottle.getValue();
 	}
 
 	/**
-	 * @return throttle to the right motor cluster [-1, 1]
+	 * Get the throttle for the right side of the drive.
+	 *
+	 * @return percent of max speed for right motor cluster from [-1.0, 1.0]
 	 */
 	@Override
 	public double getRightThrottle() {
+		//If the driver is trying to drive straight, use the average of the two sticks.
+		if (commandingStraight()){
+			return (leftThrottle.getValue()+rightThrottle.getValue())/2.;
+		}
 		return rightThrottle.getValue();
 	}
 
