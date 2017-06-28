@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.interfaces.oi;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * A tank-style dual joystick OI.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class TankOI implements UnidirectionalOI {
 
 	/**

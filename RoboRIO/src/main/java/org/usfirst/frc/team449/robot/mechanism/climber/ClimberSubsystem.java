@@ -39,10 +39,10 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	private final double maxPower;
 
 	/**
-	 * The bufferTimer controlling how long we can be above the current limit before we stop climbing.
+	 * The bufferTimer controlling how long we can be above the power limit before we stop climbing.
 	 */
 	@NotNull
-	private final BufferTimer currentLimitTimer;
+	private final BufferTimer powerLimitTimer;
 
 	/**
 	 * Whether or not the motor is currently spinning.
@@ -53,23 +53,22 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	/**
 	 * Default constructor
 	 *
-	 * @param talonSRX            The CANTalon controlling one of the climber motors.
-	 * @param maxPower            The maximum power at which the motor won't shut off.
-	 * @param victor              The VictorSP controlling the other climber motor. Can be null.
-	 * @param millisAboveMaxPower The number of milliseconds it takes to shut off the climber after being above the
-	 *                            current limit. Defaults to 0.
+	 * @param talonSRX        The CANTalon controlling one of the climber motors.
+	 * @param maxPower        The maximum power at which the motor won't shut off.
+	 * @param victor          The VictorSP controlling the other climber motor. Can be null.
+	 * @param powerLimitTimer The buffer timer for the power-limited shutoff.
 	 */
 	@JsonCreator
 	public ClimberSubsystem(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX talonSRX,
 	                        @JsonProperty(required = true) double maxPower,
 	                        @Nullable MappedVictor victor,
-	                        int millisAboveMaxPower) {
+	                        @NotNull @JsonProperty(required = true) BufferTimer powerLimitTimer) {
 		//Instantiate things
-		canTalonSRX = talonSRX;
+		this.canTalonSRX = talonSRX;
 		this.maxPower = maxPower;
-		currentLimitTimer = new BufferTimer(millisAboveMaxPower);
-		motorSpinning = false;
+		this.powerLimitTimer = powerLimitTimer;
 		this.victor = victor;
+		this.motorSpinning = false;
 	}
 
 	/**
@@ -163,12 +162,12 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Whether or not the current limit has been exceeded
+	 * Whether or not the power limit has been exceeded
 	 *
 	 * @return true if exceeded, false otherwise
 	 */
 	@Override
 	public boolean isConditionTrue() {
-		return currentLimitTimer.get(Math.abs(canTalonSRX.getPower()) > maxPower);
+		return powerLimitTimer.get(Math.abs(canTalonSRX.getPower()) > maxPower);
 	}
 }

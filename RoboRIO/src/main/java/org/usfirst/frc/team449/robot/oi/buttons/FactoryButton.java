@@ -1,18 +1,18 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
+import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
+import org.usfirst.frc.team449.robot.components.MappedThrottle;
 
 /**
  * A factory for constructing a button..
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public abstract class FactoryButton extends Button {
 
@@ -44,7 +44,7 @@ public abstract class FactoryButton extends Button {
 	                                            @Nullable Double triggerAt,
 	                                            @Nullable Integer angle) {
 		if (triggerAxis != null) {
-			return new TriggerButton(joystick, triggerAxis, triggerAt);
+			return new TriggerButton(new MappedThrottle(joystick, triggerAxis, false), triggerAt);
 		} else if (angle != null) {
 			return new dPadButton(joystick, angle);
 		} else {

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
 import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
 
@@ -35,9 +34,10 @@ public class SimpleTankOI extends TankOI {
 	/**
 	 * Default constructor
 	 *
-	 * @param leftThrottle  The throttle for controlling the velocity of the left side of the drive.
-	 * @param rightThrottle The throttle for controlling the velocity of the right side of the drive.
-	 * @param commandingStraightTolerance The difference between left and right input within which the driver is considered to be trying to drive straight. Defaults to 0.
+	 * @param leftThrottle                The throttle for controlling the velocity of the left side of the drive.
+	 * @param rightThrottle               The throttle for controlling the velocity of the right side of the drive.
+	 * @param commandingStraightTolerance The difference between left and right input within which the driver is
+	 *                                    considered to be trying to drive straight. Defaults to 0.
 	 */
 	@JsonCreator
 	public SimpleTankOI(@NotNull @JsonProperty(required = true) MappedThrottle leftThrottle,
@@ -56,8 +56,8 @@ public class SimpleTankOI extends TankOI {
 	@Override
 	public double getLeftThrottle() {
 		//If the driver is trying to drive straight, use the average of the two sticks.
-		if (commandingStraight()){
-			return (leftThrottle.getValue()+rightThrottle.getValue())/2.;
+		if (commandingStraight()) {
+			return (leftThrottle.getValue() + rightThrottle.getValue()) / 2.;
 		}
 		return leftThrottle.getValue();
 	}
@@ -70,8 +70,8 @@ public class SimpleTankOI extends TankOI {
 	@Override
 	public double getRightThrottle() {
 		//If the driver is trying to drive straight, use the average of the two sticks.
-		if (commandingStraight()){
-			return (leftThrottle.getValue()+rightThrottle.getValue())/2.;
+		if (commandingStraight()) {
+			return (leftThrottle.getValue() + rightThrottle.getValue()) / 2.;
 		}
 		return rightThrottle.getValue();
 	}
@@ -83,6 +83,6 @@ public class SimpleTankOI extends TankOI {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return Math.abs(leftThrottle.getValue()-rightThrottle.getValue()) <= commandingStraightTolerance;
+		return Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) <= commandingStraightTolerance;
 	}
 }

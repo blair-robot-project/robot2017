@@ -78,6 +78,7 @@ public class CameraSubsystem extends YamlSubsystem {
 
 	/**
 	 * Getter for the server.
+	 *
 	 * @return The server the camera feed streams to.
 	 */
 	@NotNull
@@ -87,6 +88,7 @@ public class CameraSubsystem extends YamlSubsystem {
 
 	/**
 	 * Getter for the list of cameras.
+	 *
 	 * @return The list of cameras the subsystem reads from.
 	 */
 	@NotNull
@@ -96,6 +98,7 @@ public class CameraSubsystem extends YamlSubsystem {
 
 	/**
 	 * Getter for the number of the active camera.
+	 *
 	 * @return The index of the active camera in the list of cameras.
 	 */
 	public int getCamNum() {
@@ -104,6 +107,7 @@ public class CameraSubsystem extends YamlSubsystem {
 
 	/**
 	 * Setter for the number of the active camera.
+	 *
 	 * @param camNum The index of the active camera in the list of cameras.
 	 */
 	public void setCamNum(int camNum) {

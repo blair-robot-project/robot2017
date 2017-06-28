@@ -1,11 +1,17 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.components.MappedJoystick;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class dPadButton extends FactoryButton {
 
 	/**
@@ -25,7 +31,9 @@ public class dPadButton extends FactoryButton {
 	 * @param joystick The joystick with the D-pad.
 	 * @param angle    The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	dPadButton(@NotNull Joystick joystick, int angle) {
+	@JsonCreator
+	public dPadButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
+	                  @JsonProperty(required = true) int angle) {
 		this.angle = angle;
 		this.joystick = joystick;
 	}

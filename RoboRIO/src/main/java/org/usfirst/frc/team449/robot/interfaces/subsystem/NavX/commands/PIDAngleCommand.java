@@ -54,7 +54,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * @param kP                Proportional gain. Defaults to zero.
 	 * @param kI                Integral gain. Defaults to zero.
 	 * @param kD                Derivative gain. Defaults to zero.
-	 * @param subsystem    The subsystem to execute this command on.
+	 * @param subsystem         The subsystem to execute this command on.
 	 */
 	@JsonCreator
 	public PIDAngleCommand(@JsonProperty(required = true) double absoluteTolerance,

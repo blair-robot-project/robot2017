@@ -61,29 +61,32 @@ public class AutoshiftProcessor {
 	/**
 	 * Default constructor
 	 *
-	 * @param upshiftSpeed                     The minimum speed both sides the drive must be going at to shift to high gear.
-	 * @param downshiftSpeed                   The maximum speed both sides must be going at to shift to low gear.
-	 * @param delayAfterUpshiftConditionsMet   How long, in seconds, the conditions to upshift have to be met for before upshifting happens. Defaults to 0.
-	 * @param delayAfterDownshiftConditionsMet How long, in seconds, the conditions to downshift have to be met for before downshifting happens. Defaults to 0.
-	 * @param cooldownAfterDownshift           The minimum time, in seconds, between downshifting and then upshifting again. Defaults to 0.
-	 * @param cooldownAfterUpshift             The minimum time, in seconds, between upshifting and then downshifting again. Defaults to 0.
-	 * @param upshiftFwdThresh                 The minimum amount the forward joystick must be pushed forward in order to upshift, on [0, 1]. Defaults to 0.
+	 * @param upshiftSpeed           The minimum speed both sides the drive must be going at to shift to high gear.
+	 * @param downshiftSpeed         The maximum speed both sides must be going at to shift to low gear.
+	 * @param upshiftBufferTimer     Buffer timer for upshifting.
+	 * @param downshiftBufferTimer   Buffer timer for downshifting.
+	 * @param cooldownAfterDownshift The minimum time, in seconds, between downshifting and then upshifting again.
+	 *                               Defaults to 0.
+	 * @param cooldownAfterUpshift   The minimum time, in seconds, between upshifting and then downshifting again.
+	 *                               Defaults to 0.
+	 * @param upshiftFwdThresh       The minimum amount the forward joystick must be pushed forward in order to upshift,
+	 *                               on [0, 1]. Defaults to 0.
 	 */
 	@JsonCreator
 	public AutoshiftProcessor(@JsonProperty(required = true) double upshiftSpeed,
 	                          @JsonProperty(required = true) double downshiftSpeed,
+	                          @NotNull @JsonProperty(required = true) BufferTimer upshiftBufferTimer,
+	                          @NotNull @JsonProperty(required = true) BufferTimer downshiftBufferTimer,
 	                          double upshiftFwdThresh,
 	                          double cooldownAfterUpshift,
-	                          double cooldownAfterDownshift,
-	                          double delayAfterUpshiftConditionsMet,
-	                          double delayAfterDownshiftConditionsMet) {
+	                          double cooldownAfterDownshift) {
 		this.upshiftSpeed = upshiftSpeed;
 		this.downshiftSpeed = downshiftSpeed;
 		this.upshiftFwdThresh = upshiftFwdThresh;
 		this.cooldownAfterUpshift = (long) (cooldownAfterUpshift * 1000.);
 		this.cooldownAfterDownshift = (long) (cooldownAfterDownshift * 1000.);
-		this.upshiftBufferTimer = new BufferTimer(delayAfterUpshiftConditionsMet);
-		this.downshiftBufferTimer = new BufferTimer(delayAfterDownshiftConditionsMet);
+		this.upshiftBufferTimer = upshiftBufferTimer;
+		this.downshiftBufferTimer = downshiftBufferTimer;
 	}
 
 	/**
@@ -144,11 +147,12 @@ public class AutoshiftProcessor {
 
 	/**
 	 * Determine if the subsystem should shift, and if yes, do the shifting.
+	 *
 	 * @param leftThrottle  The left side's throttle, on [-1, 1].
 	 * @param rightThrottle The right side's throttle, on [-1, 1].
 	 * @param leftVel       The velocity of the left side of the drive.
 	 * @param rightVel      The velocity of the right side of the drive.
-	 * @param shift The function to actually shift gears.
+	 * @param shift         The function to actually shift gears.
 	 */
 	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<ShiftingDrive.gear> shift) {
 		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {

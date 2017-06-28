@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXDefaultDrive;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
@@ -119,18 +118,24 @@ public class RobotMap {
 	 *                            testMP is true, but otherwise must have a value.
 	 * @param dropGearSwitch      The switch for deciding whether or not to drop the gear. Can be null if doMP is false
 	 *                            or testMP is true, but otherwise must have a value.
-	 * @param locationDial        The dial for selecting which side of the field the robot is on. Can be null if doMP is false or testMP is true, but otherwise must have a value.
-	 * @param boilerAuto          The command to run in autonomous on the boiler side of the field. Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param locationDial        The dial for selecting which side of the field the robot is on. Can be null if doMP is
+	 *                            false or testMP is true, but otherwise must have a value.
+	 * @param boilerAuto          The command to run in autonomous on the boiler side of the field. Can be null if doMP
+	 *                            is false or testMP is true, but otherwise must have a value.
 	 * @param centerAuto          The command to run in autonomous on the center of the field. Can be null if doMP is
 	 *                            false or testMP is true, but otherwise must have a value.
-	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be null
+	 *                            if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param leftTestProfile     The profile for the left side of the drive to run in test mode. Can be null if either
 	 *                            testMP or doMP are false, but otherwise must have a value.
-	 * @param rightTestProfile    The profile for the right side of the drive to run in test mode. Can be null if either testMP or doMP are false, but otherwise must have a value.
+	 * @param rightTestProfile    The profile for the right side of the drive to run in test mode. Can be null if either
+	 *                            testMP or doMP are false, but otherwise must have a value.
 	 * @param leftProfiles        The starting position to peg profiles for the left side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left". Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 *                            Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param rightProfiles       The starting position to peg profiles for the right side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left". Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 *                            Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param nonMPAutoCommand    The command to run during autonomous if doMP is false. Can be null, and if it is, no
 	 *                            command is run during autonomous.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.

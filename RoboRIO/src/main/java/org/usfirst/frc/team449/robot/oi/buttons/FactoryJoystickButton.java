@@ -1,11 +1,17 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.components.MappedJoystick;
 
 /**
  * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a FactoryButton.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FactoryJoystickButton extends FactoryButton {
 
 	/**
@@ -17,17 +23,19 @@ public class FactoryJoystickButton extends FactoryButton {
 	/**
 	 * The port of the button on the joystick.
 	 */
-	private final int buttonNum;
+	private final int buttonNumber;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param joystick  The joystick the button is on.
-	 * @param buttonNum The port of the button. Note that button numbers begin at 1, not 0.
+	 * @param buttonNumber The port of the button. Note that button numbers begin at 1, not 0.
 	 */
-	FactoryJoystickButton(@NotNull Joystick joystick, int buttonNum) {
+	@JsonCreator
+	public FactoryJoystickButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
+	                             @JsonProperty(required = true) int buttonNumber) {
 		this.joystick = joystick;
-		this.buttonNum = buttonNum;
+		this.buttonNumber = buttonNumber;
 	}
 
 	/**
@@ -37,6 +45,6 @@ public class FactoryJoystickButton extends FactoryButton {
 	 */
 	@Override
 	public boolean get() {
-		return joystick.getRawButton(buttonNum);
+		return joystick.getRawButton(buttonNumber);
 	}
 }
