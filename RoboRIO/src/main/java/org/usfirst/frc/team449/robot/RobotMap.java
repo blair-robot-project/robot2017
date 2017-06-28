@@ -35,7 +35,7 @@ public class RobotMap {
 	private final TalonClusterDrive drive;
 
 	@NotNull
-	private final UnidirectionalNavXDefaultDrive defaultDriveCommand;
+	private final Command defaultDriveCommand;
 
 	@Nullable
 	private final ClimberSubsystem climber;
@@ -71,13 +71,13 @@ public class RobotMap {
 	private final MappedDigitalInput locationDial;
 
 	@Nullable
-	private final YamlCommand boilerAuto;
+	private final Command boilerAuto;
 
 	@Nullable
-	private final YamlCommand centerAuto;
+	private final Command centerAuto;
 
 	@Nullable
-	private final YamlCommand feederAuto;
+	private final Command feederAuto;
 
 	@Nullable
 	private final MotionProfileData leftTestProfile;
@@ -116,37 +116,21 @@ public class RobotMap {
 	 * @param gearHandler         The gear handler on this robot. Can be null.
 	 * @param RIOduinoPort        The I2C port of the RIOduino plugged into this robot. Can be null.
 	 * @param allianceSwitch      The switch for selecting which alliance we're on. Can be null if doMP is false or
-	 *                            testMP
-	 *                            is true, but otherwise must have a value.
-	 * @param dropGearSwitch      The switch for deciding whether or not to drop the gear. Can be null if doMP is false
-	 *                            or
 	 *                            testMP is true, but otherwise must have a value.
-	 * @param locationDial        The dial for selecting which side of the field the robot is on. Can be null if doMP
-	 *                            is
-	 *                            false or testMP is true, but otherwise must have a value.
-	 * @param boilerAuto          The command to run in autonomous on the boiler side of the field. Can be null if doMP
-	 *                            is
-	 *                            false or testMP is true, but otherwise must have a value.
-	 * @param centerAuto          The command to run in autonomous on the center of the field. Can be null if doMP is
-	 *                            false
+	 * @param dropGearSwitch      The switch for deciding whether or not to drop the gear. Can be null if doMP is false
 	 *                            or testMP is true, but otherwise must have a value.
-	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be
-	 *                            null
-	 *                            if
-	 *                            doMP is false or testMP is true, but otherwise must have a value.
+	 * @param locationDial        The dial for selecting which side of the field the robot is on. Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param boilerAuto          The command to run in autonomous on the boiler side of the field. Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param centerAuto          The command to run in autonomous on the center of the field. Can be null if doMP is
+	 *                            false or testMP is true, but otherwise must have a value.
+	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param leftTestProfile     The profile for the left side of the drive to run in test mode. Can be null if either
 	 *                            testMP or doMP are false, but otherwise must have a value.
-	 * @param rightTestProfile    The profile for the right side of the drive to run in test mode. Can be null if
-	 *                            either
-	 *                            testMP or doMP are false, but otherwise must have a value.
+	 * @param rightTestProfile    The profile for the right side of the drive to run in test mode. Can be null if either testMP or doMP are false, but otherwise must have a value.
 	 * @param leftProfiles        The starting position to peg profiles for the left side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
-	 *                            Can
-	 *                            be null if doMP is false or testMP is true, but otherwise must have a value.
+	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left". Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param rightProfiles       The starting position to peg profiles for the right side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
-	 *                            Can
-	 *                            be null if doMP is false or testMP is true, but otherwise must have a value.
+	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left". Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param nonMPAutoCommand    The command to run during autonomous if doMP is false. Can be null, and if it is, no
 	 *                            command is run during autonomous.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
@@ -157,7 +141,7 @@ public class RobotMap {
 	                @NotNull @JsonProperty(required = true) ArcadeOIWithDPad arcadeOI,
 	                @NotNull @JsonProperty(required = true) Logger logger,
 	                @NotNull @JsonProperty(required = true) TalonClusterDrive drive,
-	                @NotNull @JsonProperty(required = true) UnidirectionalNavXDefaultDrive defaultDriveCommand,
+	                @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
 	                @Nullable ClimberSubsystem climber,
 	                @Nullable SingleFlywheelShooter shooter,
 	                @Nullable CameraSubsystem camera,
@@ -190,14 +174,14 @@ public class RobotMap {
 		this.allianceSwitch = allianceSwitch;
 		this.dropGearSwitch = dropGearSwitch;
 		this.locationDial = locationDial;
-		this.boilerAuto = boilerAuto;
-		this.centerAuto = centerAuto;
-		this.feederAuto = feederAuto;
+		this.boilerAuto = boilerAuto != null ? boilerAuto.getCommand() : null;
+		this.centerAuto = centerAuto != null ? centerAuto.getCommand() : null;
+		this.feederAuto = feederAuto != null ? feederAuto.getCommand() : null;
 		this.leftTestProfile = leftTestProfile;
 		this.rightTestProfile = rightTestProfile;
 		this.leftProfiles = leftProfiles;
 		this.rightProfiles = rightProfiles;
-		this.defaultDriveCommand = defaultDriveCommand;
+		this.defaultDriveCommand = defaultDriveCommand.getCommand();
 		if (nonMPAutoCommand != null) {
 			this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
 		} else {
@@ -299,17 +283,17 @@ public class RobotMap {
 	}
 
 	@Nullable
-	public YamlCommand getBoilerAuto() {
+	public Command getBoilerAuto() {
 		return boilerAuto;
 	}
 
 	@Nullable
-	public YamlCommand getCenterAuto() {
+	public Command getCenterAuto() {
 		return centerAuto;
 	}
 
 	@Nullable
-	public YamlCommand getFeederAuto() {
+	public Command getFeederAuto() {
 		return feederAuto;
 	}
 
@@ -319,7 +303,7 @@ public class RobotMap {
 	}
 
 	@NotNull
-	public UnidirectionalNavXDefaultDrive getDefaultDriveCommand() {
+	public Command getDefaultDriveCommand() {
 		return defaultDriveCommand;
 	}
 

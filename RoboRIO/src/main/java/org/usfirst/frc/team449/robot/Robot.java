@@ -230,11 +230,11 @@ public class Robot extends IterativeRobot {
 						robotMap.getRightProfiles().get(allianceString + "_" + position));
 				//Set the autonomousCommand to be the correct command for the current position and alliance.
 				if (position.equals("center")) {
-					autonomousCommand = robotMap.getCenterAuto().getCommand();
+					autonomousCommand = robotMap.getCenterAuto();
 				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
-					autonomousCommand = robotMap.getBoilerAuto().getCommand();
+					autonomousCommand = robotMap.getBoilerAuto();
 				} else {
-					autonomousCommand = robotMap.getFeederAuto().getCommand();
+					autonomousCommand = robotMap.getFeederAuto();
 				}
 			}
 		} else {
