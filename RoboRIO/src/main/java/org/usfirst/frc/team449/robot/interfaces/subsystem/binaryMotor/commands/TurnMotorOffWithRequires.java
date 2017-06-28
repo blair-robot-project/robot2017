@@ -1,29 +1,30 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Turns off the motor of the subsystem, but does so while using requires() to interrupt any other commands currently
  * controlling the subsystem.
  */
-public class TurnMotorOffWithRequires extends Command {
-
-	/**
-	 * The subsystem to execute this command on.
-	 */
-	private BinaryMotorSubsystem subsystem;
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class TurnMotorOffWithRequires <T extends YamlSubsystem & BinaryMotorSubsystem> extends TurnMotorOff {
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public TurnMotorOffWithRequires(BinaryMotorSubsystem subsystem) {
-		this.subsystem = subsystem;
-		requires((Subsystem) subsystem);
+	@JsonCreator
+	public TurnMotorOffWithRequires(@NotNull @JsonProperty(required = true) T subsystem) {
+		super(subsystem);
+		requires(subsystem);
 	}
 
 	/**
@@ -32,24 +33,6 @@ public class TurnMotorOffWithRequires extends Command {
 	@Override
 	protected void initialize() {
 		Logger.addEvent("TurnMotorOffWithRequires init.", this.getClass());
-	}
-
-	/**
-	 * Turn the motor off.
-	 */
-	@Override
-	protected void execute() {
-		subsystem.turnMotorOff();
-	}
-
-	/**
-	 * Finish immediately because this is a state-change command.
-	 *
-	 * @return true
-	 */
-	@Override
-	protected boolean isFinished() {
-		return true;
 	}
 
 	/**

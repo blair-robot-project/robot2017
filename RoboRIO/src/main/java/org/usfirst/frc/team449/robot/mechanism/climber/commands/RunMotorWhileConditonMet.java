@@ -1,29 +1,36 @@
 package org.usfirst.frc.team449.robot.mechanism.climber.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.conditional.ConditionalSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Run a BinaryMotor while a condition is true.
  */
-public class RunMotorWhileConditonMet extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class RunMotorWhileConditonMet <T extends YamlSubsystem & BinaryMotorSubsystem & ConditionalSubsystem> extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on
 	 */
-	private BinaryMotorSubsystem subsystem;
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The BinaryMotor subsystem to execute this command on. Must also be a {@link
-	 *                  ConditionalSubsystem}.
+	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public RunMotorWhileConditonMet(BinaryMotorSubsystem subsystem) {
-		requires((Subsystem) subsystem);
+	@JsonCreator
+	public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) T subsystem) {
+		requires(subsystem);
 		this.subsystem = subsystem;
 		Logger.addEvent("RunMotorWhileConditonMet constructed", this.getClass());
 	}
@@ -51,7 +58,7 @@ public class RunMotorWhileConditonMet extends Command {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return ((ConditionalSubsystem) subsystem).isConditionTrue();
+		return subsystem.isConditionTrue();
 	}
 
 	/**

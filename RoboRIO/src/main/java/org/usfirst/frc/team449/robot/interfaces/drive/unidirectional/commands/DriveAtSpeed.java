@@ -1,24 +1,37 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
- * Go at a certain speed for a set number of seconds
+ * Go at a certain velocity for a set number of seconds
  */
-public class DriveAtSpeed extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class DriveAtSpeed <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * Speed to go at
 	 */
-	private double speed;
+	private final double velocity;
 
 	/**
 	 * How long to run for
 	 */
-	private double seconds;
+	private final double seconds;
+
+	/**
+	 * The drive subsystem to execute this command on.
+	 */
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * When this command was initialized.
@@ -26,22 +39,21 @@ public class DriveAtSpeed extends Command {
 	private long startTime;
 
 	/**
-	 * The drive subsystem to execute this command on.
-	 */
-	private UnidirectionalDrive subsystem;
-
-	/**
 	 * Default constructor
 	 *
-	 * @param drive   The drive to execute this command on
-	 * @param speed   How fast to go, in RPS
-	 * @param seconds How long to drive for.
+	 * @param subsystem The drive to execute this command on
+	 * @param velocity  How fast to go, in RPS
+	 * @param seconds   How long to drive for.
 	 */
-	public DriveAtSpeed(UnidirectionalDrive drive, double speed, double seconds) {
+	@JsonCreator
+	public DriveAtSpeed(@NotNull @JsonProperty(required = true) T subsystem,
+	                    @JsonProperty(required = true) double velocity,
+	                    @JsonProperty(required = true) double seconds) {
 		//Initialize stuff
-		this.subsystem = drive;
-		this.speed = speed;
+		this.subsystem = subsystem;
+		this.velocity = velocity;
 		this.seconds = seconds;
+		requires(subsystem);
 		Logger.addEvent("Drive Robot bueno", this.getClass());
 	}
 
@@ -52,7 +64,7 @@ public class DriveAtSpeed extends Command {
 	protected void initialize() {
 		//Set up start time
 		startTime = Robot.currentTimeMillis();
-		//Reset drive speed (for safety reasons)
+		//Reset drive velocity (for safety reasons)
 		subsystem.fullStop();
 		Logger.addEvent("DriveAtSpeed init", this.getClass());
 	}
@@ -62,8 +74,8 @@ public class DriveAtSpeed extends Command {
 	 */
 	@Override
 	protected void execute() {
-		//Set the speed
-		subsystem.setOutput(speed, speed);
+		//Set the velocity
+		subsystem.setOutput(velocity, velocity);
 	}
 
 	/**

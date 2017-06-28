@@ -1,33 +1,40 @@
 package org.usfirst.frc.team449.robot.mechanism.activegear;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * The subsystem that carries and pushes gears.
  */
-public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubsystem {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsystem {
+
+	/**
+	 * Piston for pushing gears
+	 */
+	@NotNull
+	private final DoubleSolenoid piston;
+
 	/**
 	 * Whether piston is currently contracted
 	 */
 	private boolean contracted;
 
 	/**
-	 * Piston for pushing gears
-	 */
-	private DoubleSolenoid piston;
-
-	/**
-	 * Creates a mapped subsystem and sets its map
+	 * Default constructor
 	 *
-	 * @param map the map of constants relevant to this subsystem
+	 * @param piston The piston that comprises this subsystem.
 	 */
-	public ActiveGearSubsystem(maps.org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearMap.ActiveGear map) {
-		super(map.getMechanism());
-		this.map = map;
-		this.piston = new MappedDoubleSolenoid(map.getPiston());
+	@JsonCreator
+	public ActiveGearSubsystem(@NotNull @JsonProperty(required = true) MappedDoubleSolenoid piston) {
+		this.piston = piston;
 	}
 
 	/**
@@ -35,7 +42,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	 *
 	 * @param value Forward to extend the Solenoid, Reverse to contract it.
 	 */
-	public void setSolenoid(DoubleSolenoid.Value value) {
+	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
 		piston.set(value);
 		contracted = (value == DoubleSolenoid.Value.kReverse);
 	}
@@ -45,6 +52,7 @@ public class ActiveGearSubsystem extends MappedSubsystem implements SolenoidSubs
 	 *
 	 * @return Forward if extended, Reverse if contracted.
 	 */
+	@NotNull
 	@Override
 	public DoubleSolenoid.Value getSolenoidPosition() {
 		return contracted ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;

@@ -1,26 +1,37 @@
 package org.usfirst.frc.team449.robot.components;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.AnalogInput;
-import maps.org.usfirst.frc.team449.robot.components.AnalogPressureSensorMap;
 
 /**
  * Wrapper for an {@link AnalogInput} pressure sensor that returns a voltage linearly proportional to pressure.
  */
-public class PressureSensor extends Component {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class PressureSensor {
+
 	/**
 	 * The AnalogInput this is a wrapper on.
 	 */
-	private AnalogInput sensor;
+	private final AnalogInput sensor;
+
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 *
-	 * @param map map of this object.
+	 * @param port           The port of the sensor.
+	 * @param oversampleBits The number of oversample bits.
+	 * @param averageBits    The number of averaging bits.
 	 */
-	public PressureSensor(AnalogPressureSensorMap.AnalogPressureSensor map) {
-		sensor = new AnalogInput(map.getPort());
-		sensor.setOversampleBits(map.getOversampleBits());
-		sensor.setAverageBits(map.getAverageBits());
+	@JsonCreator
+	public PressureSensor(@JsonProperty(required = true) int port,
+	                      @JsonProperty(required = true) int oversampleBits,
+	                      @JsonProperty(required = true) int averageBits) {
+		sensor = new AnalogInput(port);
+		sensor.setOversampleBits(oversampleBits);
+		sensor.setAverageBits(averageBits);
 	}
 
 	/**

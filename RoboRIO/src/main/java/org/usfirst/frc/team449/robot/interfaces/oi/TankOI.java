@@ -4,20 +4,20 @@ package org.usfirst.frc.team449.robot.interfaces.oi;
  * A tank-style dual joystick OI.
  */
 public abstract class TankOI implements UnidirectionalOI {
+
 	/**
+	 * Get the throttle for the left side of the drive.
+	 *
 	 * @return percent of max speed for left motor cluster from [-1.0, 1.0]
 	 */
 	public abstract double getLeftThrottle();
 
 	/**
+	 * Get the throttle for the right side of the drive.
+	 *
 	 * @return percent of max speed for right motor cluster from [-1.0, 1.0]
 	 */
 	public abstract double getRightThrottle();
-
-	/**
-	 * Map all buttons to commands. Should only be run after all subsystems have been instantiated.
-	 */
-	public abstract void mapButtons();
 
 	/**
 	 * The output to be given to the left side of the drive.

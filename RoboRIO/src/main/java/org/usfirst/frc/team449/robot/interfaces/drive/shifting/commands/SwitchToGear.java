@@ -1,23 +1,31 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Switches to a specified gear.
  */
-public class SwitchToGear extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class SwitchToGear extends YamlCommandWrapper {
 
 	/**
 	 * The drive to execute this command on.
 	 */
-	private ShiftingDrive subsystem;
+	@NotNull
+	private final ShiftingDrive subsystem;
 
 	/**
 	 * The gear to switch to.
 	 */
-	private ShiftingDrive.gear switchTo;
+	@NotNull
+	private final ShiftingDrive.gear switchTo;
 
 	/**
 	 * Default constructor
@@ -25,7 +33,9 @@ public class SwitchToGear extends Command {
 	 * @param subsystem The drive to execute this command on
 	 * @param switchTo  The gear to switch to.
 	 */
-	public SwitchToGear(ShiftingDrive subsystem, ShiftingDrive.gear switchTo) {
+	@JsonCreator
+	public SwitchToGear(@NotNull @JsonProperty(required = true) ShiftingDrive subsystem,
+	                    @NotNull @JsonProperty(required = true) ShiftingDrive.gear switchTo) {
 		this.subsystem = subsystem;
 		this.switchTo = switchTo;
 	}

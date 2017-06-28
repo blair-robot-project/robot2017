@@ -1,45 +1,62 @@
 package org.usfirst.frc.team449.robot.autonomous;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.SpinUpShooter;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlCommand;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
 /**
  * The autonomous routine to deliver a gear to the center gear.
  */
-public class BoilerAuto2017 extends CommandGroup {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class BoilerAuto2017 extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param drive                The drive subsystem to execute this command on. Must also be a {@link
-	 *                             UnidirectionalDrive}, and
-	 *                             needs to have the profile to drive up to the peg already loaded into it.
-	 * @param gearHandler          The gear handler to execute this command on.
-	 * @param dropGear             Whether or not to drop the gear.
-	 * @param leftPegToKeyProfile  The motion profile for the left side of the drive to execute to get from the peg to
-	 *                             the key.
-	 * @param rightPegToKeyProfile The motion profile for the right side of the drive to execute to get from the peg to
-	 *                             the key.
-	 * @param shooter              The shooter subsystem to execute this command on.
+	 * @param runWallToPegProfile    The command for running the profile for going from the wall to the peg, which has
+	 *                               already been loaded.
+	 * @param dropGear               The command for dropping the held gear.
+	 * @param dropGearSwitch         The switch deciding whether or not to drop the gear.
+	 * @param allianceSwitch         The switch indicating which alliance we're on.
+	 * @param runRedPegToKeyProfile  The command for moving from the peg to the key, on the red side of the field.
+	 * @param runBluePegToKeyProfile The command for moving from the peg to the key, on the blue side of the field.
+	 * @param spinUpShooter          The command for revving up the shooter. Can be null.
+	 * @param fireShooter            The command for firing the shooter. Can be null.
 	 */
-	public BoilerAuto2017(TwoSideMPSubsystem drive, ActiveGearSubsystem gearHandler, boolean dropGear,
-	                      MotionProfileData leftPegToKeyProfile, MotionProfileData rightPegToKeyProfile,
-	                      ShooterSubsystem shooter) {
-		addParallel(new SpinUpShooter(shooter));
-		addSequential(new RunLoadedProfile(drive, 15, true));
-		if (dropGear) {
-			addSequential(new SolenoidReverse(gearHandler));
+	@JsonCreator
+	public BoilerAuto2017(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
+	                      @NotNull @JsonProperty(required = true) YamlCommand dropGear,
+	                      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
+	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedPegToKeyProfile,
+	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBluePegToKeyProfile,
+	                      @Nullable YamlCommand spinUpShooter,
+	                      @Nullable YamlCommand fireShooter) {
+		if (spinUpShooter != null) {
+			addParallel(spinUpShooter.getCommand());
 		}
-		addSequential(new RunProfileTwoSides(drive, leftPegToKeyProfile, rightPegToKeyProfile, 10));
-		addSequential(new TurnAllOn(shooter));
+		addSequential(runWallToPegProfile);
+		if (dropGearSwitch.getStatus().get(0)) {
+			addSequential(dropGear.getCommand());
+		}
+
+		//Red is true, blue is false
+		if (allianceSwitch.getStatus().get(0)) {
+			addSequential(runRedPegToKeyProfile);
+		} else {
+			addSequential(runBluePegToKeyProfile);
+		}
+
+		if (fireShooter != null) {
+			addSequential(fireShooter.getCommand());
+		}
 	}
 }

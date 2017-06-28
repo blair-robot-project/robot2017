@@ -1,38 +1,47 @@
 package org.usfirst.frc.team449.robot.util;
 
 import com.ctre.CANTalon;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Notifier;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 
 /**
  * Utility class for loading and running profiles on a {@link CANTalon}.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class CANTalonMPHandler {
 
 	/**
 	 * The talons with the RPSCANTalonSRX wrapper to convert from feet to native units.
 	 */
-	private RotPerSecCANTalonSRX[] RPStalons;
+	@NotNull
+	private final RotPerSecCANTalonSRX[] RPSTalons;
 
 	/**
 	 * The talons without any wrapper.
 	 */
-	private CANTalon[] talons;
+	@NotNull
+	private final CANTalon[] talons;
 
 	/**
 	 * The notifier for the thread in which points are moved from the API-level buffer to the low-level one.
 	 */
-	private Notifier MPNotifier;
+	@NotNull
+	private final Notifier MPNotifier;
 
 	/**
 	 * The period of the thread in which points are moved from the API-level buffer to the low-level one, in seconds.
 	 */
-	private double updaterProcessPeriodSecs;
+	private final double updaterProcessPeriodSecs;
 
 	/**
 	 * The minimum number of points that must be in the bottom MP buffer to start a profile.
 	 */
-	private int minNumPointsInBtmBuffer;
+	private final int minNumPointsInBtmBuffer;
 
 	/**
 	 * Default constructor.
@@ -43,22 +52,22 @@ public class CANTalonMPHandler {
 	 * @param minNumPointsInBtmBuffer  The minimum number of points that must be in the bottom MP buffer to start a
 	 *                                 profile.
 	 */
-	public CANTalonMPHandler(RotPerSecCANTalonSRX[] talons, double updaterProcessPeriodSecs, int minNumPointsInBtmBuffer) {
-		this.RPStalons = talons;
+	@JsonCreator
+	public CANTalonMPHandler(@NotNull @JsonProperty(required = true) RotPerSecCANTalonSRX[] talons,
+	                         @JsonProperty(required = true) double updaterProcessPeriodSecs,
+	                         @JsonProperty(required = true) int minNumPointsInBtmBuffer) {
+		this.RPSTalons = talons;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;
 		//Instantiate the CANTalon list
-		this.talons = new CANTalon[RPStalons.length];
-		//Set up the updater
-		CANTalonMPUpdaterProcess updaterProcess = new CANTalonMPUpdaterProcess();
-		for (int i = 0; i < this.RPStalons.length; i++) {
-			//Add the talon to the updater
-			updaterProcess.addTalon(this.RPStalons[i].canTalon);
+		this.talons = new CANTalon[RPSTalons.length];
+		//Set up the talon list
+		for (int i = 0; i < this.RPSTalons.length; i++) {
 			//Make a list of the inner talon class.
-			this.talons[i] = this.RPStalons[i].canTalon;
+			this.talons[i] = this.RPSTalons[i].getCanTalon();
 		}
 		//Set up the notifier.
-		MPNotifier = new Notifier(updaterProcess);
+		MPNotifier = new Notifier(this::processMPBuffer);
 	}
 
 	/**
@@ -114,7 +123,7 @@ public class CANTalonMPHandler {
 		}
 		//Actually start running them in another loop so they start as simultaneously as possible.
 		for (CANTalon talon : talons) {
-			talon.setControlMode(CANTalon.SetValueMotionProfile.Enable.value);
+			talon.set(CANTalon.SetValueMotionProfile.Enable.value);
 		}
 	}
 
@@ -150,29 +159,30 @@ public class CANTalonMPHandler {
 	 */
 	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalonSRX talon) {
 		//Clear all the MP-related stuff on talon
-		talon.canTalon.disable();
-		talon.canTalon.clearMotionProfileHasUnderrun();
-		talon.canTalon.clearMotionProfileTrajectories();
+		talon.getCanTalon().disable();
+		talon.getCanTalon().clearMotionProfileHasUnderrun();
+		talon.getCanTalon().clearMotionProfileTrajectories();
 
 		//Instantiate the point outside the loop to avoid garbage collection.
-		CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
+		CANTalon.TrajectoryPoint point;
 
-		//Set parameters that are true for all points
-		point.profileSlotSelect = 1;    // gain selection
-		point.velocityOnly = false;  // true => no position servo just velocity feedforward
-
-		for (int i = 0; i < data.data.length; ++i) {
+		for (int i = 0; i < data.getData().length; ++i) {
+			point = new CANTalon.TrajectoryPoint();
+			//Set parameters that are true for all points
+			point.profileSlotSelect = 1;    // gain selection
+			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			// Set all the fields of the profile point
-			point.position = talon.feetToNative(data.data[i][0]);
-			point.velocity = talon.feetPerSecToNative(data.data[i][1]);
-			point.timeDurMs = (int) (data.data[i][2] * 1000.);
+			point.position = talon.feetToNative(data.getData()[i][0]);
+			point.velocity = talon.feetPerSecToNative(data.getData()[i][1]);
+			point.timeDurMs = (int) (data.getData()[i][2] * 1000.);
 			point.zeroPos = i == 0; // If its the first point, set the encoder position to 0.
-			point.isLastPoint = (i + 1) == data.data.length; // If its the last point, isLastPoint = true
+			point.isLastPoint = (i + 1) == data.getData().length; // If its the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer
-			if (!talon.canTalon.pushMotionProfileTrajectory(point)) {
+			if (!talon.getCanTalon().pushMotionProfileTrajectory(point)) {
 				//If sending the point doesn't work, log an error and exit.
 				Logger.addEvent("Buffer full!", CANTalonMPHandler.class);
+				System.out.println("Buffer full!");
 				break;
 			}
 		}
@@ -185,9 +195,9 @@ public class CANTalonMPHandler {
 	 */
 	public void loadTopLevel(MotionProfileData data) {
 		//Stop the updater while we load the API-level buffer
-		startUpdaterProcess();
+		stopUpdaterProcess();
 		//Load the profile into each talon.
-		for (RotPerSecCANTalonSRX talon : RPStalons) {
+		for (RotPerSecCANTalonSRX talon : RPSTalons) {
 			loadTopLevel(data, talon);
 		}
 		//Resume the updater.
@@ -217,8 +227,8 @@ public class CANTalonMPHandler {
 		//Stop the updater while we load the API-level buffer
 		stopUpdaterProcess();
 		//Load each profile
-		for (int i = 0; i < RPStalons.length; i++) {
-			loadTopLevel(profiles[i], RPStalons[i]);
+		for (int i = 0; i < RPSTalons.length; i++) {
+			loadTopLevel(profiles[i], RPSTalons[i]);
 		}
 		//Resume the updater.
 		startUpdaterProcess();
@@ -262,5 +272,14 @@ public class CANTalonMPHandler {
 	 */
 	public void holdTalons() {
 		holdTalons(talons);
+	}
+
+	/**
+	 * For each talon, move points from the API-level MP buffer to the bottom one.
+	 */
+	private void processMPBuffer() {
+		for (CANTalon talon : talons) {
+			talon.processMotionProfileBuffer();
+		}
 	}
 }

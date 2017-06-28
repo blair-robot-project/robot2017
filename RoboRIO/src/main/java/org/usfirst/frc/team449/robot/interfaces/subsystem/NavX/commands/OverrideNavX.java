@@ -1,23 +1,30 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Set whether or not to override the NavX.
  */
-public class OverrideNavX extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class OverrideNavX extends YamlCommandWrapper {
 
 	/**
 	 * Whether or not to override the NavX.
 	 */
-	private boolean override;
+	private final boolean override;
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private NavxSubsystem subsystem;
+	@NotNull
+	private final NavxSubsystem subsystem;
 
 	/**
 	 * Default constructor.
@@ -25,7 +32,9 @@ public class OverrideNavX extends Command {
 	 * @param subsystem The subsystem to execute this command on
 	 * @param override  Whether or not to override the NavX.
 	 */
-	public OverrideNavX(NavxSubsystem subsystem, boolean override) {
+	@JsonCreator
+	public OverrideNavX(@NotNull @JsonProperty(required = true) NavxSubsystem subsystem,
+	                    @JsonProperty(required = true) boolean override) {
 		this.override = override;
 		this.subsystem = subsystem;
 	}

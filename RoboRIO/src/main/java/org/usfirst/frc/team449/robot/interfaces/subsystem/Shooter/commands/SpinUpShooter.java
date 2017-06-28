@@ -1,25 +1,33 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Turn on the shooter but not the feeder in order to give the shooter time to get up to speed.
  */
-public class SpinUpShooter extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class SpinUpShooter extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private ShooterSubsystem subsystem;
+	@NotNull
+	private final ShooterSubsystem subsystem;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public SpinUpShooter(ShooterSubsystem subsystem) {
+	@JsonCreator
+	public SpinUpShooter(@NotNull @JsonProperty(required = true) ShooterSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

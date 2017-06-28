@@ -1,21 +1,21 @@
 package org.usfirst.frc.team449.robot;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import maps.org.usfirst.frc.team449.robot.Robot2017Map;
-import maps.org.usfirst.frc.team449.robot.util.MotionProfileMap;
-import org.usfirst.frc.team449.robot.autonomous.BoilerAuto2017;
-import org.usfirst.frc.team449.robot.autonomous.CenterAuto2017;
-import org.usfirst.frc.team449.robot.autonomous.FeederAuto2017;
-import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXArcadeDrive;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands.PIDTest;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
@@ -25,32 +25,27 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
-import org.usfirst.frc.team449.robot.util.Loggable;
+import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
 import org.usfirst.frc.team449.robot.util.Logger;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * The main class of the robot, constructs all the subsystems and initializes default commands.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Robot extends IterativeRobot {
 
 	/**
 	 * The absolute filepath to the resources folder containing the config files.
 	 */
+	@NotNull
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
-
-	/**
-	 * The instance of this object that exists. This is a static field so that the subsystems don't have to be.
-	 */
-	public static Robot instance;
 
 	/**
 	 * The current time in milliseconds as it was stored the last time a method in robot was run.
@@ -65,47 +60,53 @@ public class Robot extends IterativeRobot {
 	/**
 	 * The shooter subsystem (flywheel and feeder)
 	 */
-	public SingleFlywheelShooter singleFlywheelShooterSubsystem;
+	@Nullable
+	private SingleFlywheelShooter singleFlywheelShooterSubsystem;
 
 	/**
 	 * The intake subsystem (intake motors and pistons)
 	 */
-	public Intake2017 intakeSubsystem;
+	@Nullable
+	private Intake2017 intakeSubsystem;
 
 	/**
 	 * The climber
 	 */
-	public ClimberSubsystem climberSubsystem;
+	@Nullable
+	private ClimberSubsystem climberSubsystem;
 
 	/**
 	 * The compressor and pressure sensor
 	 */
-	public PneumaticsSubsystem pneumaticsSubsystem;
+	@Nullable
+	private PneumaticsSubsystem pneumaticsSubsystem;
 
 	/**
 	 * The drive
 	 */
-	public TalonClusterDrive driveSubsystem;
+	private TalonClusterDrive driveSubsystem;
 
 	/**
-	 * OI, using an Xbox-style controller and arcade drive.
+	 * The OI containing the joysticks to get input from.
 	 */
-	public OI2017ArcadeGamepad oiSubsystem;
+	private ArcadeOIWithDPad arcadeOI;
 
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
-	public CameraSubsystem cameraSubsystem;
+	@Nullable
+	private CameraSubsystem cameraSubsystem;
 
 	/**
 	 * The active gear subsystem.
 	 */
-	public ActiveGearSubsystem gearSubsystem;
+	@Nullable
+	private ActiveGearSubsystem gearSubsystem;
 
 	/**
-	 * The object constructed directly from map.cfg.
+	 * The object constructed directly from the yaml map.
 	 */
-	private Robot2017Map.Robot2017 cfg;
+	private RobotMap robotMap;
 
 	/**
 	 * The Notifier running the logging thread.
@@ -113,35 +114,17 @@ public class Robot extends IterativeRobot {
 	private Notifier loggerNotifier;
 
 	/**
-	 * Whether or not we're on the red alliance, according to the dIO switch.
-	 */
-	private boolean redAlliance;
-
-	/**
-	 * Whether or not to drop the gear during autonomous, according to the dIO switch.
-	 */
-	private boolean dropGear;
-
-	/**
-	 * The position we're in, according to the dIO switch.
-	 */
-	private String position;
-
-	/**
 	 * The string version of the alliance we're on ("red" or "blue"). Used for string concatenation to pick which
 	 * profile to execute.
 	 */
+	@Nullable
 	private String allianceString;
 
 	/**
 	 * The I2C channel for communicating with the RIOduino.
 	 */
+	@Nullable
 	private I2C robotInfo;
-
-	/**
-	 * The gear to start both autonomous and teleop in.
-	 */
-	private ShiftingDrive.gear startingGear;
 
 	/**
 	 * The logger for the robot.
@@ -158,6 +141,7 @@ public class Robot extends IterativeRobot {
 	 *
 	 * @return current time in milliseconds.
 	 */
+	@Contract(pure = true)
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
 	}
@@ -169,157 +153,94 @@ public class Robot extends IterativeRobot {
 		//Set up start time
 		currentTimeMillis = System.currentTimeMillis();
 		startTime = currentTimeMillis;
+
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
 
-		//Set up instance.
-		instance = this;
-
+		Yaml yaml = new Yaml();
 		try {
-			//Try to construct map from the cfg file
-//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH+"balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig(RESOURCES_PATH + "fancy_map.cfg",
-					Robot2017Map.Robot2017.newBuilder());
+			//Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
+			YAMLMapper mapper = new YAMLMapper();
+			//Turn the Map read by SnakeYaml into a String so Jackson can read it.
+			String fixed = mapper.writeValueAsString(normalized);
+			//Use a parameter name module so we don't have to specify name for every field.
+			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
+			//Deserialize the map into an object.
+			robotMap = mapper.readValue(fixed, RobotMap.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
-
-		//Instantiate the list of loggable subsystems.
-		List<Loggable> loggables = new ArrayList<>();
-
-		//Set up starting gear from the map.
-		startingGear = cfg.getStartLowGear() ? ShiftingDrive.gear.LOW : ShiftingDrive.gear.HIGH;
-
-		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
-		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
-		Logger.addEvent("Constructed OI", this.getClass());
-
-		//Construct the drive (not in an "if null" block because you kind of need it.)
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem, startingGear);
-		Logger.addEvent("Constructed Drive", this.getClass());
-		loggables.add(driveSubsystem);
-
-		//Construct camera if it's in the map.
-		if (cfg.hasCamera()) {
-			cameraSubsystem = new CameraSubsystem(cfg.getCamera());
-		}
-
-		//Construct climber if it's in the map.
-		if (cfg.hasClimber()) {
-			climberSubsystem = new ClimberSubsystem(cfg.getClimber());
-			loggables.add(climberSubsystem);
-		}
-
-		//Construct shooter if it's in the map.
-		if (cfg.hasShooter()) {
-			singleFlywheelShooterSubsystem = new SingleFlywheelShooter(cfg.getShooter());
-			loggables.add(singleFlywheelShooterSubsystem);
-			Logger.addEvent("Constructed SingleFlywheelShooter", this.getClass());
-		}
-
-		//Construct pneumatics if it's in the map.
-		if (cfg.hasPneumatics()) {
-			pneumaticsSubsystem = new PneumaticsSubsystem(cfg.getPneumatics());
-			loggables.add(pneumaticsSubsystem);
-			Logger.addEvent("Constructed PneumaticsSubsystem", this.getClass());
-		}
-
-		//Construct intake if it's in the map.
-		if (cfg.hasIntake()) {
-			intakeSubsystem = new Intake2017(cfg.getIntake());
-		}
-
-		//Construct active gear if it's in the map.
-		if (cfg.hasGear()) {
-			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
-		}
-
-		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
-		oiSubsystem.mapButtons();
-		Logger.addEvent("Mapped buttons", this.getClass());
-
-		//Try to instantiate the logger.
-		try {
-			logger = new Logger(cfg.getLogger(), loggables);
-			//Set up the Notifier that runs the logging thread.
-			loggerNotifier = new Notifier(logger);
-		} catch (IOException e) {
-			System.out.println("Instantiating logger failed!");
-			e.printStackTrace();
-		}
+		//Set fields from the map.
+		this.logger = robotMap.getLogger();
+		this.loggerNotifier = new Notifier(this.logger);
+		this.climberSubsystem = robotMap.getClimber();
+		this.singleFlywheelShooterSubsystem = robotMap.getShooter();
+		this.cameraSubsystem = robotMap.getCamera();
+		this.intakeSubsystem = robotMap.getIntake();
+		this.pneumaticsSubsystem = robotMap.getPneumatics();
+		this.gearSubsystem = robotMap.getGearHandler();
+		this.arcadeOI = robotMap.getArcadeOI();
+		this.driveSubsystem = robotMap.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.
-		if (cfg.hasRioduinoPort()) {
-			robotInfo = new I2C(I2C.Port.kOnboard, cfg.getRioduinoPort());
-		}
-
-		//Read the dIO pins if they're in the map
-		if (cfg.hasBlueRed()) {
-			//Read from the pins
-			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
-			dropGear = new MappedDigitalInput(cfg.getDropGear()).getStatus().get(0);
-			List<Boolean> tmp = new MappedDigitalInput(cfg.getLocation()).getStatus();
-
-			//Interpret the pin input from the three-way side selection switch.
-			if (!tmp.get(0) && !tmp.get(1)) {
-				position = "center";
-			} else if (tmp.get(0)) {
-				position = "left";
-			} else {
-				position = "right";
-			}
-
-			//Set up allianceString to use for concatenation.
-			if (redAlliance) {
-				allianceString = "red";
-			} else {
-				allianceString = "blue";
-			}
-		}
-
-		//Log the data read from the switches
-		Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
-		Logger.addEvent("dropGear: " + dropGear, this.getClass());
-		Logger.addEvent("position: " + position, this.getClass());
-
-		//Instantiate the profile maps.
-		Map<String, MotionProfileData> rightProfiles = new HashMap<>(), leftProfiles = new HashMap<>();
-
-		//Fill the profile data with the profiles. This part takes a little while because we have to read all the files.
-		for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-			leftProfiles.put(profile.getName(), new MotionProfileData(profile));
-		}
-		for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-			rightProfiles.put(profile.getName(), new MotionProfileData(profile));
+		if (robotMap.getRIOduinoPort() != null) {
+			robotInfo = new I2C(I2C.Port.kOnboard, robotMap.getRIOduinoPort());
 		}
 
 		//Set up the motion profiles if we're doing motion profiling
-		if (cfg.getDoMP()) {
-			//Load the test profiles if we just want to run one.
-			if (cfg.getTestMP()) {
-				driveSubsystem.loadMotionProfile(leftProfiles.get("test"), rightProfiles.get("test"));
-				autonomousCommand = new RunLoadedProfile(driveSubsystem, 15, true);
+		if (robotMap.getDoMP()) {
+			//Load the test profiles if we're testing.
+			if (robotMap.getTestMP()) {
+				driveSubsystem.loadMotionProfile(robotMap.getLeftTestProfile(), robotMap.getRightTestProfile());
+				autonomousCommand = new RunLoadedProfile<>(driveSubsystem, 15, true);
 			} else {
+				//Read the data from the input switches
+				boolean redAlliance = robotMap.getAllianceSwitch().getStatus().get(0);
+				boolean dropGear = robotMap.getDropGearSwitch().getStatus().get(0);
+				List<Boolean> tmp = robotMap.getLocationDial().getStatus();
+
+				String position;
+				//Interpret the pin input from the three-way side selection switch.
+				if (!tmp.get(0) && !tmp.get(1)) {
+					position = "center";
+				} else if (tmp.get(0)) {
+					position = "left";
+				} else {
+					position = "right";
+				}
+
+				//Set up the alliance strings for easily selecting profiles.
+				if (redAlliance) {
+					allianceString = "red";
+				} else {
+					allianceString = "blue";
+				}
+
+				//Log the data read from the switches
+				Logger.addEvent("redAlliance: " + redAlliance, this.getClass());
+				Logger.addEvent("dropGear: " + dropGear, this.getClass());
+				Logger.addEvent("position: " + position, this.getClass());
+
 				//Load the first profile we want to run
-				driveSubsystem.loadMotionProfile(leftProfiles.get(allianceString + "_" + position), rightProfiles.get(allianceString + "_" + position));
+				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),
+						robotMap.getRightProfiles().get(allianceString + "_" + position));
 				//Set the autonomousCommand to be the correct command for the current position and alliance.
 				if (position.equals("center")) {
-					autonomousCommand = new CenterAuto2017(driveSubsystem, gearSubsystem, dropGear, cfg.getDriveBackTime());
+					autonomousCommand = robotMap.getCenterAuto().getCommand();
 				} else if ((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) {
-					autonomousCommand = new BoilerAuto2017(driveSubsystem, gearSubsystem, dropGear,
-							leftProfiles.get(allianceString + "_shoot"), rightProfiles.get(allianceString + "_shoot"),
-							singleFlywheelShooterSubsystem);
+					autonomousCommand = robotMap.getBoilerAuto().getCommand();
 				} else {
-					autonomousCommand = new FeederAuto2017(driveSubsystem, gearSubsystem, dropGear,
-							leftProfiles.get(allianceString + "_backup"), rightProfiles.get(allianceString + "_backup"),
-							leftProfiles.get("forward"));
+					autonomousCommand = robotMap.getFeederAuto().getCommand();
 				}
 			}
 		} else {
-			autonomousCommand = new PIDTest(driveSubsystem, cfg.getDriveBackTime());
+			autonomousCommand = robotMap.getNonMPAutoCommand();
 		}
+
 		//Run the logger to write all the events that happened during initialization to a file.
 		logger.run();
 	}
@@ -332,14 +253,12 @@ public class Robot extends IterativeRobot {
 		//Stop the drive for safety reasons
 		driveSubsystem.stopMPProcesses();
 		driveSubsystem.fullStop();
-		//Set up whether to override the NavX based on whether it's overriden by default.
-		driveSubsystem.setOverrideNavX(!cfg.getArcadeOi().getOverrideNavXWhileHeld());
 
 		//Enable the motors in case they got disabled somehow
 		driveSubsystem.enableMotors();
 
 		//Set the default command
-		driveSubsystem.setDefaultCommandManual(new ShiftingUnidirectionalNavXArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
 
 		//Do the startup tasks
 		doStartupTasks();
@@ -425,11 +344,13 @@ public class Robot extends IterativeRobot {
 	 */
 	private void doStartupTasks() {
 		//Start running the logger
-		loggerNotifier.startPeriodic(cfg.getLogger().getLoopTimeSecs());
+		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
 		//Switch to starting gear
-		Scheduler.getInstance().add(new SwitchToGear(driveSubsystem, startingGear));
+		if (driveSubsystem.getClass().equals(ShiftingTalonClusterDrive.class)) {
+			Scheduler.getInstance().add(new SwitchToGear((ShiftingTalonClusterDrive) driveSubsystem, ((ShiftingTalonClusterDrive) driveSubsystem).getStartingGear()));
+		}
 
 		//Start the compressor if it exists
 		if (pneumaticsSubsystem != null) {

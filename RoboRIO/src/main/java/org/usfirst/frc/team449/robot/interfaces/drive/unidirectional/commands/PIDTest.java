@@ -1,24 +1,34 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Drive forward at constant speed then stop to tune PID.
  */
-public class PIDTest extends CommandGroup {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem the UnidirectionalDrive to execute this command on
+	 * @param subsystem the subsystem to execute this command on
 	 * @param driveTime How long to drive forwards for, in seconds.
+	 * @param speed     The speed to drive at, from [0, 1].
 	 */
-	public PIDTest(UnidirectionalDrive subsystem, double driveTime) {
-
+	@JsonCreator
+	public PIDTest(@NotNull @JsonProperty(required = true) T subsystem,
+	               @JsonProperty(required = true) double driveTime,
+	               @JsonProperty(required = true) double speed) {
 		//Drive forward for a bit
-		addSequential(new DriveAtSpeed(subsystem, 0.7, driveTime));
-		//Stop
-		addSequential(new DriveAtSpeed(subsystem, 0, 100));
+		addSequential(new DriveAtSpeed<>(subsystem, speed, driveTime));
+		//Stop actively to see how the PID responds.
+		addSequential(new DriveAtSpeed<>(subsystem, 0, 100));
 	}
 }

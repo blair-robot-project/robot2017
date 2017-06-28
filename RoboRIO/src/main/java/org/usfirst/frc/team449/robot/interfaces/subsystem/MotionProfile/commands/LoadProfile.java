@@ -1,24 +1,32 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Loads the given profile into the subsystem, but doesn't run it.
  */
-public class LoadProfile extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class LoadProfile extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private MPSubsystem subsystem;
+	@NotNull
+	private final MPSubsystem subsystem;
 
 	/**
 	 * The profile to execute.
 	 */
-	private MotionProfileData profile;
+	@NotNull
+	private final MotionProfileData profile;
 
 	/**
 	 * Default constructor
@@ -26,7 +34,9 @@ public class LoadProfile extends Command {
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param profile   The profile to run.
 	 */
-	public LoadProfile(MPSubsystem subsystem, MotionProfileData profile) {
+	@JsonCreator
+	public LoadProfile(@NotNull @JsonProperty(required = true) MPSubsystem subsystem,
+	                   @NotNull @JsonProperty(required = true) MotionProfileData profile) {
 		this.subsystem = subsystem;
 		this.profile = profile;
 	}

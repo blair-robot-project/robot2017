@@ -1,25 +1,33 @@
 package org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
  * Turns on the motor of the specified subsystem.
  */
-public class TurnMotorOn extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class TurnMotorOn extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
 	 */
-	private BinaryMotorSubsystem subsystem;
+	@NotNull
+	private final BinaryMotorSubsystem subsystem;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The subsystem to execute this command on.
 	 */
-	public TurnMotorOn(BinaryMotorSubsystem subsystem) {
+	@JsonCreator
+	public TurnMotorOn(@NotNull @JsonProperty(required = true) BinaryMotorSubsystem subsystem) {
 		this.subsystem = subsystem;
 	}
 

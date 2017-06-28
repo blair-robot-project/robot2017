@@ -1,42 +1,33 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
  */
-public class dPadButton extends Button {
+public class dPadButton extends FactoryButton {
 
 	/**
 	 * The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	private int angle;
+	private final int angle;
 
 	/**
 	 * The joystick with the relevant D-pad on it.
 	 */
-	private Joystick joystick;
+	@NotNull
+	private final Joystick joystick;
 
 	/**
 	 * Explicit argument constructor.
 	 *
-	 * @param port  The port the relevant joystick is plugged into.
-	 * @param angle The angle that the D-pad must be pushed to to trigger this button.
+	 * @param joystick The joystick with the D-pad.
+	 * @param angle    The angle that the D-pad must be pushed to to trigger this button.
 	 */
-	public dPadButton(int port, int angle) {
+	dPadButton(@NotNull Joystick joystick, int angle) {
 		this.angle = angle;
-		this.joystick = new Joystick(port);
-	}
-
-	/**
-	 * Map-based constructor
-	 *
-	 * @param map Map containing constants defining this object.
-	 */
-	public dPadButton(JoystickButtonMap.JoystickButton map) {
-		this(map.getPort(), map.getAngle());
+		this.joystick = joystick;
 	}
 
 	/**

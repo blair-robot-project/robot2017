@@ -1,37 +1,47 @@
 package org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.util.Logger;
+import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
  * Very simple unidirectional drive control.
  */
-public class SimpleUnidirectionalDrive extends Command {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class SimpleUnidirectionalDrive <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.
 	 */
-	public UnidirectionalOI oi;
+	@NotNull
+	public final UnidirectionalOI oi;
 
 	/**
-	 * The drive subsystem to execute this command on.
+	 * The subsystem to execute this command on.
 	 */
-	private UnidirectionalDrive subsystem;
+	@NotNull
+	private final T subsystem;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param drive The drive to execute this command on
-	 * @param oi    The OI that gives the input to this command.
+	 * @param subsystem The subsystem to execute this command on
+	 * @param oi        The OI that gives the input to this command.
 	 */
-	public SimpleUnidirectionalDrive(UnidirectionalDrive drive, UnidirectionalOI oi) {
+	@JsonCreator
+	public SimpleUnidirectionalDrive(@NotNull @JsonProperty(required = true) T subsystem,
+	                                 @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
 		this.oi = oi;
-		this.subsystem = drive;
+		this.subsystem = subsystem;
 		//Default commands need to require their subsystems.
-		requires((Subsystem) drive);
+		requires(subsystem);
 	}
 
 	/**

@@ -1,45 +1,36 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import maps.org.usfirst.frc.team449.robot.oi.JoystickButtonMap;
-import org.usfirst.frc.team449.robot.oi.components.SmoothedThrottle;
-import org.usfirst.frc.team449.robot.oi.components.Throttle;
+import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.components.MappedJoystick;
+import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
+import org.usfirst.frc.team449.robot.components.MappedThrottle;
 
 /**
  * A button that gets triggered by a specific throttle being held down at or over a certain amount.
  */
-public class TriggerButton extends Button {
+public class TriggerButton extends FactoryButton {
 
 	/**
 	 * The relevant throttle.
 	 */
-	private Throttle throttle;
+	@NotNull
+	private final MappedThrottle throttle;
 
 	/**
 	 * The percentage pressed to trigger at, from (0, 1]
 	 */
-	private double triggerAt;
+	private final double triggerAt;
 
 	/**
 	 * Argument-based constructor.
 	 *
-	 * @param port      The port of the joystick containing the throttle.
+	 * @param joystick  The the joystick containing the throttle.
 	 * @param axis      The axis of the throttle.
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
-	public TriggerButton(int port, int axis, double triggerAt) {
-		throttle = new SmoothedThrottle(new Joystick(port), axis);
+	TriggerButton(@NotNull MappedJoystick joystick, int axis, double triggerAt) {
+		throttle = new MappedSmoothedThrottle(joystick, axis, 0, 0, false);
 		this.triggerAt = triggerAt;
-	}
-
-	/**
-	 * Map-based constructor
-	 *
-	 * @param map config map
-	 */
-	public TriggerButton(JoystickButtonMap.JoystickButton map) {
-		this(map.getPort(), map.getButtonIndex(), map.getTriggerAt());
 	}
 
 	/**
