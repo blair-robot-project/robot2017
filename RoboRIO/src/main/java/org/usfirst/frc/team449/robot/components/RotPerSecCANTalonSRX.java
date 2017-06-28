@@ -213,20 +213,12 @@ public class RotPerSecCANTalonSRX {
 		//Set high/only gear nominal voltages
 		this.highGearFwdNominalOutputVoltage = highGearFwdNominalOutputVoltage;
 		//If no reverse nominal voltage is given, assume symmetry.
-		if (highGearRevNominalOutputVoltage == null) {
-			this.highGearRevNominalOutputVoltage = highGearFwdNominalOutputVoltage;
-		} else {
-			this.highGearRevNominalOutputVoltage = highGearRevNominalOutputVoltage;
-		}
+		this.highGearRevNominalOutputVoltage = highGearRevNominalOutputVoltage != null ? highGearRevNominalOutputVoltage : highGearFwdNominalOutputVoltage;
 
 		//Set low gear nominal voltages
 		this.lowGearFwdNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
 		//If no reverse nominal voltage is given, assume symmetry.
-		if (lowGearRevNominalOutputVoltage == null) {
-			this.lowGearRevNominalOutputVoltage = lowGearFwdNominalOutputVoltage;
-		} else {
-			this.lowGearRevNominalOutputVoltage = lowGearRevNominalOutputVoltage;
-		}
+		this.lowGearRevNominalOutputVoltage = lowGearRevNominalOutputVoltage != null ? lowGearRevNominalOutputVoltage : lowGearFwdNominalOutputVoltage;
 
 		//Set to high gear by default.
 		canTalon.configNominalOutputVoltage(this.highGearFwdNominalOutputVoltage, -this.highGearRevNominalOutputVoltage);
@@ -269,17 +261,10 @@ public class RotPerSecCANTalonSRX {
 		}
 
 		//postEncoderGearing defaults to 1
-		if (postEncoderGearing == null) {
-			this.postEncoderGearing = 1.;
-		} else {
-			this.postEncoderGearing = postEncoderGearing;
-		}
+		this.postEncoderGearing = postEncoderGearing != null ? postEncoderGearing : 1.;
 
 		//Configure the maximum output voltage. If only forward voltage was given, use it for both forward and reverse.
-		if (revPeakOutputVoltage == null) {
-			revPeakOutputVoltage = fwdPeakOutputVoltage;
-		}
-		canTalon.configPeakOutputVoltage(fwdPeakOutputVoltage, -revPeakOutputVoltage);
+		canTalon.configPeakOutputVoltage(fwdPeakOutputVoltage, revPeakOutputVoltage != null ? -revPeakOutputVoltage : -fwdPeakOutputVoltage);
 
 		//Set the current limit if it was given
 		if (currentLimit != null) {

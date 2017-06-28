@@ -28,7 +28,6 @@ public class StartCompressor extends YamlCommandWrapper {
 	 */
 	@JsonCreator
 	public StartCompressor(@NotNull @JsonProperty(required = true) PneumaticsSubsystem subsystem) {
-		super();
 		this.subsystem = subsystem;
 	}
 

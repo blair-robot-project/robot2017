@@ -68,7 +68,6 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	                             @NotNull @JsonProperty(required = true) MappedVictor feederVictor,
 	                             @JsonProperty(required = true) double feederThrottle,
 	                             double spinUpTimeSecs) {
-		super();
 		this.shooterTalon = shooterTalon;
 		this.shooterThrottle = shooterThrottle;
 		this.feederVictor = feederVictor;

@@ -32,7 +32,6 @@ public class RunMotorWhileConditonMet <T extends YamlSubsystem & BinaryMotorSubs
 	public RunMotorWhileConditonMet(@NotNull @JsonProperty(required = true) T subsystem) {
 		requires(subsystem);
 		this.subsystem = subsystem;
-		Logger.addEvent("RunMotorWhileConditonMet constructed", this.getClass());
 	}
 
 	/**
