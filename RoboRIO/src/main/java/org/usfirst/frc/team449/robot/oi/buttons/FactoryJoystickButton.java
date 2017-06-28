@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
 
-import java.util.Map;
-
 /**
  * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a FactoryButton.
  */

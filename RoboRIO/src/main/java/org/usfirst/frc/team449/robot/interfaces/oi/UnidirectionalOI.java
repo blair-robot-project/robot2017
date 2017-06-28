@@ -25,6 +25,7 @@ public interface UnidirectionalOI {
 
 	/**
 	 * Whether the driver is trying to drive straight.
+	 *
 	 * @return True if the driver is trying to drive straight, false otherwise.
 	 */
 	boolean commandingStraight();

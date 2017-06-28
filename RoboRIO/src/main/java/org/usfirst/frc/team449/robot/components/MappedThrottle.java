@@ -47,10 +47,12 @@ public class MappedThrottle implements PIDSource {
 	}
 
 	/**
-	 * Gets the raw value from the stick and inverts it if necessary. This is private so it's not overriden, allowing it to be used by both getValue and pidGet without causing a circular reference.
+	 * Gets the raw value from the stick and inverts it if necessary. This is private so it's not overriden, allowing it
+	 * to be used by both getValue and pidGet without causing a circular reference.
+	 *
 	 * @return The raw joystick output, on [-1, 1].
 	 */
-	private double getValuePrivate(){
+	private double getValuePrivate() {
 		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
 	}
 

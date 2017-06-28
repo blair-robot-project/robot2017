@@ -1,8 +1,11 @@
 package org.usfirst.frc.team449.robot.interfaces.oi;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * An arcade-style dual joystick OI.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class ArcadeOI implements UnidirectionalOI {
 
 	/**
@@ -39,10 +42,11 @@ public abstract class ArcadeOI implements UnidirectionalOI {
 
 	/**
 	 * Whether the driver is trying to drive straight.
+	 *
 	 * @return True if the driver is trying to drive straight, false otherwise.
 	 */
 	@Override
-	public boolean commandingStraight(){
+	public boolean commandingStraight() {
 		return getRot() == 0;
 	}
 }

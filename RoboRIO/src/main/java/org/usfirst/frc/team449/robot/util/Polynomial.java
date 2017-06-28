@@ -38,8 +38,11 @@ public class Polynomial {
 
 	/**
 	 * Default constructor.
-	 * @param powerToCoefficientMap A map of the powers and coefficients of each term. Defaults to [1:1] if null or 0-length.
-	 * @param scaleCoefficientSumTo Scales each coefficient so they all add up to this number. Can be null to avoid scaling.
+	 *
+	 * @param powerToCoefficientMap A map of the powers and coefficients of each term. Defaults to [1:1] if null or
+	 *                              0-length.
+	 * @param scaleCoefficientSumTo Scales each coefficient so they all add up to this number. Can be null to avoid
+	 *                              scaling.
 	 */
 	@JsonCreator
 	public Polynomial(@Nullable Map<Double, Double> powerToCoefficientMap,
@@ -60,6 +63,7 @@ public class Polynomial {
 
 	/**
 	 * Get the value of the polynomial given x.
+	 *
 	 * @param x The variable to be given to the polynomial.
 	 * @return The value of the polynomial evaluated at |x|, then changed to the sign of x.
 	 */
@@ -75,6 +79,7 @@ public class Polynomial {
 
 	/**
 	 * Scale each coefficient so they sum to a given number.
+	 *
 	 * @param scaleTo The number to scale the sum of coefficients to.
 	 */
 	public void scaleCoefficientSum(double scaleTo) {
@@ -90,6 +95,7 @@ public class Polynomial {
 
 	/**
 	 * Getter for the map of the powers and coefficients of each term.
+	 *
 	 * @return powerToCoefficientMap.
 	 */
 	@NotNull
