@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.Unidirectio
 import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
 import org.usfirst.frc.team449.robot.util.AutoshiftProcessor;
+import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
@@ -34,27 +35,26 @@ public class ShiftingUnidirectionalNavXDefaultDrive <T extends YamlSubsystem & U
 	/**
 	 * Default constructor
 	 *
-	 * @param toleranceBuffer          How many consecutive loops have to be run while within tolerance to be
-	 *                                 considered
-	 *                                 on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
-	 * @param absoluteTolerance        The maximum number of degrees off from the target at which we can be considered
-	 *                                 within tolerance.
-	 * @param minimumOutput            The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput            The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                                 used.
-	 * @param deadband                 The deadband around the setpoint, in degrees, within which no output is given to
-	 *                                 the motors. Defaults to zero.
-	 * @param maxAngularVelToEnterLoop The maximum angular velocity, in degrees/sec, at which the loop will be entered.
-	 *                                 Defaults to 180.
-	 * @param inverted                 Whether the loop is inverted. Defaults to false.
-	 * @param kP                       Proportional gain. Defaults to zero.
-	 * @param kI                       Integral gain. Defaults to zero.
-	 * @param kD                       Derivative gain. Defaults to zero.
-	 * @param loopEntryDelay           The delay to enter the loop after conditions for entry are met. Defaults to
-	 *                                 zero.
-	 * @param subsystem                The drive to execute this command on.
-	 * @param oi                       The OI controlling the robot.
-	 * @param autoshiftProcessor       The helper object for autoshifting.
+	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
+	 *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
+	 *                                    Defaults to  0.
+	 * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
+	 *                                    considered within tolerance.
+	 * @param minimumOutput               The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
+	 *                                    is used.
+	 * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
+	 *                                    to the motors. Defaults to zero.
+	 * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
+	 *                                    entered. Defaults to 180.
+	 * @param inverted                    Whether the loop is inverted. Defaults to false.
+	 * @param kP                          Proportional gain. Defaults to zero.
+	 * @param kI                          Integral gain. Defaults to zero.
+	 * @param kD                          Derivative gain. Defaults to zero.
+	 * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
+	 * @param subsystem                   The drive to execute this command on.
+	 * @param oi                          The OI controlling the robot.
+	 * @param autoshiftProcessor          The helper object for autoshifting.
 	 */
 	@JsonCreator
 	public ShiftingUnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -66,12 +66,12 @@ public class ShiftingUnidirectionalNavXDefaultDrive <T extends YamlSubsystem & U
 	                                              int kP,
 	                                              int kI,
 	                                              int kD,
-	                                              double loopEntryDelay,
+	                                              @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) UnidirectionalOI oi,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftProcessor autoshiftProcessor) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
-				inverted, kP, kI, kD, loopEntryDelay, subsystem, oi);
+				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
 		this.autoshiftProcessor = autoshiftProcessor;
 		this.subsystem = subsystem;
 	}
