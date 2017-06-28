@@ -419,7 +419,7 @@ nonMPAutoCommand:
                 drive
 buttons:
     -   button:
-	        org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
                 '@id': switchToLowButton
                 joystick:
                     '@id': gunnerGamepad
@@ -433,7 +433,7 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
                 '@id': switchToHighButton
                 joystick:
                     gunnerGamepad
@@ -446,7 +446,7 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': overrideNavXButton
                 joystick:
                     gunnerGamepad
@@ -460,7 +460,7 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 overrideNavXButton
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
@@ -471,7 +471,7 @@ buttons:
                         drive
         action: WHEN_RELEASED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': jiggleRobotButton
                 joystick:
                     gunnerGamepad
@@ -491,11 +491,14 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 '@id': climbButton
-                joystick:
-                    driverGamepad
-                triggerAxis: 2
+                throttle:
+                    org.usfirst.frc.team449.robot.components.MappedThrottle:
+                        '@id': climbButtonThrottle
+                        stick:
+                            driverGamepad
+                        axis: 2
                 triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.mechanism.climber.commands.RunMotorWhileConditonMet:
@@ -505,7 +508,7 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 climbButton
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOffWithRequires:
@@ -515,7 +518,7 @@ buttons:
                         climber
         action: WHEN_RELEASED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': manualClimbButton
                 joystick:
                     gunnerGamepad
@@ -528,14 +531,14 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 manualClimbButton
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands.TurnMotorOffWithRequires:
                 stopClimbCommand
         action: WHEN_RELEASED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': switchCameraButton
                 joystick:
                     gunnerGamepad
@@ -548,11 +551,14 @@ buttons:
                         cameras
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 '@id': pushGearButton
-                joystick:
-                    driverGamepad
-                triggerAxis: 3
+                throttle:
+                    org.usfirst.frc.team449.robot.components.MappedThrottle:
+                        '@id': pushGearThrottle
+                        stick:
+                            driverGamepad
+                        axis: 3
                 triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse:
@@ -560,7 +566,7 @@ buttons:
                 '@id': openGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
-			org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 pushGearButton
         command:
             org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward:
@@ -570,7 +576,7 @@ buttons:
                         gearHandler
         action: WHEN_RELEASED
 #    -   button:
-#			 org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+#             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
 #               '@id': fireShooterButton
 #               joystick:
 #                   gunnerGamepad
@@ -583,11 +589,14 @@ buttons:
 #                        shooter
 #        action: WHEN_PRESSED
 #    -   button:
-#			 org.usfirstfirst.frc.team449.robot.oi.buttons.TriggerButton:
+#             org.usfirstfirst.frc.team449.robot.oi.buttons.TriggerButton:
 #               '@id': rackShooterButton
-#               joystick:
-#                   gunnerGamepad
-#               triggerAxis: 3
+#                throttle:
+#                    '@id': rackShooterThrottle
+#                    org.usfirst.frc.team449.robot.components.MappedThrottle:
+#                        stick:
+#                            gunnerGamepad
+#                        axis: 3
 #               triggerAt: 0.9
 #        command:
 #            org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter:
@@ -597,7 +606,7 @@ buttons:
 #                        shooter
 #        action: WHEN_PRESSED
 #    -   button:
-#			org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+#            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
 #                '@id': resetShooterButton
 #                joystick:
 #                    gunnerGamepad

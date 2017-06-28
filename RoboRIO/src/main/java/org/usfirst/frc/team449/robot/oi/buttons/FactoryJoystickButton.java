@@ -23,19 +23,19 @@ public class FactoryJoystickButton extends FactoryButton {
 	/**
 	 * The port of the button on the joystick.
 	 */
-	private final int buttonNum;
+	private final int buttonNumber;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param joystick  The joystick the button is on.
-	 * @param buttonNum The port of the button. Note that button numbers begin at 1, not 0.
+	 * @param buttonNumber The port of the button. Note that button numbers begin at 1, not 0.
 	 */
 	@JsonCreator
 	public FactoryJoystickButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
-	                             @JsonProperty(required = true) int buttonNum) {
+	                             @JsonProperty(required = true) int buttonNumber) {
 		this.joystick = joystick;
-		this.buttonNum = buttonNum;
+		this.buttonNumber = buttonNumber;
 	}
 
 	/**
@@ -45,6 +45,6 @@ public class FactoryJoystickButton extends FactoryButton {
 	 */
 	@Override
 	public boolean get() {
-		return joystick.getRawButton(buttonNum);
+		return joystick.getRawButton(buttonNumber);
 	}
 }
