@@ -11,12 +11,25 @@ import org.jetbrains.annotations.NotNull;
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class MappedSmoothedThrottle extends MappedThrottle {
 
+	/**
+	 * The value below which the joystick input is considered 0.
+	 */
 	protected final double deadband;
 
+	/**
+	 * The smoothing filter for the joystick input.
+	 */
+	@NotNull
 	private final LinearDigitalFilter filter;
 
+	/**
+	 * The input from the joystick. Declared outside of getValue to avoid garbage collection.
+	 */
 	private double input;
 
+	/**
+	 * The sign of the input from the joystick. Declared outside of getValue to avoid garbage collection.
+	 */
 	private double sign;
 
 	/**

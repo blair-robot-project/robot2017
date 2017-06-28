@@ -89,7 +89,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 		//This caps the output we can give. One way to set up closed-loop is to make P large and then use this to
 		// prevent overshoot.
 		if (maximumOutput != null) {
-			this.getPIDController().setOutputRange(-minimumOutput, maximumOutput);
+			this.getPIDController().setOutputRange(-maximumOutput, maximumOutput);
 		}
 
 		//Set a deadband around the setpoint, in degrees, within which don't move, to avoid "dancing"

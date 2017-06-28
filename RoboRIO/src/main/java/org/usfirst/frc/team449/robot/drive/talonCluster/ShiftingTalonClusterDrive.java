@@ -67,11 +67,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 		this.shifter = shifter;
 
 		//Default to low
-		if (startingGear == null) {
-			this.startingGear = gear.LOW;
-		} else {
-			this.startingGear = startingGear;
-		}
+		this.startingGear = startingGear != null ? startingGear : gear.LOW;
 		currentGear = this.startingGear;
 
 		// Initialize shifting constants, assuming robot is stationary.

@@ -90,10 +90,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 		this.subsystem = subsystem;
 
 		driveStraightLoopEntryTimer = new BufferTimer(loopEntryDelay);
-		if (maxAngularVelToEnterLoop == null) {
-			maxAngularVelToEnterLoop = 180.;
-		}
-		this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop;
+		this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop != null ? maxAngularVelToEnterLoop : 180;
 
 		//Needs a requires because it's a default command.
 		requires(this.subsystem);

@@ -42,17 +42,24 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	@Nullable
 	private final Joystick gamepad;
 
+	/**
+	 * The polynomial to scale the forwards throttle output by before using it to scale the rotational throttle. Can be
+	 * null, and if it is, rotational throttle is not scaled by forwards throttle.
+	 */
 	@Nullable
 	private final Polynomial scaleRotByFwdPoly;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param gamepad     The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
-	 * @param rotThrottle The throttle for rotating the robot.
-	 * @param fwdThrottle The throttle for driving the robot straight.
-	 * @param invertDPad  Whether or not to invert the D-pad. Defaults to false.
-	 * @param dPadShift   How fast the dPad should turn the robot, on [0, 1]. Defaults to 0.
+	 * @param gamepad           The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
+	 * @param rotThrottle       The throttle for rotating the robot.
+	 * @param fwdThrottle       The throttle for driving the robot straight.
+	 * @param invertDPad        Whether or not to invert the D-pad. Defaults to false.
+	 * @param dPadShift         How fast the dPad should turn the robot, on [0, 1]. Defaults to 0.
+	 * @param scaleRotByFwdPoly The polynomial to scale the forwards throttle output by before using it to scale the
+	 *                          rotational throttle. Can be null, and if it is, rotational throttle is not scaled by
+	 *                          forwards throttle.
 	 */
 	@JsonCreator
 	public ArcadeOIWithDPad(

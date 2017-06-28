@@ -36,6 +36,7 @@ public abstract class FactoryButton extends Button {
 	 *                     {@link dPadButton}.
 	 * @return A Button constructed from the given parameters.
 	 */
+	@NotNull
 	@JsonCreator
 	public static FactoryButton constructButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
 	                                            @Nullable Integer buttonNumber,

@@ -1,5 +1,5 @@
 ---
-doMP: false
+doMP: true
 testMP: false
 leftTestProfile:
     &leftTest
@@ -83,12 +83,13 @@ arcadeOI:
                 axis: 0
                 smoothingTimeConstantSecs: 0.04
                 deadband: 0.05
-                inverted: true
+                inverted: false
         fwdThrottle:
             org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle:
                 <<: *rotThrottle
                 '@id': fwdThrottle
                 axis: 5
+                inverted: true
         invertDPad: true
         dPadShift: 0.1
 drive:
@@ -156,7 +157,7 @@ drive:
             module: 15
             forward: 2
             reverse: 3
-        startingGear: HIGH
+        startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXDefaultDrive:
         '@id': defaultDriveCommand

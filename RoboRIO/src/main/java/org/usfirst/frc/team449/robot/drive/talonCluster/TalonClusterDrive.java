@@ -75,10 +75,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	                         @Nullable Double PIDScale) {
 		super();
 		//Initialize stuff
-		if (PIDScale == null) {
-			PIDScale = 1.;
-		}
-		PID_SCALE = PIDScale;
+		this.PID_SCALE = PIDScale != null ? PIDScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.mpHandler = MPHandler;

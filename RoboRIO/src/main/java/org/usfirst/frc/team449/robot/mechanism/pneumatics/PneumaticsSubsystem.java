@@ -38,7 +38,6 @@ public class PneumaticsSubsystem extends YamlSubsystem implements Loggable {
 	@JsonCreator
 	public PneumaticsSubsystem(@JsonProperty(required = true) int nodeID,
 	                           @Nullable PressureSensor pressureSensor) {
-		super();
 		compressor = new Compressor(nodeID);
 		this.pressureSensor = pressureSensor;
 	}
