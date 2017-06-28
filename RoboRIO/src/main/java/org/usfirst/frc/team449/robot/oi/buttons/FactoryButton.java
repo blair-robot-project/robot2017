@@ -1,9 +1,6 @@
 package org.usfirst.frc.team449.robot.oi.buttons;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +10,7 @@ import org.usfirst.frc.team449.robot.components.MappedJoystick;
 /**
  * A factory for constructing a button..
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public abstract class FactoryButton extends Button {
 

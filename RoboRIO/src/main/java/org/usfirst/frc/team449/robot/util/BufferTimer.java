@@ -1,10 +1,15 @@
 package org.usfirst.frc.team449.robot.util;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
 
 /**
  * A timer that checks if condition has been true for the past n seconds/milliseconds.
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class BufferTimer {
 
 	/**
@@ -27,7 +32,8 @@ public class BufferTimer {
 	 *
 	 * @param bufferTimeSeconds The amount of time the condition has to be true for, in seconds.
 	 */
-	public BufferTimer(double bufferTimeSeconds) {
+	@JsonCreator
+	public BufferTimer(@JsonProperty(required = true) double bufferTimeSeconds) {
 		bufferTime = (long) (bufferTimeSeconds * 1000.);
 	}
 

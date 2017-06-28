@@ -21,11 +21,13 @@ public class LogEvent {
 	/**
 	 * The message of this event.
 	 */
+	@NotNull
 	private final String message;
 
 	/**
 	 * The class that called this event.
 	 */
+	@NotNull
 	private final Class caller;
 
 	/**
