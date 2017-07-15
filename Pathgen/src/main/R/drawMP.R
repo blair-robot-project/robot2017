@@ -20,10 +20,13 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   }
   
   for(i in 2:length(left$V4)){
+    #Get the angle between a ray along the X axis at the right wheel and the left wheel. 
     oldTheta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
     
+    #Add the change in time
     out[i,1] <- out[i-1,1]+left$V3[i]
     
+    #Figure out linear change for each side using position or velocity
     if (usePosition){
       deltaLeft <- left$V1[i] - left$V1[i-1]
       deltaRight <- right$V1[i] - right$V1[i-1]
@@ -32,15 +35,25 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       deltaRight <- right$V2[i]*left$V3[i]
     }
     
+    # Invert the change if nessecary
     if (inverted){
       deltaLeft <- -deltaLeft
       deltaRight <- -deltaRight
     }
     
+    #So in this next part, we figure out the turning center of the robot
+    #and the angle it turns around that center. Note that the turning center is
+    #often outside of the robot.
+    
+    #Calculate how much we turn first, because if theta = 0, turning center is infinitely far away and can't be calcualted.
     theta <- (deltaLeft - deltaRight)/wheelbaseDiameter
     
+    # If theta is 0, we're going straight and need to treat it as a special case.
     if (identical(theta, 0)){
+      # get the angle pointing at where the robot is currently facing
       perpendicular <- oldTheta - pi/2
+      
+      #If inverted, swap which wheel gets which input
       if(inverted){
         out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
         out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
@@ -53,10 +66,21 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
         out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
       }
     } else {
+      
+      #We do this with sectors, so this is the radius of the turning circle for the
+      #left and right sides. They just differ by the diameter of the wheelbase.
       rightR <- (wheelbaseDiameter/2) * (deltaLeft + deltaRight) / (deltaLeft - deltaRight) - wheelbaseDiameter/2
       leftR <- rightR + wheelbaseDiameter
+      
+      #This is the angle for the vector pointing towards the new position of each
+      #wheel.
       vectorTheta <- (pi - theta)/2 - (pi - oldTheta)
+      
+      #The is the length of the vector pointing towards the new position of each
+      #wheel divided by the radius of the turning circle.
       vectorDistanceWithoutR <- 2*sin(theta/2)
+      
+      #If inverted, swap which wheel gets which input
       if(inverted){
         out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
         out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
