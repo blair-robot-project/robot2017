@@ -55,7 +55,7 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
     } else {
       rightR <- (wheelbaseDiameter/2) * (deltaLeft + deltaRight) / (deltaLeft - deltaRight) - wheelbaseDiameter/2
       leftR <- rightR + wheelbaseDiameter
-      vectorTheta <- pi/2 - oldTheta + theta/2
+      vectorTheta <- (pi - theta)/2 - (pi - oldTheta)
       vectorDistanceWithoutR <- 2*sin(theta/2)
       if(inverted){
         out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
@@ -69,20 +69,6 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
         out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
       }
     }
-    
-    # perpendicular <- oldTheta - pi/2
-    # 
-    # if(inverted){
-    #   out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
-    #   out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
-    #   out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
-    #   out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
-    # } else {
-    #   out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
-    #   out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
-    #   out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
-    #   out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
-    # }
   }
   return(out)
 }
@@ -175,5 +161,5 @@ drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, 
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
 out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-#drawRobot("robot.csv", out2[length(out2[,1]),])
+drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
+drawRobot("robot.csv", out2[length(out2[,1]),])
