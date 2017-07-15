@@ -40,3 +40,6 @@ robot2017.iws
 
 #Copied log files
 logs/
+
+#Generated profiles in the base-level directory
+*Profile.csv

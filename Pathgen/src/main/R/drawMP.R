@@ -20,10 +20,10 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   }
   
   for(i in 2:length(left$V4)){
-    theta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
+    oldTheta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
     
     out[i,1] <- out[i-1,1]+left$V3[i]
-
+    
     if (usePosition){
       deltaLeft <- left$V1[i] - left$V1[i-1]
       deltaRight <- right$V1[i] - right$V1[i-1]
@@ -37,19 +37,52 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       deltaRight <- -deltaRight
     }
     
-    perpendicular <- theta - pi/2
+    theta <- (deltaLeft - deltaRight)/wheelbaseDiameter
     
-    if(inverted){
-      out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
-      out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
-      out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
-      out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
+    if (identical(theta, 0)){
+      perpendicular <- oldTheta - pi/2
+      if(inverted){
+        out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
+        out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
+        out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
+        out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
+      } else {
+        out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
+        out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
+        out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
+        out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
+      }
     } else {
-      out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
-      out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
-      out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
-      out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
+      rightR <- (wheelbaseDiameter/2) * (deltaLeft + deltaRight) / (deltaLeft - deltaRight) - wheelbaseDiameter/2
+      leftR <- rightR + wheelbaseDiameter
+      vectorTheta <- pi/2 - oldTheta + theta/2
+      vectorDistanceWithoutR <- 2*sin(theta/2)
+      if(inverted){
+        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
+        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
+        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*leftR*round(cos(vectorTheta), digits = 3)
+        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*leftR*round(sin(vectorTheta), digits = 3)
+      } else {
+        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*leftR*round(cos(vectorTheta), digits = 3)
+        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*leftR*round(sin(vectorTheta), digits = 3)
+        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
+        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
+      }
     }
+    
+    # perpendicular <- oldTheta - pi/2
+    # 
+    # if(inverted){
+    #   out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
+    #   out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
+    #   out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
+    #   out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
+    # } else {
+    #   out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
+    #   out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
+    #   out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
+    #   out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
+    # }
   }
   return(out)
 }
@@ -136,11 +169,11 @@ centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
 #out <- plotProfile(profileName = "Left", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos = c(0, 54-centerToBack, -(10.3449-centerToSide)-wheelbaseDiameter/2., 54-centerToBack, -(10.3449-centerToSide)+wheelbaseDiameter/2.))
-out <- plotProfile(profileName = "Right", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= -10.3449+centerToSide, usePosition = TRUE)
+out <- plotProfile(profileName = "BlueRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= -10.3449+centerToSide, usePosition = TRUE)
 #out <- plotProfile(profileName = "Mid", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos = c(0, 54-centerToBack, -wheelbaseDiameter/2., 54-centerToBack, wheelbaseDiameter/2.))
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
-out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-drawRobot("robot.csv", out2[length(out2[,1]),])
+out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
+#drawRobot("robot.csv", out2[length(out2[,1]),])
