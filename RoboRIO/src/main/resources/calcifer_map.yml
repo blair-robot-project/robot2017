@@ -110,6 +110,7 @@ drive:
             encoderCPR: 512
             reverseSensor: false
             currentLimit: 35
+            maxClosedLoopVoltage: 12
             maxSpeedHigh: 17.5
             highGearP: 0.5
             highGearI: 0.0
@@ -220,6 +221,7 @@ climber:
 #            fwdPeakOutputVoltage: 12
 #            fwdNominalOutputVoltage: 0
 #            closedLoopRampRate: 12
+#            maxClosedLoopVoltage: 12
 #            feedbackDevice: QuadEncoder
 #            encoderCPR: 1024
 #            maxSpeedHigh: 90
