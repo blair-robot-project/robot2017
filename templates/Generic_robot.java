@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.template;
+package templates;
 
 import com.google.protobuf.Message;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -11,6 +11,7 @@ import java.io.IOException;
 /**
  * A broad template for all robot classes
  */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Generic_robot extends IterativeRobot{
 
 	/**
@@ -21,7 +22,7 @@ public class Generic_robot extends IterativeRobot{
 	/**
 	 * The object constructed directly from map.cfg.
 	 */
-	public static Message cfg;
+	public static RobotMap cfg;
 
 	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.

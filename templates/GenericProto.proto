@@ -1,8 +1,0 @@
-syntax = "proto2";
-
-option java_package = "maps.org.usfirst.frc.team449.template";
-option java_outer_classname = "GenericProtoMap";
-
-message GenericProto{
-
-}
