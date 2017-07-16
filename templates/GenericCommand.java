@@ -9,10 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
 /**
- * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)
+ * A broad template for all commands.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class StateChangeCommand extends YamlCommandWrapper {
+public class GenericCommand extends YamlCommandWrapper{
 
 	/**
 	 * The subsystem to execute this command on.
@@ -22,52 +22,52 @@ public class StateChangeCommand extends YamlCommandWrapper {
 
 	/**
 	 * Default constructor
-	 *
-	 * @param subsystem The subsystem to execute this command on.
+	 * 
+	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public StateChangeCommand(@NotNull @JsonProperty(required = true) GenericSubsystemInterface subsystem) {
+	public GenericCommand(@NotNull @JsonProperty(required = true) GenericSubsystemInterface subsystem) {
 		this.subsystem = subsystem;
 	}
 
 	/**
-	 * Log when this command is initialized
+	 *
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("StateChangeCommand init.", this.getClass());
+		Logger.addEvent("GenericCommand init.", this.getClass());
 	}
 
 	/**
-	 * Do the state change.
+	 *
 	 */
 	@Override
 	protected void execute() {
-		subsystem.doAThing();
 	}
 
 	/**
-	 * Finish immediately because this is a state-change command.
-	 * @return true
+	 *
+	 * @return
 	 */
 	@Override
 	protected boolean isFinished() {
+		//This does NOT have to be true.
 		return true;
 	}
 
 	/**
-	 * Log when this command ends
+	 *
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("StateChangeCommand end.", this.getClass());
+		Logger.addEvent("GenericCommand end.", this.getClass());
 	}
 
 	/**
-	 * Log when this command is interrupted.
+	 *
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("StateChangeCommand Interrupted!", this.getClass());
+		Logger.addEvent("GenericCommand Interrupted!", this.getClass());
 	}
 }
