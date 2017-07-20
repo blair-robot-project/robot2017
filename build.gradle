@@ -1,5 +1,5 @@
 allprojects {
-	tasks.withType(Javadoc).all { enabled = false }
+	tasks.withType(Javadoc).all { enabled = true }
 	repositories {
 		maven {
 			url 'https://jitpack.io'
