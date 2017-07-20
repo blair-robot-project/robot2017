@@ -96,11 +96,6 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
-
-	copy {
-		from './build/docs/javadoc'
-		into '../docs/'
-	}
 }
 
 artifacts {
