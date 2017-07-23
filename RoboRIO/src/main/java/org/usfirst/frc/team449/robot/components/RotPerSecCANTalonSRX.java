@@ -138,6 +138,7 @@ public class RotPerSecCANTalonSRX {
 	 *                                        to.
 	 * @param currentLimit                    The max amps this device can draw. If this is null, no current limit is
 	 *                                        used.
+	 * @param maxClosedLoopVoltage The voltage to scale closed-loop output based on, e.g. closed-loop output of 1 will produce this voltage, output of 0.5 will produce half, etc. This feature compensates for low battery voltage.
 	 * @param feedbackDevice                  The type of encoder used to measure the output velocity of this motor.
 	 *                                        Can
 	 *                                        be null if there is no encoder attached to this Talon.
@@ -185,6 +186,7 @@ public class RotPerSecCANTalonSRX {
 	                            @Nullable Double closedLoopRampRate,
 	                            @Nullable Double inchesPerRotation,
 	                            @Nullable Integer currentLimit,
+	                            double maxClosedLoopVoltage,
 	                            @Nullable CANTalon.FeedbackDevice feedbackDevice,
 	                            @Nullable Integer encoderCPR,
 	                            @Nullable Boolean reverseSensor,
@@ -274,6 +276,9 @@ public class RotPerSecCANTalonSRX {
 			//If we don't have a current limit, disable current limiting.
 			canTalon.EnableCurrentLimit(false);
 		}
+
+		//Set the nominal closed loop battery voltage. Different thing from NominalOutputVoltage.
+		canTalon.setNominalClosedLoopVoltage(maxClosedLoopVoltage);
 
 		//Configure ramp rate
 		if (closedLoopRampRate != null) {
