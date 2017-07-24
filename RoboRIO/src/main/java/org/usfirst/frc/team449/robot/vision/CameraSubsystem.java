@@ -19,13 +19,13 @@ import java.util.List;
 public class CameraSubsystem extends YamlSubsystem {
 
 	/**
-	 * Video server to view on SmartDashboard
+	 * Video server to view on SmartDashboard.
 	 */
 	@NotNull
 	private final MjpegServer server;
 
 	/**
-	 * List of cameras used on robot
+	 * List of cameras used on the robot.
 	 */
 	@NotNull
 	private final List<MappedUsbCamera> cameras;
@@ -76,9 +76,7 @@ public class CameraSubsystem extends YamlSubsystem {
 	}
 
 	/**
-	 * Getter for the server.
-	 *
-	 * @return The server the camera feed streams to.
+	 * @return Video server to view on SmartDashboard.
 	 */
 	@NotNull
 	public MjpegServer getServer() {
@@ -86,9 +84,7 @@ public class CameraSubsystem extends YamlSubsystem {
 	}
 
 	/**
-	 * Getter for the list of cameras.
-	 *
-	 * @return The list of cameras the subsystem reads from.
+	 * @return List of cameras used on the robot.
 	 */
 	@NotNull
 	public List<MappedUsbCamera> getCameras() {
@@ -96,8 +92,6 @@ public class CameraSubsystem extends YamlSubsystem {
 	}
 
 	/**
-	 * Getter for the number of the active camera.
-	 *
 	 * @return The index of the active camera in the list of cameras.
 	 */
 	public int getCamNum() {
@@ -105,9 +99,7 @@ public class CameraSubsystem extends YamlSubsystem {
 	}
 
 	/**
-	 * Setter for the number of the active camera.
-	 *
-	 * @param camNum The index of the active camera in the list of cameras.
+	 * @param camNum The index of the camera to make active in the list of cameras.
 	 */
 	public void setCamNum(int camNum) {
 		this.camNum = camNum;

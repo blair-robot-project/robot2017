@@ -9,9 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public interface ConditionalSubsystem {
 
 	/**
-	 * Whether or not the condition had been met
-	 *
-	 * @return true if met, false otherwise
+	 * @return true if the condition is met, false otherwise
 	 */
 	boolean isConditionTrue();
 }

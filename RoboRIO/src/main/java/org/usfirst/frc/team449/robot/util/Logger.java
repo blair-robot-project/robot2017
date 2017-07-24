@@ -222,8 +222,6 @@ public class Logger implements Runnable {
 	}
 
 	/**
-	 * Getter for the loop time of this logger.
-	 *
 	 * @return The map-specified loop period of this logger, in seconds.
 	 */
 	public double getLoopTimeSecs() {

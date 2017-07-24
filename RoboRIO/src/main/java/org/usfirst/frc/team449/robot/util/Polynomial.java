@@ -94,9 +94,7 @@ public class Polynomial {
 	}
 
 	/**
-	 * Getter for the map of the powers and coefficients of each term.
-	 *
-	 * @return powerToCoefficientMap.
+	 * @return A map of the powers and coefficients of each term.
 	 */
 	@NotNull
 	public Map<Double, Double> getPowerToCoefficientMap() {

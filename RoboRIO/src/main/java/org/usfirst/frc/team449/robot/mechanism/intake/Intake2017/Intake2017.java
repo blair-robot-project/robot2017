@@ -113,9 +113,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	}
 
 	/**
-	 * Set the solenoid to a certain position.
-	 *
-	 * @param value Forward to extend the Solenoid, Reverse to contract it.
+	 * @param value The position to set the solenoid to.
 	 */
 	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
 		if (piston != null) {
@@ -125,9 +123,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	}
 
 	/**
-	 * Get the position of the solenoid.
-	 *
-	 * @return Forward if extended, Reverse if contracted.
+	 * @return the current position of the solenoid.
 	 */
 	@NotNull
 	public DoubleSolenoid.Value getSolenoidPosition() {
@@ -145,9 +141,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	}
 
 	/**
-	 * Get the mode of the intake
-	 *
-	 * @return off, in slow, in fast, out slow, out fast.
+	 * @return the current mode of the intake.
 	 */
 	@NotNull
 	@Override
@@ -156,9 +150,7 @@ public class Intake2017 extends YamlSubsystem implements SolenoidSubsystem, Inta
 	}
 
 	/**
-	 * Set the speed of the intake to one of 5 IntakeModes.
-	 *
-	 * @param mode off, in slow, in fast, out slow, out fast.
+	 * @param mode The mode to switch the intake to.
 	 */
 	@Override
 	public void setMode(@NotNull IntakeMode mode) {

@@ -151,8 +151,6 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Get the current state of the motor.
-	 *
 	 * @return true if the motor is on, false otherwise.
 	 */
 	@Override
@@ -161,9 +159,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Whether or not the power limit has been exceeded
-	 *
-	 * @return true if exceeded, false otherwise
+	 * @return true if the condition is met, false otherwise
 	 */
 	@Override
 	public boolean isConditionTrue() {

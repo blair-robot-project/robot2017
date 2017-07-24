@@ -385,7 +385,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The switch for selecting which alliance we're on. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The switch for selecting which alliance we're on. Can be null if getDoMP returns false or getTestMP
+	 * returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public MappedDigitalInput getAllianceSwitch() {
@@ -393,7 +394,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The switch for deciding whether or not to drop the gear. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The switch for deciding whether or not to drop the gear. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public MappedDigitalInput getDropGearSwitch() {
@@ -401,7 +403,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The dial for selecting which side of the field the robot is on. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The dial for selecting which side of the field the robot is on. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public MappedDigitalInput getLocationDial() {
@@ -409,7 +412,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The command to run in autonomous on the boiler side of the field. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The command to run in autonomous on the boiler side of the field. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public Command getBoilerAuto() {
@@ -417,7 +421,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The command to run in autonomous on the center of the field. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The command to run in autonomous on the center of the field. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public Command getCenterAuto() {
@@ -425,7 +430,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The command to run in autonomous on the feeding station side of the field. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value.
+	 * @return The command to run in autonomous on the feeding station side of the field. Can be null if getDoMP returns
+	 * false or getTestMP returns true, but otherwise has a value.
 	 */
 	@Nullable
 	public Command getFeederAuto() {
@@ -433,7 +439,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The profile for the left side of the drive to run in test mode. Can be null if either getTestMP or getDoMP return false, but otherwise has a value.
+	 * @return The profile for the left side of the drive to run in test mode. Can be null if either getTestMP or
+	 * getDoMP return false, but otherwise has a value.
 	 */
 	@Nullable
 	public MotionProfileData getLeftTestProfile() {
@@ -441,7 +448,8 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The profile for the right side of the drive to run in test mode. Can be null if either getTestMP or getDoMP return false, but otherwise has a value.
+	 * @return The profile for the right side of the drive to run in test mode. Can be null if either getTestMP or
+	 * getDoMP return false, but otherwise has a value.
 	 */
 	@Nullable
 	public MotionProfileData getRightTestProfile() {
@@ -449,7 +457,9 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The starting position to peg profiles for the left side. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value. If not null, has values for the keys "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 * @return The starting position to peg profiles for the left side. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value. If not null, has values for the keys "red_right",
+	 * "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
 	 */
 	@Nullable
 	public Map<String, MotionProfileData> getLeftProfiles() {
@@ -457,7 +467,9 @@ public class RobotMap {
 	}
 
 	/**
-	 * @return The starting position to peg profiles for the right side. Can be null if getDoMP returns false or getTestMP returns true, but otherwise has a value. If not null, has values for the keys "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 * @return The starting position to peg profiles for the right side. Can be null if getDoMP returns false or
+	 * getTestMP returns true, but otherwise has a value. If not null, has values for the keys "red_right",
+	 * "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
 	 */
 	@Nullable
 	public Map<String, MotionProfileData> getRightProfiles() {

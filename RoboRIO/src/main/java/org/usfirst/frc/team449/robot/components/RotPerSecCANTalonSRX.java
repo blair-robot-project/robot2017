@@ -416,9 +416,8 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Get the max speed of the gear the talon is currently in.
-	 *
-	 * @return max speed, in RPS, as given in the map, or null if no value given.
+	 * @return the max speed of the gear the talon is currently in, in RPS, as given in the map, or null if no value
+	 * given.
 	 */
 	@Nullable
 	public Double getMaxSpeed() {
@@ -572,8 +571,6 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Get the high gear max speed. Used for for scaling joystick output.
-	 *
 	 * @return The high gear max speed in RPS, or null if none was given.
 	 */
 	@Nullable
@@ -653,9 +650,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Get the CANTalon this is a wrapper on.
-	 *
-	 * @return The canTalon this wraps.
+	 * @return The CANTalon this is a wrapper on.
 	 */
 	@NotNull
 	public CANTalon getCanTalon() {
@@ -692,8 +687,6 @@ public class RotPerSecCANTalonSRX {
 		}
 
 		/**
-		 * Getter for port number.
-		 *
 		 * @return The port number of this Talon.
 		 */
 		public int getPort() {
@@ -701,8 +694,6 @@ public class RotPerSecCANTalonSRX {
 		}
 
 		/**
-		 * Getter for inversion.
-		 *
 		 * @return true if this Talon is inverted compared to its master, false otherwise.
 		 */
 		public boolean isInverted() {

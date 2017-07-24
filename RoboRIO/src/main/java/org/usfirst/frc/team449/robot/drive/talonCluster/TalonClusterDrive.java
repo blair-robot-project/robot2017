@@ -197,7 +197,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	/**
 	 * Get the robot's heading using the navX
 	 *
-	 * @return robot heading (degrees) [-180, 180]
+	 * @return robot heading, in degrees, on [-180, 180]
 	 */
 	@Override
 	public double getGyroOutput() {
@@ -205,9 +205,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Get whether this subsystem's NavX is currently being overriden.
-	 *
-	 * @return true if the NavX is overriden, false otherwise.
+	 * @return true if the NavX is currently overriden, false otherwise.
 	 */
 	@Override
 	public boolean getOverrideNavX() {
@@ -215,9 +213,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Set whether or not to override this subsystem's NavX.
-	 *
-	 * @param override true to override, false otherwise.
+	 * @param override true to override the NavX, false to un-override it.
 	 */
 	@Override
 	public void setOverrideNavX(boolean override) {
@@ -225,8 +221,6 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Get the NavX this subsystem uses.
-	 *
 	 * @return An AHRS object representing this subsystem's NavX.
 	 */
 	@Override

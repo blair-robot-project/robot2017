@@ -38,9 +38,7 @@ public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsys
 	}
 
 	/**
-	 * Set the solenoid to a certain position.
-	 *
-	 * @param value Forward to extend the Solenoid, Reverse to contract it.
+	 * @param value The position to set the solenoid to.
 	 */
 	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
 		piston.set(value);
@@ -48,9 +46,7 @@ public class ActiveGearSubsystem extends YamlSubsystem implements SolenoidSubsys
 	}
 
 	/**
-	 * Get the position of the solenoid.
-	 *
-	 * @return Forward if extended, Reverse if contracted.
+	 * @return the current position of the solenoid.
 	 */
 	@NotNull
 	@Override

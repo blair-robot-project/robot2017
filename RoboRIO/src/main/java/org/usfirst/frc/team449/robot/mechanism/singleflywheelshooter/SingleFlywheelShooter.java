@@ -42,7 +42,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	private final double shooterThrottle;
 
 	/**
-	 * How long it takes the shooter to get up to speed, in milliseconds.
+	 * Time from giving the shooter voltage to being ready to fire, in milliseconds.
 	 */
 	private final long spinUpTime;
 
@@ -202,9 +202,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	}
 
 	/**
-	 * Gets the shooter's state, for use in "toggle" commands.
-	 *
-	 * @return Off, spinning up, or shooting.
+	 * @return The current state of the shooter.
 	 */
 	@NotNull
 	@Override
@@ -213,9 +211,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	}
 
 	/**
-	 * Sets the state of the shooter. Only called from within commands.
-	 *
-	 * @param state Off, spinning up, or shooting
+	 * @param state The state to switch the shooter to.
 	 */
 	@Override
 	public void setShooterState(@NotNull ShooterState state) {
@@ -223,9 +219,7 @@ public class SingleFlywheelShooter extends YamlSubsystem implements Loggable, Sh
 	}
 
 	/**
-	 * How long it takes for the shooter to get up to launch speed. Should be measured experimentally.
-	 *
-	 * @return Time from giving the shooter a voltage to being ready to fire, in milliseconds.
+	 * @return Time from giving the shooter voltage to being ready to fire, in milliseconds.
 	 */
 	@Override
 	public long getSpinUpTimeMillis() {
