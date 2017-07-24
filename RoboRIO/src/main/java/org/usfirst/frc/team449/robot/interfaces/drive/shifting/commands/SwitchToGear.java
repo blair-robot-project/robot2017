@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,13 +19,13 @@ public class SwitchToGear extends YamlCommandWrapper {
 	 * The drive to execute this command on.
 	 */
 	@NotNull
-	private final ShiftingDrive subsystem;
+	private final DriveShifting subsystem;
 
 	/**
 	 * The gear to switch to.
 	 */
 	@NotNull
-	private final ShiftingDrive.gear switchTo;
+	private final DriveShifting.gear switchTo;
 
 	/**
 	 * Default constructor
@@ -34,8 +34,8 @@ public class SwitchToGear extends YamlCommandWrapper {
 	 * @param switchTo  The gear to switch to.
 	 */
 	@JsonCreator
-	public SwitchToGear(@NotNull @JsonProperty(required = true) ShiftingDrive subsystem,
-	                    @NotNull @JsonProperty(required = true) ShiftingDrive.gear switchTo) {
+	public SwitchToGear(@NotNull @JsonProperty(required = true) DriveShifting subsystem,
+	                    @NotNull @JsonProperty(required = true) DriveShifting.gear switchTo) {
 		this.subsystem = subsystem;
 		this.switchTo = switchTo;
 	}

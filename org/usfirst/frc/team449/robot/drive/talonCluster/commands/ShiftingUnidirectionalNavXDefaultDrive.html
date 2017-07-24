@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/UnidirectionalNavXDefaultDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster.commands">org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXDefaultDrive</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.drive.talonCluster.commands.ShiftingUnidirectionalNavXDefaultDrive&lt;T&gt;</li>
+<li>org.usfirst.frc.team449.robot.drive.talonCluster.commands.UnidirectionalNavXShiftingDefaultDrive&lt;T&gt;</li>
 </ul>
 </li>
 </ul>
@@ -156,7 +156,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/tal
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/ShiftingUnidirectionalNavXDefaultDrive.html#autoshiftProcessor">autoshiftProcessor</a></span></code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/ShiftingUnidirectionalNavXDefaultDrive.html#autoshiftComponent">autoshiftComponent</a></span></code>
 <div class="block">The helper object for autoshifting.</div>
 </td>
 </tr>
@@ -188,7 +188,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/tal
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/ShiftingUnidirectionalNavXDefaultDrive.html#ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-T-org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI-org.usfirst.frc.team449.robot.util.AutoshiftProcessor-">ShiftingUnidirectionalNavXDefaultDrive</a></span>(double&nbsp;absoluteTolerance,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/ShiftingUnidirectionalNavXDefaultDrive.html#ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-T-org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional-org.usfirst.frc.team449.robot.util.AutoshiftComponent-">ShiftingUnidirectionalNavXDefaultDrive</a></span>(double&nbsp;absoluteTolerance,
                                       int&nbsp;toleranceBuffer,
                                       double&nbsp;minimumOutput,
                                       java.lang.Double&nbsp;maximumOutput,
@@ -201,7 +201,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/tal
                                       <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util">BufferTimer</a>&nbsp;driveStraightLoopEntryTimer,
                                       <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/ShiftingUnidirectionalNavXDefaultDrive.html" title="type parameter in ShiftingUnidirectionalNavXDefaultDrive">T</a>&nbsp;subsystem,
                                       <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/UnidirectionalOI.html" title="interface in org.usfirst.frc.team449.robot.interfaces.oi">UnidirectionalOI</a>&nbsp;oi,
-                                      <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a>&nbsp;autoshiftProcessor)</code>
+                                      <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a>&nbsp;autoshiftComponent)</code>
 <div class="block">Default constructor</div>
 </td>
 </tr>
@@ -306,14 +306,14 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
 <div class="block">The drive to execute this command on.</div>
 </li>
 </ul>
-<a name="autoshiftProcessor">
+<a name="autoshiftComponent">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>autoshiftProcessor</h4>
+<h4>autoshiftComponent</h4>
 <pre>@NotNull
-protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a> autoshiftProcessor</pre>
+protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a> autoshiftComponent</pre>
 <div class="block">The helper object for autoshifting.</div>
 </li>
 </ul>
@@ -325,9 +325,9 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-org.usfirst.frc.team449.robot.util.YamlSubsystem-org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI-org.usfirst.frc.team449.robot.util.AutoshiftProcessor-">
+<a name="ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-org.usfirst.frc.team449.robot.util.YamlSubsystem-org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional-org.usfirst.frc.team449.robot.util.AutoshiftComponent-">
 <!--   -->
-</a><a name="ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-T-org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI-org.usfirst.frc.team449.robot.util.AutoshiftProcessor-">
+</a><a name="ShiftingUnidirectionalNavXDefaultDrive-double-int-double-java.lang.Double-double-java.lang.Double-boolean-int-int-int-org.usfirst.frc.team449.robot.util.BufferTimer-T-org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional-org.usfirst.frc.team449.robot.util.AutoshiftComponent-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -352,7 +352,7 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
                                               @NotNull
                                               <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/UnidirectionalOI.html" title="interface in org.usfirst.frc.team449.robot.interfaces.oi">UnidirectionalOI</a>&nbsp;oi,
                                               @NotNull
-                                              <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a>&nbsp;autoshiftProcessor)</pre>
+                                              <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" title="class in org.usfirst.frc.team449.robot.util">AutoshiftProcessor</a>&nbsp;autoshiftComponent)</pre>
 <div class="block">Default constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -375,7 +375,7 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
 <dd><code>driveStraightLoopEntryTimer</code> - The buffer timer for starting to drive straight.</dd>
 <dd><code>subsystem</code> - The drive to execute this command on.</dd>
 <dd><code>oi</code> - The OI controlling the robot.</dd>
-<dd><code>autoshiftProcessor</code> - The helper object for autoshifting.</dd>
+<dd><code>autoshiftComponent</code> - The helper object for autoshifting.</dd>
 </dl>
 </li>
 </ul>

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.pneumatics.Pneumatics;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,7 +19,7 @@ public class StartCompressor extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final PneumaticsSubsystem subsystem;
+	private final Pneumatics subsystem;
 
 	/**
 	 * Default constructor
@@ -27,7 +27,7 @@ public class StartCompressor extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public StartCompressor(@NotNull @JsonProperty(required = true) PneumaticsSubsystem subsystem) {
+	public StartCompressor(@NotNull @JsonProperty(required = true) Pneumatics subsystem) {
 		this.subsystem = subsystem;
 	}
 

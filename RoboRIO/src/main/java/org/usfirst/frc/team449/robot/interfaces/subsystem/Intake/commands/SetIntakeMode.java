@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,13 +19,13 @@ public class SetIntakeMode extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final IntakeSubsystem subsystem;
+	private final SubsystemIntake subsystem;
 
 	/**
 	 * The mode to set this subsystem to.
 	 */
 	@NotNull
-	private final IntakeSubsystem.IntakeMode mode;
+	private final SubsystemIntake.IntakeMode mode;
 
 	/**
 	 * Default constructor
@@ -34,8 +34,8 @@ public class SetIntakeMode extends YamlCommandWrapper {
 	 * @param mode      The mode to set the intake to.
 	 */
 	@JsonCreator
-	public SetIntakeMode(@NotNull @JsonProperty(required = true) IntakeSubsystem subsystem,
-	                     @NotNull @JsonProperty(required = true) IntakeSubsystem.IntakeMode mode) {
+	public SetIntakeMode(@NotNull @JsonProperty(required = true) SubsystemIntake subsystem,
+	                     @NotNull @JsonProperty(required = true) SubsystemIntake.IntakeMode mode) {
 		this.subsystem = subsystem;
 		this.mode = mode;
 	}

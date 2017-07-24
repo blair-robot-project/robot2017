@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOff;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
@@ -16,23 +16,23 @@ import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
  * Command group to reset everything. Turns everything off, raises intake
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {
+public class ResetShooter <T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Constructs a ResetShooter command group
 	 *
-	 * @param shooterSubsystem shooter subsystem. Can be null.
+	 * @param subsystemShooter shooter subsystem. Can be null.
 	 * @param intakeSubsystem  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public ResetShooter(@Nullable ShooterSubsystem shooterSubsystem,
+	public ResetShooter(@Nullable SubsystemShooter subsystemShooter,
 	                    @Nullable T intakeSubsystem) {
-		if (shooterSubsystem != null) {
-			addParallel(new TurnAllOff(shooterSubsystem));
+		if (subsystemShooter != null) {
+			addParallel(new TurnAllOff(subsystemShooter));
 		}
 		if (intakeSubsystem != null) {
 			addParallel(new SolenoidReverse(intakeSubsystem));
-			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.OFF));
+			addParallel(new SetIntakeMode(intakeSubsystem, SubsystemIntake.IntakeMode.OFF));
 		}
 	}
 }

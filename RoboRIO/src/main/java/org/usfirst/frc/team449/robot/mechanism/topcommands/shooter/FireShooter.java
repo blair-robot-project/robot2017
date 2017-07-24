@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnAllOn;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
@@ -20,17 +20,17 @@ public class FireShooter extends YamlCommandGroupWrapper {
 	/**
 	 * Constructs a FireShooter command group
 	 *
-	 * @param shooterSubsystem shooter subsystem. Can be null.
-	 * @param intakeSubsystem  intake subsystem. Can be null.
+	 * @param subsystemShooter shooter subsystem. Can be null.
+	 * @param subsystemIntake  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public FireShooter(@Nullable ShooterSubsystem shooterSubsystem,
-	                   @Nullable IntakeSubsystem intakeSubsystem) {
-		if (shooterSubsystem != null) {
-			addParallel(new TurnAllOn(shooterSubsystem));
+	public FireShooter(@Nullable SubsystemShooter subsystemShooter,
+	                   @Nullable SubsystemIntake subsystemIntake) {
+		if (subsystemShooter != null) {
+			addParallel(new TurnAllOn(subsystemShooter));
 		}
-		if (intakeSubsystem != null) {
-			addParallel(new SetIntakeMode(intakeSubsystem, IntakeSubsystem.IntakeMode.IN_SLOW));
+		if (subsystemIntake != null) {
+			addParallel(new SetIntakeMode(subsystemIntake, SubsystemIntake.IntakeMode.IN_SLOW));
 		}
 	}
 }

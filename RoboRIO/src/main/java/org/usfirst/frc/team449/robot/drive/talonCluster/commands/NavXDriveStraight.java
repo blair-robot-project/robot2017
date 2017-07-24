@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.TankOI;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.interfaces.oi.OITank;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to give output to.
@@ -29,7 +29,7 @@ public class NavXDriveStraight <T extends YamlSubsystem & UnidirectionalDrive & 
 	 * The tank OI to get input from.
 	 */
 	@NotNull
-	private final TankOI oi;
+	private final OITank oi;
 
 	/**
 	 * Whether to use the left joystick to drive straight.
@@ -66,7 +66,7 @@ public class NavXDriveStraight <T extends YamlSubsystem & UnidirectionalDrive & 
 	                         int kI,
 	                         int kD,
 	                         @NotNull @JsonProperty(required = true) T subsystem,
-	                         @NotNull @JsonProperty(required = true) TankOI oi,
+	                         @NotNull @JsonProperty(required = true) OITank oi,
 	                         @JsonProperty(required = true) boolean useLeft) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
+import org.usfirst.frc.team449.robot.vision.CameraNetwork;
 
 /**
  * Toggles camera on button press.
@@ -19,7 +19,7 @@ public class ChangeCam extends YamlCommandWrapper {
 	 * The subsystem to execute this command on
 	 */
 	@NotNull
-	private CameraSubsystem subsystem;
+	private CameraNetwork subsystem;
 
 	/**
 	 * Default constructor.
@@ -27,7 +27,7 @@ public class ChangeCam extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public ChangeCam(@NotNull @JsonProperty(required = true) CameraSubsystem subsystem) {
+	public ChangeCam(@NotNull @JsonProperty(required = true) CameraNetwork subsystem) {
 		this.subsystem = subsystem;
 		requires(subsystem);
 	}

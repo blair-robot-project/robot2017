@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.components.MappedThrottle;
+import org.usfirst.frc.team449.robot.components.Throttle;
 
 /**
  * A button that gets triggered by a specific throttle being held down at or over a certain amount.
@@ -17,7 +17,7 @@ public class TriggerButton extends FactoryButton {
 	 * The relevant throttle.
 	 */
 	@NotNull
-	private final MappedThrottle throttle;
+	private final Throttle throttle;
 
 	/**
 	 * The percentage pressed to trigger at, from (0, 1]
@@ -31,7 +31,7 @@ public class TriggerButton extends FactoryButton {
 	 * @param triggerAt The percentage pressed to trigger at, from (0, 1]
 	 */
 	@JsonCreator
-	public TriggerButton(@NotNull @JsonProperty(required = true) MappedThrottle throttle,
+	public TriggerButton(@NotNull @JsonProperty(required = true) Throttle throttle,
 	                     @JsonProperty(required = true) double triggerAt) {
 		this.throttle = throttle;
 		this.triggerAt = triggerAt;

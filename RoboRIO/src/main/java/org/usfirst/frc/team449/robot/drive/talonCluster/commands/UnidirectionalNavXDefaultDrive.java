@@ -3,9 +3,9 @@ package org.usfirst.frc.team449.robot.drive.talonCluster.commands;
 import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand;
 import org.usfirst.frc.team449.robot.util.BufferTimer;
 import org.usfirst.frc.team449.robot.util.Logger;
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -28,7 +28,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	 * The OI giving the input stick values.
 	 */
 	@NotNull
-	protected final UnidirectionalOI oi;
+	protected final OIUnidirectional oi;
 
 	/**
 	 * The maximum velocity for the robot to be at in order to switch to driveStraight, in degrees/sec
@@ -81,7 +81,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & Unidirect
 	                                      int kD,
 	                                      @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
-	                                      @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
+	                                      @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;

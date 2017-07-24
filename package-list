@@ -24,13 +24,13 @@ org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.commands
 org.usfirst.frc.team449.robot.interfaces.subsystem.conditional
 org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid
 org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands
-org.usfirst.frc.team449.robot.mechanism.activegear
+org.usfirst.frc.team449.robot.mechanism.activegearhandler
 org.usfirst.frc.team449.robot.mechanism.climber
 org.usfirst.frc.team449.robot.mechanism.climber.commands
 org.usfirst.frc.team449.robot.mechanism.intake.Intake2017
 org.usfirst.frc.team449.robot.mechanism.pneumatics
 org.usfirst.frc.team449.robot.mechanism.pneumatics.commands
-org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter
+org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel
 org.usfirst.frc.team449.robot.mechanism.topcommands.shooter
 org.usfirst.frc.team449.robot.oi
 org.usfirst.frc.team449.robot.oi.buttons

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
@@ -15,13 +15,13 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class SimpleUnidirectionalDrive <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.
 	 */
 	@NotNull
-	public final UnidirectionalOI oi;
+	public final OIUnidirectional oi;
 
 	/**
 	 * The subsystem to execute this command on.
@@ -37,7 +37,7 @@ public class SimpleUnidirectionalDrive <T extends YamlSubsystem & Unidirectional
 	 */
 	@JsonCreator
 	public SimpleUnidirectionalDrive(@NotNull @JsonProperty(required = true) T subsystem,
-	                                 @NotNull @JsonProperty(required = true) UnidirectionalOI oi) {
+	                                 @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
 		this.oi = oi;
 		this.subsystem = subsystem;
 		//Default commands need to require their subsystems.

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
 /**
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * continue running.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnAllOffWithRequires <T extends YamlSubsystem & ShooterSubsystem> extends TurnAllOff {
+public class TurnAllOffWithRequires <T extends YamlSubsystem & SubsystemShooter> extends TurnAllOff {
 
 	/**
 	 * Default constructor

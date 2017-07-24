@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class JiggleRobot <T extends YamlSubsystem & UnidirectionalDrive & NavxSubsystem> extends YamlCommandGroupWrapper {
+public class JiggleRobot <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Instantiate the CommandGroup
@@ -44,7 +44,7 @@ public class JiggleRobot <T extends YamlSubsystem & UnidirectionalDrive & NavxSu
 	                   int kI,
 	                   int kD,
 	                   @NotNull @JsonProperty(required = true) T subsystem) {
-		addSequential(new NavXRelativeTTA<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
-		addSequential(new NavXRelativeTTA<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
+		addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, 10, subsystem, 3));
+		addSequential(new NavXTurnToAngleRelative<>(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, kP, kI, kD, -10, subsystem, 3));
 	}
 }

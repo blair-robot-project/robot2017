@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Run the motors until they move, slowly increasing the voltage up from 0.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DetermineNominalVoltage <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandWrapper {
+public class DetermineNominalVoltage <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The drive subsystem to execute this command on.

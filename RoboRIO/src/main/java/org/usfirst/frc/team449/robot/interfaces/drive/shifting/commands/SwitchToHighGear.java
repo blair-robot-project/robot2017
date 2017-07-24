@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,7 +19,7 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	 * The drive subsystem to execute this command on.
 	 */
 	@NotNull
-	private final ShiftingDrive subsystem;
+	private final DriveShifting subsystem;
 
 	/**
 	 * Default constructor
@@ -27,7 +27,7 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public SwitchToHighGear(@NotNull @JsonProperty(required = true) ShiftingDrive subsystem) {
+	public SwitchToHighGear(@NotNull @JsonProperty(required = true) DriveShifting subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -44,7 +44,7 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(ShiftingDrive.gear.HIGH);
+		subsystem.setGear(DriveShifting.gear.HIGH);
 	}
 
 	/**

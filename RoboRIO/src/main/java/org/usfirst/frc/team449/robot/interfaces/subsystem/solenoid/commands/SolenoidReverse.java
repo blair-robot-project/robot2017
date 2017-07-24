@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SolenoidSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -20,7 +20,7 @@ public class SolenoidReverse extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final SolenoidSubsystem subsystem;
+	private final SubsystemSolenoid subsystem;
 
 	/**
 	 * Default constructor
@@ -28,7 +28,7 @@ public class SolenoidReverse extends YamlCommandWrapper {
 	 * @param subsystem The solenoid subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public SolenoidReverse(@NotNull @JsonProperty(required = true) SolenoidSubsystem subsystem) {
+	public SolenoidReverse(@NotNull @JsonProperty(required = true) SubsystemSolenoid subsystem) {
 		this.subsystem = subsystem;
 	}
 

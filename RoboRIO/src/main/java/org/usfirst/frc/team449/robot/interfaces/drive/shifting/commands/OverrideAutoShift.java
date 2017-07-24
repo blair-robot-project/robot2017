@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -24,7 +24,7 @@ public class OverrideAutoShift extends YamlCommandWrapper {
 	 * The drive subsystem to execute this command on.
 	 */
 	@NotNull
-	private final ShiftingDrive subsystem;
+	private final DriveShifting subsystem;
 
 	/**
 	 * Default constructor
@@ -33,7 +33,7 @@ public class OverrideAutoShift extends YamlCommandWrapper {
 	 * @param override Whether or not to override autoshifting.
 	 */
 	@JsonCreator
-	public OverrideAutoShift(@NotNull @JsonProperty(required = true) ShiftingDrive drive,
+	public OverrideAutoShift(@NotNull @JsonProperty(required = true) DriveShifting drive,
 	                         @JsonProperty(required = true) boolean override) {
 		subsystem = drive;
 		this.override = override;

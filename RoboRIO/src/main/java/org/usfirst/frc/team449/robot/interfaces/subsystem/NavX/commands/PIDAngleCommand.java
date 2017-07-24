@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.util.YamlCommand;
 
 /**
@@ -21,7 +21,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	protected final NavxSubsystem subsystem;
+	protected final SubsystemNavX subsystem;
 
 	/**
 	 * The minimum the robot should be able to output, to overcome friction.
@@ -61,7 +61,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	                       double minimumOutput, @Nullable Double maximumOutput,
 	                       double deadband,
 	                       boolean inverted,
-	                       @NotNull @JsonProperty(required = true) NavxSubsystem subsystem,
+	                       @NotNull @JsonProperty(required = true) SubsystemNavX subsystem,
 	                       int kP,
 	                       int kI,
 	                       int kD) {

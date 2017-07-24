@@ -74,7 +74,7 @@ var activeTableTab = "activeTableTab";
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -105,10 +105,10 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive</a></li>
+<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive</li>
+<li>org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonClusterShifting</li>
 </ul>
 </li>
 </ul>
@@ -144,7 +144,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 </a>
 <h3>Nested Class Summary</h3>
 <ul class="blockList">
-<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive">
+<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting">
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.interfaces.drive.shifting.<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive</a></h3>
@@ -159,7 +159,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 </a>
 <h3>Field Summary</h3>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive">
+<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.usfirst.frc.team449.robot.drive.talonCluster.<a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">TalonClusterDrive</a></h3>
@@ -179,7 +179,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html#ShiftingTalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPHandler-java.lang.Double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive.gear-">ShiftingTalonClusterDrive</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;leftMaster,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html#ShiftingTalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPComponent-java.lang.Double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting.gear-">ShiftingTalonClusterDrive</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;leftMaster,
                          <a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;rightMaster,
                          <a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.components">MappedAHRS</a>&nbsp;navX,
                          <a href="../../../../../../../org/usfirst/frc/team449/robot/util/CANTalonMPHandler.html" title="class in org.usfirst.frc.team449.robot.util">CANTalonMPHandler</a>&nbsp;MPHandler,
@@ -222,7 +222,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html#setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive.gear-">setGear</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive.gear</a>&nbsp;gear)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html#setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting.gear-">setGear</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive.gear</a>&nbsp;gear)</code>
 <div class="block">Shift to a specific gear.</div>
 </td>
 </tr>
@@ -241,7 +241,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive">
+<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.drive.talonCluster.<a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">TalonClusterDrive</a></h3>
@@ -275,7 +275,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ShiftingTalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPHandler-java.lang.Double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive.gear-">
+<a name="ShiftingTalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPComponent-java.lang.Double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting.gear-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -383,7 +383,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 </dl>
 </li>
 </ul>
-<a name="setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive.gear-">
+<a name="setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting.gear-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -394,7 +394,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 <div class="block">Shift to a specific gear.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.html#setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.ShiftingDrive.gear-">setGear</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.html#setGear-org.usfirst.frc.team449.robot.interfaces.drive.shifting.DriveShifting.gear-">setGear</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>gear</code> - Which gear to shift to.</dd>
 </dl>
@@ -468,7 +468,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive">Field</a>&nbsp;|&nbsp;</li>
+<li><a href="#fields.inherited.from.class.org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.SubsystemMP;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
@@ -20,7 +20,7 @@ public class LoadProfile extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final MPSubsystem subsystem;
+	private final SubsystemMP subsystem;
 
 	/**
 	 * The profile to execute.
@@ -35,7 +35,7 @@ public class LoadProfile extends YamlCommandWrapper {
 	 * @param profile   The profile to run.
 	 */
 	@JsonCreator
-	public LoadProfile(@NotNull @JsonProperty(required = true) MPSubsystem subsystem,
+	public LoadProfile(@NotNull @JsonProperty(required = true) SubsystemMP subsystem,
 	                   @NotNull @JsonProperty(required = true) MotionProfileData profile) {
 		this.subsystem = subsystem;
 		this.profile = profile;

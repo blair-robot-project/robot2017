@@ -13,21 +13,21 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster;
+import org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonClusterShifting;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
+import org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.activegearhandler.ActiveGearHandler;
+import org.usfirst.frc.team449.robot.mechanism.climber.Climber;
+import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
+import org.usfirst.frc.team449.robot.mechanism.pneumatics.Pneumatics;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
-import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
+import org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel.ShooterSingleFlywheel;
 import org.usfirst.frc.team449.robot.util.Logger;
-import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
+import org.usfirst.frc.team449.robot.vision.CameraNetwork;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;
@@ -61,7 +61,7 @@ public class Robot extends IterativeRobot {
 	 * The shooter subsystem (flywheel and feeder)
 	 */
 	@Nullable
-	private SingleFlywheelShooter singleFlywheelShooterSubsystem;
+	private ShooterSingleFlywheel shooterSingleFlywheelSubsystem;
 
 	/**
 	 * The intake subsystem (intake motors and pistons)
@@ -73,40 +73,40 @@ public class Robot extends IterativeRobot {
 	 * The climber
 	 */
 	@Nullable
-	private ClimberSubsystem climberSubsystem;
+	private Climber climber;
 
 	/**
 	 * The compressor and pressure sensor
 	 */
 	@Nullable
-	private PneumaticsSubsystem pneumaticsSubsystem;
+	private Pneumatics pneumatics;
 
 	/**
 	 * The drive
 	 */
-	private TalonClusterDrive driveSubsystem;
+	private DriveTalonCluster driveSubsystem;
 
 	/**
 	 * The OI containing the joysticks to get input from.
 	 */
-	private UnidirectionalOI oi;
+	private OIUnidirectional oi;
 
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
 	 */
 	@Nullable
-	private CameraSubsystem cameraSubsystem;
+	private CameraNetwork cameraNetwork;
 
 	/**
 	 * The active gear subsystem.
 	 */
 	@Nullable
-	private ActiveGearSubsystem gearSubsystem;
+	private ActiveGearHandler gearSubsystem;
 
 	/**
 	 * The object constructed directly from the yaml map.
 	 */
-	private RobotMap robotMap;
+	private RobotMap2017 robotMap;
 
 	/**
 	 * The Notifier running the logging thread.
@@ -168,7 +168,7 @@ public class Robot extends IterativeRobot {
 			//Use a parameter name module so we don't have to specify name for every field.
 			mapper.registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES));
 			//Deserialize the map into an object.
-			robotMap = mapper.readValue(fixed, RobotMap.class);
+			robotMap = mapper.readValue(fixed, RobotMap2017.class);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
@@ -177,11 +177,11 @@ public class Robot extends IterativeRobot {
 		//Set fields from the map.
 		this.logger = robotMap.getLogger();
 		this.loggerNotifier = new Notifier(this.logger);
-		this.climberSubsystem = robotMap.getClimber();
-		this.singleFlywheelShooterSubsystem = robotMap.getShooter();
-		this.cameraSubsystem = robotMap.getCamera();
+		this.climber = robotMap.getClimber();
+		this.shooterSingleFlywheelSubsystem = robotMap.getShooter();
+		this.cameraNetwork = robotMap.getCamera();
 		this.intakeSubsystem = robotMap.getIntake();
-		this.pneumaticsSubsystem = robotMap.getPneumatics();
+		this.pneumatics = robotMap.getPneumatics();
 		this.gearSubsystem = robotMap.getGearHandler();
 		this.oi = robotMap.getOI();
 		this.driveSubsystem = robotMap.getDrive();
@@ -348,13 +348,13 @@ public class Robot extends IterativeRobot {
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
 		//Switch to starting gear
-		if (driveSubsystem.getClass().equals(ShiftingTalonClusterDrive.class)) {
-			Scheduler.getInstance().add(new SwitchToGear((ShiftingTalonClusterDrive) driveSubsystem, ((ShiftingTalonClusterDrive) driveSubsystem).getStartingGear()));
+		if (driveSubsystem.getClass().equals(DriveTalonClusterShifting.class)) {
+			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));
 		}
 
 		//Start the compressor if it exists
-		if (pneumaticsSubsystem != null) {
-			Scheduler.getInstance().add(new StartCompressor(pneumaticsSubsystem));
+		if (pneumatics != null) {
+			Scheduler.getInstance().add(new StartCompressor(pneumatics));
 		}
 
 		//Put up the intake if it exists

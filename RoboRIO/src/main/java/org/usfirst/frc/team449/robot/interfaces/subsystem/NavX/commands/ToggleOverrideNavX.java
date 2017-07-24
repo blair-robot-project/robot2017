@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.NavxSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,7 +19,7 @@ public class ToggleOverrideNavX extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final NavxSubsystem subsystem;
+	private final SubsystemNavX subsystem;
 
 	/**
 	 * Default constructor.
@@ -27,7 +27,7 @@ public class ToggleOverrideNavX extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public ToggleOverrideNavX(@NotNull @JsonProperty(required = true) NavxSubsystem subsystem) {
+	public ToggleOverrideNavX(@NotNull @JsonProperty(required = true) SubsystemNavX subsystem) {
 		this.subsystem = subsystem;
 	}
 

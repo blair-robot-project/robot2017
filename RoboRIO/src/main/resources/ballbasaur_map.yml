@@ -2,7 +2,7 @@
 doMP: false
 testMP: false
 drive:
-    org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+    org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster:
         '@id': drive
         leftMaster:
             &leftMaster
@@ -54,7 +54,7 @@ drive:
 logger:
     '@id': logger
     subsystems:
-        - org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+        - org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster:
             drive
     loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
@@ -89,7 +89,7 @@ oi:
                     org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
                         '@id': overrideNavX
                         subsystem:
-                            org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+                            org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster:
                                 drive
                         override: true
                 action: WHEN_PRESSED
@@ -100,7 +100,7 @@ oi:
                     org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.OverrideNavX:
                         '@id': unoverrideNavX
                         subsystem:
-                            org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+                            org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster:
                                 drive
                         override: false
                 action: WHEN_RELEASED
@@ -115,7 +115,7 @@ defaultDriveCommand:
         loopEntryDelay: 0.15
         inverted: false
         drive:
-            org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive:
+            org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster:
                 drive
         oi:
             org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.MPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.SubsystemMP;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends YamlCommandWrapper {
+public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.
@@ -26,7 +26,7 @@ public class RunLoadedProfile <T extends YamlSubsystem & MPSubsystem> extends Ya
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final MPSubsystem subsystem;
+	private final SubsystemMP subsystem;
 
 	/**
 	 * The time this command started running at.

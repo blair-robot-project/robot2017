@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.BinaryMotorSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.binaryMotor.SubsystemBinaryMotor;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * controlling the subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnMotorOffWithRequires <T extends YamlSubsystem & BinaryMotorSubsystem> extends TurnMotorOff {
+public class TurnMotorOffWithRequires <T extends YamlSubsystem & SubsystemBinaryMotor> extends TurnMotorOff {
 
 	/**
 	 * Default constructor

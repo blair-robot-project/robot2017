@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel</div>
 <h2 title="Class SingleFlywheelShooter" class="title">Class SingleFlywheelShooter</h2>
 </div>
 <div class="contentContainer">
@@ -105,7 +105,7 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter</li>
+<li>org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel.ShooterSingleFlywheel</li>
 </ul>
 </li>
 </ul>
@@ -139,7 +139,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 </a>
 <h3>Nested Class Summary</h3>
 <ul class="blockList">
-<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem">
+<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter">
 <!--   -->
 </a>
 <h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem</a></h3>
@@ -159,7 +159,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#SingleFlywheelShooter-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-">SingleFlywheelShooter</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;shooterTalon,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#SingleFlywheelShooter-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-">SingleFlywheelShooter</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;shooterTalon,
                      double&nbsp;shooterThrottle,
                      <a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedVictor.html" title="class in org.usfirst.frc.team449.robot.components">MappedVictor</a>&nbsp;feederVictor,
                      double&nbsp;feederThrottle,
@@ -220,7 +220,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem.ShooterState-">setShooterState</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</code>
 <div class="block">Sets the state of the shooter.</div>
 </td>
 </tr>
@@ -277,7 +277,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="SingleFlywheelShooter-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-">
+<a name="SingleFlywheelShooter-org.usfirst.frc.team449.robot.components.RotPerSecCANTalon-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -452,7 +452,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 </dl>
 </li>
 </ul>
-<a name="setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem.ShooterState-">
+<a name="setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -463,7 +463,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 <div class="block">Sets the state of the shooter. Only called from within commands.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem.ShooterState-">setShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>state</code> - Off, spinning up, or shooting</dd>
 </dl>

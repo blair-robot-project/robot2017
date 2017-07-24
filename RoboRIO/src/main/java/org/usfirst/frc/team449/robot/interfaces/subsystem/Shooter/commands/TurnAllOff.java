@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
 
@@ -19,7 +19,7 @@ public class TurnAllOff extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final ShooterSubsystem subsystem;
+	private final SubsystemShooter subsystem;
 
 	/**
 	 * Default constructor
@@ -27,7 +27,7 @@ public class TurnAllOff extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public TurnAllOff(@NotNull @JsonProperty(required = true) ShooterSubsystem subsystem) {
+	public TurnAllOff(@NotNull @JsonProperty(required = true) SubsystemShooter subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -46,7 +46,7 @@ public class TurnAllOff extends YamlCommandWrapper {
 	protected void execute() {
 		subsystem.turnFeederOff();
 		subsystem.turnShooterOff();
-		subsystem.setShooterState(ShooterSubsystem.ShooterState.OFF);
+		subsystem.setShooterState(SubsystemShooter.ShooterState.OFF);
 	}
 
 	/**

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.UnidirectionalDrive;
+import org.usfirst.frc.team449.robot.interfaces.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 
@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
  * Drive forward at constant speed then stop to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDTest <T extends YamlSubsystem & UnidirectionalDrive> extends YamlCommandGroupWrapper {
+public class PIDTest <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor

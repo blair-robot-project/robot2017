@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.TwoSideMPSubsystem;
+import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
@@ -20,7 +20,7 @@ public class LoadProfileTwoSides extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final TwoSideMPSubsystem subsystem;
+	private final SubsystemMPTwoSides subsystem;
 
 	/**
 	 * The motion profiles for the left and right sides to execute, respectively.
@@ -36,7 +36,7 @@ public class LoadProfileTwoSides extends YamlCommandWrapper {
 	 * @param right     The profile for the right side to run.
 	 */
 	@JsonCreator
-	public LoadProfileTwoSides(@NotNull @JsonProperty(required = true) TwoSideMPSubsystem subsystem,
+	public LoadProfileTwoSides(@NotNull @JsonProperty(required = true) SubsystemMPTwoSides subsystem,
 	                           @NotNull @JsonProperty(required = true) MotionProfileData left,
 	                           @NotNull @JsonProperty(required = true) MotionProfileData right) {
 		this.subsystem = subsystem;
