@@ -41,15 +41,14 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	/**
 	 * Default constructor.
 	 *
-	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered
-	 *                          within tolerance.
-	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
-	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
+	 *                          tolerance.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
+	 *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is
-	 *                          used.
-	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to
-	 *                          the motors. Defaults to zero.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
+	 *                          motors. Defaults to zero.
 	 * @param inverted          Whether the loop is inverted. Defaults to false.
 	 * @param kP                Proportional gain. Defaults to zero.
 	 * @param kI                Integral gain. Defaults to zero.
@@ -125,18 +124,10 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	}
 
 	/**
-	 * Returns the input for the pid loop.
-	 * <p>
-	 * It returns the input for the pid loop, so if this command was based off of
-	 * a gyro, then it should return the angle of the gyro
-	 * </p>
-	 * <p>
-	 * All subclasses of {@link PIDCommand} must override this method.
-	 * </p>
-	 * <p>
-	 * This method will be called in a different thread then the {@link Scheduler}
-	 * thread.
-	 * </p>
+	 * Returns the input for the pid loop. <p> It returns the input for the pid loop, so if this command was based off
+	 * of a gyro, then it should return the angle of the gyro </p> <p> All subclasses of {@link PIDCommand} must
+	 * override this method. </p> <p> This method will be called in a different thread then the {@link Scheduler}
+	 * thread. </p>
 	 *
 	 * @return the value the pid loop should use as input
 	 */

@@ -13,8 +13,8 @@ import org.usfirst.frc.team449.robot.util.Logger;
 import java.util.List;
 
 /**
- * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every
- * non-unit-conversion in this class takes arguments in post-gearing RPS.
+ * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every non-unit-conversion
+ * in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RotPerSecCANTalonSRX {
@@ -38,15 +38,15 @@ public class RotPerSecCANTalonSRX {
 	private final CANTalon.FeedbackDevice feedbackDevice;
 
 	/**
-	 * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if
-	 * there was a 70:1 gearing between the encoder and the final output.
+	 * The coefficient the output changes by after being measured by the encoder, e.g. this would be 1/70 if there was a
+	 * 70:1 gearing between the encoder and the final output.
 	 */
 	private final double postEncoderGearing;
 
 	/**
 	 * The number of inches travelled per rotation of the motor this is attached to, or null if there is no encoder.
-	 * Only used for Motion Profile unit conversions.
-	 * {@link Double} so it throws a nullPointer if you try to use it without a value in the map.
+	 * Only used for Motion Profile unit conversions. {@link Double} so it throws a nullPointer if you try to use it
+	 * without a value in the map.
 	 */
 	@Nullable
 	private final Double inchesPerRotation;
@@ -75,7 +75,8 @@ public class RotPerSecCANTalonSRX {
 	private final int lowGearP, lowGearI, lowGearD;
 
 	/**
-	 * The forward and reverse nominal voltages for high gear, or if this motor has no gears, just the nominal voltages.
+	 * The forward and reverse nominal voltages for high gear, or if this motor has no gears, just the nominal
+	 * voltages.
 	 */
 	private final double highGearFwdNominalOutputVoltage, highGearRevNominalOutputVoltage;
 
@@ -120,16 +121,11 @@ public class RotPerSecCANTalonSRX {
 	 *                                        null, the forward limit switch is disabled.
 	 * @param revLimitSwitchNormallyOpen      Whether the reverse limit switch is normally open or closed. If this is
 	 *                                        null, the reverse limit switch is disabled.
-	 * @param fwdSoftLimit                    The forward software limit. If this is null, the forward software limit
-	 *                                        is
-	 *                                        disabled.
-	 *                                        TODO figure out units
-	 * @param revSoftLimit                    The reverse software limit. If this is null, the reverse software limit
-	 *                                        is
-	 *                                        disabled.
-	 *                                        TODO figure out units
-	 * @param postEncoderGearing              The coefficient the output changes by after being measured by the
-	 *                                        encoder,
+	 * @param fwdSoftLimit                    The forward software limit. If this is null, the forward software limit is
+	 *                                        disabled. TODO figure out units
+	 * @param revSoftLimit                    The reverse software limit. If this is null, the reverse software limit is
+	 *                                        disabled. TODO figure out units
+	 * @param postEncoderGearing              The coefficient the output changes by after being measured by the encoder,
 	 *                                        e.g. this would be 1/70 if there was a 70:1 gearing between the encoder
 	 *                                        and the final output. Defaults to 1.
 	 * @param closedLoopRampRate              The voltage ramp rate for closed-loop velocity control. Can be null, and
@@ -141,8 +137,7 @@ public class RotPerSecCANTalonSRX {
 	 * @param maxClosedLoopVoltage            The voltage to scale closed-loop output based on, e.g. closed-loop output
 	 *                                        of 1 will produce this voltage, output of 0.5 will produce half, etc. This
 	 *                                        feature compensates for low battery voltage.
-	 * @param feedbackDevice                  The type of encoder used to measure the output velocity of this motor.
-	 *                                        Can
+	 * @param feedbackDevice                  The type of encoder used to measure the output velocity of this motor. Can
 	 *                                        be null if there is no encoder attached to this Talon.
 	 * @param encoderCPR                      The counts per rotation of the encoder on this Talon. Can be null if
 	 *                                        feedbackDevice is, but otherwise must have a value.
@@ -150,8 +145,7 @@ public class RotPerSecCANTalonSRX {
 	 *                                        be null if feedbackDevice is, but otherwise must have a value.
 	 * @param maxSpeedHigh                    The high gear max speed, in RPS. If this motor doesn't have gears, then
 	 *                                        this is just the max speed. Used to calculate velocity PIDF feed-forward.
-	 *                                        Can be null, and if it is, it's assumed that this motor won't use
-	 *                                        velocity
+	 *                                        Can be null, and if it is, it's assumed that this motor won't use velocity
 	 *                                        closed-loop control.
 	 * @param highGearP                       The proportional gain for high gear. Defaults to 0.
 	 * @param highGearI                       The integral gain for high gear. Defaults to 0.
@@ -432,8 +426,8 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Converts the velocity read by the talon's getSpeed() method to the RPS of the output shaft.
-	 * Note this DOES account for post-encoder gearing.
+	 * Converts the velocity read by the talon's getSpeed() method to the RPS of the output shaft. Note this DOES
+	 * account for post-encoder gearing.
 	 *
 	 * @param encoderReading The velocity read from the encoder with no conversions.
 	 * @return The velocity of the output shaft, in RPS, when the encoder has that reading, or null if no encoder CPR
@@ -597,8 +591,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Convert from native units read by an encoder to feet moved.
-	 * Note this DOES account for post-encoder gearing.
+	 * Convert from native units read by an encoder to feet moved. Note this DOES account for post-encoder gearing.
 	 *
 	 * @param nativeUnits A distance native units as measured by the encoder.
 	 * @return That distance in feet, or null if no encoder CPR or inches per rotation was given.
@@ -613,8 +606,8 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Convert a distance from feet to encoder reading in native units.
-	 * Note this DOES account for post-encoder gearing.
+	 * Convert a distance from feet to encoder reading in native units. Note this DOES account for post-encoder
+	 * gearing.
 	 *
 	 * @param feet A distance in feet.
 	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR or inches per
@@ -630,8 +623,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Convert a velocity from feet per second to encoder units.
-	 * Note this DOES account for post-encoder gearing.
+	 * Convert a velocity from feet per second to encoder units. Note this DOES account for post-encoder gearing.
 	 *
 	 * @param fps A velocity in feet per second
 	 * @return That velocity in either native units or RPS, depending on the type of encoder, or null if no encoder CPR
@@ -646,8 +638,7 @@ public class RotPerSecCANTalonSRX {
 	}
 
 	/**
-	 * Convert a velocity from encoder units to feet per second.
-	 * Note this DOES account for post-encoder gearing.
+	 * Convert a velocity from encoder units to feet per second. Note this DOES account for post-encoder gearing.
 	 *
 	 * @param nativeUnits A velocity in either native units or RPS, depending on the type of encoder.
 	 * @return That velocity in feet per second, or null if no encoder CPR or inches per rotation was given.

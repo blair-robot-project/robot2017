@@ -17,7 +17,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * A logger that logs telemetry data and individual events. Should be run as a separate thread from the main robot loop.
+ * A logger that logs telemetry data and individual events. Should be run as a separate thread from the main robot
+ * loop.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class Logger implements Runnable {
@@ -47,7 +48,8 @@ public class Logger implements Runnable {
 	private final Loggable[] subsystems;
 
 	/**
-	 * A 2d array of the names of the each datum logged by each subsystem. Organized as itemNames[subsystem][dataIndex].
+	 * A 2d array of the names of the each datum logged by each subsystem. Organized as
+	 * itemNames[subsystem][dataIndex].
 	 */
 	@NotNull
 	private final String[][] itemNames;

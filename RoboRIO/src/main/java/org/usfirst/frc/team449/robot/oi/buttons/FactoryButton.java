@@ -20,18 +20,15 @@ public abstract class FactoryButton extends Button {
 	 *
 	 * @param joystick     The joystick that the button is on.
 	 * @param buttonNumber The index of the button on the joystick (starts at 1). Must be null if either triggerAxis or
-	 *                     angle isn't, but otherwise must have a value. Indicates that this is a simple
-	 *                     {@link JoystickButton}.
-	 * @param triggerAxis  The stick axis for the trigger that this button triggers based off of. Must be null if
-	 *                     either
-	 *                     buttonNumber or angle isn't, but otherwise must have a value. Indicates that this is a
-	 *                     {@link TriggerButton}.
+	 *                     angle isn't, but otherwise must have a value. Indicates that this is a simple {@link
+	 *                     JoystickButton}.
+	 * @param triggerAxis  The stick axis for the trigger that this button triggers based off of. Must be null if either
+	 *                     buttonNumber or angle isn't, but otherwise must have a value. Indicates that this is a {@link
+	 *                     TriggerButton}.
 	 * @param triggerAt    The amount, on [0, 1], that the joystick must be pushed to trigger. Must be null if
-	 *                     triggerAxis
-	 *                     is, and otherwise must have a value.
+	 *                     triggerAxis is, and otherwise must have a value.
 	 * @param angle        The angle the D-pad needs to be pushed to to trigger this button. Must be null if either
-	 *                     triggerAxis
-	 *                     or buttonNumber isn't, but otherwise must have a value. Indicates that this is a
+	 *                     triggerAxis or buttonNumber isn't, but otherwise must have a value. Indicates that this is a
 	 *                     {@link dPadButton}.
 	 * @return A Button constructed from the given parameters.
 	 */

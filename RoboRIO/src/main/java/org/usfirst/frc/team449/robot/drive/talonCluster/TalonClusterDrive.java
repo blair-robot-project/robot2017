@@ -25,8 +25,8 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
-	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
-	 * loop space to compensate.
+	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the loop
+	 * space to compensate.
 	 */
 	protected final double PID_SCALE;
 

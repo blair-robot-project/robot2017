@@ -77,11 +77,12 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	}
 
 	/**
-	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of
-	 * joystick it is.
+	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick
+	 * it is.
 	 *
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
+	@Override
 	public double getFwd() {
 		//Scale based on rotational throttle for more responsive turning at high speed
 		return fwdThrottle.getValue();
@@ -93,6 +94,7 @@ public class ArcadeOIWithDPad extends ArcadeOI {
 	 *
 	 * @return The processed stick or D-pad output, sign-adjusted so 1 is right and -1 is left.
 	 */
+	@Override
 	public double getRot() {
 		//If the gamepad is being pushed to the left or right
 		if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
