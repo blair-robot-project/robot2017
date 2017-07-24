@@ -69,7 +69,7 @@ locationDial:
     '@id': locationDial
     ports: [0, 1]
 RIOduinoPort: 4
-arcadeOI:
+oi:
     org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad:
         '@id': oi
         gamepad:

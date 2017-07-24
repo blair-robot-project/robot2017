@@ -21,8 +21,8 @@ public class NavXRelativeTTA <T extends YamlSubsystem & UnidirectionalDrive & Na
 	/**
 	 * Default constructor.
 	 *
-	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered
-	 *                          on target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
+	 *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
 	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
 	 *                          tolerance.
 	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.

@@ -30,24 +30,18 @@ public interface ShooterSubsystem {
 	void turnFeederOff();
 
 	/**
-	 * Gets the shooter's state, for use in "toggle" commands.
-	 *
-	 * @return Off, spinning up, or shooting.
+	 * @return The current state of the shooter.
 	 */
 	@NotNull
 	ShooterState getShooterState();
 
 	/**
-	 * Sets the state of the shooter. Only called from within commands.
-	 *
-	 * @param state Off, spinning up, or shooting
+	 * @param state The state to switch the shooter to.
 	 */
 	void setShooterState(@NotNull ShooterState state);
 
 	/**
-	 * How long it takes for the shooter to get up to launch speed. Should be measured experimentally.
-	 *
-	 * @return Time from giving the shooter a voltage to being ready to fire, in milliseconds.
+	 * @return Time from giving the shooter voltage to being ready to fire, in milliseconds.
 	 */
 	long getSpinUpTimeMillis();
 

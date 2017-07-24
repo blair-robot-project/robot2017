@@ -25,8 +25,8 @@ import org.usfirst.frc.team449.robot.util.YamlSubsystem;
 public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, UnidirectionalDrive, Loggable, TwoSideMPSubsystem {
 
 	/**
-	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the
-	 * loop space to compensate.
+	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the loop
+	 * space to compensate.
 	 */
 	protected final double PID_SCALE;
 
@@ -64,6 +64,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 *
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
+	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
 	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
 	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */
@@ -196,7 +197,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	/**
 	 * Get the robot's heading using the navX
 	 *
-	 * @return robot heading (degrees) [-180, 180]
+	 * @return robot heading, in degrees, on [-180, 180]
 	 */
 	@Override
 	public double getGyroOutput() {
@@ -204,9 +205,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Get whether this subsystem's NavX is currently being overriden.
-	 *
-	 * @return true if the NavX is overriden, false otherwise.
+	 * @return true if the NavX is currently overriden, false otherwise.
 	 */
 	@Override
 	public boolean getOverrideNavX() {
@@ -214,9 +213,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Set whether or not to override this subsystem's NavX.
-	 *
-	 * @param override true to override, false otherwise.
+	 * @param override true to override the NavX, false to un-override it.
 	 */
 	@Override
 	public void setOverrideNavX(boolean override) {
@@ -224,8 +221,6 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	}
 
 	/**
-	 * Get the NavX this subsystem uses.
-	 *
 	 * @return An AHRS object representing this subsystem's NavX.
 	 */
 	@Override

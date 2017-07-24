@@ -13,8 +13,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
 /**
- * Command group for intaking balls from the ground.
- * Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.
+ * Command group for intaking balls from the ground. Stops flywheel, runs static intake, runs dynamic intake, lowers
+ * intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class LoadShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {

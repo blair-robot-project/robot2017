@@ -23,15 +23,11 @@ public interface ShiftingDrive {
 	void setGear(@NotNull gear gear);
 
 	/**
-	 * A getter for whether we're currently overriding autoshifting.
-	 *
-	 * @return true if overriding, false otherwise.
+	 * @return true if currently overriding autoshifting, false otherwise.
 	 */
 	boolean getOverrideAutoshift();
 
 	/**
-	 * A setter for overriding the autoshifting.
-	 *
 	 * @param override Whether or not to override autoshifting.
 	 */
 	void setOverrideAutoshift(boolean override);

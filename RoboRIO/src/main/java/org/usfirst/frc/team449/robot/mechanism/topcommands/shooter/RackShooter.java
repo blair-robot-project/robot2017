@@ -13,8 +13,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.Sole
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
 /**
- * Command group for preparing the shooter to fire.
- * Starts flywheel, runs static intake, stops dynamic intake, raises intake, and stops feeder.
+ * Command group for preparing the shooter to fire. Starts flywheel, runs static intake, stops dynamic intake, raises
+ * intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class RackShooter <T extends IntakeSubsystem & SolenoidSubsystem> extends YamlCommandGroupWrapper {

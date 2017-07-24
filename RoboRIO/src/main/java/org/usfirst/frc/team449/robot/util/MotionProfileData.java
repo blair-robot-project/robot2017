@@ -87,6 +87,9 @@ public class MotionProfileData {
 		br.close();
 	}
 
+	/**
+	 * @return A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
+	 */
 	@NotNull
 	public double[][] getData() {
 		return data;

@@ -27,7 +27,8 @@ public class SimpleTankOI extends TankOI {
 	private final MappedThrottle rightThrottle;
 
 	/**
-	 * The difference between left and right input within which the driver is considered to be trying to drive straight.
+	 * The difference between left and right input within which the driver is considered to be trying to drive
+	 * straight.
 	 */
 	private final double commandingStraightTolerance;
 

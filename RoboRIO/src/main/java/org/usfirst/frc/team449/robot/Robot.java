@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.talonCluster.ShiftingTalonClusterDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
 import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
+import org.usfirst.frc.team449.robot.interfaces.oi.UnidirectionalOI;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
 import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
@@ -25,7 +26,6 @@ import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
-import org.usfirst.frc.team449.robot.oi.ArcadeOIWithDPad;
 import org.usfirst.frc.team449.robot.util.Logger;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
 import org.yaml.snakeyaml.Yaml;
@@ -89,7 +89,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * The OI containing the joysticks to get input from.
 	 */
-	private ArcadeOIWithDPad arcadeOI;
+	private UnidirectionalOI oi;
 
 	/**
 	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
@@ -183,7 +183,7 @@ public class Robot extends IterativeRobot {
 		this.intakeSubsystem = robotMap.getIntake();
 		this.pneumaticsSubsystem = robotMap.getPneumatics();
 		this.gearSubsystem = robotMap.getGearHandler();
-		this.arcadeOI = robotMap.getArcadeOI();
+		this.oi = robotMap.getOI();
 		this.driveSubsystem = robotMap.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.

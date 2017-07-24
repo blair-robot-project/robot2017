@@ -28,7 +28,7 @@ public class FactoryJoystickButton extends FactoryButton {
 	/**
 	 * Default constructor.
 	 *
-	 * @param joystick  The joystick the button is on.
+	 * @param joystick     The joystick the button is on.
 	 * @param buttonNumber The port of the button. Note that button numbers begin at 1, not 0.
 	 */
 	@JsonCreator

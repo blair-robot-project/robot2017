@@ -10,20 +10,19 @@ import org.jetbrains.annotations.NotNull;
 public interface IntakeSubsystem {
 
 	/**
-	 * Get the mode of the intake
-	 *
-	 * @return off, in slow, in fast, out slow, out fast.
+	 * @return the current mode of the intake.
 	 */
 	@NotNull
 	IntakeMode getMode();
 
 	/**
-	 * Set the speed of the intake to one of 5 IntakeModes.
-	 *
-	 * @param mode off, in slow, in fast, out slow, out fast.
+	 * @param mode The mode to switch the intake to.
 	 */
 	void setMode(@NotNull IntakeMode mode);
 
+	/**
+	 * An enum for the possible states of the intake.
+	 */
 	enum IntakeMode {
 		OFF, IN_SLOW, IN_FAST, OUT_SLOW, OUT_FAST
 	}

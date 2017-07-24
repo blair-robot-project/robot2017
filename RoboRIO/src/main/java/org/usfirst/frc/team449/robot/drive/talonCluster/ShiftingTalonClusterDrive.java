@@ -75,9 +75,7 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	}
 
 	/**
-	 * A getter for whether we're currently overriding autoshifting.
-	 *
-	 * @return true if overriding, false otherwise.
+	 * @return true if currently overriding autoshifting, false otherwise.
 	 */
 	@Override
 	public boolean getOverrideAutoshift() {
@@ -85,8 +83,6 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	}
 
 	/**
-	 * A setter for overriding the autoshifting.
-	 *
 	 * @param override Whether or not to override autoshifting.
 	 */
 	@Override
@@ -156,8 +152,6 @@ public class ShiftingTalonClusterDrive extends TalonClusterDrive implements Shif
 	}
 
 	/**
-	 * A getter for the starting gear.
-	 *
 	 * @return The gear this subsystem starts auto and teleop in.
 	 */
 	@NotNull

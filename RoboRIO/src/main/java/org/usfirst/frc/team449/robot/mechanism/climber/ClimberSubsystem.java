@@ -72,10 +72,9 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Initialize the default command for a subsystem By default subsystems have
-	 * no default command, but if they do, the default command is set with this
-	 * method. It is called on all Subsystems by CommandBase in the users program
-	 * after all the Subsystems are created.
+	 * Initialize the default command for a subsystem By default subsystems have no default command, but if they do, the
+	 * default command is set with this method. It is called on all Subsystems by CommandBase in the users program after
+	 * all the Subsystems are created.
 	 */
 	@Override
 	protected void initDefaultCommand() {
@@ -152,8 +151,6 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Get the current state of the motor.
-	 *
 	 * @return true if the motor is on, false otherwise.
 	 */
 	@Override
@@ -162,9 +159,7 @@ public class ClimberSubsystem extends YamlSubsystem implements Loggable, BinaryM
 	}
 
 	/**
-	 * Whether or not the power limit has been exceeded
-	 *
-	 * @return true if exceeded, false otherwise
+	 * @return true if the condition is met, false otherwise
 	 */
 	@Override
 	public boolean isConditionTrue() {

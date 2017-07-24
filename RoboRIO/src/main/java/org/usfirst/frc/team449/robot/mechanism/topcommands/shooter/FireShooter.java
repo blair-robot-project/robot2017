@@ -11,8 +11,8 @@ import org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.commands.TurnA
 import org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper;
 
 /**
- * Command group for firing the shooter.
- * Runs flywheel, runs static intake, stops dynamic intake, raises intake, and runs feeder.
+ * Command group for firing the shooter. Runs flywheel, runs static intake, stops dynamic intake, raises intake, and
+ * runs feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class FireShooter extends YamlCommandGroupWrapper {

@@ -42,6 +42,7 @@ public class SimpleArcadeOI extends ArcadeOI {
 	/**
 	 * @return rotational velocity component
 	 */
+	@Override
 	public double getRot() {
 		return rotThrottle.getValue();
 	}
@@ -49,6 +50,7 @@ public class SimpleArcadeOI extends ArcadeOI {
 	/**
 	 * @return forward velocity component
 	 */
+	@Override
 	public double getFwd() {
 		return velThrottle.getValue();
 	}
