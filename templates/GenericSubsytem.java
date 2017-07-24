@@ -3,7 +3,7 @@ package templates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.util.YamlSubsystem;
+import org.usfirst.frc.team449.robot.logger.YamlSubsystem;
 
 /**
  * The subsystem that carries and pushes gears.

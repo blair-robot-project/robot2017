@@ -99,10 +99,10 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/ArcadeOI.html" title="class in org.usfirst.frc.team449.robot.interfaces.oi">org.usfirst.frc.team449.robot.interfaces.oi.OIArcade</a></li>
+<li><a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/ArcadeOI.html" title="class in org.usfirst.frc.team449.robot.interfaces.oi">org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcade</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.oi.OIArcadeWithDPad</li>
+<li>org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad</li>
 </ul>
 </li>
 </ul>
@@ -138,12 +138,12 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/A
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/oi/ArcadeOIWithDPad.html#ArcadeOIWithDPad-org.usfirst.frc.team449.robot.components.Throttle-org.usfirst.frc.team449.robot.components.Throttle-double-boolean-org.usfirst.frc.team449.robot.components.MappedJoystick-org.usfirst.frc.team449.robot.util.Polynomial-">ArcadeOIWithDPad</a></span>(<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedThrottle</a>&nbsp;rotThrottle,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/oi/ArcadeOIWithDPad.html#ArcadeOIWithDPad-org.usfirst.frc.team449.robot.oi.throttles.Throttle-org.usfirst.frc.team449.robot.oi.throttles.Throttle-double-boolean-org.usfirst.frc.team449.robot.JacksonWrappers.MappedJoystick-org.usfirst.frc.team449.robot.other.Polynomial-">ArcadeOIWithDPad</a></span>(<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedThrottle</a>&nbsp;rotThrottle,
                 <a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedThrottle</a>&nbsp;fwdThrottle,
                 double&nbsp;dPadShift,
                 boolean&nbsp;invertDPad,
                 <a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedJoystick.html" title="class in org.usfirst.frc.team449.robot.components">MappedJoystick</a>&nbsp;gamepad,
-                <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a>&nbsp;scaleRotByFwdPoly)</code>
+                <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a>&nbsp;scaleRotByFwdPoly)</code>
 <div class="block">Default constructor</div>
 </td>
 </tr>
@@ -177,7 +177,7 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/A
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.oi.OIArcade">
+<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcade">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.interfaces.oi.<a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/ArcadeOI.html" title="class in org.usfirst.frc.team449.robot.interfaces.oi">ArcadeOI</a></h3>
@@ -204,7 +204,7 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/A
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ArcadeOIWithDPad-org.usfirst.frc.team449.robot.components.Throttle-org.usfirst.frc.team449.robot.components.Throttle-double-boolean-org.usfirst.frc.team449.robot.components.MappedJoystick-org.usfirst.frc.team449.robot.util.Polynomial-">
+<a name="ArcadeOIWithDPad-org.usfirst.frc.team449.robot.oi.throttles.Throttle-org.usfirst.frc.team449.robot.oi.throttles.Throttle-double-boolean-org.usfirst.frc.team449.robot.JacksonWrappers.MappedJoystick-org.usfirst.frc.team449.robot.other.Polynomial-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -219,7 +219,7 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/oi/A
                         @Nullable
                         <a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedJoystick.html" title="class in org.usfirst.frc.team449.robot.components">MappedJoystick</a>&nbsp;gamepad,
                         @Nullable
-                        <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a>&nbsp;scaleRotByFwdPoly)</pre>
+                        <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a>&nbsp;scaleRotByFwdPoly)</pre>
 <div class="block">Default constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

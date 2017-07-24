@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem</div>
 <h2 title="Interface TwoSideMPSubsystem" class="title">Interface TwoSideMPSubsystem</h2>
 </div>
 <div class="contentContainer">
@@ -100,16 +100,16 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></dd>
+<dd><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></dd>
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
-<dd><a href="../../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">ShiftingTalonClusterDrive</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">TalonClusterDrive</a></dd>
+<dd><a href="../../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.unidirectional">ShiftingTalonClusterDrive</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.unidirectional">TalonClusterDrive</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">TwoSideMPSubsystem</span>
-extends <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></pre>
+extends <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></pre>
 <div class="block">An MP subsystem with two sides that therefore needs two profiles at a time.</div>
 </li>
 </ul>
@@ -131,8 +131,8 @@ extends <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interf
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;left,
-                 <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;right)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;left,
+                 <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;right)</code>
 <div class="block">Loads given profiles into the left and right sides of the drive.</div>
 </td>
 </tr>
@@ -141,8 +141,8 @@ extends <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interf
 <li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.SubsystemMP">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.<a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></h3>
-<code><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#disable--">disable</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></code></li>
+<h3>Methods inherited from interface&nbsp;org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.<a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></h3>
+<code><a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#disable--">disable</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a>, <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></code></li>
 </ul>
 </li>
 </ul>
@@ -158,16 +158,16 @@ extends <a href="../../../../../../../../../org/usfirst/frc/team449/robot/interf
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-org.usfirst.frc.team449.robot.util.MotionProfileData-">
+<a name="loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-org.usfirst.frc.team449.robot.other.MotionProfileData-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>loadMotionProfile</h4>
 <pre>void&nbsp;loadMotionProfile(@NotNull
-                       <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;left,
+                       <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;left,
                        @NotNull
-                       <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;right)</pre>
+                       <a href="../../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;right)</pre>
 <div class="block">Loads given profiles into the left and right sides of the drive.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

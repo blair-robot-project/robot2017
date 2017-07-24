@@ -5,19 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
-import org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster;
-import org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional;
-import org.usfirst.frc.team449.robot.mechanism.activegearhandler.ActiveGearHandler;
-import org.usfirst.frc.team449.robot.mechanism.climber.Climber;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.pneumatics.Pneumatics;
-import org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel.ShooterSingleFlywheel;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
+import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
+import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
+import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
+import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
+import org.usfirst.frc.team449.robot.subsystem.complex.shooter.ShooterWithVictorFeeder;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
-import org.usfirst.frc.team449.robot.util.Logger;
-import org.usfirst.frc.team449.robot.util.MotionProfileData;
-import org.usfirst.frc.team449.robot.util.YamlCommand;
-import org.usfirst.frc.team449.robot.vision.CameraNetwork;
+import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.MotionProfileData;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
+import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
 
 import java.util.List;
 import java.util.Map;
@@ -61,13 +61,13 @@ public class RobotMap2017 {
 	 * The climber for boarding the airship. Can be null.
 	 */
 	@Nullable
-	private final Climber climber;
+	private final ClimberCurrentLimited climber;
 
 	/**
-	 * The shooter for shooting fuel. Can be null.
+	 * The multiSubsystem for shooting fuel. Can be null.
 	 */
 	@Nullable
-	private final ShooterSingleFlywheel shooter;
+	private final ShooterWithVictorFeeder shooter;
 
 	/**
 	 * The cameras on this robot. Can be null.
@@ -79,7 +79,7 @@ public class RobotMap2017 {
 	 * The intake for picking up and agitating balls. Can be null.
 	 */
 	@Nullable
-	private final Intake2017 intake;
+	private final IntakeFixedAndActuated intake;
 
 	/**
 	 * The pneumatics on this robot. Can be null.
@@ -91,7 +91,7 @@ public class RobotMap2017 {
 	 * The gear handler on this robot. Can be null.
 	 */
 	@Nullable
-	private final ActiveGearHandler gearHandler;
+	private final SolenoidSimple gearHandler;
 
 	/**
 	 * The I2C port of the RIOduino plugged into this robot. Can be null.
@@ -197,7 +197,7 @@ public class RobotMap2017 {
 	 * @param drive               The drive.
 	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.
 	 * @param climber             The climber for boarding the airship. Can be null.
-	 * @param shooter             The shooter for shooting fuel. Can be null.
+	 * @param shooter             The multiSubsystem for shooting fuel. Can be null.
 	 * @param camera              The cameras on this robot. Can be null.
 	 * @param intake              The intake for picking up and agitating balls. Can be null.
 	 * @param pneumatics          The pneumatics on this robot. Can be null.
@@ -236,12 +236,12 @@ public class RobotMap2017 {
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
 	                    @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
-	                    @Nullable Climber climber,
-	                    @Nullable ShooterSingleFlywheel shooter,
+	                    @Nullable ClimberCurrentLimited climber,
+	                    @Nullable ShooterWithVictorFeeder shooter,
 	                    @Nullable CameraNetwork camera,
-	                    @Nullable Intake2017 intake,
+	                    @Nullable IntakeFixedAndActuated intake,
 	                    @Nullable Pneumatics pneumatics,
-	                    @Nullable ActiveGearHandler gearHandler,
+	                    @Nullable SolenoidSimple gearHandler,
 	                    @Nullable Integer RIOduinoPort,
 	                    @Nullable MappedDigitalInput allianceSwitch,
 	                    @Nullable MappedDigitalInput dropGearSwitch,
@@ -332,15 +332,15 @@ public class RobotMap2017 {
 	 * @return The climber for boarding the airship. Can be null.
 	 */
 	@Nullable
-	public Climber getClimber() {
+	public ClimberCurrentLimited getClimber() {
 		return climber;
 	}
 
 	/**
-	 * @return The shooter for shooting fuel. Can be null.
+	 * @return The multiSubsystem for shooting fuel. Can be null.
 	 */
 	@Nullable
-	public ShooterSingleFlywheel getShooter() {
+	public ShooterWithVictorFeeder getShooter() {
 		return shooter;
 	}
 
@@ -356,7 +356,7 @@ public class RobotMap2017 {
 	 * @return The intake for picking up and agitating balls. Can be null.
 	 */
 	@Nullable
-	public Intake2017 getIntake() {
+	public IntakeFixedAndActuated getIntake() {
 		return intake;
 	}
 
@@ -372,7 +372,7 @@ public class RobotMap2017 {
 	 * @return The gear handler on this robot. Can be null.
 	 */
 	@Nullable
-	public ActiveGearHandler getGearHandler() {
+	public SolenoidSimple getGearHandler() {
 		return gearHandler;
 	}
 

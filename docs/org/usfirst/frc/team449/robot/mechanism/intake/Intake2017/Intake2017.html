@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.intake.Intake2017</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated</div>
 <h2 title="Class Intake2017" class="title">Class Intake2017</h2>
 </div>
 <div class="contentContainer">
@@ -102,7 +102,7 @@ var activeTableTab = "activeTableTab";
 <li>edu.wpi.first.wpilibj.command.Subsystem</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlSubsystem</a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
 <li>Intake2017</li>
@@ -118,13 +118,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">Intake2017</span>
-extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">YamlSubsystem</a>
-implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a></pre>
+extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a>
+implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a></pre>
 <div class="block">A subsystem that picks up balls from the ground.</div>
 </li>
 </ul>
@@ -142,8 +142,8 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 <li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake">
 <!--   -->
 </a>
-<h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a></h3>
-<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem.IntakeMode</a></code></li>
+<h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.subsystem.interfaces.intake.<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a></h3>
+<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem.IntakeMode</a></code></li>
 </ul>
 </li>
 </ul>
@@ -159,7 +159,7 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/intake/Intake2017/Intake2017.html#Intake2017-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-">Intake2017</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/components/MappedVictor.html" title="class in org.usfirst.frc.team449.robot.components">MappedVictor</a>&nbsp;fixedVictor,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/intake/Intake2017/Intake2017.html#Intake2017-org.usfirst.frc.team449.robot.JacksonWrappers.MappedVictor-double-double-org.usfirst.frc.team449.robot.JacksonWrappers.MappedVictor-double-org.usfirst.frc.team449.robot.JacksonWrappers.MappedDoubleSolenoid-">Intake2017</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/components/MappedVictor.html" title="class in org.usfirst.frc.team449.robot.components">MappedVictor</a>&nbsp;fixedVictor,
           double&nbsp;fixedAgitateSpeed,
           double&nbsp;fixedIntakeSpeed,
           <a href="../../../../../../../../org/usfirst/frc/team449/robot/components/MappedVictor.html" title="class in org.usfirst.frc.team449.robot.components">MappedVictor</a>&nbsp;actuatedVictor,
@@ -184,7 +184,7 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem.IntakeMode</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem.IntakeMode</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/intake/Intake2017/Intake2017.html#getMode--">getMode</a></span>()</code>
 <div class="block">Get the mode of the intake</div>
 </td>
@@ -203,7 +203,7 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/intake/Intake2017/Intake2017.html#setMode-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake.IntakeMode-">setMode</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem.IntakeMode</a>&nbsp;mode)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/intake/Intake2017/Intake2017.html#setMode-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake.IntakeMode-">setMode</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem.IntakeMode</a>&nbsp;mode)</code>
 <div class="block">Set the speed of the intake to one of 5 IntakeModes.</div>
 </td>
 </tr>
@@ -242,7 +242,7 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="Intake2017-org.usfirst.frc.team449.robot.components.MappedVictor-double-double-org.usfirst.frc.team449.robot.components.MappedVictor-double-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-">
+<a name="Intake2017-org.usfirst.frc.team449.robot.JacksonWrappers.MappedVictor-double-double-org.usfirst.frc.team449.robot.JacksonWrappers.MappedVictor-double-org.usfirst.frc.team449.robot.JacksonWrappers.MappedDoubleSolenoid-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -288,7 +288,7 @@ implements <a href="../../../../../../../../org/usfirst/frc/team449/robot/interf
 <div class="block">Set the solenoid to a certain position.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#setSolenoid-edu.wpi.first.wpilibj.DoubleSolenoid.Value-">setSolenoid</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#setSolenoid-edu.wpi.first.wpilibj.DoubleSolenoid.Value-">setSolenoid</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - Forward to extend the Solenoid, Reverse to contract it.</dd>
 </dl>
@@ -305,7 +305,7 @@ public&nbsp;edu.wpi.first.wpilibj.DoubleSolenoid.Value&nbsp;getSolenoidPosition(
 <div class="block">Get the position of the solenoid.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#getSolenoidPosition--">getSolenoidPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#getSolenoidPosition--">getSolenoidPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Forward if extended, Reverse if contracted.</dd>
 </dl>
@@ -335,11 +335,11 @@ public&nbsp;edu.wpi.first.wpilibj.DoubleSolenoid.Value&nbsp;getSolenoidPosition(
 <li class="blockList">
 <h4>getMode</h4>
 <pre>@NotNull
-public&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem.IntakeMode</a>&nbsp;getMode()</pre>
+public&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem.IntakeMode</a>&nbsp;getMode()</pre>
 <div class="block">Get the mode of the intake</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html#getMode--">getMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html#getMode--">getMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>off, in slow, in fast, out slow, out fast.</dd>
 </dl>
@@ -352,11 +352,11 @@ public&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/inter
 <li class="blockList">
 <h4>setMode</h4>
 <pre>public&nbsp;void&nbsp;setMode(@NotNull
-                    <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem.IntakeMode</a>&nbsp;mode)</pre>
+                    <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.IntakeMode.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem.IntakeMode</a>&nbsp;mode)</pre>
 <div class="block">Set the speed of the intake to one of 5 IntakeModes.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html#setMode-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake.IntakeMode-">setMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html#setMode-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake.IntakeMode-">setMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>mode</code> - off, in slow, in fast, out slow, out fast.</dd>
 </dl>

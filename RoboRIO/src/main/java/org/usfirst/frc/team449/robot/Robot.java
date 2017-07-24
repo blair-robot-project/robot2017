@@ -13,21 +13,21 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonCluster;
-import org.usfirst.frc.team449.robot.drive.talonCluster.DriveTalonClusterShifting;
-import org.usfirst.frc.team449.robot.interfaces.drive.shifting.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.interfaces.oi.OIUnidirectional;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidForward;
-import org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.mechanism.activegearhandler.ActiveGearHandler;
-import org.usfirst.frc.team449.robot.mechanism.climber.Climber;
-import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017;
-import org.usfirst.frc.team449.robot.mechanism.pneumatics.Pneumatics;
-import org.usfirst.frc.team449.robot.mechanism.pneumatics.commands.StartCompressor;
-import org.usfirst.frc.team449.robot.mechanism.shootersingleflywheel.ShooterSingleFlywheel;
-import org.usfirst.frc.team449.robot.util.Logger;
-import org.usfirst.frc.team449.robot.vision.CameraNetwork;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting;
+import org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToGear;
+import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
+import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
+import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
+import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
+import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor;
+import org.usfirst.frc.team449.robot.subsystem.complex.shooter.ShooterWithVictorFeeder;
+import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;
@@ -61,19 +61,19 @@ public class Robot extends IterativeRobot {
 	 * The shooter subsystem (flywheel and feeder)
 	 */
 	@Nullable
-	private ShooterSingleFlywheel shooterSingleFlywheelSubsystem;
+	private ShooterWithVictorFeeder shooterSingleFlywheelSubsystem;
 
 	/**
 	 * The intake subsystem (intake motors and pistons)
 	 */
 	@Nullable
-	private Intake2017 intakeSubsystem;
+	private IntakeFixedAndActuated intakeSubsystem;
 
 	/**
 	 * The climber
 	 */
 	@Nullable
-	private Climber climber;
+	private ClimberCurrentLimited climber;
 
 	/**
 	 * The compressor and pressure sensor
@@ -101,7 +101,7 @@ public class Robot extends IterativeRobot {
 	 * The active gear subsystem.
 	 */
 	@Nullable
-	private ActiveGearHandler gearSubsystem;
+	private SolenoidSimple gearSubsystem;
 
 	/**
 	 * The object constructed directly from the yaml map.
