@@ -104,6 +104,7 @@ public class RobotMap {
 	 * Default constructor.
 	 *
 	 * @param buttons             The buttons for controlling this robot.
+	 * @param arcadeOI            The OI for controlling this robot's drive.
 	 * @param logger              The logger for recording events and telemetry data.
 	 * @param drive               The drive.
 	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.

@@ -138,7 +138,9 @@ public class RotPerSecCANTalonSRX {
 	 *                                        to.
 	 * @param currentLimit                    The max amps this device can draw. If this is null, no current limit is
 	 *                                        used.
-	 * @param maxClosedLoopVoltage The voltage to scale closed-loop output based on, e.g. closed-loop output of 1 will produce this voltage, output of 0.5 will produce half, etc. This feature compensates for low battery voltage.
+	 * @param maxClosedLoopVoltage            The voltage to scale closed-loop output based on, e.g. closed-loop output
+	 *                                        of 1 will produce this voltage, output of 0.5 will produce half, etc. This
+	 *                                        feature compensates for low battery voltage.
 	 * @param feedbackDevice                  The type of encoder used to measure the output velocity of this motor.
 	 *                                        Can
 	 *                                        be null if there is no encoder attached to this Talon.

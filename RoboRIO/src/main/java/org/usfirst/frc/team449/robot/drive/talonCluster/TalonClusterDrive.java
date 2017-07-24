@@ -64,6 +64,7 @@ public class TalonClusterDrive extends YamlSubsystem implements NavxSubsystem, U
 	 *
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
+	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
 	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
 	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
 	 */

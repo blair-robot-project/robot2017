@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.MappedJoystick;
-import org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle;
 import org.usfirst.frc.team449.robot.components.MappedThrottle;
 
 /**
