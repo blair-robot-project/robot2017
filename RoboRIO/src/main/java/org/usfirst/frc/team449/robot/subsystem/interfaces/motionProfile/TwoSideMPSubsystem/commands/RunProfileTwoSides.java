@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.MotionProfileData;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 
 /**
  * Loads and runs the given profiles into the given subsystem.

@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 /**
  * A command that uses a navX to turn to a certain angle.

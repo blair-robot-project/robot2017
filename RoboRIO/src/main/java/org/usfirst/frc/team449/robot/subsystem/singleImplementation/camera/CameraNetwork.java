@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.cscore.MjpegServer;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedUsbCamera;
-import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.logger.Logger;
 
 import java.util.List;
 

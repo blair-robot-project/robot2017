@@ -6,14 +6,14 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 
 /**

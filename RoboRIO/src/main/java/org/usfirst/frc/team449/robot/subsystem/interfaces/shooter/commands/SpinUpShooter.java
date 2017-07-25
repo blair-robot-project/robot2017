@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
-import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
- * Turn on the multiSubsystem but not the feeder in order to give the multiSubsystem time to get up to speed.
+ * Turn on the shooter but not the feeder in order to give the shooter time to get up to speed.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class SpinUpShooter extends YamlCommandWrapper {
@@ -40,7 +40,7 @@ public class SpinUpShooter extends YamlCommandWrapper {
 	}
 
 	/**
-	 * Turn the feeder off and the multiSubsystem on.
+	 * Turn the feeder off and the shooter on.
 	 */
 	@Override
 	protected void execute() {

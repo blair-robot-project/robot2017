@@ -2,8 +2,8 @@ package org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSide
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.SubsystemMP;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.SubsystemMP;
 
 /**
  * An MP subsystem with two sides that therefore needs two profiles at a time.

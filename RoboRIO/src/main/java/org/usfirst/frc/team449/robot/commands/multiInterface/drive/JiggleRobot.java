@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 /**
  * Rotates the robot back and forth in order to dislodge any stuck balls.

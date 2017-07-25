@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.logger.Loggable;
+import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.SubsystemBinaryMotor;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.conditional.SubsystemConditional;
-import org.usfirst.frc.team449.robot.other.BufferTimer;
-import org.usfirst.frc.team449.robot.logger.Loggable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 
 /**
  * A climber subsystem that uses power monitoring to stop climbing.

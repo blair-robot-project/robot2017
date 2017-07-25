@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
-import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
- * Turn off the multiSubsystem and feeder.
+ * Turn off the shooter and feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class TurnAllOff extends YamlCommandWrapper {
@@ -40,7 +40,7 @@ public class TurnAllOff extends YamlCommandWrapper {
 	}
 
 	/**
-	 * Turn off the multiSubsystem and feeder.
+	 * Turn off the shooter and feeder.
 	 */
 	@Override
 	protected void execute() {

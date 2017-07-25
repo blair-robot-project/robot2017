@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.VictorSP;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.logger.Logger;
-import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
  * A flywheel multiSubsystem with a single flywheel and a single-motor feeder system.
@@ -59,8 +59,8 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the multiSubsystem.
 	 * @param feederVictor    The VictorSP controlling the feeder.
 	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
-	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the multiSubsystem to get up to speed. Defaults to
-	 *                        0.
+	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the multiSubsystem to get up to speed.
+	 *                        Defaults to 0.
 	 */
 	@JsonCreator
 	public ShooterWithVictorFeeder(@NotNull @JsonProperty(required = true) RotPerSecCANTalon shooterTalon,

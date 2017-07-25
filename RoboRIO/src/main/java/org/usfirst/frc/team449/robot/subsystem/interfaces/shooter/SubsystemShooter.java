@@ -4,56 +4,56 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * A subsystem with a multiSubsystem and feeder.
+ * A subsystem with a shooter and feeder.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public interface SubsystemShooter {
 
 	/**
-	 * Turn the multiSubsystem on to a map-specified speed.
+	 * Turn the shooter on to a map-specified speed.
 	 */
 	void turnShooterOn();
 
 	/**
-	 * Turn the multiSubsystem off.
+	 * Turn the shooter off.
 	 */
 	void turnShooterOff();
 
 	/**
-	 * Start feeding balls into the multiSubsystem.
+	 * Start feeding balls into the shooter.
 	 */
 	void turnFeederOn();
 
 	/**
-	 * Stop feeding balls into the multiSubsystem.
+	 * Stop feeding balls into the shooter.
 	 */
 	void turnFeederOff();
 
 	/**
-	 * @return The current state of the multiSubsystem.
+	 * @return The current state of the shooter.
 	 */
 	@NotNull
 	ShooterState getShooterState();
 
 	/**
-	 * @param state The state to switch the multiSubsystem to.
+	 * @param state The state to switch the shooter to.
 	 */
 	void setShooterState(@NotNull ShooterState state);
 
 	/**
-	 * @return Time from giving the multiSubsystem voltage to being ready to fire, in milliseconds.
+	 * @return Time from giving the shooter voltage to being ready to fire, in milliseconds.
 	 */
 	long getSpinUpTimeMillis();
 
 	/**
-	 * An enum for the possible states of the multiSubsystem.
+	 * An enum for the possible states of the shooter.
 	 */
 	enum ShooterState {
-		//Both multiSubsystem and feeder off
+		//Both shooter and feeder off
 		OFF,
-		//Feeder off, multiSubsystem on
+		//Feeder off, shooter on
 		SPINNING_UP,
-		//Both multiSubsystem and feeder on
+		//Both shooter and feeder on
 		SHOOTING
 	}
 }

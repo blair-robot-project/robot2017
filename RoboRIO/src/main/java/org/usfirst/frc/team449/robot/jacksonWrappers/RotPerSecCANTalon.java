@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RotPerSecCANTalon {
+public class RotPerSecCANTalon implements SimpleMotor {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -655,6 +656,36 @@ public class RotPerSecCANTalon {
 	@NotNull
 	public CANTalon getCanTalon() {
 		return canTalon;
+	}
+
+	/**
+	 * Set the velocity for the motor to go at.
+	 *
+	 * @param velocity the desired velocity, on [-1, 1].
+	 */
+	@Override
+	public void setVelocity(double velocity) {
+		if (maxSpeed != null) {
+			setSpeed(velocity);
+		} else {
+			setPercentVbus(velocity);
+		}
+	}
+
+	/**
+	 * Enables the motor, if applicable.
+	 */
+	@Override
+	public void enable() {
+		canTalon.enable();
+	}
+
+	/**
+	 * Disables the motor, if applicable.
+	 */
+	@Override
+	public void disable() {
+		canTalon.disable();
 	}
 
 	/**

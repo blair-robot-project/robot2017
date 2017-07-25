@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
  * Toggle whether or not the subsystem is firing.

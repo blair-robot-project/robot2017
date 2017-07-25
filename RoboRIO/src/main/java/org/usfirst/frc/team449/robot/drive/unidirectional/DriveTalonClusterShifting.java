@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 
 
 /**
