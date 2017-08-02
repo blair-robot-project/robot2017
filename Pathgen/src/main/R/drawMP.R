@@ -74,11 +74,12 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       
       #This is the angle for the vector pointing towards the new position of each
       #wheel.
+      #To understand why this formula is correct, overlay isoclese triangles on the sectors
       vectorTheta <- (pi - theta)/2 - (pi - oldTheta)
       
       #The is the length of the vector pointing towards the new position of each
       #wheel divided by the radius of the turning circle.
-      vectorDistanceWithoutR <- 2*sin(theta/2)
+      vectorDistanceWithoutR <- sin(theta)/sin((pi-theta)/2)
       
       #If inverted, swap which wheel gets which input
       if(inverted){
