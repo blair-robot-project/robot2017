@@ -20,8 +20,8 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   }
   
   for(i in 2:length(left$V4)){
-    #Get the angle between a ray along the X axis at the right wheel and the left wheel. 
-    oldTheta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
+    #Get the angle the robot is facing.
+    perpendicular <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])-pi/2
     
     #Add the change in time
     out[i,1] <- out[i-1,1]+left$V3[i]
@@ -50,8 +50,6 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
     
     # If theta is 0, we're going straight and need to treat it as a special case.
     if (identical(theta, 0)){
-      # get the angle pointing at where the robot is currently facing
-      perpendicular <- oldTheta - pi/2
       
       #If inverted, swap which wheel gets which input
       if(inverted){
@@ -75,7 +73,7 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       #This is the angle for the vector pointing towards the new position of each
       #wheel.
       #To understand why this formula is correct, overlay isoclese triangles on the sectors
-      vectorTheta <- (pi - theta)/2 - (pi - oldTheta)
+      vectorTheta <- (pi - theta)/2 - (pi/2 - perpendicular)
       
       #The is the length of the vector pointing towards the new position of each
       #wheel divided by the radius of the turning circle.
