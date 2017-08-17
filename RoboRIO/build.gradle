@@ -19,6 +19,16 @@ repositories {
 	maven { url "https://plugins.gradle.org/m2/" }
 }
 
+wpi {
+	wpilibVersion = "+"
+	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
+	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
+	opencvVersion = "3.1.0"                   // The OpenCV version to use
+	cscoreVersion = "+"                   // The CSCore version to use
+
+	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
+}
+
 dependencies {
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0.pr3'
@@ -58,16 +68,6 @@ remotes {
 frc {
 	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
-}
-
-wpi {
-	wpilibVersion = "+"
-	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
-	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
-	opencvVersion = "+"                   // The OpenCV version to use
-	cscoreVersion = "+"                   // The CSCore version to use
-
-	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
 def robotManifest = {
