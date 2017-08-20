@@ -100,8 +100,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	protected void setVBusThrottle(double left, double right) {
 		//Set voltage mode throttles
-		leftMaster.setPercentVbus(left);
-		rightMaster.setPercentVbus(-right); //This is negative so PID doesn't have to be. Future people, if your robot goes in circles in voltage mode, this may be why.
+		leftMaster.setPercentVbus(left*PID_SCALE);
+		rightMaster.setPercentVbus(right*PID_SCALE);
 	}
 
 	/**
@@ -130,8 +130,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	public void setOutput(double left, double right) {
 		//Clip to one to avoid anything strange.
-		setPIDThrottle(clipToOne(left), clipToOne(right));
-//		setVBusThrottle(left, right);
+//		setPIDThrottle(clipToOne(left), clipToOne(right));
+		setVBusThrottle(left, right);
 	}
 
 	/**
