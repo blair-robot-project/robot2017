@@ -1,5 +1,5 @@
 ---
-doMP: true
+doMP: false
 testMP: false
 leftTestProfile:
     &leftTest
@@ -103,8 +103,8 @@ drive:
                 inverted: true
                 enableBrakeMode: false
                 fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 1
-                lowGearFwdNominalOutputVoltage: 1.5
+                highGearFwdNominalOutputVoltage: 3.3
+                lowGearFwdNominalOutputVoltage: 2
                 inchesPerRotation: 11.78097
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
@@ -160,7 +160,7 @@ drive:
             module: 15
             forward: 2
             reverse: 3
-        startingGear: LOW
+        startingGear: HIGH
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
