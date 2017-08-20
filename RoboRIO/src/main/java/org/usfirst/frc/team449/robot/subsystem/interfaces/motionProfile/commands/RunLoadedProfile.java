@@ -57,7 +57,7 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 		}
 
 		//Convert to milliseconds.
-		this.timeout = (long) (timeout * 1000);
+		this.timeout = (long) (timeout * 1000.);
 
 		runningProfile = false;
 	}

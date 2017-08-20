@@ -1,5 +1,5 @@
 ---
-doMP: false
+doMP: true
 testMP: false
 leftTestProfile:
     &leftTest
@@ -136,6 +136,7 @@ drive:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
+                reverseSensor: true
                 port: 2
                 slaves:
                     - '@id': talon1
@@ -160,7 +161,7 @@ drive:
             module: 15
             forward: 2
             reverse: 3
-        startingGear: HIGH
+        startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
