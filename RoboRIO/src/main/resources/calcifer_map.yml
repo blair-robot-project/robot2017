@@ -96,52 +96,54 @@ drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
         '@id': drive
         leftMaster:
-            &leftMaster
-            '@id': leftMaster
-            port: 7
-            inverted: true
-            enableBrakeMode: false
-            fwdPeakOutputVoltage: 12
-            highGearFwdNominalOutputVoltage: 1
-            lowGearFwdNominalOutputVoltage: 1.5
-            inchesPerRotation: 11.78097
-            currentLimit: 40
-            feedbackDevice: QuadEncoder
-            encoderCPR: 512
-            reverseSensor: false
-            currentLimit: 35
-            maxClosedLoopVoltage: 12
-            maxSpeedHigh: 17.5
-            highGearP: 0.5
-            highGearI: 0.0
-            highGearD: 3.0
-            maxSpeedLow: 6
-            lowGearP: 0.17
-            lowGearI: 0.0
-            lowGearD: 0.0
-            motionProfileP: 1.5
-            motionProfileI: 0.0
-            motionProfileD: 0.0
-            MPUseLowGear: true
-            slaves:
-                - '@id': talon8
-                  port: 8
-                  inverted: true
-                - '@id': talon6
-                  port: 6
-                  inverted: true
+            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+                &leftMaster
+                '@id': leftMaster
+                port: 7
+                inverted: true
+                enableBrakeMode: false
+                fwdPeakOutputVoltage: 12
+                highGearFwdNominalOutputVoltage: 1
+                lowGearFwdNominalOutputVoltage: 1.5
+                inchesPerRotation: 11.78097
+                currentLimit: 40
+                feedbackDevice: QuadEncoder
+                encoderCPR: 512
+                reverseSensor: false
+                currentLimit: 35
+                maxClosedLoopVoltage: 12
+                maxSpeedHigh: 17.5
+                highGearP: 0.5
+                highGearI: 0.0
+                highGearD: 3.0
+                maxSpeedLow: 6
+                lowGearP: 0.17
+                lowGearI: 0.0
+                lowGearD: 0.0
+                motionProfileP: 1.5
+                motionProfileI: 0.0
+                motionProfileD: 0.0
+                MPUseLowGear: true
+                slaves:
+                    - '@id': talon8
+                      port: 8
+                      inverted: true
+                    - '@id': talon6
+                      port: 6
+                      inverted: true
         rightMaster:
-            <<: *leftMaster
-            '@id': rightMaster
-            inverted: false
-            port: 2
-            slaves:
-                - '@id': talon1
-                  port: 1
-                  inverted: true
-                - '@id': talon3
-                  port: 3
-                  inverted: true
+            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+                <<: *leftMaster
+                '@id': rightMaster
+                inverted: false
+                port: 2
+                slaves:
+                    - '@id': talon1
+                      port: 1
+                      inverted: true
+                    - '@id': talon3
+                      port: 3
+                      inverted: true
         MPHandler:
             '@id': driveMPHandler
             talons:
@@ -192,20 +194,22 @@ defaultDriveCommand:
                 bufferTimeSeconds: 0.0
             upshiftFwdThresh: 0.3
 climber:
-    org.usfirst.frc.team449.robot.subsystem.subsystems.climber.ClimberCurrentLimited:
+    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
         talonSRX:
-            '@id': climberTalon
-            port: 5
-            inverted: false
-            enableBrakeMode: false
-            fwdPeakOutputVoltage: 12
-            highGearFwdNominalOutputVoltage: 0
+            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+                '@id': climberTalon
+                port: 5
+                inverted: false
+                enableBrakeMode: false
+                fwdPeakOutputVoltage: 12
+                highGearFwdNominalOutputVoltage: 0
         maxPower: 500
-        victor:
-            '@id': climberVictor
-            port: 0
-            inverted: false
+        simpleMotor:
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor:
+                '@id': climberVictor
+                port: 0
+                inverted: false
         powerLimitTimer:
             '@id': powerLimitTimer
             bufferTimeSeconds: 0.005
@@ -271,7 +275,7 @@ logger:
             drive
         - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
             pneumatics
-        - org.usfirst.frc.team449.robot.subsystem.subsystems.climber.ClimberCurrentLimited:
+        - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
 #        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
 #            multiSubsystem
@@ -506,7 +510,7 @@ buttons:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunMotorWhileConditonMet:
                 '@id': climbCommand
                 subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.subsystems.climber.ClimberCurrentLimited:
+                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
                         climber
         action: WHEN_PRESSED
     -   button:
@@ -516,7 +520,7 @@ buttons:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
                 '@id': stopClimbCommand
                 subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.subsystems.climber.ClimberCurrentLimited:
+                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
                         climber
         action: WHEN_RELEASED
     -   button:
@@ -529,7 +533,7 @@ buttons:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOn:
                 '@id': manualClimbCommand
                 subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.subsystems.climber.ClimberCurrentLimited:
+                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
                         climber
         action: WHEN_PRESSED
     -   button:

@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
+import org.usfirst.frc.team449.robot.other.SimpleMotor;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.SubsystemBinaryMotor;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.conditional.SubsystemConditional;
 
@@ -28,10 +29,10 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	private final RotPerSecCANTalon canTalonSRX;
 
 	/**
-	 * The Victor controlling the other climber motor.
+	 * The other climber motor.
 	 */
 	@Nullable
-	private final VictorSP victor;
+	private final SimpleMotor simpleMotor;
 
 	/**
 	 * The maximum allowable power before we stop the motor.
@@ -55,19 +56,19 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 *
 	 * @param talonSRX        The CANTalon controlling one of the climber motors.
 	 * @param maxPower        The maximum power at which the motor won't shut off.
-	 * @param victor          The VictorSP controlling the other climber motor. Can be null.
+	 * @param simpleMotor     The other climber motor. Can be null.
 	 * @param powerLimitTimer The buffer timer for the power-limited shutoff.
 	 */
 	@JsonCreator
 	public ClimberCurrentLimited(@NotNull @JsonProperty(required = true) RotPerSecCANTalon talonSRX,
 	                             @JsonProperty(required = true) double maxPower,
-	                             @Nullable MappedVictor victor,
+	                             @Nullable SimpleMotor simpleMotor,
 	                             @NotNull @JsonProperty(required = true) BufferTimer powerLimitTimer) {
 		//Instantiate things
 		this.canTalonSRX = talonSRX;
 		this.maxPower = maxPower;
 		this.powerLimitTimer = powerLimitTimer;
-		this.victor = victor;
+		this.simpleMotor = simpleMotor;
 		this.motorSpinning = false;
 	}
 
@@ -88,8 +89,8 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	private void setPercentVbus(double percentVbus) {
 		canTalonSRX.setPercentVbus(percentVbus);
-		if (victor != null) {
-			victor.set(percentVbus);
+		if (simpleMotor != null) {
+			simpleMotor.setVelocity(percentVbus);
 		}
 	}
 
