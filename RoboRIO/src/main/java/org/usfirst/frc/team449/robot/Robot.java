@@ -132,8 +132,9 @@ public class Robot extends IterativeRobot {
 	private Logger logger;
 
 	/**
-	 * The command to run during autonomous.
+	 * The command to run during autonomous. Null to do nothing during autonomous.
 	 */
+	@Nullable
 	private Command autonomousCommand;
 
 	/**
@@ -290,7 +291,9 @@ public class Robot extends IterativeRobot {
 		doStartupTasks();
 
 		//Start running the autonomous command
-		autonomousCommand.start();
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
+		}
 
 		//Tell the RIOduino we're in autonomous
 		sendModeOverI2C(robotInfo, "auto");
