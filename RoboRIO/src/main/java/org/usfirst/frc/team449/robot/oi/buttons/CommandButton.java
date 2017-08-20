@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.oi.buttons;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.util.YamlCommand;
+import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 
 /**
  * A button mapped to a command.

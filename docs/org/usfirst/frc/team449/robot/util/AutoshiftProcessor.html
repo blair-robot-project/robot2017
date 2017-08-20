@@ -49,7 +49,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" target="_top">Frames</a></li>
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.util</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.logger</div>
 <h2 title="Class AutoshiftProcessor" class="title">Class AutoshiftProcessor</h2>
 </div>
 <div class="contentContainer">
@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.util.AutoshiftProcessor</li>
+<li>org.usfirst.frc.team449.robot.components.AutoshiftComponent</li>
 </ul>
 </li>
 </ul>
@@ -129,10 +129,10 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html#AutoshiftProcessor-double-double-org.usfirst.frc.team449.robot.util.BufferTimer-org.usfirst.frc.team449.robot.util.BufferTimer-double-double-double-">AutoshiftProcessor</a></span>(double&nbsp;upshiftSpeed,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html#AutoshiftProcessor-double-double-org.usfirst.frc.team449.robot.other.BufferTimer-org.usfirst.frc.team449.robot.other.BufferTimer-double-double-double-">AutoshiftProcessor</a></span>(double&nbsp;upshiftSpeed,
                   double&nbsp;downshiftSpeed,
-                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util">BufferTimer</a>&nbsp;upshiftBufferTimer,
-                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util">BufferTimer</a>&nbsp;downshiftBufferTimer,
+                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger">BufferTimer</a>&nbsp;upshiftBufferTimer,
+                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger">BufferTimer</a>&nbsp;downshiftBufferTimer,
                   double&nbsp;upshiftFwdThresh,
                   double&nbsp;cooldownAfterUpshift,
                   double&nbsp;cooldownAfterDownshift)</code>
@@ -160,7 +160,7 @@ extends java.lang.Object</pre>
          double&nbsp;rightThrottle,
          double&nbsp;leftVel,
          double&nbsp;rightVel,
-         java.util.function.Consumer&lt;<a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive.gear</a>&gt;&nbsp;shift)</code>
+         java.util.function.Consumer&lt;<a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.drive.shifting">ShiftingDrive.gear</a>&gt;&nbsp;shift)</code>
 <div class="block">Determine if the subsystem should shift, and if yes, do the shifting.</div>
 </td>
 </tr>
@@ -204,7 +204,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="AutoshiftProcessor-double-double-org.usfirst.frc.team449.robot.util.BufferTimer-org.usfirst.frc.team449.robot.util.BufferTimer-double-double-double-">
+<a name="AutoshiftProcessor-double-double-org.usfirst.frc.team449.robot.other.BufferTimer-org.usfirst.frc.team449.robot.other.BufferTimer-double-double-double-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -213,9 +213,9 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;AutoshiftProcessor(double&nbsp;upshiftSpeed,
                           double&nbsp;downshiftSpeed,
                           @NotNull
-                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util">BufferTimer</a>&nbsp;upshiftBufferTimer,
+                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger">BufferTimer</a>&nbsp;upshiftBufferTimer,
                           @NotNull
-                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util">BufferTimer</a>&nbsp;downshiftBufferTimer,
+                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger">BufferTimer</a>&nbsp;downshiftBufferTimer,
                           double&nbsp;upshiftFwdThresh,
                           double&nbsp;cooldownAfterUpshift,
                           double&nbsp;cooldownAfterDownshift)</pre>
@@ -297,7 +297,7 @@ extends java.lang.Object</pre>
                       double&nbsp;rightThrottle,
                       double&nbsp;leftVel,
                       double&nbsp;rightVel,
-                      java.util.function.Consumer&lt;<a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.interfaces.drive.shifting">ShiftingDrive.gear</a>&gt;&nbsp;shift)</pre>
+                      java.util.function.Consumer&lt;<a href="../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/shifting/ShiftingDrive.gear.html" title="enum in org.usfirst.frc.team449.robot.drive.shifting">ShiftingDrive.gear</a>&gt;&nbsp;shift)</pre>
 <div class="block">Determine if the subsystem should shift, and if yes, do the shifting.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -337,7 +337,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.util"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../org/usfirst/frc/team449/robot/util/BufferTimer.html" title="class in org.usfirst.frc.team449.robot.logger"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../index.html?org/usfirst/frc/team449/robot/util/AutoshiftProcessor.html" target="_top">Frames</a></li>

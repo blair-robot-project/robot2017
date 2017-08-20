@@ -42,8 +42,8 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/FireShooter.html" title="class in org.usfirst.frc.team449.robot.mechanism.topcommands.shooter"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/RackShooter.html" title="class in org.usfirst.frc.team449.robot.mechanism.topcommands.shooter"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/FireShooter.html" title="class in org.usfirst.frc.team449.robot.commands.multiSubsystem"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/RackShooter.html" title="class in org.usfirst.frc.team449.robot.commands.multiSubsystem"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" target="_top">Frames</a></li>
@@ -70,7 +70,7 @@
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper">Method</a></li>
+<li><a href="#methods.inherited.from.class.org.usfirst.frc.team449.robot.jacksonwrappers.YamlCommandGroupWrapper">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
@@ -85,8 +85,8 @@
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.topcommands.shooter</div>
-<h2 title="Class LoadShooter" class="title">Class LoadShooter&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a>&gt;</h2>
+<div class="subTitle">org.usfirst.frc.team449.robot.commands.multiSubsystem</div>
+<h2 title="Class LoadShooter" class="title">Class LoadShooter&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a>&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -99,10 +99,10 @@
 <li>edu.wpi.first.wpilibj.command.CommandGroup</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper</a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.logger">org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter&lt;T&gt;</li>
+<li>org.usfirst.frc.team449.robot.commands.multiSubsystem.LoadShooter&lt;T&gt;</li>
 </ul>
 </li>
 </ul>
@@ -117,12 +117,12 @@
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommand.html" title="interface in org.usfirst.frc.team449.robot.util">YamlCommand</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommand.html" title="interface in org.usfirst.frc.team449.robot.logger">YamlCommand</a></dd>
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">LoadShooter&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Intake">IntakeSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a>&gt;</span>
-extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.util">YamlCommandGroupWrapper</a></pre>
+<pre>public class <span class="typeNameLabel">LoadShooter&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Intake/IntakeSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.intake">IntakeSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a>&gt;</span>
+extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.logger">YamlCommandGroupWrapper</a></pre>
 <div class="block">Command group for intaking balls from the ground.
  Stops flywheel, runs static intake, runs dynamic intake, lowers intake, and stops feeder.</div>
 </li>
@@ -143,8 +143,8 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html#LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem-T-">LoadShooter</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem</a>&nbsp;shooterSubsystem,
-           <a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" title="type parameter in LoadShooter">T</a>&nbsp;intakeSubsystem)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html#LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter-T-">LoadShooter</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a>&nbsp;subsystemShooter,
+           <a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" title="type parameter in LoadShooter">T</a>&nbsp;subsystemIntake)</code>
 <div class="block">Constructs a LoadShooter command group</div>
 </td>
 </tr>
@@ -158,10 +158,10 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 </a>
 <h3>Method Summary</h3>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper">
+<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.jacksonwrappers.YamlCommandGroupWrapper">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.util.<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.util">YamlCommandGroupWrapper</a></h3>
+<h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.logger.<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.logger">YamlCommandGroupWrapper</a></h3>
 <code><a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html#getCommand--">getCommand</a></code></li>
 </ul>
 <ul class="blockList">
@@ -199,23 +199,23 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.IntakeSubsystem-">
+<a name="LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Intake.SubsystemIntake-">
 <!--   -->
-</a><a name="LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.ShooterSubsystem-T-">
+</a><a name="LoadShooter-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter-T-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>LoadShooter</h4>
 <pre>public&nbsp;LoadShooter(@Nullable
-                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter">ShooterSubsystem</a>&nbsp;shooterSubsystem,
+                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a>&nbsp;subsystemShooter,
                    @Nullable
-                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" title="type parameter in LoadShooter">T</a>&nbsp;intakeSubsystem)</pre>
+                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" title="type parameter in LoadShooter">T</a>&nbsp;subsystemIntake)</pre>
 <div class="block">Constructs a LoadShooter command group</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>shooterSubsystem</code> - shooter subsystem. Can be null.</dd>
-<dd><code>intakeSubsystem</code> - intake subsystem. Can be null.</dd>
+<dd><code>subsystemShooter</code> - shooter subsystem. Can be null.</dd>
+<dd><code>subsystemIntake</code> - intake subsystem. Can be null.</dd>
 </dl>
 </li>
 </ul>
@@ -246,8 +246,8 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/FireShooter.html" title="class in org.usfirst.frc.team449.robot.mechanism.topcommands.shooter"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/RackShooter.html" title="class in org.usfirst.frc.team449.robot.mechanism.topcommands.shooter"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/FireShooter.html" title="class in org.usfirst.frc.team449.robot.commands.multiSubsystem"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/RackShooter.html" title="class in org.usfirst.frc.team449.robot.commands.multiSubsystem"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/mechanism/topcommands/shooter/LoadShooter.html" target="_top">Frames</a></li>
@@ -274,7 +274,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.org.usfirst.frc.team449.robot.util.YamlCommandGroupWrapper">Method</a></li>
+<li><a href="#methods.inherited.from.class.org.usfirst.frc.team449.robot.jacksonwrappers.YamlCommandGroupWrapper">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>

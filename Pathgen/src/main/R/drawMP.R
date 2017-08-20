@@ -20,8 +20,8 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   }
   
   for(i in 2:length(left$V4)){
-    #Get the angle between a ray along the X axis at the right wheel and the left wheel. 
-    oldTheta <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])
+    #Get the angle the robot is facing.
+    perpendicular <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])-pi/2
     
     #Add the change in time
     out[i,1] <- out[i-1,1]+left$V3[i]
@@ -50,20 +50,18 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
     
     # If theta is 0, we're going straight and need to treat it as a special case.
     if (identical(theta, 0)){
-      # get the angle pointing at where the robot is currently facing
-      perpendicular <- oldTheta - pi/2
       
       #If inverted, swap which wheel gets which input
       if(inverted){
-        out[i, 2] <- out[i-1,2]+deltaRight*round(cos(perpendicular), digits = 3)
-        out[i, 3] <- out[i-1,3]+deltaRight*round(sin(perpendicular), digits = 3)
-        out[i, 4] <- out[i-1,4]+deltaLeft*round(cos(perpendicular), digits = 3)
-        out[i, 5] <- out[i-1,5]+deltaLeft*round(sin(perpendicular), digits = 3)
+        out[i, 2] <- out[i-1,2]+deltaRight*cos(perpendicular)
+        out[i, 3] <- out[i-1,3]+deltaRight*sin(perpendicular)
+        out[i, 4] <- out[i-1,4]+deltaLeft*cos(perpendicular)
+        out[i, 5] <- out[i-1,5]+deltaLeft*sin(perpendicular)
       } else {
-        out[i, 2] <- out[i-1,2]+deltaLeft*round(cos(perpendicular), digits = 3)
-        out[i, 3] <- out[i-1,3]+deltaLeft*round(sin(perpendicular), digits = 3)
-        out[i, 4] <- out[i-1,4]+deltaRight*round(cos(perpendicular), digits = 3)
-        out[i, 5] <- out[i-1,5]+deltaRight*round(sin(perpendicular), digits = 3)
+        out[i, 2] <- out[i-1,2]+deltaLeft*cos(perpendicular)
+        out[i, 3] <- out[i-1,3]+deltaLeft*sin(perpendicular)
+        out[i, 4] <- out[i-1,4]+deltaRight*cos(perpendicular)
+        out[i, 5] <- out[i-1,5]+deltaRight*sin(perpendicular)
       }
     } else {
       
@@ -74,23 +72,24 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       
       #This is the angle for the vector pointing towards the new position of each
       #wheel.
-      vectorTheta <- (pi - theta)/2 - (pi - oldTheta)
+      #To understand why this formula is correct, overlay isoclese triangles on the sectors
+      vectorTheta <- (pi - theta)/2 - (pi/2 - perpendicular)
       
       #The is the length of the vector pointing towards the new position of each
       #wheel divided by the radius of the turning circle.
-      vectorDistanceWithoutR <- 2*sin(theta/2)
+      vectorDistanceWithoutR <- sin(theta)/sin((pi-theta)/2)
       
       #If inverted, swap which wheel gets which input
       if(inverted){
-        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
-        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
-        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*leftR*round(cos(vectorTheta), digits = 3)
-        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*leftR*round(sin(vectorTheta), digits = 3)
+        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
+        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
+        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
+        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
       } else {
-        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*leftR*round(cos(vectorTheta), digits = 3)
-        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*leftR*round(sin(vectorTheta), digits = 3)
-        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*rightR*round(cos(vectorTheta), digits = 3)
-        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*round(sin(vectorTheta), digits = 3)
+        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
+        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
+        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
+        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
       }
     }
   }

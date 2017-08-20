@@ -3,7 +3,7 @@ plugins {
 	id "java"
 	id "eclipse"
 	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
+	id "jaci.openrio.gradle.GradleRIO" version "2017.2.3"
 }
 
 group 'org.usfirst.frc.team449.robot2017'
@@ -17,6 +17,16 @@ repositories {
 	}
 
 	maven { url "https://plugins.gradle.org/m2/" }
+}
+
+wpi {
+	wpilibVersion = "+"
+	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
+	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
+	opencvVersion = "+"                   // The OpenCV version to use
+	cscoreVersion = "+"                   // The CSCore version to use
+
+	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
 dependencies {
@@ -58,16 +68,6 @@ remotes {
 frc {
 	team = '449'
 	robotClass = "org.usfirst.frc.team449.robot.Robot"
-}
-
-wpi {
-	wpilibVersion = "+"
-	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
-	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
-	opencvVersion = "+"                   // The OpenCV version to use
-	cscoreVersion = "+"                   // The CSCore version to use
-
-	talonSrxVersion = "+"                 // The CTRE Toolsuite (Talon SRX) version to use.
 }
 
 def robotManifest = {

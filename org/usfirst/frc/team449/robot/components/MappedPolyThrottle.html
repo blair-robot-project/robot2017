@@ -99,13 +99,13 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">org.usfirst.frc.team449.robot.components.MappedThrottle</a></li>
+<li><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">org.usfirst.frc.team449.robot.oi.throttles.Throttle</a></li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedSmoothedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle</a></li>
+<li><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedSmoothedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.components.MappedPolyThrottle</li>
+<li>org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial</li>
 </ul>
 </li>
 </ul>
@@ -144,21 +144,21 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/components/Mapp
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>protected <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a></code></td>
+<td class="colFirst"><code>protected <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedPolyThrottle.html#polynomial">polynomial</a></span></code>
 <div class="block">The polynomially that scales the throttle.</div>
 </td>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.components.MappedSmoothedThrottle">
+<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.usfirst.frc.team449.robot.components.<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedSmoothedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedSmoothedThrottle</a></h3>
 <code><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedSmoothedThrottle.html#deadband">deadband</a></code></li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.components.MappedThrottle">
+<li class="blockList"><a name="fields.inherited.from.class.org.usfirst.frc.team449.robot.oi.throttles.Throttle">
 <!--   -->
 </a>
 <h3>Fields inherited from class&nbsp;org.usfirst.frc.team449.robot.components.<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedThrottle</a></h3>
@@ -178,12 +178,12 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/components/Mapp
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedPolyThrottle.html#MappedPolyThrottle-org.usfirst.frc.team449.robot.components.MappedJoystick-int-double-double-boolean-org.usfirst.frc.team449.robot.util.Polynomial-">MappedPolyThrottle</a></span>(<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedJoystick.html" title="class in org.usfirst.frc.team449.robot.components">MappedJoystick</a>&nbsp;stick,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedPolyThrottle.html#MappedPolyThrottle-org.usfirst.frc.team449.robot.JacksonWrappers.MappedJoystick-int-double-double-boolean-org.usfirst.frc.team449.robot.other.Polynomial-">MappedPolyThrottle</a></span>(<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedJoystick.html" title="class in org.usfirst.frc.team449.robot.components">MappedJoystick</a>&nbsp;stick,
                   int&nbsp;axis,
                   double&nbsp;smoothingTimeConstantSecs,
                   double&nbsp;deadband,
                   boolean&nbsp;inverted,
-                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a>&nbsp;polynomial)</code>
+                  <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a>&nbsp;polynomial)</code>
 <div class="block">A basic constructor.</div>
 </td>
 </tr>
@@ -210,7 +210,7 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/components/Mapp
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.components.MappedThrottle">
+<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.oi.throttles.Throttle">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.components.<a href="../../../../../../org/usfirst/frc/team449/robot/components/MappedThrottle.html" title="class in org.usfirst.frc.team449.robot.components">MappedThrottle</a></h3>
@@ -244,7 +244,7 @@ extends <a href="../../../../../../org/usfirst/frc/team449/robot/components/Mapp
 <li class="blockList">
 <h4>polynomial</h4>
 <pre>@NotNull
-protected final&nbsp;<a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a> polynomial</pre>
+protected final&nbsp;<a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a> polynomial</pre>
 <div class="block">The polynomially that scales the throttle.</div>
 </li>
 </ul>
@@ -256,7 +256,7 @@ protected final&nbsp;<a href="../../../../../../org/usfirst/frc/team449/robot/ut
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="MappedPolyThrottle-org.usfirst.frc.team449.robot.components.MappedJoystick-int-double-double-boolean-org.usfirst.frc.team449.robot.util.Polynomial-">
+<a name="MappedPolyThrottle-org.usfirst.frc.team449.robot.JacksonWrappers.MappedJoystick-int-double-double-boolean-org.usfirst.frc.team449.robot.other.Polynomial-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -269,7 +269,7 @@ protected final&nbsp;<a href="../../../../../../org/usfirst/frc/team449/robot/ut
                           double&nbsp;deadband,
                           boolean&nbsp;inverted,
                           @NotNull
-                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.util">Polynomial</a>&nbsp;polynomial)</pre>
+                          <a href="../../../../../../org/usfirst/frc/team449/robot/util/Polynomial.html" title="class in org.usfirst.frc.team449.robot.logger">Polynomial</a>&nbsp;polynomial)</pre>
 <div class="block">A basic constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

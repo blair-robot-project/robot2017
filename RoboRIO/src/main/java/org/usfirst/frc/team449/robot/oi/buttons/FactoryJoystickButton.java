@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.components.MappedJoystick;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /**
  * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a FactoryButton.

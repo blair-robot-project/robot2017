@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.MappedJoystick;
-import org.usfirst.frc.team449.robot.components.MappedThrottle;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
+import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
 
 /**
  * A factory for constructing a button..
@@ -40,7 +40,7 @@ public abstract class FactoryButton extends Button {
 	                                            @Nullable Double triggerAt,
 	                                            @Nullable Integer angle) {
 		if (triggerAxis != null) {
-			return new TriggerButton(new MappedThrottle(joystick, triggerAxis, false), triggerAt);
+			return new TriggerButton(new Throttle(joystick, triggerAxis, false), triggerAt);
 		} else if (angle != null) {
 			return new dPadButton(joystick, angle);
 		} else {

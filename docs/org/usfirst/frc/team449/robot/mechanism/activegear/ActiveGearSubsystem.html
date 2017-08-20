@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.activegear</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.mechanism.activegearhandler</div>
 <h2 title="Class ActiveGearSubsystem" class="title">Class ActiveGearSubsystem</h2>
 </div>
 <div class="contentContainer">
@@ -102,10 +102,10 @@ var activeTableTab = "activeTableTab";
 <li>edu.wpi.first.wpilibj.command.Subsystem</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlSubsystem</a></li>
+<li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem</li>
+<li>org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple</li>
 </ul>
 </li>
 </ul>
@@ -118,13 +118,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">ActiveGearSubsystem</span>
-extends <a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">YamlSubsystem</a>
-implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></pre>
+extends <a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a>
+implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></pre>
 <div class="block">The subsystem that carries and pushes gears.</div>
 </li>
 </ul>
@@ -144,7 +144,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/activegear/ActiveGearSubsystem.html#ActiveGearSubsystem-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-">ActiveGearSubsystem</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedDoubleSolenoid.html" title="class in org.usfirst.frc.team449.robot.components">MappedDoubleSolenoid</a>&nbsp;piston)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/activegear/ActiveGearSubsystem.html#ActiveGearSubsystem-org.usfirst.frc.team449.robot.JacksonWrappers.MappedDoubleSolenoid-">ActiveGearSubsystem</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedDoubleSolenoid.html" title="class in org.usfirst.frc.team449.robot.components">MappedDoubleSolenoid</a>&nbsp;piston)</code>
 <div class="block">Default constructor</div>
 </td>
 </tr>
@@ -210,7 +210,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ActiveGearSubsystem-org.usfirst.frc.team449.robot.components.MappedDoubleSolenoid-">
+<a name="ActiveGearSubsystem-org.usfirst.frc.team449.robot.JacksonWrappers.MappedDoubleSolenoid-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -244,7 +244,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <div class="block">Set the solenoid to a certain position.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#setSolenoid-edu.wpi.first.wpilibj.DoubleSolenoid.Value-">setSolenoid</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#setSolenoid-edu.wpi.first.wpilibj.DoubleSolenoid.Value-">setSolenoid</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - Forward to extend the Solenoid, Reverse to contract it.</dd>
 </dl>
@@ -261,7 +261,7 @@ public&nbsp;edu.wpi.first.wpilibj.DoubleSolenoid.Value&nbsp;getSolenoidPosition(
 <div class="block">Get the position of the solenoid.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#getSolenoidPosition--">getSolenoidPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.solenoid">SolenoidSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html#getSolenoidPosition--">getSolenoidPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/solenoid/SolenoidSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid">SolenoidSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Forward if extended, Reverse if contracted.</dd>
 </dl>

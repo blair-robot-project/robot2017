@@ -12,7 +12,7 @@ import java.io.IOException;
  * A broad template for all robot classes
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Generic_robot extends IterativeRobot{
+public class Generic_robot extends IterativeRobot {
 
 	/**
 	 * Generic subsystem

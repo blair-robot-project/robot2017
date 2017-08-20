@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.unidirectional"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.drive.talonCluster</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.drive.unidirectional</div>
 <h2 title="Class TalonClusterDrive" class="title">Class TalonClusterDrive</h2>
 </div>
 <div class="contentContainer">
@@ -102,10 +102,10 @@ var activeTableTab = "activeTableTab";
 <li>edu.wpi.first.wpilibj.command.Subsystem</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">org.usfirst.frc.team449.robot.util.YamlSubsystem</a></li>
+<li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive</li>
+<li>org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster</li>
 </ul>
 </li>
 </ul>
@@ -118,17 +118,17 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/DriveSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive">DriveSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.util">Loggable</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/DriveSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive">DriveSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster">ShiftingTalonClusterDrive</a></dd>
+<dd><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.unidirectional">ShiftingTalonClusterDrive</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">TalonClusterDrive</span>
-extends <a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.util">YamlSubsystem</a>
-implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.util">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></pre>
+extends <a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a>
+implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></pre>
 <div class="block">A drive with a cluster of any number of CANTalonSRX controlled motors on each side.</div>
 </li>
 </ul>
@@ -181,10 +181,10 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#TalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPHandler-java.lang.Double-">TalonClusterDrive</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;leftMaster,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#TalonClusterDrive-org.usfirst.frc.team449.robot.JacksonWrappers.RotPerSecCANTalon-org.usfirst.frc.team449.robot.JacksonWrappers.RotPerSecCANTalon-org.usfirst.frc.team449.robot.JacksonWrappers.MappedAHRS-org.usfirst.frc.team449.robot.components.CANTalonMPComponent-java.lang.Double-">TalonClusterDrive</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;leftMaster,
                  <a href="../../../../../../../org/usfirst/frc/team449/robot/components/RotPerSecCANTalonSRX.html" title="class in org.usfirst.frc.team449.robot.components">RotPerSecCANTalonSRX</a>&nbsp;rightMaster,
                  <a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.components">MappedAHRS</a>&nbsp;navX,
-                 <a href="../../../../../../../org/usfirst/frc/team449/robot/util/CANTalonMPHandler.html" title="class in org.usfirst.frc.team449.robot.util">CANTalonMPHandler</a>&nbsp;MPHandler,
+                 <a href="../../../../../../../org/usfirst/frc/team449/robot/util/CANTalonMPHandler.html" title="class in org.usfirst.frc.team449.robot.logger">CANTalonMPHandler</a>&nbsp;MPHandler,
                  java.lang.Double&nbsp;PIDScale)</code>
 <div class="block">Default constructor.</div>
 </td>
@@ -284,14 +284,14 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/interface
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;profile)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;profile)</code>
 <div class="block">Loads a profile into the MP buffer.</div>
 </td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;left,
-                 <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;right)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/TalonClusterDrive.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;left,
+                 <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;right)</code>
 <div class="block">Loads given profiles into the left and right sides of the drive.</div>
 </td>
 </tr>
@@ -422,7 +422,7 @@ protected final&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="TalonClusterDrive-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX-org.usfirst.frc.team449.robot.components.MappedAHRS-org.usfirst.frc.team449.robot.util.CANTalonMPHandler-java.lang.Double-">
+<a name="TalonClusterDrive-org.usfirst.frc.team449.robot.JacksonWrappers.RotPerSecCANTalon-org.usfirst.frc.team449.robot.JacksonWrappers.RotPerSecCANTalon-org.usfirst.frc.team449.robot.JacksonWrappers.MappedAHRS-org.usfirst.frc.team449.robot.components.CANTalonMPComponent-java.lang.Double-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -435,7 +435,7 @@ protected final&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot
                          @NotNull
                          <a href="../../../../../../../org/usfirst/frc/team449/robot/components/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.components">MappedAHRS</a>&nbsp;navX,
                          @NotNull
-                         <a href="../../../../../../../org/usfirst/frc/team449/robot/util/CANTalonMPHandler.html" title="class in org.usfirst.frc.team449.robot.util">CANTalonMPHandler</a>&nbsp;MPHandler,
+                         <a href="../../../../../../../org/usfirst/frc/team449/robot/util/CANTalonMPHandler.html" title="class in org.usfirst.frc.team449.robot.logger">CANTalonMPHandler</a>&nbsp;MPHandler,
                          @Nullable
                          java.lang.Double&nbsp;PIDScale)</pre>
 <div class="block">Default constructor.</div>
@@ -607,7 +607,7 @@ public&nbsp;java.lang.Double&nbsp;getRightVel()</pre>
 <div class="block">Get the robot's heading using the navX</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getGyroOutput--">getGyroOutput</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getGyroOutput--">getGyroOutput</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>robot heading (degrees) [-180, 180]</dd>
 </dl>
@@ -623,7 +623,7 @@ public&nbsp;java.lang.Double&nbsp;getRightVel()</pre>
 <div class="block">Get whether this subsystem's NavX is currently being overriden.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getOverrideNavX--">getOverrideNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getOverrideNavX--">getOverrideNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the NavX is overriden, false otherwise.</dd>
 </dl>
@@ -639,7 +639,7 @@ public&nbsp;java.lang.Double&nbsp;getRightVel()</pre>
 <div class="block">Set whether or not to override this subsystem's NavX.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#setOverrideNavX-boolean-">setOverrideNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#setOverrideNavX-boolean-">setOverrideNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>override</code> - true to override, false otherwise.</dd>
 </dl>
@@ -656,7 +656,7 @@ public&nbsp;com.kauailabs.navx.frc.AHRS&nbsp;getNavX()</pre>
 <div class="block">Get the NavX this subsystem uses.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getNavX--">getNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.NavX">NavxSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getNavX--">getNavX</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An AHRS object representing this subsystem's NavX.</dd>
 </dl>
@@ -674,7 +674,7 @@ public&nbsp;java.lang.String[]&nbsp;getHeader()</pre>
 <div class="block">Get the headers for the data this subsystem logs every loop.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getHeader--">getHeader</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.util">Loggable</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getHeader--">getHeader</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An N-length array of String labels for data, where N is the length of the Object[] returned by getData().</dd>
 </dl>
@@ -691,7 +691,7 @@ public&nbsp;java.lang.Object[]&nbsp;getData()</pre>
 <div class="block">Get the data this subsystem logs every loop.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getData--">getData</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.util">Loggable</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getData--">getData</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>An N-length array of Objects, where N is the number of labels given by getHeader.</dd>
 </dl>
@@ -711,7 +711,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>getName</code>&nbsp;in interface&nbsp;<code>edu.wpi.first.wpilibj.NamedSendable</code></dd>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getName--">getName</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.util">Loggable</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getName--">getName</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code>getName</code>&nbsp;in class&nbsp;<code>edu.wpi.first.wpilibj.command.Subsystem</code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -719,18 +719,18 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 </dl>
 </li>
 </ul>
-<a name="loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-">
+<a name="loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>loadMotionProfile</h4>
 <pre>public&nbsp;void&nbsp;loadMotionProfile(@NotNull
-                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;profile)</pre>
+                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;profile)</pre>
 <div class="block">Loads a profile into the MP buffer.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>profile</code> - The profile to be loaded.</dd>
 </dl>
@@ -746,7 +746,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Start running the profile that's currently loaded into the MP buffer.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -760,7 +760,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Get whether this subsystem has finished running the profile loaded in it.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if there's no profile loaded and no profile running, false otherwise.</dd>
 </dl>
@@ -776,7 +776,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Disable the motors.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#disable--">disable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#disable--">disable</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -790,7 +790,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Hold the current position.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -804,7 +804,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Get whether the subsystem is ready to run the loaded profile.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if a profile is loaded and ready to run, false otherwise.</dd>
 </dl>
@@ -820,24 +820,24 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Stops any MP-related threads currently running. Normally called at the start of teleop.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile">MPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">MPSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
-<a name="loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-org.usfirst.frc.team449.robot.util.MotionProfileData-">
+<a name="loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-org.usfirst.frc.team449.robot.other.MotionProfileData-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>loadMotionProfile</h4>
 <pre>public&nbsp;void&nbsp;loadMotionProfile(@NotNull
-                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;left,
+                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;left,
                               @NotNull
-                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.util">MotionProfileData</a>&nbsp;right)</pre>
+                              <a href="../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;right)</pre>
 <div class="block">Loads given profiles into the left and right sides of the drive.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.util.MotionProfileData-org.usfirst.frc.team449.robot.util.MotionProfileData-">loadMotionProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.interfaces.subsystem.MotionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>left</code> - The profile to load into the left side.</dd>
 <dd><code>right</code> - The profile to load into the right side.</dd>
@@ -871,7 +871,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.talonCluster"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/ShiftingTalonClusterDrive.html" title="class in org.usfirst.frc.team449.robot.drive.unidirectional"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">

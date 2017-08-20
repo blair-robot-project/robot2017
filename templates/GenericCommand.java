@@ -1,18 +1,18 @@
 package templates;
 
-import org.usfirst.frc.team449.robot.util.Logger;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.util.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.logger.YamlCommandWrapper;
 
 /**
  * A broad template for all commands.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class GenericCommand extends YamlCommandWrapper{
+public class GenericCommand extends YamlCommandWrapper {
 
 	/**
 	 * The subsystem to execute this command on.
@@ -22,7 +22,7 @@ public class GenericCommand extends YamlCommandWrapper{
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
@@ -46,7 +46,6 @@ public class GenericCommand extends YamlCommandWrapper{
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	@Override
