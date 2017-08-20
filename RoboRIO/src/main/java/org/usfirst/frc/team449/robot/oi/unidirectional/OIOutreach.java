@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.oi.buttons.FactoryButton;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class OIOutreach implements OIUnidirectional{
@@ -21,11 +22,19 @@ public class OIOutreach implements OIUnidirectional{
 	@NotNull
 	private final OIUnidirectional overridenOI;
 
+	/**
+	 * A button that overrides the lower priority controller
+	 */
+	@NotNull
+	private final FactoryButton button;
+
 	@JsonCreator
 	public OIOutreach(@NotNull @JsonProperty(required = true) OIUnidirectional overridingOI,
-	                  @NotNull @JsonProperty(required = true) OIUnidirectional overridenOI) {
+	                  @NotNull @JsonProperty(required = true) OIUnidirectional overridenOI,
+	                  @NotNull @JsonProperty(required = true) FactoryButton button) {
 		this.overridingOI = overridingOI;
 		this.overridenOI = overridenOI;
+		this.button = button;
 	}
 
 	/**
@@ -35,7 +44,7 @@ public class OIOutreach implements OIUnidirectional{
 	 */
 	@Override
 	public double getLeftOutput() {
-		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0){
+		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()){
 			return overridingOI.getLeftOutput();
 		} else {
 			return overridenOI.getLeftOutput();
@@ -49,7 +58,7 @@ public class OIOutreach implements OIUnidirectional{
 	 */
 	@Override
 	public double getRightOutput() {
-		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0){
+		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()){
 			return overridingOI.getRightOutput();
 		} else {
 			return overridenOI.getRightOutput();
@@ -63,6 +72,6 @@ public class OIOutreach implements OIUnidirectional{
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return false;
+		return getLeftOutput() == getRightOutput();
 	}
 }

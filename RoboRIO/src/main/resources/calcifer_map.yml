@@ -118,6 +118,11 @@ oi:
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
+        button:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+                '@id': overrideButton
+                joystick: overridingGamepad
+                buttonNumber: 6
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
         '@id': drive
@@ -178,7 +183,7 @@ drive:
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
         #This is the number you change to adjust the speed
-        PIDScale: 0.3
+        PIDScale: 0.5
         navX:
             '@id': driveNavX
             port: kMXP
