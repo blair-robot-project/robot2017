@@ -13,12 +13,12 @@ import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 /**
- * A meccanum drive. Meccanum drives have an independently-driven meccanum wheel at each corner, allowing
+ * A mecanum drive. Mecanum drives have an independently-driven mecanum wheel at each corner, allowing
  * omnidirectional movement.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonMeccanum extends YamlSubsystem implements SubsystemNavX, DriveMeccanum, Loggable {
+public class DriveTalonMecanum extends YamlSubsystem implements SubsystemNavX, DriveMecanum, Loggable {
 
     protected final double PID_SCALE;
 
@@ -49,12 +49,12 @@ public class DriveTalonMeccanum extends YamlSubsystem implements SubsystemNavX, 
      * @param PIDScale PID scaling constant for joystick values
      */
     @JsonCreator
-    public DriveTalonMeccanum(@NotNull @JsonProperty(required = true) RotPerSecCANTalon frontLeft,
-                              @NotNull @JsonProperty(required = true) RotPerSecCANTalon frontRight,
-                              @NotNull @JsonProperty(required = true) RotPerSecCANTalon backLeft,
-                              @NotNull @JsonProperty(required = true) RotPerSecCANTalon backRight,
-                              @NotNull @JsonProperty(required = true) MappedAHRS navX,
-                              @Nullable Double PIDScale){
+    public DriveTalonMecanum(@NotNull @JsonProperty(required = true) RotPerSecCANTalon frontLeft,
+                             @NotNull @JsonProperty(required = true) RotPerSecCANTalon frontRight,
+                             @NotNull @JsonProperty(required = true) RotPerSecCANTalon backLeft,
+                             @NotNull @JsonProperty(required = true) RotPerSecCANTalon backRight,
+                             @NotNull @JsonProperty(required = true) MappedAHRS navX,
+                             @Nullable Double PIDScale){
         super();
         //Initialization
         this.PID_SCALE = PIDScale;

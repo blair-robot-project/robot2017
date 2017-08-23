@@ -5,10 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 
 /**
- * A meccanum drive.
+ * A mecanum drive.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public interface DriveMeccanum extends DriveSubsystem {
+public interface DriveMecanum extends DriveSubsystem {
 
     /**
      * Set the output of each wheel. All velocities are in the range [-1, 1].
