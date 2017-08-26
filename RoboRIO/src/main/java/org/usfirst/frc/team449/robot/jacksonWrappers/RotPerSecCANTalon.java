@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,6 +95,8 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	private Double maxSpeed;
 
 	public final String name;
+
+	private final List<CANTalon> slaves;
 
 	/**
 	 * Default constructor.
@@ -320,6 +323,8 @@ public class RotPerSecCANTalon implements SimpleMotor {
 			}
 		}
 
+		this.slaves = new ArrayList<>();
+
 		if (slaves != null) {
 			//Set up slaves.
 			for (SlaveTalon slave : slaves) {
@@ -330,21 +335,28 @@ public class RotPerSecCANTalon implements SimpleMotor {
 				tmp.reverseSensor(false);
 				tmp.setInverted(false);
 
+				tmp.enableLimitSwitch(false, false);
+				tmp.enableForwardSoftLimit(false);
+				tmp.enableReverseSoftLimit(false);
+				tmp.configNominalOutputVoltage(0,0);
+				tmp.configPeakOutputVoltage(12, -12);
+				tmp.configMaxOutputVoltage(12);
+
 				//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
 				tmp.enableBrakeMode(enableBrakeMode);
 				if (currentLimit != null) {
-					canTalon.setCurrentLimit(currentLimit);
-					canTalon.EnableCurrentLimit(true);
+					tmp.setCurrentLimit(currentLimit);
+					tmp.EnableCurrentLimit(true);
 				} else {
 					//If we don't have a current limit, disable current limiting.
-					canTalon.EnableCurrentLimit(false);
+					tmp.EnableCurrentLimit(false);
 				}
 
-				//Don't forget to enable!
-				tmp.enable();
 				//Set the slave up to follow this talon.
 				tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
 				tmp.set(port);
+				tmp.enable();
+				this.slaves.add(tmp);
 			}
 		}
 	}
