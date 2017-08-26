@@ -124,6 +124,7 @@ drive:
                 motionProfileI: 0.0
                 motionProfileD: 0.0
                 MPUseLowGear: true
+                name: "left"
                 slaves:
                     - '@id': talon8
                       port: 8
@@ -138,6 +139,7 @@ drive:
                 inverted: false
                 reverseSensor: true
                 port: 2
+                name: "right"
                 slaves:
                     - '@id': talon1
                       port: 1

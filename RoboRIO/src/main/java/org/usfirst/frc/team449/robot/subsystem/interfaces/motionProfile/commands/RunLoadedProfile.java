@@ -91,7 +91,12 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 	 */
 	@Override
 	protected boolean isFinished() {
-		return subsystem.profileFinished() || (Robot.currentTimeMillis() - startTime > timeout);
+		if (Robot.currentTimeMillis() - startTime > timeout){
+			Logger.addEvent("Command timed out", this.getClass());
+			System.out.println("RunLoadedProfile timed out!");
+			return true;
+		}
+		return subsystem.profileFinished();
 	}
 
 	/**

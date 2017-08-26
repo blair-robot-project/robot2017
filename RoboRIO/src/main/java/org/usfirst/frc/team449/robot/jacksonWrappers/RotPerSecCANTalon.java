@@ -93,6 +93,8 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Nullable
 	private Double maxSpeed;
 
+	public final String name;
+
 	/**
 	 * Default constructor.
 	 *
@@ -199,7 +201,9 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	                         int motionProfileI,
 	                         int motionProfileD,
 	                         boolean MPUseLowGear,
-	                         @Nullable List<SlaveTalon> slaves) {
+	                         @Nullable List<SlaveTalon> slaves,
+	                         String name) {
+		this.name = name;
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
