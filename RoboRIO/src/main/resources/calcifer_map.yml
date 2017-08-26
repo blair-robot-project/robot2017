@@ -100,18 +100,17 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
-                inverted: true
+                inverted: false
+                reverseOutput: true
                 enableBrakeMode: false
                 fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 1
-                lowGearFwdNominalOutputVoltage: 1.5
+                highGearFwdNominalOutputVoltage: 1.3
+                lowGearFwdNominalOutputVoltage: 0.7
                 inchesPerRotation: 11.78097
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
-                currentLimit: 35
-                maxClosedLoopVoltage: 12
                 maxSpeedHigh: 17.5
                 highGearP: 0.5
                 highGearI: 0.0
@@ -136,6 +135,8 @@ drive:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
+                reverseSensor: true
+                reverseOutput: false
                 port: 2
                 slaves:
                     - '@id': talon1

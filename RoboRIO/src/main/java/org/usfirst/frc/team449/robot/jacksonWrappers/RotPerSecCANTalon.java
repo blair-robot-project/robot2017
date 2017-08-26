@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -98,6 +99,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	 *
 	 * @param port                            CAN port of this Talon.
 	 * @param inverted                        Whether this Talon is inverted.
+	 * @param reverseOutput Whether to reverse the output (identical effect to inverting outside of position PID)
 	 * @param enableBrakeMode                 Whether to brake or coast when stopped.
 	 * @param fwdPeakOutputVoltage            The peak voltage in the forward direction, in volts. If
 	 *                                        revPeakOutputVoltage is null, this is used for peak voltage in both
@@ -168,6 +170,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@JsonCreator
 	public RotPerSecCANTalon(@JsonProperty(required = true) int port,
 	                         @JsonProperty(required = true) boolean inverted,
+	                         boolean reverseOutput,
 	                         @JsonProperty(required = true) boolean enableBrakeMode,
 	                         @JsonProperty(required = true) double fwdPeakOutputVoltage,
 	                         @Nullable Double revPeakOutputVoltage,
@@ -203,7 +206,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
-		canTalon.reverseOutput(false);
+		canTalon.reverseOutput(reverseOutput);
 		//Set inversion
 		canTalon.setInverted(inverted);
 		//Set brake mode
@@ -326,21 +329,27 @@ public class RotPerSecCANTalon implements SimpleMotor {
 				tmp.reverseSensor(false);
 				tmp.setInverted(false);
 
+				tmp.enableLimitSwitch(false, false);
+				tmp.enableForwardSoftLimit(false);
+				tmp.enableReverseSoftLimit(false);
+				tmp.configNominalOutputVoltage(0,0);
+				tmp.configPeakOutputVoltage(12, -12);
+				tmp.configMaxOutputVoltage(12);
+
 				//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
 				tmp.enableBrakeMode(enableBrakeMode);
 				if (currentLimit != null) {
-					canTalon.setCurrentLimit(currentLimit);
-					canTalon.EnableCurrentLimit(true);
+					tmp.setCurrentLimit(currentLimit);
+					tmp.EnableCurrentLimit(true);
 				} else {
 					//If we don't have a current limit, disable current limiting.
-					canTalon.EnableCurrentLimit(false);
+					tmp.EnableCurrentLimit(false);
 				}
 
-				//Don't forget to enable!
-				tmp.enable();
 				//Set the slave up to follow this talon.
 				tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
 				tmp.set(port);
+				tmp.enable();
 			}
 		}
 	}
