@@ -165,11 +165,9 @@ public class CANTalonMPComponent {
 		talon.getCanTalon().clearMotionProfileHasUnderrun();
 		talon.getCanTalon().clearMotionProfileTrajectories();
 
-		//Instantiate the point outside the loop to avoid garbage collection.
-		CANTalon.TrajectoryPoint point;
 
 		for (int i = 0; i < data.getData().length; ++i) {
-			point = new CANTalon.TrajectoryPoint();
+			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 			//Set parameters that are true for all points
 			point.profileSlotSelect = 1;    // gain selection
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward

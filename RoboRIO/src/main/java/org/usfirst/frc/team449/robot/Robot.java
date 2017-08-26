@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -226,6 +227,8 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("dropGear: " + dropGear, this.getClass());
 				Logger.addEvent("position: " + position, this.getClass());
 
+				SmartDashboard.putString("Position",allianceString+" "+position);
+
 				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),
 						robotMap.getRightProfiles().get(allianceString + "_" + position));
@@ -354,6 +357,8 @@ public class Robot extends IterativeRobot {
 		if (driveSubsystem.getClass().equals(DriveTalonClusterShifting.class)) {
 			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));
 		}
+
+		driveSubsystem.resetPosition();
 
 		//Start the compressor if it exists
 		if (pneumatics != null) {
