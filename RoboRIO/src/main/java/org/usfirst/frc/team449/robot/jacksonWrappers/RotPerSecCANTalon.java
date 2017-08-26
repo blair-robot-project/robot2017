@@ -94,15 +94,12 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Nullable
 	private Double maxSpeed;
 
-	public final String name;
-
-	private final List<CANTalon> slaves;
-
 	/**
 	 * Default constructor.
 	 *
 	 * @param port                            CAN port of this Talon.
 	 * @param inverted                        Whether this Talon is inverted.
+	 * @param reverseOutput Whether to reverse the output (identical effect to inverting outside of position PID)
 	 * @param enableBrakeMode                 Whether to brake or coast when stopped.
 	 * @param fwdPeakOutputVoltage            The peak voltage in the forward direction, in volts. If
 	 *                                        revPeakOutputVoltage is null, this is used for peak voltage in both
@@ -173,6 +170,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@JsonCreator
 	public RotPerSecCANTalon(@JsonProperty(required = true) int port,
 	                         @JsonProperty(required = true) boolean inverted,
+	                         boolean reverseOutput,
 	                         @JsonProperty(required = true) boolean enableBrakeMode,
 	                         @JsonProperty(required = true) double fwdPeakOutputVoltage,
 	                         @Nullable Double revPeakOutputVoltage,
@@ -204,10 +202,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	                         int motionProfileI,
 	                         int motionProfileD,
 	                         boolean MPUseLowGear,
-	                         @Nullable List<SlaveTalon> slaves,
-	                         String name,
-	                         boolean reverseOutput) {
-		this.name = name;
+	                         @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
@@ -324,8 +319,6 @@ public class RotPerSecCANTalon implements SimpleMotor {
 			}
 		}
 
-		this.slaves = new ArrayList<>();
-
 		if (slaves != null) {
 			//Set up slaves.
 			for (SlaveTalon slave : slaves) {
@@ -357,7 +350,6 @@ public class RotPerSecCANTalon implements SimpleMotor {
 				tmp.changeControlMode(CANTalon.TalonControlMode.Follower);
 				tmp.set(port);
 				tmp.enable();
-				this.slaves.add(tmp);
 			}
 		}
 	}

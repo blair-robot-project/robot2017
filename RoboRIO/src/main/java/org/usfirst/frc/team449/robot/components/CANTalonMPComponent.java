@@ -107,8 +107,6 @@ public class CANTalonMPComponent {
 			talon.getMotionProfileStatus(status);
 			//We check if the current point is the final one to see if the profile is finished.
 			finished = finished && status.activePoint.isLastPoint;
-			System.out.println("Active point for port "+talon.getDeviceID()+": (pos: "+status.activePoint.position+", vel: "+status.activePoint.velocity+")");
-			Logger.addEvent("Active point for port "+talon.getDeviceID()+": (pos: "+status.activePoint.position+", vel: "+status.activePoint.velocity+")", CANTalonMPComponent.class);
 		}
 		return finished;
 	}
@@ -180,8 +178,6 @@ public class CANTalonMPComponent {
 			point.zeroPos = i == 0; // If its the first point, set the encoder position to 0.
 			point.isLastPoint = (i + 1) == data.getData().length; // If its the last point, isLastPoint = true
 
-			System.out.println("Added point (pos: "+point.position+", vel: "+point.velocity+") to talon "+talon.name);
-			Logger.addEvent("Added point (pos: "+point.position+", vel: "+point.velocity+") to talon "+talon.name, CANTalonMPComponent.class);
 			// Send the point to the Talon's buffer
 			if (!talon.getCanTalon().pushMotionProfileTrajectory(point)) {
 				//If sending the point doesn't work, log an error and exit.

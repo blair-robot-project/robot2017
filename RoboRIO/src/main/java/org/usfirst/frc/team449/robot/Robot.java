@@ -358,6 +358,8 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));
 		}
 
+		driveSubsystem.resetPosition();
+
 		//Start the compressor if it exists
 		if (pneumatics != null) {
 			Scheduler.getInstance().add(new StartCompressor(pneumatics));
