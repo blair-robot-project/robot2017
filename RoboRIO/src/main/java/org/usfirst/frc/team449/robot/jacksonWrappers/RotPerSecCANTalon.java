@@ -205,12 +205,13 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	                         int motionProfileD,
 	                         boolean MPUseLowGear,
 	                         @Nullable List<SlaveTalon> slaves,
-	                         String name) {
+	                         String name,
+	                         boolean reverseOutput) {
 		this.name = name;
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
-		canTalon.reverseOutput(false);
+		canTalon.reverseOutput(reverseOutput);
 		//Set inversion
 		canTalon.setInverted(inverted);
 		//Set brake mode
