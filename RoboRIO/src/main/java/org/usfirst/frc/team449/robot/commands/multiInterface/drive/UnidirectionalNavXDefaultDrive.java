@@ -125,7 +125,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
-		//If we're free driving and the driver tries to turn:
+		//If we're free driving and the driver stops turning:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
 				commandingStraight && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
