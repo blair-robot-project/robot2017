@@ -38,6 +38,12 @@ public class ShiftComponent {
 	protected Shiftable.gear currentGear;
 
 	/**
+	 * The gear to start in.
+	 */
+	@NotNull
+	private final Shiftable.gear startingGear;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param otherShiftables  All objects that should be shifted when this component's piston is.
@@ -61,6 +67,7 @@ public class ShiftComponent {
 			//Get the starting gear from the piston's position if it's not provided
 			this.currentGear = piston.get() == lowGearPistonPos ? Shiftable.gear.LOW : Shiftable.gear.HIGH;
 		}
+		this.startingGear = currentGear;
 
 		//Set all the shiftables to the starting gear.
 		for (Shiftable shiftable : otherShiftables) {
@@ -82,6 +89,22 @@ public class ShiftComponent {
 			shiftPiston(gear);
 			this.currentGear = gear;
 		}
+	}
+
+	/**
+	 * @return The gear the shifter is currently in.
+	 */
+	@NotNull
+	public Shiftable.gear getCurrentGear(){
+		return currentGear;
+	}
+
+	/**
+	 * @return The gear to start in.
+	 */
+	@NotNull
+	public Shiftable.gear getStartingGear() {
+		return startingGear;
 	}
 
 	/**

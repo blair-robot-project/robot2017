@@ -156,12 +156,19 @@ drive:
         navX:
             '@id': driveNavX
             port: kMXP
-        shifter:
-            '@id': driveShifter
-            module: 15
-            forward: 2
-            reverse: 3
-        startingGear: LOW
+        shiftComponent:
+            org.usfirst.frc.team449.robot.components.shiftComponent:
+                '@id': driveShiftComponent
+                otherShiftables:
+                    - leftMaster
+                    - rightMaster
+                piston:
+                    '@id': driveShifter
+                    module: 15
+                    forward: 2
+                    reverse: 3
+                lowGearPistonPos: kForward
+                startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand

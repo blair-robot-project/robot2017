@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.logger.Logger;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RotPerSecCANTalon implements SimpleMotor {
+public class RotPerSecCANTalon implements SimpleMotor, Shiftable {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -92,6 +93,11 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	 */
 	@Nullable
 	private Double maxSpeed;
+
+	/**
+	 * The current gear this Talon is in
+	 */
+	private Shiftable.gear currentGear;
 
 	/**
 	 * Default constructor.
@@ -397,31 +403,41 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	}
 
 	/**
-	 * Switch to using the high gear PID constants and nominal voltage.
+	 * @return The gear this subsystem is currently in.
 	 */
-	public void switchToHighGear() {
-		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
-		if (maxSpeedHigh != null) {
-			//Switch max speed to high gear max speed
-			maxSpeed = maxSpeedHigh;
-			//Set the slot 0 constants to the high gear ones.
-			setPIDF(highGearP, highGearI, highGearD, maxSpeed, 0, 0, 0);
-		}
+	@NotNull
+	@Override
+	public gear getGear() {
+		return currentGear;
 	}
 
 	/**
-	 * Switch to using the low gear PID constants and nominal output voltages if we have them.
+	 * Shift to a specific gear.
+	 *
+	 * @param gear Which gear to shift to.
 	 */
-	public void switchToLowGear() {
-		if (lowGearFwdNominalOutputVoltage != null) {
-			canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
-		}
-		//If there are low gear constants in the map
-		if (maxSpeedLow != null) {
-			//Switch max speed to low gear max speed
-			maxSpeed = maxSpeedLow;
-			//Set the slot 0 constants to the low gear ones.
-			setPIDF(lowGearP, lowGearI, lowGearD, maxSpeed, 0, 0, 0);
+	@Override
+	public void setGear(@NotNull gear gear) {
+		currentGear = gear;
+		if (gear.equals(Shiftable.gear.HIGH)){
+			canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
+			if (maxSpeedHigh != null) {
+				//Switch max speed to high gear max speed
+				maxSpeed = maxSpeedHigh;
+				//Set the slot 0 constants to the high gear ones.
+				setPIDF(highGearP, highGearI, highGearD, maxSpeed, 0, 0, 0);
+			}
+		} else {
+			if (lowGearFwdNominalOutputVoltage != null) {
+				canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
+			}
+			//If there are low gear constants in the map
+			if (maxSpeedLow != null) {
+				//Switch max speed to low gear max speed
+				maxSpeed = maxSpeedLow;
+				//Set the slot 0 constants to the low gear ones.
+				setPIDF(lowGearP, lowGearI, lowGearD, maxSpeed, 0, 0, 0);
+			}
 		}
 	}
 
