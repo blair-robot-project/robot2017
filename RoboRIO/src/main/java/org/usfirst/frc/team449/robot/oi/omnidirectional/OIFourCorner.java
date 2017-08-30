@@ -17,4 +17,10 @@ public interface OIFourCorner {
 
     double getBackRightOutput();
 
+    /**
+     * Whether the driver is trying to drive straight
+     * @return true if the driver is trying to go straight; false otherwise
+     */
+    boolean commandingStraight();
+
 }

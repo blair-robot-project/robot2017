@@ -68,4 +68,9 @@ public class OIMecanum implements OIFourCorner {
     public double getBackRightOutput() {
         return getY() - getRot() + getX();
     }
+
+    @Override
+    public boolean commandingStraight() {
+        return getRot()==0; //if the driver isn't turning, they are driving straight
+    }
 }
