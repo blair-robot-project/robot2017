@@ -1,33 +1,33 @@
-package org.usfirst.frc.team449.robot.drive.shifting.commands;
+package org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.logger.Logger;
 
 /**
- * A command that switches to low gear.
+ * A command that switches to high gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SwitchToLowGear extends YamlCommandWrapper {
+public class SwitchToHighGear extends YamlCommandWrapper {
 
 	/**
 	 * The drive subsystem to execute this command on.
 	 */
 	@NotNull
-	private final DriveShifting subsystem;
+	private final Shiftable subsystem;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The drive subsystem to execute this command on
+	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public SwitchToLowGear(@NotNull @JsonProperty(required = true) DriveShifting subsystem) {
+	public SwitchToHighGear(@NotNull @JsonProperty(required = true) Shiftable subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -36,15 +36,15 @@ public class SwitchToLowGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("SwitchToLowGear init.", this.getClass());
+		Logger.addEvent("SwitchToHighGear init.", this.getClass());
 	}
 
 	/**
-	 * Switch to low gear
+	 * Switch to high gear
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(DriveShifting.gear.LOW);
+		subsystem.setGear(Shiftable.gear.HIGH);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class SwitchToLowGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("SwitchToLowGear end.", this.getClass());
+		Logger.addEvent("SwitchToHighGear end.", this.getClass());
 	}
 
 	/**
@@ -70,6 +70,6 @@ public class SwitchToLowGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("SwitchToLowGear Interrupted!", this.getClass());
+		Logger.addEvent("SwitchToHighGear Interrupted!", this.getClass());
 	}
 }

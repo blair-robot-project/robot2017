@@ -86,7 +86,7 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">org.usfirst.frc.team449.robot.drive.unidirectional.commands</div>
-<h2 title="Class JiggleRobot" class="title">Class JiggleRobot&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>&gt;</h2>
+<h2 title="Class JiggleRobot" class="title">Class JiggleRobot&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.navX">NavxSubsystem</a>&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -121,7 +121,7 @@
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">JiggleRobot&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>&gt;</span>
+<pre>public class <span class="typeNameLabel">JiggleRobot&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.navX">NavxSubsystem</a>&gt;</span>
 extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlCommandGroupWrapper.html" title="class in org.usfirst.frc.team449.robot.logger">YamlCommandGroupWrapper</a></pre>
 <div class="block">Rotates the robot back and forth in order to dislodge any stuck balls.</div>
 </li>
@@ -151,7 +151,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
            int&nbsp;kP,
            int&nbsp;kI,
            int&nbsp;kD,
-           <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/JiggleRobot.html" title="type parameter in JiggleRobot">T</a>&nbsp;subsystem)</code>
+           <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/JiggleRobot.html" title="type parameter in JiggleRobot">T</a>&nbsp;object)</code>
 <div class="block">Instantiate the CommandGroup</div>
 </td>
 </tr>
@@ -225,7 +225,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
                    int&nbsp;kI,
                    int&nbsp;kD,
                    @NotNull
-                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/JiggleRobot.html" title="type parameter in JiggleRobot">T</a>&nbsp;subsystem)</pre>
+                   <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/JiggleRobot.html" title="type parameter in JiggleRobot">T</a>&nbsp;object)</pre>
 <div class="block">Instantiate the CommandGroup</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -241,7 +241,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/Yaml
 <dd><code>kP</code> - Proportional gain. Defaults to zero.</dd>
 <dd><code>kI</code> - Integral gain. Defaults to zero.</dd>
 <dd><code>kD</code> - Derivative gain. Defaults to zero.</dd>
-<dd><code>subsystem</code> - The drive to execute this command on.</dd>
+<dd><code>object</code> - The drive to execute this command on.</dd>
 </dl>
 </li>
 </ul>

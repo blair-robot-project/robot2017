@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
@@ -18,7 +19,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonClusterShifting extends DriveTalonCluster implements DriveShifting {
+public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
 
 	/**
 	 * The solenoid that shifts between gears
@@ -55,13 +56,13 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 * @param startingGear The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
-	public DriveTalonClusterShifting(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
-	                                 @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
-	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
-	                                 @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
-	                                 @Nullable Double PIDScale,
-	                                 @NotNull @JsonProperty(required = true) MappedDoubleSolenoid shifter,
-	                                 @Nullable gear startingGear) {
+	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
+	                                  @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
+	                                  @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                                  @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
+	                                  @Nullable Double PIDScale,
+	                                  @NotNull @JsonProperty(required = true) MappedDoubleSolenoid shifter,
+	                                  @Nullable gear startingGear) {
 		super(leftMaster, rightMaster, navX, MPHandler, PIDScale);
 		//Initialize stuff
 		this.shifter = shifter;
@@ -132,7 +133,7 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	@Override
 	public void setGear(@NotNull gear gear) {
 		//If we want to downshift
-		if (gear == DriveShifting.gear.LOW) {
+		if (gear == Shiftable.gear.LOW) {
 			//Physically shift gears
 			shifter.set(DoubleSolenoid.Value.kForward);
 			//Switch the PID constants

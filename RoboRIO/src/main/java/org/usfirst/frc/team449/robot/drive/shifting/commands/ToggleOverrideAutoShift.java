@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.logger.Logger;
 
@@ -19,7 +19,7 @@ public class ToggleOverrideAutoShift extends YamlCommandWrapper {
 	 * The drive subsystem to execute this command on.
 	 */
 	@NotNull
-	private final DriveShifting subsystem;
+	private final DriveShiftable subsystem;
 
 	/**
 	 * Default constructor
@@ -27,7 +27,7 @@ public class ToggleOverrideAutoShift extends YamlCommandWrapper {
 	 * @param drive The drive subsystem to execute this command on.
 	 */
 	@JsonCreator
-	public ToggleOverrideAutoShift(@NotNull @JsonProperty(required = true) DriveShifting drive) {
+	public ToggleOverrideAutoShift(@NotNull @JsonProperty(required = true) DriveShiftable drive) {
 		subsystem = drive;
 	}
 

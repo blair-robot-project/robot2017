@@ -352,7 +352,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
 	}
 
-	public void resetPosition(){
+	public void resetPosition() {
 		leftMaster.getCanTalon().setEncPosition(0);
 		rightMaster.getCanTalon().setEncPosition(0);
 	}

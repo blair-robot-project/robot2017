@@ -52,7 +52,7 @@ var activeTableTab = "activeTableTab";
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" target="_top">Frames</a></li>
+<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" target="_top">Frames</a></li>
 <li><a href="NavxSubsystem.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.subsystem.interfaces.navX</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.object.interfaces.navX</div>
 <h2 title="Interface NavxSubsystem" class="title">Interface NavxSubsystem</h2>
 </div>
 <div class="contentContainer">
@@ -105,7 +105,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">NavxSubsystem</span></pre>
-<div class="block">A subsystem that has a NavX on it.</div>
+<div class="block">A object that has a NavX on it.</div>
 </li>
 </ul>
 </div>
@@ -126,26 +126,26 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getGyroOutput--">getGyroOutput</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html#getGyroOutput--">getGyroOutput</a></span>()</code>
 <div class="block">Get the output of the NavX</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>com.kauailabs.navx.frc.AHRS</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getNavX--">getNavX</a></span>()</code>
-<div class="block">Get the NavX this subsystem uses.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html#getNavX--">getNavX</a></span>()</code>
+<div class="block">Get the NavX this object uses.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#getOverrideNavX--">getOverrideNavX</a></span>()</code>
-<div class="block">Get whether this subsystem's NavX is currently being overriden.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html#getOverrideNavX--">getOverrideNavX</a></span>()</code>
+<div class="block">Get whether this object's NavX is currently being overriden.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html#setOverrideNavX-boolean-">setOverrideNavX</a></span>(boolean&nbsp;override)</code>
-<div class="block">Set whether or not to override this subsystem's NavX.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html#setOverrideNavX-boolean-">setOverrideNavX</a></span>(boolean&nbsp;override)</code>
+<div class="block">Set whether or not to override this object's NavX.</div>
 </td>
 </tr>
 </table>
@@ -184,7 +184,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getOverrideNavX</h4>
 <pre>boolean&nbsp;getOverrideNavX()</pre>
-<div class="block">Get whether this subsystem's NavX is currently being overriden.</div>
+<div class="block">Get whether this object's NavX is currently being overriden.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the NavX is overriden, false otherwise.</dd>
@@ -198,7 +198,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>setOverrideNavX</h4>
 <pre>void&nbsp;setOverrideNavX(boolean&nbsp;override)</pre>
-<div class="block">Set whether or not to override this subsystem's NavX.</div>
+<div class="block">Set whether or not to override this object's NavX.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>override</code> - true to override, false otherwise.</dd>
@@ -213,10 +213,10 @@ var activeTableTab = "activeTableTab";
 <h4>getNavX</h4>
 <pre>@NotNull
 com.kauailabs.navx.frc.AHRS&nbsp;getNavX()</pre>
-<div class="block">Get the NavX this subsystem uses.</div>
+<div class="block">Get the NavX this object uses.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>An AHRS object representing this subsystem's NavX.</dd>
+<dd>An AHRS object representing this object's NavX.</dd>
 </dl>
 </li>
 </ul>
@@ -251,7 +251,7 @@ com.kauailabs.navx.frc.AHRS&nbsp;getNavX()</pre>
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" target="_top">Frames</a></li>
+<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" target="_top">Frames</a></li>
 <li><a href="NavxSubsystem.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">

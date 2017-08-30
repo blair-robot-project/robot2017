@@ -92,7 +92,7 @@ var activeTableTab = "activeTableTab";
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">org.usfirst.frc.team449.robot.drive.unidirectional.commands</div>
-<h2 title="Class NavXTurnToAngle" class="title">Class NavXTurnToAngle&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>&gt;</h2>
+<h2 title="Class NavXTurnToAngle" class="title">Class NavXTurnToAngle&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.navX">NavxSubsystem</a>&gt;</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -105,7 +105,7 @@ var activeTableTab = "activeTableTab";
 <li>edu.wpi.first.wpilibj.command.PIDCommand</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands">org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand</a></li>
+<li><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.object.interfaces.navX.commands">org.usfirst.frc.team449.robot.object.interfaces.navX.commands.PIDAngleCommand</a></li>
 <li>
 <ul class="inheritance">
 <li>org.usfirst.frc.team449.robot.commands.multiInterface.drive.NavXTurnToAngle&lt;T&gt;</li>
@@ -131,8 +131,8 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>public class <span class="typeNameLabel">NavXTurnToAngle&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a>&gt;</span>
-extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands">PIDAngleCommand</a></pre>
+<pre>public class <span class="typeNameLabel">NavXTurnToAngle&lt;T extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.navX">NavxSubsystem</a>&gt;</span>
+extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.object.interfaces.navX.commands">PIDAngleCommand</a></pre>
 <div class="block">Turns to a specified angle, relative to the angle the NavX was at when the robot was turned on.</div>
 </li>
 </ul>
@@ -166,8 +166,8 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interface
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>protected <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html#subsystem">subsystem</a></span></code>
-<div class="block">The drive subsystem to execute this command on and to get the gyro reading from.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html#object">object</a></span></code>
+<div class="block">The drive object to execute this command on and to get the gyro reading from.</div>
 </td>
 </tr>
 </table>
@@ -195,7 +195,7 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interface
                int&nbsp;kI,
                int&nbsp;kD,
                double&nbsp;setpoint,
-               <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a>&nbsp;subsystem,
+               <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a>&nbsp;object,
                double&nbsp;timeout)</code>
 <div class="block">Default constructor.</div>
 </td>
@@ -253,11 +253,11 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interface
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.NavX.commands.PIDAngleCommand">
+<li class="blockList"><a name="methods.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.object.NavX.commands.PIDAngleCommand">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands">PIDAngleCommand</a></h3>
-<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html#getCommand--">getCommand</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html#processPIDOutput-double-">processPIDOutput</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/commands/PIDAngleCommand.html#returnPIDInput--">returnPIDInput</a></code></li>
+<h3>Methods inherited from class&nbsp;org.usfirst.frc.team449.robot.object.interfaces.navX.commands.<a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html" title="class in org.usfirst.frc.team449.robot.object.interfaces.navX.commands">PIDAngleCommand</a></h3>
+<code><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html#getCommand--">getCommand</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html#processPIDOutput-double-">processPIDOutput</a>, <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/commands/PIDAngleCommand.html#returnPIDInput--">returnPIDInput</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.edu.wpi.first.wpilibj.command.PIDCommand">
@@ -301,15 +301,15 @@ extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/interface
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="subsystem">
+<a name="object">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>subsystem</h4>
+<h4>object</h4>
 <pre>@NotNull
-protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a> extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">NavxSubsystem</a> subsystem</pre>
-<div class="block">The drive subsystem to execute this command on and to get the gyro reading from.</div>
+protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a> extends <a href="../../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/drive/unidirectional/UnidirectionalDrive.html" title="interface in org.usfirst.frc.team449.robot.interfaces.drive.unidirectional">UnidirectionalDrive</a> &amp; <a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/NavX/NavxSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.navX">NavxSubsystem</a> object</pre>
+<div class="block">The drive object to execute this command on and to get the gyro reading from.</div>
 </li>
 </ul>
 <a name="setpoint">
@@ -360,7 +360,7 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
                        int&nbsp;kD,
                        double&nbsp;setpoint,
                        @NotNull
-                       <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a>&nbsp;subsystem,
+                       <a href="../../../../../../../../org/usfirst/frc/team449/robot/drive/talonCluster/commands/NavXTurnToAngle.html" title="type parameter in NavXTurnToAngle">T</a>&nbsp;object,
                        double&nbsp;timeout)</pre>
 <div class="block">Default constructor.</div>
 <dl>
@@ -378,7 +378,7 @@ protected final&nbsp;<a href="../../../../../../../../org/usfirst/frc/team449/ro
 <dd><code>kI</code> - Integral gain. Defaults to zero.</dd>
 <dd><code>kD</code> - Derivative gain. Defaults to zero.</dd>
 <dd><code>setpoint</code> - The setpoint, in degrees from 180 to -180.</dd>
-<dd><code>subsystem</code> - The drive subsystem to execute this command on.</dd>
+<dd><code>object</code> - The drive object to execute this command on.</dd>
 <dd><code>timeout</code> - How long this command is allowed to run for, in seconds. Needed because sometimes
                           floating-point errors prevent termination.</dd>
 </dl>
