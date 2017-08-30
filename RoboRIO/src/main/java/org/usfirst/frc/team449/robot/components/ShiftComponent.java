@@ -9,6 +9,9 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 
 import java.util.List;
 
+/**
+ * A component that a subsystem can use to handle shifting gears.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class ShiftComponent {
@@ -32,16 +35,16 @@ public class ShiftComponent {
 	private final DoubleSolenoid.Value lowGearPistonPos;
 
 	/**
-	 * The gear this component is currently in.
-	 */
-	@NotNull
-	protected Shiftable.gear currentGear;
-
-	/**
 	 * The gear to start in.
 	 */
 	@NotNull
 	private final Shiftable.gear startingGear;
+
+	/**
+	 * The gear this component is currently in.
+	 */
+	@NotNull
+	protected Shiftable.gear currentGear;
 
 	/**
 	 * Default constructor.
@@ -95,7 +98,7 @@ public class ShiftComponent {
 	 * @return The gear the shifter is currently in.
 	 */
 	@NotNull
-	public Shiftable.gear getCurrentGear(){
+	public Shiftable.gear getCurrentGear() {
 		return currentGear;
 	}
 

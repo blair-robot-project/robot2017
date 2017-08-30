@@ -258,9 +258,6 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.stopMPProcesses();
 		driveSubsystem.fullStop();
 
-		//Enable the motors in case they got disabled somehow
-		driveSubsystem.enableMotors();
-
 		//Set the default command
 		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
 
@@ -358,6 +355,7 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShiftable) driveSubsystem, ((DriveTalonClusterShiftable) driveSubsystem).getStartingGear()));
 		}
 
+		driveSubsystem.enableMotors();
 		driveSubsystem.resetPosition();
 
 		//Start the compressor if it exists

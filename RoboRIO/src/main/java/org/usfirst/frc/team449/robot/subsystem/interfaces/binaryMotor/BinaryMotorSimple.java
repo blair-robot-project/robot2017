@@ -60,7 +60,6 @@ public class BinaryMotorSimple extends YamlSubsystem implements SubsystemBinaryM
 	 */
 	@Override
 	public void turnMotorOn() {
-		motor.enable();
 		motor.setVelocity(velocity);
 		motorOn = true;
 	}
