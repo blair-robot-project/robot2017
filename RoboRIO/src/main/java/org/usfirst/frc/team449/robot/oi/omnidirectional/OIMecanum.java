@@ -1,14 +1,17 @@
 package org.usfirst.frc.team449.robot.oi.omnidirectional;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
 
 /**
- * Created by Sam Ehrenstein on 8/23/2017.
+ * An OI for controlling a mecanum drive.
+ * Note: This OI can be used for either robot-centric or field-centric drive. For robot-centric drive, Y refers to the
+ * front-back motion of the robot, and X refers to strafing motion. For field-centric drive, Y refers to motion
+ * parallel to the gyro's zero, and X refers to motion perpendicular to that.
  */
-public class OIMecanum implements OIFourCorner {
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class OIMecanum extends OIOmnidirectional implements OIFourCorner {
 
     /**
      * The input controlling front-back velocity.
@@ -28,6 +31,12 @@ public class OIMecanum implements OIFourCorner {
     @NotNull
     private final Throttle rotThrottle;
 
+    /**
+     * Default constructor.
+     * @param yThrottle the throttle controlling Y velocity
+     * @param xThrottle the throttle controlling X velocity
+     * @param rotThrottle the throttle controlling rotational velocity
+     */
     @JsonCreator
     public OIMecanum(@NotNull @JsonProperty(required = true) Throttle yThrottle,
                      @NotNull @JsonProperty(required = true) Throttle xThrottle,
@@ -37,14 +46,17 @@ public class OIMecanum implements OIFourCorner {
         this.rotThrottle = rotThrottle;
     }
 
+    @Override
     public double getY(){
         return yThrottle.getValue();
     }
 
+    @Override
     public double getX(){
         return xThrottle.getValue();
     }
 
+    @Override
     public double getRot(){
         return rotThrottle.getValue();
     }
@@ -67,10 +79,5 @@ public class OIMecanum implements OIFourCorner {
     @Override
     public double getBackRightOutput() {
         return getY() - getRot() + getX();
-    }
-
-    @Override
-    public boolean commandingStraight() {
-        return getRot()==0; //if the driver isn't turning, they are driving straight
     }
 }
