@@ -24,16 +24,19 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	/**
 	 * The reed switches that detect if the shifter pistons are in high gear.
 	 */
+	@NotNull
 	private final MappedDigitalInput highGearSensors;
 
 	/**
 	 * The reed switches that detect if the shifter pistons are in low gear.
 	 */
+	@NotNull
 	private final MappedDigitalInput lowGearSensors;
 
 	/**
 	 * The motors that should be disabled while the piston is shifting.
 	 */
+	@NotNull
 	private final List<SimpleMotor> motorsToDisable;
 
 	/**
@@ -44,12 +47,19 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	/**
 	 * The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
 	 */
+	@NotNull
 	private final BufferTimer motorDisableTimer;
 
 	/**
 	 * The Notifier that runs checkToReenable periodically.
 	 */
+	@NotNull
 	private final Notifier sensorChecker;
+
+	/**
+	 * The period for the loop that checks the sensors and enables/disables the motors, in seconds.
+	 */
+	private final double sensorCheckerPeriodSecs;
 
 	/**
 	 * Default constructor.
@@ -63,7 +73,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 * @param lowGearSensors The reed switches that detect if the shifter pistons are in low gear.
 	 * @param motorsToDisable The motors that should be disabled while the piston is shifting.
 	 * @param motorDisableTimer The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
-	 * @param sensorCheckerPeriodSecs The period for the loop that checks the sensors and enables/disables the motors, in seconds
+	 * @param sensorCheckerPeriodSecs The period for the loop that checks the sensors and enables/disables the motors, in seconds.
 	 */
 	@JsonCreator
 	public ShiftWithSensorComponent(@NotNull @JsonProperty(required = true) List<Shiftable> otherShiftables,
@@ -82,6 +92,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 		this.motorDisableTimer = motorDisableTimer;
 		this.sensorChecker = new Notifier(this::checkToReenable);
 		this.sensorChecker.startPeriodic(sensorCheckerPeriodSecs);
+		this.sensorCheckerPeriodSecs = sensorCheckerPeriodSecs;
 	}
 
 	/**
@@ -110,6 +121,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 			for (SimpleMotor motor : motorsToDisable){
 				motor.enable();
 			}
+			sensorChecker.stop();
 		}
 		//Otherwise, if the piston is wrong, disable all the motors. We do this constantly in case some other part of
 		//the code tries to re-enable them.
@@ -125,9 +137,21 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 			for (SimpleMotor motor : motorsToDisable){
 				motor.enable();
 			}
+			sensorChecker.stop();
 		}
 
 		//Record the piston position so we can have rising/falling edge detection
 		pistonWasCorrect = pistonCorrect;
+	}
+
+	/**
+	 * Shifts to a given gear.
+	 *
+	 * @param gear The gear to shift to.
+	 */
+	@Override
+	public void shiftToGear(Shiftable.gear gear) {
+		super.shiftToGear(gear);
+		sensorChecker.startPeriodic(sensorCheckerPeriodSecs);
 	}
 }
