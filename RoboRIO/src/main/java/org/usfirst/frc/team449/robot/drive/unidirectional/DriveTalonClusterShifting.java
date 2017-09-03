@@ -50,7 +50,7 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 * @param rightMaster  The master talon on the right side of the drive.
 	 * @param navX         The NavX on this drive.
 	 * @param MPHandler    The motion profile handler that runs this drive's motion profiles.
-	 * @param PIDScale     The amount to scale the output to the PID loop by. Defaults to 1.
+	 * @param VelScale     The amount to scale the output to the motor by. Defaults to 1.
 	 * @param shifter      The piston that shifts between gears.
 	 * @param startingGear The gear the drive starts in. Defaults to low.
 	 */
@@ -59,10 +59,10 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	                                 @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
 	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                                 @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
-	                                 @Nullable Double PIDScale,
+	                                 @Nullable Double VelScale,
 	                                 @NotNull @JsonProperty(required = true) MappedDoubleSolenoid shifter,
 	                                 @Nullable gear startingGear) {
-		super(leftMaster, rightMaster, navX, MPHandler, PIDScale);
+		super(leftMaster, rightMaster, navX, MPHandler, VelScale);
 		//Initialize stuff
 		this.shifter = shifter;
 
@@ -91,27 +91,22 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	}
 
 	/**
-	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint. Defaults to voltage setpoint if the
-	 * talons don't have PID constants.
+	 * Set the output of each side of the drive.
 	 *
-	 * @param left  The left PID velocity setpoint as a percent [-1, 1]
-	 * @param right The right PID velocity setpoint as a percent [-1, 1]
+	 * @param left  The output for the left side of the drive, from [-1, 1]
+	 * @param right the output for the right side of the drive, from [-1, 1]
 	 */
 	@Override
-	protected void setPIDThrottle(double left, double right) {
-		//If we're not shifting or we're just turning in place, scale by the max speed in the current gear
-		if (overrideAutoshift || left == right) {
-			super.setPIDThrottle(left, right);
+	public void setOutput(double left, double right) {
+		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current gear
+		if (overrideAutoshift || left == -right || leftMaster.getMaxSpeedHG() == null || rightMaster.getMaxSpeedHG() == null
+				|| leftMaster.getMaxSpeed() == null || rightMaster.getMaxSpeed() == null) {
+			super.setOutput(left, right);
 		}
 		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.
 		else {
-			if (leftMaster.getMaxSpeedHG() == null || rightMaster.getMaxSpeedHG() == null) {
-				setVBusThrottle(left, right);
-				System.out.println("You're trying to set PID throttle, but the drive talons don't have PID constants defined. Using voltage control instead.");
-			} else {
-				leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeedHG()));
-				rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeedHG()));
-			}
+			super.setOutput(left*leftMaster.getMaxSpeedHG()/leftMaster.getMaxSpeed(),
+					right*rightMaster.getMaxSpeedHG()/rightMaster.getMaxSpeed());
 		}
 	}
 
