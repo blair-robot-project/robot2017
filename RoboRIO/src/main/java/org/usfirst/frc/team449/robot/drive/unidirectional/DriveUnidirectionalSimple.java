@@ -85,6 +85,28 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	}
 
 	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPos() {
+		return null;
+	}
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPos() {
+		return null;
+	}
+
+	/**
 	 * Completely stop the robot by setting the voltage to each side to be 0.
 	 */
 	@Override

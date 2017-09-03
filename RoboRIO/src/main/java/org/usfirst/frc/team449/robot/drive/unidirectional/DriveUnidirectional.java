@@ -34,4 +34,20 @@ public interface DriveUnidirectional extends DriveSubsystem {
 	 */
 	@Nullable
 	Double getRightVel();
+
+	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	Double getLeftPos();
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	Double getRightPos();
 }

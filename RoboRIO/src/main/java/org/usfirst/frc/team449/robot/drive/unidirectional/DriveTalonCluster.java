@@ -157,6 +157,38 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPos() {
+		Double feet = leftMaster.nativeToFeet(leftMaster.getCanTalon().getEncPosition());
+		if (feet == null) {
+			return null;
+		} else {
+			return feet / 12.;
+		}
+	}
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPos() {
+		Double feet = rightMaster.nativeToFeet(rightMaster.getCanTalon().getEncPosition());
+		if (feet == null) {
+			return null;
+		} else {
+			return feet / 12.;
+		}
+	}
+
+	/**
 	 * Completely stop the robot by setting the voltage to each side to be 0.
 	 */
 	@Override
