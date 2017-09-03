@@ -139,13 +139,24 @@ public class Robot extends IterativeRobot {
 	private Command autonomousCommand;
 
 	/**
-	 * Get the current time, in milliseconds, since startup.
+	 * Get the time, in milliseconds between when the robot code started running and the beginning of the last periodic
+	 * loop.
 	 *
 	 * @return current time in milliseconds.
 	 */
 	@Contract(pure = true)
 	public static long currentTimeMillis() {
 		return currentTimeMillis - startTime;
+	}
+
+	/**
+	 * Get the actual amount of time since the robot code started running, in milliseconds. This does call {@link
+	 * System}.currentTimeMillis(), so only use it when knowing the actual time within 1 millisecond is very important.
+	 *
+	 * @return current time in milliseconds.
+	 */
+	public static long getTimeSinceInit() {
+		return System.currentTimeMillis() - startTime;
 	}
 
 	/**
@@ -227,7 +238,7 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("dropGear: " + dropGear, this.getClass());
 				Logger.addEvent("position: " + position, this.getClass());
 
-				SmartDashboard.putString("Position",allianceString+" "+position);
+				SmartDashboard.putString("Position", allianceString + " " + position);
 
 				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),
@@ -254,6 +265,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		//Update the current time
+		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		driveSubsystem.stopMPProcesses();
 		driveSubsystem.fullStop();
@@ -287,6 +300,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		//Update the current time
+		currentTimeMillis = System.currentTimeMillis();
 		//Stop the drive for safety reasons
 		driveSubsystem.fullStop();
 
@@ -351,8 +366,7 @@ public class Robot extends IterativeRobot {
 	private void doStartupTasks() {
 		//Start running the logger
 		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
-		//Refresh the current time.
-		currentTimeMillis = System.currentTimeMillis();
+
 		//Switch to starting gear
 		if (driveSubsystem.getClass().equals(DriveTalonClusterShifting.class)) {
 			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));

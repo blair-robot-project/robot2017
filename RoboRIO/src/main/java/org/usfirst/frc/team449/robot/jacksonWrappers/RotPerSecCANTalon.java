@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,7 +98,8 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	 *
 	 * @param port                            CAN port of this Talon.
 	 * @param inverted                        Whether this Talon is inverted.
-	 * @param reverseOutput Whether to reverse the output (identical effect to inverting outside of position PID)
+	 * @param reverseOutput                   Whether to reverse the output (identical effect to inverting outside of
+	 *                                        position PID)
 	 * @param enableBrakeMode                 Whether to brake or coast when stopped.
 	 * @param fwdPeakOutputVoltage            The peak voltage in the forward direction, in volts. If
 	 *                                        revPeakOutputVoltage is null, this is used for peak voltage in both
@@ -332,7 +332,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 				tmp.enableLimitSwitch(false, false);
 				tmp.enableForwardSoftLimit(false);
 				tmp.enableReverseSoftLimit(false);
-				tmp.configNominalOutputVoltage(0,0);
+				tmp.configNominalOutputVoltage(0, 0);
 				tmp.configPeakOutputVoltage(12, -12);
 				tmp.configMaxOutputVoltage(12);
 

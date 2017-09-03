@@ -62,7 +62,7 @@ public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectio
 		this.startTime = Robot.currentTimeMillis();
 		Logger.addEvent("NavXRelativeTurnToAngle init.", this.getClass());
 		//Do math to setup the setpoint.
-		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroOutput() + setpoint));
+		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroHeading() + setpoint));
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}

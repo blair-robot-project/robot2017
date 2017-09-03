@@ -132,7 +132,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the navX
 			this.getPIDController().reset();
-			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
+			this.getPIDController().setSetpoint(subsystem.getGyroHeading());
 			this.getPIDController().enable();
 			Logger.addEvent("Switching to DriveStraight.", this.getClass());
 		}
