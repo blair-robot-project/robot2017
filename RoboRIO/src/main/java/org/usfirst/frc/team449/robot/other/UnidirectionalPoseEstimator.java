@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 import java.util.ArrayList;
@@ -18,12 +20,13 @@ import java.util.List;
  * @param <T>
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable {
+public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable, Loggable{
 
 	/**
 	 * The wheel-to-wheel diameter of the robot.
 	 */
-	private final double robotDiameter;
+	@Nullable
+	private final Double robotDiameter;
 
 	/**
 	 * The subsystem to get gyro and encoder data from.
@@ -99,10 +102,16 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	 */
 	private boolean modifyingList;
 
+	private double fudgedWheelbaseDiameter;
+
+	private boolean recalcedLeft;
+
+	private double percentChanged;
+
 	/**
 	 * Default constructor.
 	 *
-	 * @param robotDiameter             The wheel-to-wheel diameter of the robot.
+	 * @param robotDiameter             The wheel-to-wheel diameter of the robot, in inches.
 	 * @param subsystem                 The subsystem to get gyro and encoder data from.
 	 * @param absolutePosAngleTolerance The maximum amount, in degrees, a new absolute position's angle can be off from
 	 *                                  the gyro reading and still be accepted as valid.
@@ -111,7 +120,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	 * @param startTheta                The starting angle of the robot, in degrees. Defaults to 0.
 	 */
 	@JsonCreator
-	public UnidirectionalPoseEstimator(@JsonProperty(required = true) double robotDiameter,
+	public UnidirectionalPoseEstimator(@Nullable Double robotDiameter,
 	                                   @JsonProperty(required = true) @NotNull T subsystem,
 	                                   @JsonProperty(required = true) double absolutePosAngleTolerance,
 	                                   double startX,
@@ -155,43 +164,50 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		double deltaLeft = left - lastLeftPos;
 		double deltaRight = right - lastRightPos;
 		double deltaTheta = theta - lastTheta;
+		double robotDiameter;
+		fudgedWheelbaseDiameter = (deltaLeft - deltaRight) / deltaTheta;
 
-		//For this next part, we assume that the gyro is 100% accurate at measuring the change in angle over the given
-		//time period and that the encoders will possibly overmeasure (due to wheel slip) but never undermeasure.
-		//Given those constraints, we have an overdetermined system because deltaTheta should be equal to
-		//(deltaLeft-deltaRight)/robotDiameter. We can use this to determine which wheel slipped more, and replace its
-		//reading with a value calculated from the other encoder and the gyro.
-		if (deltaTheta < (deltaLeft - deltaRight) / robotDiameter) {
-			if (deltaLeft > 0) {
-				deltaLeft = deltaRight + robotDiameter * deltaTheta;
-			} else {
-				deltaRight = deltaLeft - robotDiameter * deltaTheta;
+		if (this.robotDiameter != null) {
+			//Noah's Approach:
+
+			//For this next part, we assume that the gyro is 100% accurate at measuring the change in angle over the given
+
+			//time period and that the encoders will possibly overmeasure (due to wheel slip) but never undermeasure.
+			//Given those constraints, we have an overdetermined system because deltaTheta should be equal to
+			//(deltaLeft-deltaRight)/robotDiameter. We can use this to determine which wheel slipped more, and replace its
+			//reading with a value calculated from the other encoder and the gyro.
+			robotDiameter = this.robotDiameter;
+			if (deltaTheta < (deltaLeft - deltaRight) / robotDiameter) {
+				if (deltaLeft > 0) {
+					percentChanged = ((deltaRight + robotDiameter * deltaTheta)-deltaLeft)/deltaLeft;
+					deltaLeft = deltaRight + robotDiameter * deltaTheta;
+					recalcedLeft = true;
+				} else {
+					percentChanged = ((deltaLeft - robotDiameter * deltaTheta)-deltaRight)/deltaRight;
+					deltaRight = deltaLeft - robotDiameter * deltaTheta;
+					recalcedLeft = false;
+				}
+			} else if (deltaTheta > (deltaLeft - deltaRight) / robotDiameter) {
+				if (deltaLeft < 0) {
+					percentChanged = ((deltaRight + robotDiameter * deltaTheta)-deltaLeft)/deltaLeft;
+					deltaLeft = deltaRight + robotDiameter * deltaTheta;
+					recalcedLeft = true;
+				} else {
+					percentChanged = ((deltaLeft - robotDiameter * deltaTheta)-deltaRight)/deltaRight;
+					deltaRight = deltaLeft - robotDiameter * deltaTheta;
+					recalcedLeft = false;
+				}
 			}
-		} else if (deltaTheta > (deltaLeft - deltaRight) / robotDiameter) {
-			if (deltaLeft < 0) {
-				deltaLeft = deltaRight + robotDiameter * deltaTheta;
-			} else {
-				deltaRight = deltaLeft - robotDiameter * deltaTheta;
-			}
+		} else {
+
+			//Eli's Approach
+
+			//Here we assume all the measured values are correct and adjust the diameter to match.
+			robotDiameter = fudgedWheelbaseDiameter;
 		}
 
 		//The vector for how much the robot moves, element 0 is x and element 1 is y.
-		double[] vector = new double[2];
-
-		//If we're going in a straight line
-		if (deltaTheta == 0) {
-			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
-			vector[0] = deltaLeft * Math.cos(theta);
-			vector[1] = deltaLeft * Math.sin(theta);
-		} else {
-			//This next part is too complicated to explain in comments. Read this wiki page instead:
-			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double r = robotDiameter / 2. * (deltaLeft + deltaRight) / (deltaLeft - deltaRight);
-			double vectorAngle = (Math.PI - deltaTheta) / 2. - (Math.PI / 2 - lastTheta);
-			double vectorMagnitude = (r * Math.sin(deltaTheta)) / Math.sin((Math.PI - deltaTheta) / 2.);
-			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
-			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
-		}
+		double[] vector = calcVector(deltaLeft, deltaRight, robotDiameter, deltaTheta, lastTheta);
 
 		//If we received an absolute position between the last run and this one, scale the vector so it only includes
 		//the change since the absolute position was given
@@ -352,4 +368,66 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		return firstKeepableIndex;
 	}
 
+	private static double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle){
+		//The vector for how much the robot moves, element 0 is x and element 1 is y.
+		double[] vector = new double[2];
+
+		//If we're going in a straight line
+		if (deltaTheta == 0) {
+			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
+			vector[0] = left * Math.cos(lastAngle+deltaTheta);
+			vector[1] = left * Math.sin(lastAngle+deltaTheta);
+		} else {
+			//This next part is too complicated to explain in comments. Read this wiki page instead:
+			// http://team449.shoutwiki.com/wiki/Pose_Estimation
+			double r = robotDiameter / 2. * (left + right) / (left - right);
+			double vectorAngle = (Math.PI - deltaTheta) / 2. - (Math.PI / 2 - lastAngle);
+			double vectorMagnitude = (r * Math.sin(deltaTheta)) / Math.sin((Math.PI - deltaTheta) / 2.);
+			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
+			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
+		}
+		return vector;
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by
+	 * getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"effective_wheelbase",
+				"recalced_left",
+				"percent_changed"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				fudgedWheelbaseDiameter,
+				recalcedLeft,
+				percentChanged
+		};
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return A string that will identify this object in the log file.
+	 */
+	@NotNull
+	@Override
+	public String getName() {
+		return "PoseEstimator";
+	}
 }

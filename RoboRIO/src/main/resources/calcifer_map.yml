@@ -269,6 +269,13 @@ pneumatics:
             port: 0
             oversampleBits: 0
             averageBits: 0
+poseEstimator:
+    '@id': poseEstimator
+    robotDiameter: 25
+    subsystem:
+        org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+            drive
+    absolutePosAngleTolerance: 5
 logger:
     '@id': logger
     subsystems:
@@ -278,6 +285,8 @@ logger:
             pneumatics
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
+        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+            poseEstimator
 #        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
 #            multiSubsystem
     loopTimeSecs: 0.05

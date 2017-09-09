@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
+import org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
 import org.usfirst.frc.team449.robot.subsystem.complex.shooter.ShooterWithVictorFeeder;
@@ -188,6 +189,8 @@ public class RobotMap2017 {
 	 */
 	private final boolean doMP;
 
+	private UnidirectionalPoseEstimator poseEstimator;
+
 	/**
 	 * Default constructor.
 	 *
@@ -253,7 +256,8 @@ public class RobotMap2017 {
 	                    @Nullable Map<String, MotionProfileData> leftProfiles, @Nullable Map<String, MotionProfileData> rightProfiles,
 	                    @Nullable YamlCommand nonMPAutoCommand,
 	                    boolean testMP,
-	                    @Nullable Boolean doMP) {
+	                    @Nullable Boolean doMP,
+	                    @Nullable UnidirectionalPoseEstimator poseEstimator) {
 		this.buttons = buttons;
 		this.oi = oi;
 		this.drive = drive;
@@ -286,6 +290,7 @@ public class RobotMap2017 {
 			doMP = true;
 		}
 		this.doMP = doMP;
+		this.poseEstimator = poseEstimator;
 	}
 
 	/**
@@ -496,5 +501,9 @@ public class RobotMap2017 {
 	 */
 	public boolean getDoMP() {
 		return doMP;
+	}
+
+	public UnidirectionalPoseEstimator getPoseEstimator() {
+		return poseEstimator;
 	}
 }

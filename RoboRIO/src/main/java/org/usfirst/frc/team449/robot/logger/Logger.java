@@ -202,10 +202,13 @@ public class Logger implements Runnable {
 				telemetryData.append(",");
 			}
 		}
-		telemetryData.append("\n");
+
+		String telemetryString = telemetryData.toString();
+		telemetryString = telemetryString.substring(0, telemetryString.length()-1);
+		telemetryString += "\n";
 		//Log the data to a file.
 		try {
-			telemetryLogWriter.write(telemetryData.toString());
+			telemetryLogWriter.write(telemetryString);
 		} catch (IOException e) {
 			System.out.println("Logging failed!");
 			e.printStackTrace();
