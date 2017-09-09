@@ -35,14 +35,16 @@ public class MotionProfileData {
 	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
 	 *                 lines.
 	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
+	 * @param maxAccel The maximum acceleration the motor is capable of, usually stall torque of the drive output * wheel radius / (robot mass/2)
+	 * @param maxVel The max velocity the motor is capable of.
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
 	                         @JsonProperty(required = true) boolean inverted,
-	                         @JsonProperty(required = true) double kA,
-	                         @JsonProperty(required = true) double kV) {
+	                         @JsonProperty(required = true) double maxAccel,
+	                         @JsonProperty(required = true) double maxVel) {
 		this.inverted = inverted;
-		this.kaOverKv = kA/kV;
+		this.kaOverKv = maxVel/maxAccel;
 		try {
 			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
