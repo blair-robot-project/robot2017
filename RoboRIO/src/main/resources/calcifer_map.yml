@@ -152,7 +152,7 @@ drive:
                 - rightMaster
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
-        PIDScale: 0.9
+        VelScale: 0.9
         navX:
             '@id': driveNavX
             port: kMXP
