@@ -11,6 +11,8 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 
+import java.util.Arrays;
+
 /**
  * Component class for loading and running profiles on a {@link CANTalon}.
  */
@@ -173,6 +175,10 @@ public class CANTalonMPComponent {
 			point.velocityOnly = false;  // true => no position servo just velocity feedforward
 			// Set all the fields of the profile point
 			point.position = talon.feetToNative(data.getData()[i][0]);
+			if (talon.feetPerSecToNative(data.getData()[i][1]) > 1023){
+				System.out.println("Point "+ Arrays.toString(data.getData()[i])+" has an unattainable velocity+accel!");
+				Logger.addEvent("Point "+ Arrays.toString(data.getData()[i])+" has an unattainable velocity+accel!", CANTalonMPComponent.class);
+			}
 			point.velocity = talon.feetPerSecToNative(data.getData()[i][1]);
 			point.timeDurMs = (int) (data.getData()[i][2] * 1000.);
 			point.zeroPos = i == 0; // If its the first point, set the encoder position to 0.
