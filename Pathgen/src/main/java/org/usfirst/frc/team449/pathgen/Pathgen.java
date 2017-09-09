@@ -148,14 +148,14 @@ public class Pathgen {
 			lfw.write(tm.getLeftTrajectory().length() + "\n");
 			for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
 				lfw.write(tm.getLeftTrajectory().get(i).position + ",\t" + tm.getLeftTrajectory().get(i).velocity + ",\t"
-						+ tm.getLeftTrajectory().get(i).dt + ",");
+						+ tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getLeftTrajectory().get(i).dt);
 				lfw.write("\n");
 			}
 
 			rfw.write(tm.getRightTrajectory().length() + "\n");
 			for (int i = 0; i < tm.getRightTrajectory().length(); i++) {
-				rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity + "," +
-						"\t" + tm.getRightTrajectory().get(i).dt + ",");
+				rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity +
+						",\t" + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getRightTrajectory().get(i).dt);
 				rfw.write("\n");
 			}
 

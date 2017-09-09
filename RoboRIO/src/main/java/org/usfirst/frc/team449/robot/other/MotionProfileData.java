@@ -27,6 +27,8 @@ public class MotionProfileData {
 	 */
 	private boolean inverted;
 
+	private double kaOverKv;
+
 	/**
 	 * Default constructor
 	 *
@@ -36,8 +38,11 @@ public class MotionProfileData {
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
-	                         @JsonProperty(required = true) boolean inverted) {
+	                         @JsonProperty(required = true) boolean inverted,
+	                         @JsonProperty(required = true) double kA,
+	                         @JsonProperty(required = true) double kV) {
 		this.inverted = inverted;
+		this.kaOverKv = kA/kV;
 		try {
 			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
@@ -70,17 +75,18 @@ public class MotionProfileData {
 			//declare as a new double because we already put the old object it referenced in data.
 			tmp = new double[3];
 
+			double velPlusAccel = Double.parseDouble(line[1]) + Double.parseDouble(line[2])* kaOverKv;
+
 			//Invert the position and velocity if the profile is inverted
 			if (inverted) {
 				tmp[0] = -Double.parseDouble(line[0]);
-				tmp[1] = -Double.parseDouble(line[1]);
+				tmp[1] = -velPlusAccel;
 			} else {
 				tmp[0] = Double.parseDouble(line[0]);
-				tmp[1] = Double.parseDouble(line[1]);
+				tmp[1] = velPlusAccel;
 			}
 
-			//Trim the end of line comma
-			tmp[2] = Double.parseDouble(line[2].replace(",", ""));
+			tmp[2] = Double.parseDouble(line[3]);
 			data[i] = tmp;
 		}
 		//Close the reader
