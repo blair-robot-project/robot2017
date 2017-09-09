@@ -24,10 +24,9 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
 
 	/**
-	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the PID loop to give the loop
-	 * space to compensate.
+	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the motors.
 	 */
-	protected final double PID_SCALE;
+	protected final double VEL_SCALE;
 
 	/**
 	 * Right master Talon
@@ -65,60 +64,21 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @param rightMaster The master talon on the right side of the drive.
 	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
 	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
-	 * @param PIDScale    The amount to scale the output to the PID loop by. Defaults to 1.
+	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
 	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
 	                         @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
 	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                         @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
-	                         @Nullable Double PIDScale) {
+	                         @Nullable Double VelScale) {
 		super();
 		//Initialize stuff
-		this.PID_SCALE = PIDScale != null ? PIDScale : 1.;
+		this.VEL_SCALE = VelScale != null ? VelScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.mpHandler = MPHandler;
 		this.navX = navX;
-	}
-
-	/**
-	 * Simple helper function for clipping output to the -1 to 1 scale.
-	 *
-	 * @param in The number to be processed.
-	 * @return That number, clipped to 1 if it's greater than 1 or clipped to -1 if it's less than -1.
-	 */
-	private static double clipToOne(double in) {
-		return Math.min(Math.max(in, -1), 1);
-	}
-
-	/**
-	 * Sets the left and right wheel speeds as a percent of max voltage, not nearly as precise as PID.
-	 *
-	 * @param left  The left voltage throttle, [-1, 1]
-	 * @param right The right voltage throttle, [-1, 1]
-	 */
-	protected void setVBusThrottle(double left, double right) {
-		//Set voltage mode throttles
-		leftMaster.setPercentVbus(left);
-		rightMaster.setPercentVbus(-right); //This is negative so PID doesn't have to be. Future people, if your robot goes in circles in voltage mode, this may be why.
-	}
-
-	/**
-	 * Sets left and right wheel PID velocity setpoint as a percent of max setpoint
-	 *
-	 * @param left  The left PID velocity setpoint as a percent [-1, 1]
-	 * @param right The right PID velocity setpoint as a percent [-1, 1]
-	 */
-	protected void setPIDThrottle(double left, double right) {
-		//scale by the max speed
-		if (leftMaster.getMaxSpeed() == null || rightMaster.getMaxSpeed() == null) {
-			setVBusThrottle(left, right);
-			System.out.println("You're trying to set PID throttle, but the drive talons don't have PID constants defined. Using voltage control instead.");
-		} else {
-			leftMaster.setSpeed(PID_SCALE * (left * leftMaster.getMaxSpeed()));
-			rightMaster.setSpeed(PID_SCALE * (right * rightMaster.getMaxSpeed()));
-		}
 	}
 
 	/**
@@ -129,9 +89,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void setOutput(double left, double right) {
-		//Clip to one to avoid anything strange.
-		setPIDThrottle(clipToOne(left), clipToOne(right));
-//		setVBusThrottle(left, right);
+		//scale by the max speed
+		leftMaster.setVelocity(VEL_SCALE * left);
+		rightMaster.setVelocity(VEL_SCALE * right);
 	}
 
 	/**
@@ -161,7 +121,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void fullStop() {
-		setVBusThrottle(0, 0);
+		leftMaster.setPercentVbus(0);
+		rightMaster.setPercentVbus(0);
 	}
 
 	/**
