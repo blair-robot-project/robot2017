@@ -116,7 +116,7 @@ drive:
                 highGearI: 0.0
                 highGearD: 3.0
                 maxSpeedLow: 6.3
-                lowGearP: 0.4
+                lowGearP: 0.3
                 lowGearI: 0.0
                 lowGearD: 0.0
                 motionProfileP: 1.5
@@ -172,7 +172,7 @@ defaultDriveCommand:
         absoluteTolerance: 1
         maximumOutput: 0.33333
         toleranceBuffer: 25
-        deadband: 1
+        deadband: 2
         maxAngularVelToEnterLoop: 0.05
         inverted: true
         driveStraightLoopEntryTimer:
