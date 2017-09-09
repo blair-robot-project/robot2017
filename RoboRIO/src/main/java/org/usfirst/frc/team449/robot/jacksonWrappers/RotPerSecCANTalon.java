@@ -70,12 +70,12 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	/**
 	 * The PID constants for high gear or, if this motor does not have gears, just the PID constants.
 	 */
-	private final int highGearP, highGearI, highGearD;
+	private final double highGearP, highGearI, highGearD;
 
 	/**
 	 * The PID constants for low gear if this motor has a low gear.
 	 */
-	private final int lowGearP, lowGearI, lowGearD;
+	private final double lowGearP, lowGearI, lowGearD;
 
 	/**
 	 * The forward and reverse nominal voltages for high gear, or if this motor has no gears, just the nominal
@@ -192,16 +192,16 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	                         @Nullable Integer encoderCPR,
 	                         @Nullable Boolean reverseSensor,
 	                         @Nullable Double maxSpeedHigh,
-	                         int highGearP,
-	                         int highGearI,
-	                         int highGearD,
+	                         double highGearP,
+	                         double highGearI,
+	                         double highGearD,
 	                         @Nullable Double maxSpeedLow,
-	                         int lowGearP,
-	                         int lowGearI,
-	                         int lowGearD,
-	                         int motionProfileP,
-	                         int motionProfileI,
-	                         int motionProfileD,
+	                         double lowGearP,
+	                         double lowGearI,
+	                         double lowGearD,
+	                         double motionProfileP,
+	                         double motionProfileI,
+	                         double motionProfileD,
 	                         boolean MPUseLowGear,
 	                         @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.

@@ -90,7 +90,7 @@ oi:
                 '@id': fwdThrottle
                 axis: 5
                 inverted: true
-        invertDPad: true
+        invertDPad: false
         dPadShift: 0.1
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
@@ -111,18 +111,19 @@ drive:
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
-                maxSpeedHigh: 17.5
-                highGearP: 0.5
+                maxSpeedHigh: 16
+                highGearP: 0.7
                 highGearI: 0.0
                 highGearD: 3.0
-                maxSpeedLow: 6
-                lowGearP: 0.17
+                maxSpeedLow: 6.3
+                lowGearP: 0.4
                 lowGearI: 0.0
                 lowGearD: 0.0
                 motionProfileP: 1.5
                 motionProfileI: 0.0
                 motionProfileD: 0.0
                 MPUseLowGear: true
+                maxClosedLoopVoltage: 12
                 slaves:
                     - '@id': talon8
                       port: 8
