@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
@@ -675,7 +676,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Override
 	public void setVelocity(double velocity) {
 		if (maxSpeed != null) {
-			setSpeed(velocity);
+			setSpeed(velocity*maxSpeed);
 		} else {
 			setPercentVbus(velocity);
 		}
@@ -695,6 +696,22 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Override
 	public void disable() {
 		canTalon.disable();
+	}
+
+	/**
+	 * Set the velocity scaled to a given gear's max velocity. Used mostly when autoshifting.
+	 *
+	 * @param velocity The velocity to go at, from [-1, 1], where 1 is the max speed of the given gear.
+	 * @param gear The gear to use the max speed from to scale the velocity.
+	 */
+	public void setGearScaledVelocity(double velocity, @NotNull DriveShifting.gear gear){
+		if (maxSpeed == null){
+			setPercentVbus(velocity);
+		} else if (gear.equals(DriveShifting.gear.HIGH)) {
+			setVelocity(velocity * maxSpeedHigh);
+		} else {
+			setVelocity(velocity*maxSpeedLow);
+		}
 	}
 
 	/**

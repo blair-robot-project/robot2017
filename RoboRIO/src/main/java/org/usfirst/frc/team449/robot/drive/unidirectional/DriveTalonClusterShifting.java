@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
@@ -99,14 +100,13 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	@Override
 	public void setOutput(double left, double right) {
 		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current gear
-		if (overrideAutoshift || left == -right || leftMaster.getMaxSpeedHG() == null || rightMaster.getMaxSpeedHG() == null
-				|| leftMaster.getMaxSpeed() == null || rightMaster.getMaxSpeed() == null) {
+		if (overrideAutoshift || left == -right) {
 			super.setOutput(left, right);
 		}
 		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.
 		else {
-			super.setOutput(left*leftMaster.getMaxSpeedHG()/leftMaster.getMaxSpeed(),
-					right*rightMaster.getMaxSpeedHG()/rightMaster.getMaxSpeed());
+			leftMaster.setGearScaledVelocity(left, gear.HIGH);
+			rightMaster.setGearScaledVelocity(right, gear.HIGH);
 		}
 	}
 
