@@ -19,6 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimpl
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -191,7 +192,7 @@ public class RobotMap2017 {
 	/**
 	 * Default constructor.
 	 *
-	 * @param buttons             The buttons for controlling this robot.
+	 * @param buttons             The buttons for controlling this robot. Can be null for an empty list.
 	 * @param oi                  The OI for controlling this robot's drive.
 	 * @param logger              The logger for recording events and telemetry data.
 	 * @param drive               The drive.
@@ -231,7 +232,7 @@ public class RobotMap2017 {
 	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@NotNull @JsonProperty(required = true) List<CommandButton> buttons,
+	public RobotMap2017(@Nullable List<CommandButton> buttons,
 	                    @NotNull @JsonProperty(required = true) OIUnidirectional oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
@@ -254,7 +255,7 @@ public class RobotMap2017 {
 	                    @Nullable YamlCommand nonMPAutoCommand,
 	                    boolean testMP,
 	                    @Nullable Boolean doMP) {
-		this.buttons = buttons;
+		this.buttons = buttons != null ? buttons : new ArrayList<>();
 		this.oi = oi;
 		this.drive = drive;
 		this.climber = climber;

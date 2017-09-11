@@ -1,48 +1,64 @@
 ---
-doMP: false
-testMP: false
+doMP: true
+testMP: true
+leftTestProfile:
+    &leftTest
+    '@id': leftTest
+    filename: "forward100InProfile.csv"
+    inverted: false
+    maxAccel: 15
+    maxVel: 11
+rightTestProfile:
+    <<: *leftTest
+    '@id': rightTest
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
         '@id': drive
         leftMaster:
-            &leftMaster
-            '@id': leftMaster
-            port: 6
-            inverted: false
-            enableBrakeMode: true
-            fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 0
-            inchesPerRotation: 11.78097
-            currentLimit: 40
-            feedbackDevice: QuadEncoder
-            encoderCPR: 512
-            reverseSensor: false
-            maxSpeedHigh: 12.0127
-            highGearP: 0.3
-            highGearI: 0.0
-            highGearD: 3.0
-            motionProfileP: 1.5
-            motionProfileI: 0.0
-            motionProfileD: 0.0
-            slaves:
-                - '@id': talon1
-                  port: 1
-                  inverted: false
-                - '@id': talon2
-                  port: 2
-                  inverted: false
+            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+                &leftMaster
+                '@id': leftMaster
+                port: 5
+                inverted: false
+                enableBrakeMode: true
+                fwdPeakOutputVoltage: 12
+                maxClosedLoopVoltage: 12
+                highGearFwdNominalOutputVoltage: 0
+                inchesPerRotation: 12.02
+                currentLimit: 40
+                feedbackDevice: QuadEncoder
+                encoderCPR: 512
+                reverseSensor: false
+                reverseOutput: false
+                maxSpeedHigh: 11
+                highGearP: 0.3
+                highGearI: 0.0
+                highGearD: 3.0
+                motionProfileP: 1.0
+                motionProfileI: 0.0
+                motionProfileD: 0.0
+                slaves:
+                    - '@id': talon1
+                      port: 6
+                      inverted: false
+                    - '@id': talon2
+                      port: 1
+                      inverted: false
         rightMaster:
-            <<: *leftMaster
-            '@id': rightMaster
-            port: 6
-            inverted: true
-            slaves:
-                - '@id': talon3
-                  port: 3
-                  inverted: false
-                - '@id': talon5
-                  port: 5
-                  inverted: false
+            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+                <<: *leftMaster
+                '@id': rightMaster
+                port: 2
+                inverted: true
+                reverseSensor: true
+                reverseOutput: true
+                slaves:
+                    - '@id': talon3
+                      port: 9
+                      inverted: false
+                    - '@id': talon5
+                      port: 8
+                      inverted: false
         MPHandler:
             '@id': driveMPHandler
             talons:
@@ -50,7 +66,15 @@ drive:
                 - rightMaster
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
+            velocityOnly: false
         PIDScale: 0.9
+        navX:
+            '@id': driveNavX
+            port: kMXP
+pneumatics:
+    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+        '@id': pneumatics
+        nodeID: 15
 logger:
     '@id': logger
     subsystems:
@@ -60,50 +84,27 @@ logger:
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 oi:
-    org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+    org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
         '@id': oi
         gamepad:
             '@id': driverGamepad
             port: 1
         rotThrottle:
-            &rotThrottle
-            '@id': rotThrottle
-            stick: driverGamepad
-            axis: 0
-            deadband: 0.05
-            inverted: false
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                &rotThrottle
+                '@id': rotThrottle
+                stick: driverGamepad
+                axis: 0
+                deadband: 0.05
+                inverted: true
         fwdThrottle:
-            <<: *rotThrottle
-            '@id': fwdThrottle
-            axis: 5
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                <<: *rotThrottle
+                '@id': fwdThrottle
+                axis: 5
+                inverted: false
         invertDPad: false
         dPadShift: 0.1
-        scaleFwdByRotCoefficient: 0.2
-        buttons:
-            -   '@id': overrideNavXButton
-                button:
-                    '@id': gamepad10
-                    joystick: driverGamepad
-                    buttonNumber: 10
-                command:
-                    org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
-                        '@id': overrideNavX
-                        subsystem:
-                            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-                                drive
-                        override: true
-                action: WHEN_PRESSED
-            -   '@id': unoverrideNavXButton
-                button:
-                    gamepad10
-                command:
-                    org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
-                        '@id': unoverrideNavX
-                        subsystem:
-                            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-                                drive
-                        override: false
-                action: WHEN_RELEASED
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXDefaultDrive:
         '@id': defaultDriveCommand
@@ -112,11 +113,13 @@ defaultDriveCommand:
         absoluteTolerance: 1
         maximumOutput: 0.3333
         maxAngularVelToEnterLoop: 1
-        loopEntryDelay: 0.15
+        driveStraightLoopEntryTimer:
+            '@id': driveStraightLoopEntryTimer
+            bufferTimeSeconds: 0.15
         inverted: false
-        drive:
+        subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                 drive
         oi:
-            org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad:
+            org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi

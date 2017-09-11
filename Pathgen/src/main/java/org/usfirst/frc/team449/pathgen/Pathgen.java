@@ -110,7 +110,7 @@ public class Pathgen {
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
-		profiles.put("RedLeft", redLeft);
+		/*profiles.put("RedLeft", redLeft);
 		profiles.put("RedRight", redRight);
 		profiles.put("RedMid", redCenter);
 		profiles.put("BlueLeft", blueLeft);
@@ -119,7 +119,8 @@ public class Pathgen {
 		profiles.put("RedShoot", redPegToKey);
 		profiles.put("BlueShoot", bluePegToKey);
 		profiles.put("RedBackup", backupRed);
-		profiles.put("BlueBackup", backupBlue);
+		profiles.put("BlueBackup", backupBlue);*/
+		profiles.put("forward100In", points);
 
 		final String ROBOT_NAME = "calcifer";
 

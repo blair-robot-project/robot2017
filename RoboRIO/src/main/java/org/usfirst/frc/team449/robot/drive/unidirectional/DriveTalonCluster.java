@@ -130,8 +130,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	public void setOutput(double left, double right) {
 		//Clip to one to avoid anything strange.
-		setPIDThrottle(clipToOne(left), clipToOne(right));
-//		setVBusThrottle(left, right);
+//		setPIDThrottle(clipToOne(left), clipToOne(right));
+		setVBusThrottle(left, right);
 	}
 
 	/**
@@ -244,7 +244,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"left_voltage",
 				"right_voltage",
 				"left_pos",
-				"right_pos"};
+				"right_pos",
+				"gyro_heading"};
 	}
 
 	/**
@@ -263,8 +264,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getCanTalon().getOutputCurrent(),
 				leftMaster.getCanTalon().getOutputVoltage(),
 				rightMaster.getCanTalon().getOutputVoltage(),
-				leftMaster.getCanTalon().getPosition(),
-				rightMaster.getCanTalon().getPosition()};
+				leftMaster.nativeToFeet(leftMaster.getCanTalon().getPosition()),
+				rightMaster.nativeToFeet(rightMaster.getCanTalon().getPosition()),
+				navX.pidGet()};
 	}
 
 	/**

@@ -48,6 +48,11 @@ public class CANTalonMPComponent {
 	private final int minNumPointsInBtmBuffer;
 
 	/**
+	 * Whether to only use velocity FF and not PID.
+	 */
+	private final boolean velocityOnly;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param talons                   The talons to load profiles into.
@@ -55,14 +60,17 @@ public class CANTalonMPComponent {
 	 *                                 the low-level one, in seconds.
 	 * @param minNumPointsInBtmBuffer  The minimum number of points that must be in the bottom MP buffer to start a
 	 *                                 profile.
+	 *                                 @param velocityOnly Whether to only use velocity FF and not PID. Defaults to false.
 	 */
 	@JsonCreator
 	public CANTalonMPComponent(@NotNull @JsonProperty(required = true) RotPerSecCANTalon[] talons,
 	                           @JsonProperty(required = true) double updaterProcessPeriodSecs,
-	                           @JsonProperty(required = true) int minNumPointsInBtmBuffer) {
+	                           @JsonProperty(required = true) int minNumPointsInBtmBuffer,
+	                           boolean velocityOnly) {
 		this.RPSTalons = talons;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs;
 		this.minNumPointsInBtmBuffer = minNumPointsInBtmBuffer;
+		this.velocityOnly = velocityOnly;
 		//Instantiate the CANTalon list
 		this.talons = new CANTalon[RPSTalons.length];
 		//Set up the talon list
@@ -160,8 +168,9 @@ public class CANTalonMPComponent {
 	 *
 	 * @param data  The profile to load.
 	 * @param talon The talon to load it into.
+	 *              @param velocityOnly Whether to only use velocity FF and not PID.
 	 */
-	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalon talon) {
+	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalon talon, boolean velocityOnly) {
 		//Clear all the MP-related stuff on talon
 		talon.getCanTalon().disable();
 		talon.getCanTalon().clearMotionProfileHasUnderrun();
@@ -172,7 +181,7 @@ public class CANTalonMPComponent {
 			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 			//Set parameters that are true for all points
 			point.profileSlotSelect = 1;    // gain selection
-			point.velocityOnly = false;  // true => no position servo just velocity feedforward
+			point.velocityOnly = velocityOnly;  // true => no position servo just velocity feedforward
 			// Set all the fields of the profile point
 			point.position = talon.feetToNative(data.getData()[i][0]);
 			if (talon.feetPerSecToNative(data.getData()[i][1]) > 1023){
@@ -204,7 +213,7 @@ public class CANTalonMPComponent {
 		stopUpdaterProcess();
 		//Load the profile into each talon.
 		for (RotPerSecCANTalon talon : RPSTalons) {
-			loadTopLevel(data, talon);
+			loadTopLevel(data, talon, velocityOnly);
 		}
 		//Resume the updater.
 		startUpdaterProcess();
@@ -234,7 +243,7 @@ public class CANTalonMPComponent {
 		stopUpdaterProcess();
 		//Load each profile
 		for (int i = 0; i < RPSTalons.length; i++) {
-			loadTopLevel(profiles[i], RPSTalons[i]);
+			loadTopLevel(profiles[i], RPSTalons[i], velocityOnly);
 		}
 		//Resume the updater.
 		startUpdaterProcess();
