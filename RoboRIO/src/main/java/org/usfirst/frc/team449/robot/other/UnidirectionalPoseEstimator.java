@@ -157,7 +157,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		//Record everything at the start, as it may change between executing lines of code and that would be bad.
 		double left = subsystem.getLeftPos();
 		double right = subsystem.getRightPos();
-		double theta = subsystem.getGyroHeading();
+		double theta = subsystem.getNavX().getAngle();
 		long time = Robot.getTimeSinceInit();
 
 		//Calculate differences versus the last measurement
