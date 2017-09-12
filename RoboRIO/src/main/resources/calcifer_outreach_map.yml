@@ -1,5 +1,5 @@
 ---
-doMP: true
+doMP: false
 testMP: false
 leftTestProfile:
     &leftTest
@@ -70,28 +70,59 @@ locationDial:
     ports: [0, 1]
 RIOduinoPort: 4
 oi:
-    org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+    org.usfirst.frc.team449.robot.oi.unidirectional.OIOutreach:
         '@id': oi
-        gamepad:
-            '@id': driverGamepad
-            port: 1
-        rotThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
-                &rotThrottle
-                '@id': rotThrottle
-                stick: driverGamepad
-                axis: 0
-                smoothingTimeConstantSecs: 0.04
-                deadband: 0.05
-                inverted: false
-        fwdThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
-                <<: *rotThrottle
-                '@id': fwdThrottle
-                axis: 5
-                inverted: true
-        invertDPad: false
-        dPadShift: 0.1
+        overridingOI:
+            org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                '@id': overridingOi
+                gamepad:
+                    '@id': overridingGamepad
+                    port: 1
+                rotThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                        &overridingRotThrottle
+                        '@id': overridingRotThrottle
+                        stick: overridingGamepad
+                        axis: 0
+                        smoothingTimeConstantSecs: 0.04
+                        deadband: 0.05
+                        inverted: false
+                fwdThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                        <<: *overridingRotThrottle
+                        '@id': overridingFwdThrottle
+                        axis: 5
+                        inverted: true
+                invertDPad: true
+                dPadShift: 0.1
+        overridenOI:
+            org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                '@id': overridenOi
+                gamepad:
+                    '@id': overridenGamepad
+                    port: 2
+                rotThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                        &overridenRotThrottle
+                        '@id': overridenRotThrottle
+                        stick: overridenGamepad
+                        axis: 0
+                        smoothingTimeConstantSecs: 0.04
+                        deadband: 0.05
+                        inverted: false
+                fwdThrottle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                        <<: *overridenRotThrottle
+                        '@id': overridenFwdThrottle
+                        axis: 5
+                        inverted: true
+                invertDPad: true
+                dPadShift: 0.1
+        button:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+                '@id': overrideButton
+                joystick: overridingGamepad
+                buttonNumber: 6
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
         '@id': drive
@@ -100,9 +131,9 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
-                inverted: false
-                reverseOutput: true
-                enableBrakeMode: false
+                inverted: true
+                reverseOutput: false
+                enableBrakeMode: true
                 fwdPeakOutputVoltage: 12
                 highGearFwdNominalOutputVoltage: 1.3
                 lowGearFwdNominalOutputVoltage: 0.7
@@ -111,19 +142,19 @@ drive:
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
-                maxSpeedHigh: 16
-                highGearP: 0.7
-                highGearI: 0.0
-                highGearD: 3.0
-                maxSpeedLow: 6.3
-                lowGearP: 0.3
-                lowGearI: 0.0
-                lowGearD: 0.0
-                motionProfileP: 1.5
-                motionProfileI: 0.0
-                motionProfileD: 0.0
-                MPUseLowGear: true
                 maxClosedLoopVoltage: 12
+#                maxSpeedHigh: 17.5
+#                highGearP: 0.5
+#                highGearI: 0.0
+#                highGearD: 3.0
+#                maxSpeedLow: 6
+#                lowGearP: 0.17
+#                lowGearI: 0.0
+#                lowGearD: 0.0
+#                motionProfileP: 1.5
+#                motionProfileI: 0.0
+#                motionProfileD: 0.0
+                MPUseLowGear: true
                 slaves:
                     - '@id': talon8
                       port: 8
@@ -153,7 +184,8 @@ drive:
                 - rightMaster
             updaterProcessPeriodSecs: 0.005
             minNumPointsInBtmBuffer: 10
-        VelScale: 0.9
+        #This is the number you change to adjust the speed
+        VelScale: 0.5
         navX:
             '@id': driveNavX
             port: kMXP
@@ -164,37 +196,14 @@ drive:
             reverse: 3
         startingGear: LOW
 defaultDriveCommand:
-    org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
+    org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
         '@id': defaultDriveCommand
-        kP: 0.012
-        kI: 0.0
-        kD: 0.0
-        absoluteTolerance: 1
-        maximumOutput: 0.33333
-        toleranceBuffer: 25
-        deadband: 2
-        maxAngularVelToEnterLoop: 0.05
-        inverted: true
-        driveStraightLoopEntryTimer:
-            '@id': driveStraightLoopEntryTimer
-            bufferTimeSeconds: 0.15
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
                 drive
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
-        autoshiftComponent:
-            '@id': autoshiftComponent
-            upshiftSpeed: 4
-            downshiftSpeed: 2
-            upshiftBufferTimer:
-                '@id': upshiftBufferTimer
-                bufferTimeSeconds: 0.25
-            downshiftBufferTimer:
-                '@id': downshiftBufferTimer
-                bufferTimeSeconds: 0.0
-            upshiftFwdThresh: 0.3
 climber:
     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
@@ -270,13 +279,6 @@ pneumatics:
             port: 0
             oversampleBits: 0
             averageBits: 0
-poseEstimator:
-    '@id': poseEstimator
-    robotDiameter: 25
-    subsystem:
-        org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-            drive
-    absolutePosAngleTolerance: 5
 logger:
     '@id': logger
     subsystems:
@@ -286,8 +288,6 @@ logger:
             pneumatics
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
-        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-            poseEstimator
 #        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
 #            multiSubsystem
     loopTimeSecs: 0.05
@@ -427,167 +427,107 @@ feederAuto:
                     filename: "forwardProfile.csv"
                     inverted: false
                 timeout: 5
-nonMPAutoCommand:
-    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:
-        '@id': determineNominalVoltage
-        minSpeed: 0.1
-        subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                drive
 buttons:
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
-                '@id': switchToLowButton
-                joystick:
-                    '@id': gunnerGamepad
-                    port: 3
-                angle: 180
-        command:
-            org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToLowGear:
-                '@id': switchToLowCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-        action: WHEN_PRESSED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
-                '@id': switchToHighButton
-                joystick:
-                    gunnerGamepad
-                angle: 0
-        command:
-            org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToHighGear:
-                '@id': switchToHighCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-        action: WHEN_PRESSED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                '@id': overrideNavXButton
-                joystick:
-                    gunnerGamepad
-                buttonNumber: 1
-        command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
-                '@id': overrideNavXCommand
-                override: true
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-        action: WHEN_PRESSED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                overrideNavXButton
-        command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
-                '@id': unoverrideNavXCommand
-                override: false
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-        action: WHEN_RELEASED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                '@id': jiggleRobotButton
-                joystick:
-                    gunnerGamepad
-                buttonNumber: 8
-        command:
-            org.usfirst.frc.team449.robot.commands.multiInterface.drive.JiggleRobot:
-                '@id': jiggleRobotCommand
-                kP: 0.007
-                kI: 0.0
-                kD: 0.0
-                toleranceBuffer: 25
-                absoluteTolerance: 1
-                deadband: 0.75
-                inverted: false
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-        action: WHEN_PRESSED
-    -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
-                '@id': climbButton
+                '@id': overridingClimbButton
                 throttle:
                     org.usfirst.frc.team449.robot.oi.throttles.Throttle:
-                        '@id': climbButtonThrottle
+                        '@id': overridingClimbButtonThrottle
                         stick:
-                            driverGamepad
+                            overridingGamepad
                         axis: 2
                 triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunMotorWhileConditonMet:
-                '@id': climbCommand
+                '@id': overridingClimbCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
                         climber
         action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
-                climbButton
+                overridingClimbButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
-                '@id': stopClimbCommand
+                '@id': overridingStopClimbCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
                         climber
         action: WHEN_RELEASED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                '@id': manualClimbButton
-                joystick:
-                    gunnerGamepad
-                buttonNumber: 3
-        command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOn:
-                '@id': manualClimbCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
-                        climber
-        action: WHEN_PRESSED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                manualClimbButton
-        command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
-                stopClimbCommand
-        action: WHEN_RELEASED
-    -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-                '@id': switchCameraButton
-                joystick:
-                    gunnerGamepad
-                buttonNumber: 9
-        command:
-            org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.commands.ChangeCam:
-                '@id': switchCameraCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork:
-                        cameras
-        action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
-                '@id': pushGearButton
+                '@id': overridingPushGearButton
                 throttle:
                     org.usfirst.frc.team449.robot.oi.throttles.Throttle:
-                        '@id': pushGearThrottle
+                        '@id': overridingPushGearThrottle
                         stick:
-                            driverGamepad
+                            overridingGamepad
                         axis: 3
                 triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
                 <<: *openGearHandler
-                '@id': openGearHandlerCommand
+                '@id': overridingOpenGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
-                pushGearButton
+                overridingPushGearButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
-                '@id': closeGearHandlerCommand
+                '@id': overridingCloseGearHandlerCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+                        gearHandler
+        action: WHEN_RELEASED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+                '@id': overridenClimbButton
+                throttle:
+                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
+                        '@id': overridenClimbButtonThrottle
+                        stick:
+                            overridenGamepad
+                        axis: 2
+                triggerAt: 0.9
+        command:
+            org.usfirst.frc.team449.robot.commands.multiInterface.RunMotorWhileConditonMet:
+                '@id': overridenClimbCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                        climber
+        action: WHEN_PRESSED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+                overridenClimbButton
+        command:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
+                '@id': overridenStopClimbCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                        climber
+        action: WHEN_RELEASED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+                '@id': overridenPushGearButton
+                throttle:
+                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
+                        '@id': overridenPushGearThrottle
+                        stick:
+                            overridenGamepad
+                        axis: 3
+                triggerAt: 0.9
+        command:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
+                <<: *openGearHandler
+                '@id': overridenOpenGearHandlerCommand
+        action: WHEN_PRESSED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+                overridenPushGearButton
+        command:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+                '@id': overridenCloseGearHandlerCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler

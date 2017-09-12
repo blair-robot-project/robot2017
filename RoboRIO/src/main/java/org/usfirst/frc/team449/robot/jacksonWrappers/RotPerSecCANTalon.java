@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
@@ -68,12 +69,12 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	/**
 	 * The PID constants for high gear or, if this motor does not have gears, just the PID constants.
 	 */
-	private final int highGearP, highGearI, highGearD;
+	private final double highGearP, highGearI, highGearD;
 
 	/**
 	 * The PID constants for low gear if this motor has a low gear.
 	 */
-	private final int lowGearP, lowGearI, lowGearD;
+	private final double lowGearP, lowGearI, lowGearD;
 
 	/**
 	 * The forward and reverse nominal voltages for high gear, or if this motor has no gears, just the nominal
@@ -191,16 +192,16 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	                         @Nullable Integer encoderCPR,
 	                         @Nullable Boolean reverseSensor,
 	                         @Nullable Double maxSpeedHigh,
-	                         int highGearP,
-	                         int highGearI,
-	                         int highGearD,
+	                         double highGearP,
+	                         double highGearI,
+	                         double highGearD,
 	                         @Nullable Double maxSpeedLow,
-	                         int lowGearP,
-	                         int lowGearI,
-	                         int lowGearD,
-	                         int motionProfileP,
-	                         int motionProfileI,
-	                         int motionProfileD,
+	                         double lowGearP,
+	                         double lowGearI,
+	                         double lowGearD,
+	                         double motionProfileP,
+	                         double motionProfileI,
+	                         double motionProfileD,
 	                         boolean MPUseLowGear,
 	                         @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
@@ -675,7 +676,7 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Override
 	public void setVelocity(double velocity) {
 		if (maxSpeed != null) {
-			setSpeed(velocity);
+			setSpeed(velocity*maxSpeed);
 		} else {
 			setPercentVbus(velocity);
 		}
@@ -695,6 +696,22 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	@Override
 	public void disable() {
 		canTalon.disable();
+	}
+
+	/**
+	 * Set the velocity scaled to a given gear's max velocity. Used mostly when autoshifting.
+	 *
+	 * @param velocity The velocity to go at, from [-1, 1], where 1 is the max speed of the given gear.
+	 * @param gear The gear to use the max speed from to scale the velocity.
+	 */
+	public void setGearScaledVelocity(double velocity, @NotNull DriveShifting.gear gear){
+		if (maxSpeed == null){
+			setPercentVbus(velocity);
+		} else if (gear.equals(DriveShifting.gear.HIGH)) {
+			setVelocity(velocity * maxSpeedHigh);
+		} else {
+			setVelocity(velocity*maxSpeedLow);
+		}
 	}
 
 	/**
