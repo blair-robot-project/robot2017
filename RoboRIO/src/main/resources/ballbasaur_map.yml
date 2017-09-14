@@ -7,7 +7,7 @@ leftTestProfile:
     filename: "forward100InProfile.csv"
     inverted: false
     maxAccel: 15
-    maxVel: 11
+    maxVel: 11.02
 rightTestProfile:
     <<: *leftTest
     '@id': rightTest
