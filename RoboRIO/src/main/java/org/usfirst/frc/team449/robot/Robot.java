@@ -229,6 +229,7 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("position: " + position, this.getClass());
 
 				SmartDashboard.putString("Position",allianceString+" "+position);
+				SmartDashboard.putBoolean("DropGear",dropGear);
 
 				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),

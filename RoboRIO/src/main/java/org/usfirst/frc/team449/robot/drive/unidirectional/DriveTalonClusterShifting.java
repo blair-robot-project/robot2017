@@ -100,7 +100,7 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	@Override
 	public void setOutput(double left, double right) {
 		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current gear
-		if (overrideAutoshift || left == -right) {
+		if (overrideAutoshift) {
 			super.setOutput(left, right);
 		}
 		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.

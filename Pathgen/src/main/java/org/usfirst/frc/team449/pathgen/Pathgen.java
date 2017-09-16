@@ -19,19 +19,19 @@ public class Pathgen {
 		final double CENTER_TO_FRONT = 27./2.;
 		final double CENTER_TO_BACK = 27./2. + 3.25;
 		final double CENTER_TO_SIDE = 29./2. + 3.25;
-		final double BACK_FROM_PEG = 0;
+		final double BACK_FROM_PEG = -6;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
-		final double BLUE_WALL_TO_CENTER_PEG = 114.;
-		final double BLUE_WALL_TO_SIDE_PEG = 131.;
-		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 94.139;
-		final double BLUE_HALF_KEY_LENGTH = 155./2.;
-		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 23.;
-		final double RED_WALL_TO_CENTER_PEG = 114.5;
+		final double BLUE_WALL_TO_CENTER_PEG = 114.3;
+		final double BLUE_WALL_TO_SIDE_PEG = 131.9;
+		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 92.;
+		final double BLUE_HALF_KEY_LENGTH = 154.5/2.;
+		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 24.;
+		final double RED_WALL_TO_CENTER_PEG = 114.3;
 		final double RED_WALL_TO_SIDE_PEG = 131.;
-		final double RED_BACK_CORNER_TO_SIDE_PEG = 95.;
-		final double RED_HALF_KEY_LENGTH = 154.5/2.;
-		final double RED_KEY_CORNER_TO_SIDE_PEG = 23.;
+		final double RED_BACK_CORNER_TO_SIDE_PEG = 99.;
+		final double RED_HALF_KEY_LENGTH = 157/2.;
+		final double RED_KEY_CORNER_TO_SIDE_PEG = 27.;
 		//final double AIRSHIP_PARALLEL_OFFSET = 6.-2.5;
 		final double AIRSHIP_PARALLEL_OFFSET = 6.;
 

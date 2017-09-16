@@ -708,9 +708,9 @@ public class RotPerSecCANTalon implements SimpleMotor {
 		if (maxSpeed == null){
 			setPercentVbus(velocity);
 		} else if (gear.equals(DriveShifting.gear.HIGH)) {
-			setVelocity(velocity * maxSpeedHigh);
+			setSpeed(velocity * maxSpeedHigh);
 		} else {
-			setVelocity(velocity*maxSpeedLow);
+			setSpeed(velocity*maxSpeedLow);
 		}
 	}
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
@@ -35,6 +36,7 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
 	public Auto2017Boiler(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
 	                      @NotNull @JsonProperty(required = true) YamlCommand dropGear,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+	                      YamlCommand backup,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedPegToKeyProfile,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBluePegToKeyProfile,
@@ -48,15 +50,17 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
 			addSequential(dropGear.getCommand());
 		}
 
-		//Red is true, blue is false
-		if (allianceSwitch.getStatus().get(0)) {
-			addSequential(runRedPegToKeyProfile);
-		} else {
-			addSequential(runBluePegToKeyProfile);
-		}
+		addSequential(backup.getCommand());
 
-		if (fireShooter != null) {
-			addSequential(fireShooter.getCommand());
-		}
+//		//Red is true, blue is false
+//		if (allianceSwitch.getStatus().get(0)) {
+//			addSequential(runRedPegToKeyProfile);
+//		} else {
+//			addSequential(runBluePegToKeyProfile);
+//		}
+//
+//		if (fireShooter != null) {
+//			addSequential(fireShooter.getCommand());
+//		}
 	}
 }

@@ -33,6 +33,7 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 	public Auto2017Feeder(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
 	                      @NotNull @JsonProperty(required = true) YamlCommand dropGear,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
+	                      YamlCommand backup,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedBackupProfile,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBlueBackupProfile,
@@ -41,12 +42,14 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 		if (dropGearSwitch.getStatus().get(0)) {
 			addSequential(dropGear.getCommand());
 		}
+
+		addSequential(backup.getCommand());
 		//Red is true
-		if (allianceSwitch.getStatus().get(0)) {
-			addSequential(runRedBackupProfile);
-		} else {
-			addSequential(runBlueBackupProfile);
-		}
-		addSequential(driveForwards.getCommand());
+//		if (allianceSwitch.getStatus().get(0)) {
+//			addSequential(runRedBackupProfile);
+//		} else {
+//			addSequential(runBlueBackupProfile);
+//		}
+//		addSequential(driveForwards.getCommand());
 	}
 }
