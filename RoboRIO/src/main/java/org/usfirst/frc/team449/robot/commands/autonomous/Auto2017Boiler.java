@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.commands.general.WaitForMillis;
 import org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
@@ -31,17 +32,19 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
 	 * @param runBluePegToKeyProfile The command for moving from the peg to the key, on the blue side of the field.
 	 * @param spinUpShooter          The command for revving up the shooter. Can be null.
 	 * @param fireShooter            The command for firing the shooter. Can be null.
+	 * @param waitBetweenProfilesMillis How long to wait between each motion profile. Defaults to 50 if less than 50.
 	 */
 	@JsonCreator
 	public Auto2017Boiler(@NotNull @JsonProperty(required = true) RunLoadedProfile runWallToPegProfile,
 	                      @NotNull @JsonProperty(required = true) YamlCommand dropGear,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput dropGearSwitch,
-	                      YamlCommand backup,
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedPegToKeyProfile,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBluePegToKeyProfile,
 	                      @Nullable YamlCommand spinUpShooter,
-	                      @Nullable YamlCommand fireShooter) {
+	                      @Nullable YamlCommand fireShooter,
+	                      long waitBetweenProfilesMillis) {
+		waitBetweenProfilesMillis = Math.max(50, waitBetweenProfilesMillis);
 		if (spinUpShooter != null) {
 			addParallel(spinUpShooter.getCommand());
 		}
@@ -50,17 +53,17 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
 			addSequential(dropGear.getCommand());
 		}
 
-		addSequential(backup.getCommand());
+		addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-//		//Red is true, blue is false
-//		if (allianceSwitch.getStatus().get(0)) {
-//			addSequential(runRedPegToKeyProfile);
-//		} else {
-//			addSequential(runBluePegToKeyProfile);
-//		}
-//
-//		if (fireShooter != null) {
-//			addSequential(fireShooter.getCommand());
-//		}
+		//Red is true, blue is false
+		if (allianceSwitch.getStatus().get(0)) {
+			addSequential(runRedPegToKeyProfile);
+		} else {
+			addSequential(runBluePegToKeyProfile);
+		}
+
+		if (fireShooter != null) {
+			addSequential(fireShooter.getCommand());
+		}
 	}
 }

@@ -374,14 +374,7 @@ boilerAuto:
                     filename: "calciferRightBlueShootProfile.csv"
                     inverted: true
                 timeout: 10
-        backup:
-            org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed:
-                '@id': driveBackCommandBoiler
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                velocity: -0.5
-                seconds: 0.5
+        waitBetweenProfilesMillis: 50
 feederAuto:
     org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Feeder:
         '@id': feederAuto
@@ -440,14 +433,7 @@ feederAuto:
                     filename: "forwardProfile.csv"
                     inverted: false
                 timeout: 5
-        backup:
-            org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed:
-                '@id': driveBackCommandFeeder
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                velocity: -0.5
-                seconds: 0.5
+        waitBetweenProfilesMillis: 50
 nonMPAutoCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:
         '@id': determineNominalVoltage
