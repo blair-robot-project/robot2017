@@ -49,6 +49,11 @@ public class OIArcadeWithDPad extends OIArcade {
 	private final Polynomial scaleRotByFwdPoly;
 
 	/**
+	 * The scalar that scales the rotational throttle while turning in place.
+	 */
+	private final double turnInPlaceRotScale;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param gamepad           The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
@@ -59,6 +64,7 @@ public class OIArcadeWithDPad extends OIArcade {
 	 * @param scaleRotByFwdPoly The polynomial to scale the forwards throttle output by before using it to scale the
 	 *                          rotational throttle. Can be null, and if it is, rotational throttle is not scaled by
 	 *                          forwards throttle.
+	 * @param turnInPlaceRotScale The scalar that scales the rotational throttle while turning in place.
 	 */
 	@JsonCreator
 	public OIArcadeWithDPad(
@@ -67,12 +73,14 @@ public class OIArcadeWithDPad extends OIArcade {
 			double dPadShift,
 			boolean invertDPad,
 			@Nullable MappedJoystick gamepad,
-			@Nullable Polynomial scaleRotByFwdPoly) {
+			@Nullable Polynomial scaleRotByFwdPoly,
+			@JsonProperty(required = true) double turnInPlaceRotScale) {
 		this.dPadShift = (invertDPad ? -1 : 1) * dPadShift;
 		this.rotThrottle = rotThrottle;
 		this.fwdThrottle = fwdThrottle;
 		this.gamepad = gamepad;
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
+		this.turnInPlaceRotScale = turnInPlaceRotScale;
 	}
 
 	/**
@@ -101,10 +109,15 @@ public class OIArcadeWithDPad extends OIArcade {
 			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
 		} else {
 			//Return the throttle value if it's outside of the deadband.
-			if (scaleRotByFwdPoly != null) {
-				return rotThrottle.getValue() * scaleRotByFwdPoly.get(fwdThrottle.getValue());
+			if (fwdThrottle.getValue() == 0){
+				return rotThrottle.getValue()*turnInPlaceRotScale;
+			} else {
+				if (scaleRotByFwdPoly != null) {
+					return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(fwdThrottle.getValue()));
+				} else {
+					return rotThrottle.getValue();
+				}
 			}
-			return rotThrottle.getValue();
 		}
 	}
 }
