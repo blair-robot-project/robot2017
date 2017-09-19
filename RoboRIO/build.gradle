@@ -27,7 +27,7 @@ wpi {
 	cscoreVersion = "1.0.2"                   // The CSCore version to use
 
 	talonSrxVersion = "4.4.1.14"                 // The CTRE Toolsuite (Talon SRX) version to use.
-	navxVersion = "+"
+	navxVersion = "3.0.331"
 }
 
 dependencies {
