@@ -30,7 +30,7 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	/**
 	 * Default constructor
 	 *
-	 * @param leftMotor The motor for the left side of the drive.
+	 * @param leftMotor  The motor for the left side of the drive.
 	 * @param rightMotor The motor for the right side of the drive.
 	 */
 	@JsonCreator

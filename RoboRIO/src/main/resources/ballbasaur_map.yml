@@ -146,7 +146,7 @@ oi:
             '@id': driverGamepad
             port: 1
         rotThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                 &rotThrottle
                 '@id': rotThrottle
                 stick: driverGamepad
@@ -154,7 +154,7 @@ oi:
                 deadband: 0.05
                 inverted: false
         fwdThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                 <<: *rotThrottle
                 '@id': fwdThrottle
                 axis: 5

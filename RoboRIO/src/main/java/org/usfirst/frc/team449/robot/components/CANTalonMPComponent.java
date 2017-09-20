@@ -106,12 +106,12 @@ public class CANTalonMPComponent {
 			CANTalon.MotionProfileStatus status = new CANTalon.MotionProfileStatus();
 			talon.getMotionProfileStatus(status);
 			//We check if the current point is the final one to see if the profile is finished.
-			System.out.println("Active point pos: "+status.activePoint.position);
-			System.out.println("Points in top buffer: "+status.topBufferCnt);
-			System.out.println("Points in bottom buffer: "+status.btmBufferCnt);
-			Logger.addEvent("Active point pos: "+status.activePoint.position, CANTalonMPComponent.class);
-			Logger.addEvent("Points in top buffer: "+status.topBufferCnt, CANTalonMPComponent.class);
-			Logger.addEvent("Points in bottom buffer: "+status.btmBufferCnt, CANTalonMPComponent.class);
+			System.out.println("Active point pos: " + status.activePoint.position);
+			System.out.println("Points in top buffer: " + status.topBufferCnt);
+			System.out.println("Points in bottom buffer: " + status.btmBufferCnt);
+			Logger.addEvent("Active point pos: " + status.activePoint.position, CANTalonMPComponent.class);
+			Logger.addEvent("Points in top buffer: " + status.topBufferCnt, CANTalonMPComponent.class);
+			Logger.addEvent("Points in bottom buffer: " + status.btmBufferCnt, CANTalonMPComponent.class);
 			finished = finished && status.activePoint.isLastPoint;
 		}
 		return finished;

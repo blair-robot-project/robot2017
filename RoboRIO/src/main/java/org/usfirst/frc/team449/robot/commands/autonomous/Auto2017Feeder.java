@@ -21,14 +21,14 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 	/**
 	 * Default constructor.
 	 *
-	 * @param runWallToPegProfile  The command for running the profile for going from the wall to the peg, which has
-	 *                             already been loaded.
-	 * @param dropGear             The command for dropping the held gear.
-	 * @param dropGearSwitch       The switch deciding whether or not to drop the gear.
-	 * @param allianceSwitch       The switch indicating which alliance we're on.
-	 * @param runRedBackupProfile  The command for away from the peg, on the red side of the field.
-	 * @param runBlueBackupProfile The command for moving away from the peg, on the blue side of the field.
-	 * @param driveForwards        The command for moving forwards towards the feeder station.
+	 * @param runWallToPegProfile       The command for running the profile for going from the wall to the peg, which
+	 *                                  has already been loaded.
+	 * @param dropGear                  The command for dropping the held gear.
+	 * @param dropGearSwitch            The switch deciding whether or not to drop the gear.
+	 * @param allianceSwitch            The switch indicating which alliance we're on.
+	 * @param runRedBackupProfile       The command for away from the peg, on the red side of the field.
+	 * @param runBlueBackupProfile      The command for moving away from the peg, on the blue side of the field.
+	 * @param driveForwards             The command for moving forwards towards the feeder station.
 	 * @param waitBetweenProfilesMillis How long to wait between each motion profile. Defaults to 50 if less than 50.
 	 */
 	@JsonCreator
