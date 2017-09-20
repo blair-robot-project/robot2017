@@ -5,14 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 
 
 /**
@@ -56,8 +55,8 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 * @param startingGear The gear the drive starts in. Defaults to low.
 	 */
 	@JsonCreator
-	public DriveTalonClusterShifting(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
-	                                 @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
+	public DriveTalonClusterShifting(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
+	                                 @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
 	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                                 @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                                 @Nullable Double VelScale,

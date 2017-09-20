@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 
@@ -21,7 +21,7 @@ public class CANTalonMPComponent {
 	 * The talons with the RPSCANTalonSRX wrapper to convert from feet to native units.
 	 */
 	@NotNull
-	private final RotPerSecCANTalon[] RPSTalons;
+	private final RPSTalon[] RPSTalons;
 
 	/**
 	 * The talons without any wrapper.
@@ -55,7 +55,7 @@ public class CANTalonMPComponent {
 	 *                                 profile.
 	 */
 	@JsonCreator
-	public CANTalonMPComponent(@NotNull @JsonProperty(required = true) RotPerSecCANTalon[] talons,
+	public CANTalonMPComponent(@NotNull @JsonProperty(required = true) RPSTalon[] talons,
 	                           @JsonProperty(required = true) double updaterProcessPeriodSecs,
 	                           @JsonProperty(required = true) int minNumPointsInBtmBuffer) {
 		this.RPSTalons = talons;
@@ -159,7 +159,7 @@ public class CANTalonMPComponent {
 	 * @param data  The profile to load.
 	 * @param talon The talon to load it into.
 	 */
-	public static void loadTopLevel(MotionProfileData data, RotPerSecCANTalon talon) {
+	public static void loadTopLevel(MotionProfileData data, RPSTalon talon) {
 		//Clear all the MP-related stuff on talon
 		talon.getCanTalon().disable();
 		talon.getCanTalon().clearMotionProfileHasUnderrun();
@@ -197,7 +197,7 @@ public class CANTalonMPComponent {
 		//Stop the updater while we load the API-level buffer
 		stopUpdaterProcess();
 		//Load the profile into each talon.
-		for (RotPerSecCANTalon talon : RPSTalons) {
+		for (RPSTalon talon : RPSTalons) {
 			loadTopLevel(data, talon);
 		}
 		//Resume the updater.

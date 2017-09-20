@@ -20,7 +20,7 @@ import java.util.List;
  * in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RotPerSecCANTalon implements SimpleMotor {
+public class RPSTalon implements SimpleMotor {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -169,41 +169,41 @@ public class RotPerSecCANTalon implements SimpleMotor {
 	 * @param slaves                          The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
-	public RotPerSecCANTalon(@JsonProperty(required = true) int port,
-	                         @JsonProperty(required = true) boolean inverted,
-	                         boolean reverseOutput,
-	                         @JsonProperty(required = true) boolean enableBrakeMode,
-	                         @JsonProperty(required = true) double fwdPeakOutputVoltage,
-	                         @Nullable Double revPeakOutputVoltage,
-	                         @JsonProperty(required = true) double highGearFwdNominalOutputVoltage,
-	                         @Nullable Double highGearRevNominalOutputVoltage,
-	                         @Nullable Double lowGearFwdNominalOutputVoltage,
-	                         @Nullable Double lowGearRevNominalOutputVoltage,
-	                         @Nullable Boolean fwdLimitSwitchNormallyOpen,
-	                         @Nullable Boolean revLimitSwitchNormallyOpen,
-	                         @Nullable Double fwdSoftLimit,
-	                         @Nullable Double revSoftLimit,
-	                         @Nullable Double postEncoderGearing,
-	                         @Nullable Double closedLoopRampRate,
-	                         @Nullable Double inchesPerRotation,
-	                         @Nullable Integer currentLimit,
-	                         double maxClosedLoopVoltage,
-	                         @Nullable CANTalon.FeedbackDevice feedbackDevice,
-	                         @Nullable Integer encoderCPR,
-	                         @Nullable Boolean reverseSensor,
-	                         @Nullable Double maxSpeedHigh,
-	                         double highGearP,
-	                         double highGearI,
-	                         double highGearD,
-	                         @Nullable Double maxSpeedLow,
-	                         double lowGearP,
-	                         double lowGearI,
-	                         double lowGearD,
-	                         double motionProfileP,
-	                         double motionProfileI,
-	                         double motionProfileD,
-	                         boolean MPUseLowGear,
-	                         @Nullable List<SlaveTalon> slaves) {
+	public RPSTalon(@JsonProperty(required = true) int port,
+	                @JsonProperty(required = true) boolean inverted,
+	                boolean reverseOutput,
+	                @JsonProperty(required = true) boolean enableBrakeMode,
+	                @JsonProperty(required = true) double fwdPeakOutputVoltage,
+	                @Nullable Double revPeakOutputVoltage,
+	                @JsonProperty(required = true) double highGearFwdNominalOutputVoltage,
+	                @Nullable Double highGearRevNominalOutputVoltage,
+	                @Nullable Double lowGearFwdNominalOutputVoltage,
+	                @Nullable Double lowGearRevNominalOutputVoltage,
+	                @Nullable Boolean fwdLimitSwitchNormallyOpen,
+	                @Nullable Boolean revLimitSwitchNormallyOpen,
+	                @Nullable Double fwdSoftLimit,
+	                @Nullable Double revSoftLimit,
+	                @Nullable Double postEncoderGearing,
+	                @Nullable Double closedLoopRampRate,
+	                @Nullable Double inchesPerRotation,
+	                @Nullable Integer currentLimit,
+	                double maxClosedLoopVoltage,
+	                @Nullable CANTalon.FeedbackDevice feedbackDevice,
+	                @Nullable Integer encoderCPR,
+	                @Nullable Boolean reverseSensor,
+	                @Nullable Double maxSpeedHigh,
+	                double highGearP,
+	                double highGearI,
+	                double highGearD,
+	                @Nullable Double maxSpeedLow,
+	                double lowGearP,
+	                double lowGearI,
+	                double lowGearD,
+	                double motionProfileP,
+	                double motionProfileI,
+	                double motionProfileD,
+	                boolean MPUseLowGear,
+	                @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.

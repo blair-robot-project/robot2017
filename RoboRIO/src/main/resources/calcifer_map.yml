@@ -96,7 +96,7 @@ drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
         '@id': drive
         leftMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
@@ -132,7 +132,7 @@ drive:
                       port: 6
                       inverted: true
         rightMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
@@ -199,7 +199,7 @@ climber:
     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
         talonSRX:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
                 '@id': climberTalon
                 port: 5
                 inverted: false

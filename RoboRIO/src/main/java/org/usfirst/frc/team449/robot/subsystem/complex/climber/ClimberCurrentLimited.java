@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.VictorSP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -26,7 +24,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 * The CANTalon controlling one of the climber motors.
 	 */
 	@NotNull
-	private final RotPerSecCANTalon canTalonSRX;
+	private final RPSTalon canTalonSRX;
 
 	/**
 	 * The other climber motor.
@@ -60,7 +58,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 * @param powerLimitTimer The buffer timer for the power-limited shutoff.
 	 */
 	@JsonCreator
-	public ClimberCurrentLimited(@NotNull @JsonProperty(required = true) RotPerSecCANTalon talonSRX,
+	public ClimberCurrentLimited(@NotNull @JsonProperty(required = true) RPSTalon talonSRX,
 	                             @JsonProperty(required = true) double maxPower,
 	                             @Nullable SimpleMotor simpleMotor,
 	                             @NotNull @JsonProperty(required = true) BufferTimer powerLimitTimer) {

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
@@ -32,13 +32,13 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * Right master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon rightMaster;
+	protected final RPSTalon rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon leftMaster;
+	protected final RPSTalon leftMaster;
 
 	/**
 	 * The NavX gyro
@@ -67,8 +67,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
-	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
-	                         @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
+	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
+	                         @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
 	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                         @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                         @Nullable Double VelScale) {
