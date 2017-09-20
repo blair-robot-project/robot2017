@@ -105,7 +105,7 @@ var activeTableTab = "activeTableTab";
 <li><a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem</a></li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.subsystem.complex.shooter.ShooterWithVictorFeeder</li>
+<li>org.usfirst.frc.team449.robot.object.complex.shooter.ShooterWithVictorFeeder</li>
 </ul>
 </li>
 </ul>
@@ -118,13 +118,13 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public class <span class="typeNameLabel">SingleFlywheelShooter</span>
 extends <a href="../../../../../../../org/usfirst/frc/team449/robot/util/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.logger">YamlSubsystem</a>
-implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></pre>
+implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></pre>
 <div class="block">A flywheel shooter with a single flywheel and a single-motor feeder system.</div>
 </li>
 </ul>
@@ -139,11 +139,11 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 </a>
 <h3>Nested Class Summary</h3>
 <ul class="blockList">
-<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter">
+<li class="blockList"><a name="nested.classes.inherited.from.class.org.usfirst.frc.team449.robot.interfaces.object.Shooter.SubsystemShooter">
 <!--   -->
 </a>
-<h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></h3>
-<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem.ShooterState</a></code></li>
+<h3>Nested classes/interfaces inherited from interface&nbsp;org.usfirst.frc.team449.robot.object.interfaces.shooter.<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></h3>
+<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem.ShooterState</a></code></li>
 </ul>
 </li>
 </ul>
@@ -185,13 +185,13 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.lang.Object[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#getData--">getData</a></span>()</code>
-<div class="block">Get the data this subsystem logs every loop.</div>
+<div class="block">Get the data this object logs every loop.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#getHeader--">getHeader</a></span>()</code>
-<div class="block">Get the headers for the data this subsystem logs every loop.</div>
+<div class="block">Get the headers for the data this object logs every loop.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
@@ -201,7 +201,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem.ShooterState</a></code></td>
+<td class="colFirst"><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem.ShooterState</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#getShooterState--">getShooterState</a></span>()</code>
 <div class="block">Gets the shooter's state, for use in "toggle" commands.</div>
 </td>
@@ -220,7 +220,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/mechanism/singleflywheelshooter/SingleFlywheelShooter.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.object.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</code>
 <div class="block">Sets the state of the shooter.</div>
 </td>
 </tr>
@@ -332,7 +332,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/util/Logg
 <h4>getHeader</h4>
 <pre>@NotNull
 public&nbsp;java.lang.String[]&nbsp;getHeader()</pre>
-<div class="block">Get the headers for the data this subsystem logs every loop.</div>
+<div class="block">Get the headers for the data this object logs every loop.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getHeader--">getHeader</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></code></dd>
@@ -349,7 +349,7 @@ public&nbsp;java.lang.String[]&nbsp;getHeader()</pre>
 <h4>getData</h4>
 <pre>@NotNull
 public&nbsp;java.lang.Object[]&nbsp;getData()</pre>
-<div class="block">Get the data this subsystem logs every loop.</div>
+<div class="block">Get the data this object logs every loop.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html#getData--">getData</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/util/Loggable.html" title="interface in org.usfirst.frc.team449.robot.logger">Loggable</a></code></dd>
@@ -389,7 +389,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Turn the shooter on to a map-specified speed.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#turnShooterOn--">turnShooterOn</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#turnShooterOn--">turnShooterOn</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -403,7 +403,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Turn the shooter off.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#turnShooterOff--">turnShooterOff</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#turnShooterOff--">turnShooterOff</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -417,7 +417,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Start feeding balls into the shooter.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#turnFeederOn--">turnFeederOn</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#turnFeederOn--">turnFeederOn</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -431,7 +431,7 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <div class="block">Stop feeding balls into the shooter.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#turnFeederOff--">turnFeederOff</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#turnFeederOff--">turnFeederOff</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 </dl>
 </li>
 </ul>
@@ -442,28 +442,28 @@ public&nbsp;java.lang.String&nbsp;getName()</pre>
 <li class="blockList">
 <h4>getShooterState</h4>
 <pre>@NotNull
-public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;getShooterState()</pre>
+public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;getShooterState()</pre>
 <div class="block">Gets the shooter's state, for use in "toggle" commands.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#getShooterState--">getShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#getShooterState--">getShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Off, spinning up, or shooting.</dd>
 </dl>
 </li>
 </ul>
-<a name="setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">
+<a name="setShooterState-org.usfirst.frc.team449.robot.interfaces.object.Shooter.SubsystemShooter.ShooterState-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>setShooterState</h4>
 <pre>public&nbsp;void&nbsp;setShooterState(@NotNull
-                            <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</pre>
+                            <a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.ShooterState.html" title="enum in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem.ShooterState</a>&nbsp;state)</pre>
 <div class="block">Sets the state of the shooter. Only called from within commands.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.subsystem.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#setShooterState-org.usfirst.frc.team449.robot.interfaces.object.Shooter.SubsystemShooter.ShooterState-">setShooterState</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>state</code> - Off, spinning up, or shooting</dd>
 </dl>
@@ -479,7 +479,7 @@ public&nbsp;<a href="../../../../../../../org/usfirst/frc/team449/robot/interfac
 <div class="block">How long it takes for the shooter to get up to launch speed. Should be measured experimentally.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html#getSpinUpTimeMillis--">getSpinUpTimeMillis</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.shooter">ShooterSubsystem</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html#getSpinUpTimeMillis--">getSpinUpTimeMillis</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/Shooter/ShooterSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.shooter">ShooterSubsystem</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Time from giving the shooter a voltage to being ready to fire, in milliseconds.</dd>
 </dl>

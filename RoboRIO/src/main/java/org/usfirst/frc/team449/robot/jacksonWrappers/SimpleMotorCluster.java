@@ -3,14 +3,14 @@ package org.usfirst.frc.team449.robot.jacksonWrappers;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.other.SimpleMotor;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 
 import java.util.List;
 
 /**
  * A cluster of simple motors that act as a single simple motor. Don't use this for talons, use master-slave instead.
  */
-public class SimpleMotorCluster implements SimpleMotor{
+public class SimpleMotorCluster implements SimpleMotor {
 
 	/**
 	 * The motors in this cluster. Contains at least 1 element.
@@ -24,8 +24,8 @@ public class SimpleMotorCluster implements SimpleMotor{
 	 * @param motors The motors in this cluster. Must have at least 1 element.
 	 */
 	@JsonCreator
-	public SimpleMotorCluster(@JsonProperty(required = true) @NotNull List<SimpleMotor> motors){
-		if (motors.size() == 0){
+	public SimpleMotorCluster(@JsonProperty(required = true) @NotNull List<SimpleMotor> motors) {
+		if (motors.size() == 0) {
 			throw new IllegalArgumentException("motors must have at least 1 element!");
 		}
 		this.motors = motors;
@@ -38,7 +38,7 @@ public class SimpleMotorCluster implements SimpleMotor{
 	 */
 	@Override
 	public void setVelocity(double velocity) {
-		for (SimpleMotor motor : motors){
+		for (SimpleMotor motor : motors) {
 			motor.setVelocity(velocity);
 		}
 	}
@@ -48,7 +48,7 @@ public class SimpleMotorCluster implements SimpleMotor{
 	 */
 	@Override
 	public void enable() {
-		for (SimpleMotor motor : motors){
+		for (SimpleMotor motor : motors) {
 			motor.enable();
 		}
 	}
@@ -58,7 +58,7 @@ public class SimpleMotorCluster implements SimpleMotor{
 	 */
 	@Override
 	public void disable() {
-		for (SimpleMotor motor : motors){
+		for (SimpleMotor motor : motors) {
 			motor.disable();
 		}
 	}

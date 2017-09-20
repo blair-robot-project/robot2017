@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
 /**
  * A simple example of a binary motor subsystem.
@@ -60,7 +60,6 @@ public class BinaryMotorSimple extends YamlSubsystem implements SubsystemBinaryM
 	 */
 	@Override
 	public void turnMotorOn() {
-		motor.enable();
 		motor.setVelocity(velocity);
 		motorOn = true;
 	}

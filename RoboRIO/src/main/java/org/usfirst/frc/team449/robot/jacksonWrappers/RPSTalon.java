@@ -8,11 +8,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.logger.Logger;
-import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ import java.util.List;
  * in this class takes arguments in post-gearing RPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RPSTalon implements SimpleMotor {
+public class RPSTalon implements SimpleMotor, Shiftable {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -96,11 +95,17 @@ public class RPSTalon implements SimpleMotor {
 	private Double maxSpeed;
 
 	/**
+	 * The current gear this Talon is in
+	 */
+	private Shiftable.gear currentGear;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param port                            CAN port of this Talon.
 	 * @param inverted                        Whether this Talon is inverted.
-	 * @param reverseOutput Whether to reverse the output (identical effect to inverting outside of position PID)
+	 * @param reverseOutput                   Whether to reverse the output (identical effect to inverting outside of
+	 *                                        position PID)
 	 * @param enableBrakeMode                 Whether to brake or coast when stopped.
 	 * @param fwdPeakOutputVoltage            The peak voltage in the forward direction, in volts. If
 	 *                                        revPeakOutputVoltage is null, this is used for peak voltage in both
@@ -333,7 +338,7 @@ public class RPSTalon implements SimpleMotor {
 				tmp.enableLimitSwitch(false, false);
 				tmp.enableForwardSoftLimit(false);
 				tmp.enableReverseSoftLimit(false);
-				tmp.configNominalOutputVoltage(0,0);
+				tmp.configNominalOutputVoltage(0, 0);
 				tmp.configPeakOutputVoltage(12, -12);
 				tmp.configMaxOutputVoltage(12);
 
@@ -398,31 +403,41 @@ public class RPSTalon implements SimpleMotor {
 	}
 
 	/**
-	 * Switch to using the high gear PID constants and nominal voltage.
+	 * @return The gear this subsystem is currently in.
 	 */
-	public void switchToHighGear() {
-		canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
-		if (maxSpeedHigh != null) {
-			//Switch max speed to high gear max speed
-			maxSpeed = maxSpeedHigh;
-			//Set the slot 0 constants to the high gear ones.
-			setPIDF(highGearP, highGearI, highGearD, maxSpeed, 0, 0, 0);
-		}
+	@NotNull
+	@Override
+	public gear getGear() {
+		return currentGear;
 	}
 
 	/**
-	 * Switch to using the low gear PID constants and nominal output voltages if we have them.
+	 * Shift to a specific gear.
+	 *
+	 * @param gear Which gear to shift to.
 	 */
-	public void switchToLowGear() {
-		if (lowGearFwdNominalOutputVoltage != null) {
-			canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
-		}
-		//If there are low gear constants in the map
-		if (maxSpeedLow != null) {
-			//Switch max speed to low gear max speed
-			maxSpeed = maxSpeedLow;
-			//Set the slot 0 constants to the low gear ones.
-			setPIDF(lowGearP, lowGearI, lowGearD, maxSpeed, 0, 0, 0);
+	@Override
+	public void setGear(@NotNull gear gear) {
+		currentGear = gear;
+		if (gear.equals(Shiftable.gear.HIGH)){
+			canTalon.configNominalOutputVoltage(highGearFwdNominalOutputVoltage, -highGearRevNominalOutputVoltage);
+			if (maxSpeedHigh != null) {
+				//Switch max speed to high gear max speed
+				maxSpeed = maxSpeedHigh;
+				//Set the slot 0 constants to the high gear ones.
+				setPIDF(highGearP, highGearI, highGearD, maxSpeed, 0, 0, 0);
+			}
+		} else {
+			if (lowGearFwdNominalOutputVoltage != null) {
+				canTalon.configNominalOutputVoltage(lowGearFwdNominalOutputVoltage, -lowGearRevNominalOutputVoltage);
+			}
+			//If there are low gear constants in the map
+			if (maxSpeedLow != null) {
+				//Switch max speed to low gear max speed
+				maxSpeed = maxSpeedLow;
+				//Set the slot 0 constants to the low gear ones.
+				setPIDF(lowGearP, lowGearI, lowGearD, maxSpeed, 0, 0, 0);
+			}
 		}
 	}
 
@@ -704,10 +719,10 @@ public class RPSTalon implements SimpleMotor {
 	 * @param velocity The velocity to go at, from [-1, 1], where 1 is the max speed of the given gear.
 	 * @param gear The gear to use the max speed from to scale the velocity.
 	 */
-	public void setGearScaledVelocity(double velocity, @NotNull DriveShifting.gear gear){
+	public void setGearScaledVelocity(double velocity, @NotNull Shiftable.gear gear){
 		if (maxSpeed == null){
 			setPercentVbus(velocity);
-		} else if (gear.equals(DriveShifting.gear.HIGH)) {
+		} else if (gear.equals(Shiftable.gear.HIGH)) {
 			setVelocity(velocity * maxSpeedHigh);
 		} else {
 			setVelocity(velocity*maxSpeedLow);

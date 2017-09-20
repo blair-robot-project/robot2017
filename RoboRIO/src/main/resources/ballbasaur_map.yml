@@ -86,9 +86,9 @@ oi:
                     joystick: driverGamepad
                     buttonNumber: 10
                 command:
-                    org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+                    org.usfirst.frc.team449.robot.object.interfaces.navX.commands.OverrideNavX:
                         '@id': overrideNavX
-                        subsystem:
+                        object:
                             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                                 drive
                         override: true
@@ -97,9 +97,9 @@ oi:
                 button:
                     gamepad10
                 command:
-                    org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+                    org.usfirst.frc.team449.robot.object.interfaces.navX.commands.OverrideNavX:
                         '@id': unoverrideNavX
-                        subsystem:
+                        object:
                             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                                 drive
                         override: false

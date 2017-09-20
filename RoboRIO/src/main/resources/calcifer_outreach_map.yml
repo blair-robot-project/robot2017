@@ -124,7 +124,7 @@ oi:
                 joystick: overridingGamepad
                 buttonNumber: 6
 drive:
-    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
         leftMaster:
             org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
@@ -189,12 +189,19 @@ drive:
         navX:
             '@id': driveNavX
             port: kMXP
-        shifter:
-            '@id': driveShifter
-            module: 15
-            forward: 2
-            reverse: 3
-        startingGear: LOW
+        shiftComponent:
+            org.usfirst.frc.team449.robot.components.shiftComponent:
+                '@id': driveShiftComponent
+                otherShiftables:
+                    - leftMaster
+                    - rightMaster
+                piston:
+                    '@id': driveShifter
+                    module: 15
+                    forward: 2
+                    reverse: 3
+                lowGearPistonPos: kForward
+                startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
         '@id': defaultDriveCommand

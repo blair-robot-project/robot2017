@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.components.ShiftComponent;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
@@ -18,30 +20,18 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
  * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonClusterShifting extends DriveTalonCluster implements DriveShifting {
+public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
 
 	/**
-	 * The solenoid that shifts between gears
+	 * The component that controls shifting.
 	 */
 	@NotNull
-	private final DoubleSolenoid shifter;
-
-	/**
-	 * The gear to start teleop and autonomous in.
-	 */
-	@NotNull
-	private final gear startingGear;
+	private final ShiftComponent shiftComponent;
 
 	/**
 	 * Whether not to override auto shifting
 	 */
 	private boolean overrideAutoshift;
-
-	/**
-	 * What gear we're in
-	 */
-	@NotNull
-	private gear currentGear;
 
 	/**
 	 * Default constructor.
@@ -51,24 +41,18 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 * @param navX         The NavX on this drive.
 	 * @param MPHandler    The motion profile handler that runs this drive's motion profiles.
 	 * @param VelScale     The amount to scale the output to the motor by. Defaults to 1.
-	 * @param shifter      The piston that shifts between gears.
-	 * @param startingGear The gear the drive starts in. Defaults to low.
+	 * @param shiftComponent The component that controls shifting.
 	 */
 	@JsonCreator
-	public DriveTalonClusterShifting(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
+	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
 	                                 @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
 	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                                 @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                                 @Nullable Double VelScale,
-	                                 @NotNull @JsonProperty(required = true) MappedDoubleSolenoid shifter,
-	                                 @Nullable gear startingGear) {
+	                                 @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {
 		super(leftMaster, rightMaster, navX, MPHandler, VelScale);
 		//Initialize stuff
-		this.shifter = shifter;
-
-		//Default to low
-		this.startingGear = startingGear != null ? startingGear : gear.LOW;
-		currentGear = this.startingGear;
+		this.shiftComponent = shiftComponent;
 
 		// Initialize shifting constants, assuming robot is stationary.
 		overrideAutoshift = false;
@@ -115,7 +99,7 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	@Override
 	@NotNull
 	public gear getGear() {
-		return currentGear;
+		return shiftComponent.getCurrentGear();
 	}
 
 	/**
@@ -125,24 +109,7 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 */
 	@Override
 	public void setGear(@NotNull gear gear) {
-		//If we want to downshift
-		if (gear == DriveShifting.gear.LOW) {
-			//Physically shift gears
-			shifter.set(DoubleSolenoid.Value.kForward);
-			//Switch the PID constants
-			rightMaster.switchToLowGear();
-			leftMaster.switchToLowGear();
-			//Record the current time
-		} else {
-			//Physically shift gears
-			shifter.set(DoubleSolenoid.Value.kReverse);
-			//Switch the PID constants
-			rightMaster.switchToHighGear();
-			leftMaster.switchToHighGear();
-			//Record the current time.
-		}
-		//Set logging var
-		currentGear = gear;
+		shiftComponent.shiftToGear(gear);
 	}
 
 	/**
@@ -150,6 +117,6 @@ public class DriveTalonClusterShifting extends DriveTalonCluster implements Driv
 	 */
 	@NotNull
 	public gear getStartingGear() {
-		return startingGear;
+		return shiftComponent.getStartingGear();
 	}
 }
