@@ -18,14 +18,19 @@ import java.io.IOException;
 public class MotionProfileData {
 
 	/**
+	 * Whether or not the profile is inverted because we're driving it backwards.
+	 */
+	private final boolean inverted;
+
+	/**
+	 * Whether to use position PID or not.
+	 */
+	private final boolean velocityOnly;
+
+	/**
 	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
 	 */
 	private double data[][];
-
-	/**
-	 * Whether or not the profile is inverted because we're driving it backwards.
-	 */
-	private boolean inverted;
 
 	/**
 	 * Default constructor
@@ -36,8 +41,10 @@ public class MotionProfileData {
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
-	                         @JsonProperty(required = true) boolean inverted) {
+	                         @JsonProperty(required = true) boolean inverted,
+	                         boolean velocityOnly) {
 		this.inverted = inverted;
+		this.velocityOnly = velocityOnly;
 		try {
 			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
@@ -93,5 +100,12 @@ public class MotionProfileData {
 	@NotNull
 	public double[][] getData() {
 		return data;
+	}
+
+	/**
+	 * @return Whether to use position PID or not.
+	 */
+	public boolean isVelocityOnly() {
+		return velocityOnly;
 	}
 }

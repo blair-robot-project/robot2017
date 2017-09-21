@@ -131,6 +131,8 @@ drive:
                       kI: 0.0
                       kD: 3.0
                 maxClosedLoopVoltage: 12
+                updaterProcessPeriodSecs: 0.005
+                minNumPointsInBottomBuffer: 10
                 slaves:
                     - '@id': talon8
                       port: 8
@@ -158,8 +160,6 @@ drive:
             talons:
                 - leftMaster
                 - rightMaster
-            updaterProcessPeriodSecs: 0.005
-            minNumPointsInBtmBuffer: 10
         VelScale: 0.9
         navX:
             '@id': driveNavX

@@ -74,7 +74,6 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 		this.feederThrottle = feederThrottle;
 		state = ShooterState.OFF;
 		spinUpTime = (long) (spinUpTimeSecs * 1000.);
-		Logger.addEvent("shooter F: " + shooterTalon.getCanTalon().getF(), this.getClass());
 	}
 
 	/**
@@ -152,8 +151,8 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 		return new Object[]{shooterTalon.getSpeed(),
 				shooterTalon.getSetpoint(),
 				shooterTalon.getError(),
-				shooterTalon.getCanTalon().getOutputVoltage(),
-				shooterTalon.getCanTalon().getOutputCurrent()};
+				shooterTalon.getOutputVoltage(),
+				shooterTalon.getOutputCurrent()};
 	}
 
 	/**
@@ -172,7 +171,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 */
 	@Override
 	public void turnShooterOn() {
-		shooterTalon.getCanTalon().enable();
+		shooterTalon.enable();
 		setFlywheelDefaultSpeed(shooterThrottle);
 	}
 
@@ -182,7 +181,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	@Override
 	public void turnShooterOff() {
 		setFlywheelVBusSpeed(0);
-		shooterTalon.getCanTalon().disable();
+		shooterTalon.disable();
 	}
 
 	/**

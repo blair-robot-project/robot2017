@@ -130,8 +130,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void enableMotors() {
-		leftMaster.getCanTalon().enable();
-		rightMaster.getCanTalon().enable();
+		leftMaster.enable();
+		rightMaster.enable();
 	}
 
 	/**
@@ -220,12 +220,12 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getSpeed(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
-				leftMaster.getCanTalon().getOutputCurrent(),
-				rightMaster.getCanTalon().getOutputCurrent(),
-				leftMaster.getCanTalon().getOutputVoltage(),
-				rightMaster.getCanTalon().getOutputVoltage(),
-				leftMaster.getCanTalon().getPosition(),
-				rightMaster.getCanTalon().getPosition()};
+				leftMaster.getOutputCurrent(),
+				rightMaster.getOutputCurrent(),
+				leftMaster.getOutputVoltage(),
+				rightMaster.getOutputVoltage(),
+				leftMaster.getPositionFeet(),
+				rightMaster.getPositionFeet()};
 	}
 
 	/**
@@ -273,7 +273,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void disable() {
-		mpHandler.disableTalons();
+		leftMaster.disable();
+		rightMaster.disable();
 	}
 
 	/**
@@ -299,7 +300,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void stopMPProcesses() {
-		mpHandler.stopUpdaterProcess();
+		leftMaster.stopMPProcesses();
+		rightMaster.stopMPProcesses();
 	}
 
 	/**
@@ -314,7 +316,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	public void resetPosition() {
-		leftMaster.getCanTalon().setEncPosition(0);
-		rightMaster.getCanTalon().setEncPosition(0);
+		leftMaster.resetPosition();
+		rightMaster.resetPosition();
 	}
 }

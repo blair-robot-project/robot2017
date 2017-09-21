@@ -5,12 +5,16 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.MotionProfileData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +66,27 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	private final Map<Integer, PerGearSettings> perGearSettings;
 
 	/**
+	 * The minimum number of points that must be in the bottom-level MP buffer before starting a profile.
+	 */
+	private final int minNumPointsInBottomBuffer;
+
+	/**
+	 * The motion profile motionProfileStatus of the Talon.
+	 */
+	@NotNull
+	private final CANTalon.MotionProfileStatus motionProfileStatus;
+
+	/**
+	 * A notifier that moves points from the API-level buffer to the talon-level one.
+	 */
+	private final Notifier bottomBufferLoader;
+
+	/**
+	 * The period for bottomBufferLoader, in seconds.
+	 */
+	private final double updaterProcessPeriodSecs;
+
+	/**
 	 * The current gear this Talon is in
 	 */
 	private int currentGear;
@@ -71,6 +96,12 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@NotNull
 	private PerGearSettings currentGearSettings;
+
+	/**
+	 * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
+	 * traffic.
+	 */
+	private long timeMPStatusLastRead;
 
 	/**
 	 * Default constructor.
@@ -107,6 +138,10 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * @param startingGear               The gear to start in. Can be null to use startingGearNum instead.
 	 * @param startingGearNum            The number of the gear to start in. Ignored if startingGear isn't null.
 	 *                                   Defaults to the lowest gear.
+	 * @param minNumPointsInBottomBuffer The minimum number of points that must be in the bottom-level MP buffer before
+	 *                                   starting a profile. Defaults to 128.
+	 * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
+	 *                                   seconds. Defaults to 0.005.
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
@@ -128,6 +163,8 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	                @Nullable List<PerGearSettings> perGearSettings,
 	                @Nullable Shiftable.gear startingGear,
 	                @Nullable Integer startingGearNum,
+	                @Nullable Integer minNumPointsInBottomBuffer,
+	                @Nullable Double updaterProcessPeriodSecs,
 	                @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
 		canTalon = new CANTalon(port);
@@ -140,6 +177,12 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 
 		//Set fields
 		this.inchesPerRotation = inchesPerRotation;
+		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
+		this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 128;
+
+		//Initialize
+		this.motionProfileStatus = new CANTalon.MotionProfileStatus();
+		this.timeMPStatusLastRead = 0;
 		this.perGearSettings = new HashMap<>();
 
 		//If given no gear settings, use the default values.
@@ -225,6 +268,9 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		//Set the nominal closed loop battery voltage. Different thing from NominalOutputVoltage.
 		canTalon.setNominalClosedLoopVoltage(maxClosedLoopVoltage);
 
+		//Set up MP notifier
+		bottomBufferLoader = new Notifier(canTalon::processMotionProfileBuffer);
+
 		if (slaves != null) {
 			//Set up slaves.
 			for (SlaveTalon slave : slaves) {
@@ -301,10 +347,10 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		if (currentGearSettings.getMaxSpeed() != null) {
 			//Put driving constants in slot 0
 			canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-					1023./RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
+					1023. / RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
 			//Put MP constants in slot 1
 			canTalon.setPID(currentGearSettings.getMotionProfileP(), currentGearSettings.getMotionProfileI(), currentGearSettings.getMotionProfileD(),
-					1023./RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
+					1023. / RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
 	}
@@ -465,12 +511,21 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Get the amount of power the Talon is currently drawing from the PDP.
+	 * Get the voltage the Talon is currently drawing from the PDP.
 	 *
-	 * @return Power in watts.
+	 * @return Voltage in volts.
 	 */
-	public double getPower() {
-		return canTalon.getOutputVoltage() * canTalon.getOutputCurrent();
+	public double getOutputVoltage() {
+		return canTalon.getOutputVoltage();
+	}
+
+	/**
+	 * Get the current the Talon is currently drawing from the PDP.
+	 *
+	 * @return Current in amps.
+	 */
+	public double getOutputCurrent() {
+		return canTalon.getOutputCurrent();
 	}
 
 	/**
@@ -536,14 +591,6 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * @return The CANTalon this is a wrapper on.
-	 */
-	@NotNull
-	public CANTalon getCanTalon() {
-		return canTalon;
-	}
-
-	/**
 	 * Set the velocity for the motor to go at.
 	 *
 	 * @param velocity the desired velocity, on [-1, 1].
@@ -583,7 +630,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		if (currentGearSettings.getMaxSpeed() == null) {
 			setPercentVbus(velocity);
 		} else {
-			setSpeed(perGearSettings.get(gear).getMaxSpeed()*velocity);
+			setSpeed(perGearSettings.get(gear).getMaxSpeed() * velocity);
 		}
 	}
 
@@ -595,6 +642,135 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 */
 	public void setGearScaledVelocity(double velocity, Shiftable.gear gear) {
 		setGearScaledVelocity(velocity, gear.getNumVal());
+	}
+
+	/**
+	 * @return The encoder position in native units.
+	 */
+	public int getPositionNative() {
+		return canTalon.getEncPosition();
+	}
+
+	/**
+	 * @return the position of the talon in feet, or null of inches per rotation wasn't given.
+	 */
+	public Double getPositionFeet() {
+		return nativeToFeet(canTalon.getEncPosition());
+	}
+
+	/**
+	 * Resets the position of the Talon to 0.
+	 */
+	public void resetPosition() {
+		canTalon.setEncPosition(0);
+	}
+
+	/**
+	 * A private utility method for updating motionProfileStatus with the current motion profile status. Makes sure that
+	 * the status is only gotten once per tic, to avoid CAN traffic overload.
+	 */
+	private void updateMotionProfileStatus() {
+		if (timeMPStatusLastRead < Robot.currentTimeMillis()) {
+			canTalon.getMotionProfileStatus(motionProfileStatus);
+			timeMPStatusLastRead = Robot.currentTimeMillis();
+		}
+	}
+
+	/**
+	 * Whether this talon is ready to start running a profile.
+	 *
+	 * @return True if minNumPointsInBottomBuffer points have been loaded or the top buffer is empty, false otherwise.
+	 */
+	public boolean readyForMP() {
+		updateMotionProfileStatus();
+		return motionProfileStatus.topBufferCnt == 0 || motionProfileStatus.btmBufferCnt >= minNumPointsInBottomBuffer;
+	}
+
+	/**
+	 * Whether this talon has finished running a profile.
+	 *
+	 * @return True if the active point in the talon is the last point, false otherwise.
+	 */
+	public boolean MPIsFinished() {
+		updateMotionProfileStatus();
+		return motionProfileStatus.activePoint.isLastPoint;
+	}
+
+	/**
+	 * Clear the underrun flag for motion profiles.
+	 */
+	public void clearMPUnderrun() {
+		canTalon.clearMotionProfileHasUnderrun();
+	}
+
+	/**
+	 * Reset all MP-related stuff, including all points loaded in both the API and bottom-level buffers.
+	 */
+	public void clearMP() {
+		canTalon.clearMotionProfileHasUnderrun();
+		canTalon.clearMotionProfileTrajectories();
+	}
+
+	/**
+	 * Starts running the loaded motion profile.
+	 */
+	public void startRunningMP() {
+		this.enable();
+		canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		canTalon.set(CANTalon.SetValueMotionProfile.Enable.value);
+	}
+
+	/**
+	 * Holds the current position point in MP mode.
+	 */
+	public void holdPositionMP() {
+		canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
+		canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
+	}
+
+	/**
+	 * Disables the talon and loads the given profile into the talon.
+	 *
+	 * @param data The profile to load.
+	 */
+	public void loadProfile(MotionProfileData data) {
+		bottomBufferLoader.stop();
+		//Reset the Talon
+		disable();
+		clearMP();
+
+		//Read velocityOnly out here so we only have to call data.isVelocityOnly() once.
+		boolean velocityOnly = data.isVelocityOnly();
+
+		for (int i = 0; i < data.getData().length; ++i) {
+			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
+			//Set parameters that are true for all points
+			point.profileSlotSelect = 1;        // gain selection, we always put MP gains in slot 1.
+			point.velocityOnly = velocityOnly;  // true => no position servo just velocity feedforward
+
+			// Set all the fields of the profile point
+			point.position = feetToNative(data.getData()[i][0]);
+			point.velocity = feetPerSecToNative(data.getData()[i][1]);
+			point.timeDurMs = (int) (data.getData()[i][2] * 1000.);
+			point.zeroPos = i == 0; // If it's the first point, set the encoder position to 0.
+			point.isLastPoint = (i + 1) == data.getData().length; // If it's the last point, isLastPoint = true
+
+			// Send the point to the Talon's buffer
+			if (!canTalon.pushMotionProfileTrajectory(point)) {
+				//If sending the point doesn't work, log an error and exit.
+				Logger.addEvent("Buffer full!", CANTalonMPComponent.class);
+				System.out.println("Buffer full!");
+				break;
+			}
+		}
+		bottomBufferLoader.startPeriodic(updaterProcessPeriodSecs);
+	}
+
+	/**
+	 * Stops all MP-related threads to save on CPU power. Run at the beginning of teleop.
+	 */
+	public void stopMPProcesses() {
+		bottomBufferLoader.stop();
 	}
 
 	/**

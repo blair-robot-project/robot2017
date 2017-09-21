@@ -113,9 +113,9 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	@NotNull
 	@Override
 	public Object[] getData() {
-		return new Object[]{canTalonSRX.getCanTalon().getOutputCurrent(),
-				canTalonSRX.getCanTalon().getOutputVoltage(),
-				canTalonSRX.getPower()};
+		return new Object[]{canTalonSRX.getOutputCurrent(),
+				canTalonSRX.getOutputVoltage(),
+				canTalonSRX.getOutputCurrent()*canTalonSRX.getOutputVoltage()};
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	@Override
 	public void turnMotorOn() {
-		canTalonSRX.getCanTalon().enable();
+		canTalonSRX.enable();
 		setPercentVbus(1);
 		motorSpinning = true;
 	}
@@ -145,7 +145,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	@Override
 	public void turnMotorOff() {
 		setPercentVbus(0);
-		canTalonSRX.getCanTalon().disable();
+		canTalonSRX.disable();
 		motorSpinning = false;
 	}
 
@@ -162,6 +162,6 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	@Override
 	public boolean isConditionTrue() {
-		return powerLimitTimer.get(Math.abs(canTalonSRX.getPower()) > maxPower);
+		return powerLimitTimer.get(Math.abs(canTalonSRX.getOutputCurrent()*canTalonSRX.getOutputVoltage()) > maxPower);
 	}
 }
