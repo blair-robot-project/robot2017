@@ -10,20 +10,21 @@ drive:
             port: 6
             inverted: false
             enableBrakeMode: true
-            fwdPeakOutputVoltage: 12
-            fwdNominalOutputVoltage: 0
-            inchesPerRotation: 11.78097
+            feetPerRotation: 0.9817
             currentLimit: 40
             feedbackDevice: QuadEncoder
             encoderCPR: 512
             reverseSensor: false
-            maxSpeedHigh: 12.0127
-            highGearP: 0.3
-            highGearI: 0.0
-            highGearD: 3.0
-            motionProfileP: 1.5
-            motionProfileI: 0.0
-            motionProfileD: 0.0
+            perGearSettings:
+              - fwdPeakOutputVoltage: 12
+                fwdNominalOutputVoltage: 0.0
+                maxSpeed: 11.8
+                kP: 0.3
+                kI: 0.0
+                kD: 3.0
+                motionProfileP: 1.5
+                motionProfileI: 0.0
+                motionProfileD: 0.0
             slaves:
                 - '@id': talon1
                   port: 1

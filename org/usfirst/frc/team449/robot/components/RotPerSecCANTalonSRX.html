@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon</li>
+<li>org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon</li>
 </ul>
 </li>
 </ul>
@@ -145,7 +145,7 @@ extends java.lang.Object</pre>
                     java.lang.Double&nbsp;revSoftLimit,
                     java.lang.Double&nbsp;postEncoderGearing,
                     java.lang.Double&nbsp;closedLoopRampRate,
-                    java.lang.Double&nbsp;inchesPerRotation,
+                    java.lang.Double&nbsp;feetPerRotation,
                     java.lang.Integer&nbsp;currentLimit,
                     com.ctre.CANTalon.FeedbackDevice&nbsp;feedbackDevice,
                     java.lang.Integer&nbsp;encoderCPR,
@@ -162,7 +162,7 @@ extends java.lang.Object</pre>
                     int&nbsp;motionProfileI,
                     int&nbsp;motionProfileD,
                     boolean&nbsp;MPUseLowGear,
-                    java.util.List&lt;org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon.SlaveTalon&gt;&nbsp;slaves)</code>
+                    java.util.List&lt;org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon.SlaveTalon&gt;&nbsp;slaves)</code>
 <div class="block">Default constructor.</div>
 </td>
 </tr>
@@ -337,7 +337,7 @@ extends java.lang.Object</pre>
                             @Nullable
                             java.lang.Double&nbsp;closedLoopRampRate,
                             @Nullable
-                            java.lang.Double&nbsp;inchesPerRotation,
+                            java.lang.Double&nbsp;feetPerRotation,
                             @Nullable
                             java.lang.Integer&nbsp;currentLimit,
                             @Nullable
@@ -361,7 +361,7 @@ extends java.lang.Object</pre>
                             int&nbsp;motionProfileD,
                             boolean&nbsp;MPUseLowGear,
                             @Nullable
-                            java.util.List&lt;org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon.SlaveTalon&gt;&nbsp;slaves)</pre>
+                            java.util.List&lt;org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon.SlaveTalon&gt;&nbsp;slaves)</pre>
 <div class="block">Default constructor.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -405,7 +405,7 @@ extends java.lang.Object</pre>
                                         and the final output. Defaults to 1.</dd>
 <dd><code>closedLoopRampRate</code> - The voltage ramp rate for closed-loop velocity control. Can be null, and
                                         if it is, no ramp rate is used.</dd>
-<dd><code>inchesPerRotation</code> - The number of inches travelled per rotation of the motor this is attached
+<dd><code>feetPerRotation</code> - The number of inches travelled per rotation of the motor this is attached
                                         to.</dd>
 <dd><code>currentLimit</code> - The max amps this device can draw. If this is null, no current limit is
                                         used.</dd>

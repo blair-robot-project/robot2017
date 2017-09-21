@@ -7,10 +7,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.VictorSP;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
-import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
@@ -23,7 +22,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 * The flywheel's Talon
 	 */
 	@NotNull
-	private final RPSTalon shooterTalon;
+	private final FPSTalon shooterTalon;
 
 	/**
 	 * The feeder's Victor
@@ -63,7 +62,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 *                        Defaults to 0.
 	 */
 	@JsonCreator
-	public ShooterWithVictorFeeder(@NotNull @JsonProperty(required = true) RPSTalon shooterTalon,
+	public ShooterWithVictorFeeder(@NotNull @JsonProperty(required = true) FPSTalon shooterTalon,
 	                               @JsonProperty(required = true) double shooterThrottle,
 	                               @NotNull @JsonProperty(required = true) MappedVictor feederVictor,
 	                               @JsonProperty(required = true) double feederThrottle,

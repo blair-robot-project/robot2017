@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from RPS built in. Every non-unit-conversion
- * in this class takes arguments in post-gearing RPS.
+ * Component wrapper on the CTRE {@link CANTalon}, with unit conversions to/from FPS built in. Every non-unit-conversion
+ * in this class takes arguments in post-gearing FPS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RPSTalon implements SimpleMotor, Shiftable {
+public class FPSTalon implements SimpleMotor, Shiftable {
 
 	/**
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
@@ -51,12 +51,9 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	private final double postEncoderGearing;
 
 	/**
-	 * The number of inches travelled per rotation of the motor this is attached to, or null if there is no encoder.
-	 * Only used for Motion Profile unit conversions. {@link Double} so it throws a nullPointer if you try to use it
-	 * without a value in the map.
+	 * The number of feet travelled per rotation of the motor this is attached to, or null if there is no encoder.
 	 */
-	@Nullable
-	private final Double inchesPerRotation;
+	private final double feetPerRotation;
 
 	/**
 	 * A list of all the gears this robot has and their settings.
@@ -121,7 +118,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
 	 *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
 	 *                                   final output. Defaults to 1.
-	 * @param inchesPerRotation          The number of inches travelled per rotation of the motor this is attached to.
+	 * @param feetPerRotation          The number of feet travelled per rotation of the motor this is attached to. Defaults to 1.
 	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
 	 * @param maxClosedLoopVoltage       The voltage to scale closed-loop output based on, e.g. closed-loop output of 1
 	 *                                   will produce this voltage, output of 0.5 will produce half, etc. This feature
@@ -144,7 +141,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
-	public RPSTalon(@JsonProperty(required = true) int port,
+	public FPSTalon(@JsonProperty(required = true) int port,
 	                @JsonProperty(required = true) boolean inverted,
 	                boolean reverseOutput,
 	                @JsonProperty(required = true) boolean enableBrakeMode,
@@ -153,7 +150,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	                @Nullable Double fwdSoftLimit,
 	                @Nullable Double revSoftLimit,
 	                @Nullable Double postEncoderGearing,
-	                @Nullable Double inchesPerRotation,
+	                @Nullable Double feetPerRotation,
 	                @Nullable Integer currentLimit,
 	                double maxClosedLoopVoltage,
 	                @Nullable CANTalon.FeedbackDevice feedbackDevice,
@@ -175,7 +172,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		canTalon.enableBrakeMode(enableBrakeMode);
 
 		//Set fields
-		this.inchesPerRotation = inchesPerRotation;
+		this.feetPerRotation = feetPerRotation != null ? feetPerRotation : 1;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
 		this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 128;
 
@@ -346,16 +343,16 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		if (currentGearSettings.getMaxSpeed() != null) {
 			//Put driving constants in slot 0
 			canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
-					1023. / RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
+					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
 			//Put MP constants in slot 1
 			canTalon.setPID(currentGearSettings.getMotionProfileP(), currentGearSettings.getMotionProfileI(), currentGearSettings.getMotionProfileD(),
-					1023. / RPSToNative(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
+					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
 	}
 
 	/**
-	 * @return the max speed of the gear the talon is currently in, in RPS, as given in the map, or null if no value
+	 * @return the max speed of the gear the talon is currently in, in FPS, as given in the map, or null if no value
 	 * given.
 	 */
 	@Nullable
@@ -364,25 +361,25 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Converts the velocity read by the talon's getSpeed() method to the RPS of the output shaft. Note this DOES
+	 * Converts the velocity read by the talon's getSpeed() method to the FPS of the output shaft. Note this DOES
 	 * account for post-encoder gearing.
 	 *
 	 * @param encoderReading The velocity read from the encoder with no conversions.
-	 * @return The velocity of the output shaft, in RPS, when the encoder has that reading, or null if no encoder CPR
+	 * @return The velocity of the output shaft, in FPS, when the encoder has that reading, or null if no encoder CPR
 	 * was given.
 	 */
 	@Nullable
-	public Double encoderToRPS(double encoderReading) {
+	private Double encoderToFPS(double encoderReading) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
 			//CTRE encoders use RPM
-			return RPMToRPS(encoderReading) * postEncoderGearing;
+			return RPMToRPS(encoderReading) * postEncoderGearing * feetPerRotation;
 		} else {
 			//All other feedback devices use native units.
 			Double RPS = nativeToRPS(encoderReading);
 			if (RPS == null) {
 				return null;
 			}
-			return RPS * postEncoderGearing;
+			return RPS * postEncoderGearing * feetPerRotation;
 		}
 	}
 
@@ -390,21 +387,17 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * Converts from the velocity of the output shaft to what the talon's getSpeed() method would read at that velocity.
 	 * Note this DOES account for post-encoder gearing.
 	 *
-	 * @param RPS The velocity of the output shaft, in RPS.
+	 * @param FPS The velocity of the output shaft, in FPS.
 	 * @return What the raw encoder reading would be at that velocity, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	public Double RPSToEncoder(double RPS) {
+	private Double FPSToEncoder(double FPS) {
 		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
 			//CTRE encoders use RPM
-			return RPSToRPM(RPS) / postEncoderGearing;
+			return RPSToRPM(FPS / postEncoderGearing / feetPerRotation);
 		} else {
 			//All other feedback devices use native units.
-			Double encoderReading = RPSToNative(RPS);
-			if (encoderReading == null) {
-				return null;
-			}
-			return encoderReading / postEncoderGearing;
+			return RPSToNative((FPS / postEncoderGearing) / feetPerRotation);
 		}
 	}
 
@@ -463,20 +456,20 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Get the velocity of the CANTalon in RPS
+	 * Get the velocity of the CANTalon in FPS
 	 * <p>
 	 * Note: This method is called getSpeed since the {@link CANTalon} method is called getSpeed. However, the output is
 	 * signed and is actually a velocity.
 	 *
-	 * @return The CANTalon's velocity in RPS, or null if no encoder CPR was given.
+	 * @return The CANTalon's velocity in FPS, or null if no encoder CPR was given.
 	 */
 	@Nullable
 	public Double getSpeed() {
-		return encoderToRPS(canTalon.getSpeed());
+		return encoderToFPS(canTalon.getSpeed());
 	}
 
 	/**
-	 * Give a velocity closed loop setpoint in RPS
+	 * Give a velocity closed loop setpoint in FPS
 	 * <p>
 	 * Note: This method is called setSpeed since the {@link CANTalon} method is called getSpeed. However, the input
 	 * argument is signed and is actually a velocity.
@@ -486,27 +479,27 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	public void setSpeed(double velocitySp) {
 		//Switch control mode to speed closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		canTalon.set(RPSToEncoder(velocitySp));
+		canTalon.set(FPSToEncoder(velocitySp));
 	}
 
 	/**
-	 * Get the current closed-loop velocity error in RPS. WARNING: will give garbage if not in velocity mode.
+	 * Get the current closed-loop velocity error in FPS. WARNING: will give garbage if not in velocity mode.
 	 *
-	 * @return The closed-loop error in RPS, or null if no encoder CPR was given.
+	 * @return The closed-loop error in FPS, or null if no encoder CPR was given.
 	 */
 	@Nullable
 	public Double getError() {
-		return encoderToRPS(canTalon.getError());
+		return encoderToFPS(canTalon.getError());
 	}
 
 	/**
-	 * Get the current velocity setpoint of the Talon in RPS. WARNING: will give garbage if not in velocity mode.
+	 * Get the current velocity setpoint of the Talon in FPS. WARNING: will give garbage if not in velocity mode.
 	 *
-	 * @return The closed-loop velocity setpoint in RPS, or null if no encoder CPR was given.
+	 * @return The closed-loop velocity setpoint in FPS, or null if no encoder CPR was given.
 	 */
 	@Nullable
 	public Double getSetpoint() {
-		return encoderToRPS(canTalon.getSetpoint());
+		return encoderToFPS(canTalon.getSetpoint());
 	}
 
 	/**
@@ -531,15 +524,15 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * Convert from native units read by an encoder to feet moved. Note this DOES account for post-encoder gearing.
 	 *
 	 * @param nativeUnits A distance native units as measured by the encoder.
-	 * @return That distance in feet, or null if no encoder CPR or inches per rotation was given.
+	 * @return That distance in feet, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	public Double nativeToFeet(double nativeUnits) {
-		if (encoderCPR == null || inchesPerRotation == null) {
+	private Double encoderToFeet(double nativeUnits) {
+		if (encoderCPR == null) {
 			return null;
 		}
 		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * (inchesPerRotation / 12.);
+		return rotations * feetPerRotation;
 	}
 
 	/**
@@ -547,46 +540,15 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	 * gearing.
 	 *
 	 * @param feet A distance in feet.
-	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR or inches per
-	 * rotation was given.
+	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	public Double feetToNative(double feet) {
-		if (encoderCPR == null || inchesPerRotation == null) {
+	private Double feetToEncoder(double feet) {
+		if (encoderCPR == null) {
 			return null;
 		}
-		double rotations = feet / (inchesPerRotation / 12.);
+		double rotations = feet / feetPerRotation;
 		return rotations * (encoderCPR * 4) / postEncoderGearing;
-	}
-
-	/**
-	 * Convert a velocity from feet per second to encoder units. Note this DOES account for post-encoder gearing.
-	 *
-	 * @param fps A velocity in feet per second
-	 * @return That velocity in either native units or RPS, depending on the type of encoder, or null if no encoder CPR
-	 * or inches per rotation was given.
-	 */
-	@Nullable
-	public Double feetPerSecToNative(double fps) {
-		if (inchesPerRotation == null) {
-			return null;
-		}
-		return RPSToEncoder(fps / (inchesPerRotation / 12.));
-	}
-
-	/**
-	 * Convert a velocity from encoder units to feet per second. Note this DOES account for post-encoder gearing.
-	 *
-	 * @param nativeUnits A velocity in either native units or RPS, depending on the type of encoder.
-	 * @return That velocity in feet per second, or null if no encoder CPR or inches per rotation was given.
-	 */
-	@Nullable
-	public Double nativeToFeetPerSec(double nativeUnits) {
-		Double RPS = encoderToRPS(nativeUnits);
-		if (inchesPerRotation == null || RPS == null) {
-			return null;
-		}
-		return RPS * inchesPerRotation / 12.;
 	}
 
 	/**
@@ -644,17 +606,10 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * @return The encoder position in native units.
-	 */
-	public int getPositionNative() {
-		return canTalon.getEncPosition();
-	}
-
-	/**
 	 * @return the position of the talon in feet, or null of inches per rotation wasn't given.
 	 */
 	public Double getPositionFeet() {
-		return nativeToFeet(canTalon.getEncPosition());
+		return encoderToFeet(canTalon.getEncPosition());
 	}
 
 	/**
@@ -748,8 +703,8 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 			point.velocityOnly = velocityOnly;  // true => no position servo just velocity feedforward
 
 			// Set all the fields of the profile point
-			point.position = feetToNative(data.getData()[i][0]);
-			point.velocity = feetPerSecToNative(data.getData()[i][1]);
+			point.position = feetToEncoder(data.getData()[i][0]);
+			point.velocity = FPSToEncoder(data.getData()[i][1]);
 			point.timeDurMs = (int) (data.getData()[i][2] * 1000.);
 			point.zeroPos = i == 0; // If it's the first point, set the encoder position to 0.
 			point.isLastPoint = (i + 1) == data.getData().length; // If it's the last point, isLastPoint = true
@@ -842,7 +797,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		private final double closedLoopRampRate;
 
 		/**
-		 * The maximum speed of the motor in this gear, in RPS. Can be null if not using PID in this gear.
+		 * The maximum speed of the motor in this gear, in FPS. Can be null if not using PID in this gear.
 		 */
 		@Nullable
 		private final Double maxSpeed;
@@ -874,7 +829,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		 *                                voltage. Defaults to -fwdNominalOutputVoltage.
 		 * @param closedLoopRampRate      The closed loop ramp rate, in volts/sec. Can be null, and if it is, no ramp
 		 *                                rate is used..
-		 * @param maxSpeed                The maximum speed of the motor in this gear, in RPS. Can be null if not using
+		 * @param maxSpeed                The maximum speed of the motor in this gear, in FPS. Can be null if not using
 		 *                                PID in this gear.
 		 * @param kP                      The proportional PID constant for the motor in this gear. Ignored if maxSpeed
 		 *                                is null. Defaults to 0.
@@ -977,7 +932,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 		}
 
 		/**
-		 * @return The maximum speed of the motor in this gear, in RPS.
+		 * @return The maximum speed of the motor in this gear, in FPS.
 		 */
 		@Nullable
 		public Double getMaxSpeed() {

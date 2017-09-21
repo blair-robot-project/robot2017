@@ -8,8 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.ShiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 
 
 /**
@@ -39,8 +39,8 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	 * @param shiftComponent The component that controls shifting.
 	 */
 	@JsonCreator
-	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
-	                                 @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
+	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+	                                 @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
 	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                                 @Nullable Double VelScale,
 	                                 @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {

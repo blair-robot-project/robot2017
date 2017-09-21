@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
@@ -31,13 +31,13 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * Right master Talon
 	 */
 	@NotNull
-	protected final RPSTalon rightMaster;
+	protected final FPSTalon rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
 	@NotNull
-	protected final RPSTalon leftMaster;
+	protected final FPSTalon leftMaster;
 
 	/**
 	 * The NavX gyro
@@ -59,8 +59,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
-	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
-	                         @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
+	public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+	                         @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
 	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                         @Nullable Double VelScale) {
 		super();

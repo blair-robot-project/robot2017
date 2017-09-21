@@ -96,7 +96,7 @@ drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
         leftMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
@@ -106,7 +106,7 @@ drive:
                 fwdPeakOutputVoltage: 12
                 highGearFwdNominalOutputVoltage: 1.3
                 lowGearFwdNominalOutputVoltage: 0.7
-                inchesPerRotation: 11.78097
+                feetPerRotation: 0.9817
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
@@ -116,7 +116,7 @@ drive:
                       gear: LOW
                       fwdPeakOutputVoltage: 12
                       fwdNominalOutputVoltage: 0.7
-                      maxSpeed: 6.3
+                      maxSpeed: 6.2
                       kP: 0.3
                       kI: 0.0
                       kD: 0.0
@@ -126,7 +126,7 @@ drive:
                     - <<: *lowGear
                       gear: HIGH
                       fwdNominalOutputVoltage: 1.3
-                      maxSpeed: 16
+                      maxSpeed: 15.71
                       kP: 0.7
                       kI: 0.0
                       kD: 3.0
@@ -141,7 +141,7 @@ drive:
                       port: 6
                       inverted: true
         rightMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
@@ -208,7 +208,7 @@ climber:
     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
         talonSRX:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 '@id': climberTalon
                 port: 5
                 inverted: false
