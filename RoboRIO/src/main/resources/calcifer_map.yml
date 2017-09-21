@@ -111,18 +111,25 @@ drive:
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
-                maxSpeedHigh: 16
-                highGearP: 0.7
-                highGearI: 0.0
-                highGearD: 3.0
-                maxSpeedLow: 6.3
-                lowGearP: 0.3
-                lowGearI: 0.0
-                lowGearD: 0.0
-                motionProfileP: 1.5
-                motionProfileI: 0.0
-                motionProfileD: 0.0
-                MPUseLowGear: true
+                perGearSettings:
+                    - &lowGear
+                      gear: LOW
+                      fwdPeakOutputVoltage: 12
+                      fwdNominalOutputVoltage: 0.7
+                      maxSpeed: 6.3
+                      kP: 0.3
+                      kI: 0.0
+                      kD: 0.0
+                      motionProfileP: 1.5
+                      motionProfileI: 0.0
+                      motionProfileD: 0.0
+                    - <<: *lowGear
+                      gear: HIGH
+                      fwdNominalOutputVoltage: 1.3
+                      maxSpeed: 16
+                      kP: 0.7
+                      kI: 0.0
+                      kD: 3.0
                 maxClosedLoopVoltage: 12
                 slaves:
                     - '@id': talon8
@@ -211,8 +218,6 @@ climber:
                 port: 5
                 inverted: false
                 enableBrakeMode: false
-                fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 0
         maxPower: 500
         simpleMotor:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor:
