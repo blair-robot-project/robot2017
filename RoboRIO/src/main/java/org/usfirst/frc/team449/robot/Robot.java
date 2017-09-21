@@ -353,7 +353,7 @@ public class Robot extends IterativeRobot {
 		currentTimeMillis = System.currentTimeMillis();
 		//Switch to starting gear
 		if (driveSubsystem.getClass().equals(DriveTalonClusterShiftable.class)) {
-			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShiftable) driveSubsystem, ((DriveTalonClusterShiftable) driveSubsystem).getStartingGear()));
+			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShiftable) driveSubsystem, ((DriveTalonClusterShiftable) driveSubsystem).getStartingGear(), null));
 		}
 
 		driveSubsystem.enableMotors();

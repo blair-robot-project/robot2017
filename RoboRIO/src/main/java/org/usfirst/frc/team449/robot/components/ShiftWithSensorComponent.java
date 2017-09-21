@@ -101,7 +101,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	private void checkToReenable(){
 		//Check if the piston is in correct position by making sure each sensor is reading correctly.
 		boolean pistonCorrect = true;
-		if (currentGear == Shiftable.gear.HIGH) {
+		if (currentGear == Shiftable.gear.HIGH.getNumVal()) {
 			for (boolean sensor : highGearSensors.getStatus()) {
 				//The position is correct if all the sensors read true.
 				pistonCorrect = pistonCorrect && sensor;
@@ -150,7 +150,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 * @param gear The gear to shift to.
 	 */
 	@Override
-	public void shiftToGear(Shiftable.gear gear) {
+	public void shiftToGear(int gear) {
 		super.shiftToGear(gear);
 		sensorChecker.startPeriodic(sensorCheckerPeriodSecs);
 	}

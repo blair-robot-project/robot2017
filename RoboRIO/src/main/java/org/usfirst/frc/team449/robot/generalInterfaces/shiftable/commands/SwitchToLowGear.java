@@ -44,7 +44,7 @@ public class SwitchToLowGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(Shiftable.gear.LOW);
+		subsystem.setGear(Shiftable.gear.LOW.getNumVal());
 	}
 
 	/**

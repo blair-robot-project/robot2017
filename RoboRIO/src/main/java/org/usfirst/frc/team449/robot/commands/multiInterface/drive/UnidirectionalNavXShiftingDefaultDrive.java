@@ -83,7 +83,7 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	public void execute() {
 		//Auto-shifting
 		autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
-				subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+				subsystem.getRightVel(), subsystem::setGear);
 		super.execute();
 	}
 

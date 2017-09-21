@@ -97,8 +97,7 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	 * @return The gear this subsystem is currently in.
 	 */
 	@Override
-	@NotNull
-	public gear getGear() {
+	public int getGear() {
 		return shiftComponent.getCurrentGear();
 	}
 
@@ -108,15 +107,14 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	 * @param gear Which gear to shift to.
 	 */
 	@Override
-	public void setGear(@NotNull gear gear) {
+	public void setGear(int gear) {
 		shiftComponent.shiftToGear(gear);
 	}
 
 	/**
 	 * @return The gear this subsystem starts auto and teleop in.
 	 */
-	@NotNull
-	public gear getStartingGear() {
+	public int getStartingGear() {
 		return shiftComponent.getStartingGear();
 	}
 }

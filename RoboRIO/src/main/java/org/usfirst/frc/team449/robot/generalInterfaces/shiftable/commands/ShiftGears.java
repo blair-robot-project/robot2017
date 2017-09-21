@@ -44,7 +44,7 @@ public class ShiftGears extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(subsystem.getGear() == Shiftable.gear.LOW ? Shiftable.gear.HIGH : Shiftable.gear.LOW);
+		subsystem.setGear(subsystem.getGear() == Shiftable.gear.LOW.getNumVal() ? Shiftable.gear.HIGH.getNumVal() : Shiftable.gear.LOW.getNumVal());
 	}
 
 	/**

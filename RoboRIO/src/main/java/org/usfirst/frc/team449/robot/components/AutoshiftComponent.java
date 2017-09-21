@@ -155,11 +155,11 @@ public class AutoshiftComponent {
 	 * @param rightVel      The velocity of the right side of the drive.
 	 * @param shift         The function to actually shift gears.
 	 */
-	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Shiftable.gear> shift) {
+	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
 		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
-			shift.accept(Shiftable.gear.LOW);
+			shift.accept(Shiftable.gear.LOW.getNumVal());
 		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
-			shift.accept(Shiftable.gear.HIGH);
+			shift.accept(Shiftable.gear.HIGH.getNumVal());
 		}
 	}
 }

@@ -12,18 +12,27 @@ public interface Shiftable {
 	/**
 	 * @return The gear this subsystem is currently in.
 	 */
-	@NotNull
-	gear getGear();
+	int getGear();
 
 	/**
 	 * Shift to a specific gear.
 	 *
 	 * @param gear Which gear to shift to.
 	 */
-	void setGear(@NotNull gear gear);
+	void setGear(int gear);
 
 	enum gear {
-		HIGH, LOW
+		LOW(1), HIGH(2);
+
+		private int numVal;
+
+		gear(int numVal) {
+			this.numVal = numVal;
+		}
+
+		public int getNumVal() {
+			return numVal;
+		}
 	}
 
 }

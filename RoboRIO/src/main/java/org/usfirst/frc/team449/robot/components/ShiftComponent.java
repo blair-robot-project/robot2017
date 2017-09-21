@@ -37,14 +37,12 @@ public class ShiftComponent {
 	/**
 	 * The gear to start in.
 	 */
-	@NotNull
-	private final Shiftable.gear startingGear;
+	private final int startingGear;
 
 	/**
 	 * The gear this component is currently in.
 	 */
-	@NotNull
-	protected Shiftable.gear currentGear;
+	protected int currentGear;
 
 	/**
 	 * Default constructor.
@@ -65,10 +63,10 @@ public class ShiftComponent {
 		this.lowGearPistonPos = lowGearPistonPos != null ? lowGearPistonPos : DoubleSolenoid.Value.kForward;
 
 		if (startingGear != null) {
-			this.currentGear = startingGear;
+			this.currentGear = startingGear.getNumVal();
 		} else {
 			//Get the starting gear from the piston's position if it's not provided
-			this.currentGear = piston.get() == lowGearPistonPos ? Shiftable.gear.LOW : Shiftable.gear.HIGH;
+			this.currentGear = piston.get() == lowGearPistonPos ? Shiftable.gear.LOW.getNumVal() : Shiftable.gear.HIGH.getNumVal();
 		}
 		this.startingGear = currentGear;
 
@@ -83,9 +81,9 @@ public class ShiftComponent {
 	 *
 	 * @param gear The gear to shift to.
 	 */
-	public void shiftToGear(Shiftable.gear gear) {
+	public void shiftToGear(int gear) {
 		//Do nothing if we try to switch to the current gear.
-		if (!gear.equals(currentGear)) {
+		if (!(gear == currentGear)) {
 			for (Shiftable shiftable : otherShiftables) {
 				shiftable.setGear(gear);
 			}
@@ -97,16 +95,14 @@ public class ShiftComponent {
 	/**
 	 * @return The gear the shifter is currently in.
 	 */
-	@NotNull
-	public Shiftable.gear getCurrentGear() {
+	public int getCurrentGear() {
 		return currentGear;
 	}
 
 	/**
 	 * @return The gear to start in.
 	 */
-	@NotNull
-	public Shiftable.gear getStartingGear() {
+	public int getStartingGear() {
 		return startingGear;
 	}
 
@@ -115,8 +111,8 @@ public class ShiftComponent {
 	 *
 	 * @param gear The gear to shift to
 	 */
-	protected void shiftPiston(Shiftable.gear gear) {
-		if (gear.equals(Shiftable.gear.LOW)) {
+	protected void shiftPiston(int gear) {
+		if (gear == Shiftable.gear.LOW.getNumVal()) {
 			//Switch to the low gear pos
 			piston.set(lowGearPistonPos);
 		} else if (lowGearPistonPos.equals(DoubleSolenoid.Value.kForward)) {

@@ -44,7 +44,7 @@ public class SwitchToHighGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(Shiftable.gear.HIGH);
+		subsystem.setGear(Shiftable.gear.HIGH.getNumVal());
 	}
 
 	/**

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.logger.Logger;
@@ -24,20 +25,25 @@ public class SwitchToGear extends YamlCommandWrapper {
 	/**
 	 * The gear to switch to.
 	 */
-	@NotNull
-	private final Shiftable.gear switchTo;
+	private final int switchTo;
 
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The drive to execute this command on
-	 * @param switchTo  The gear to switch to.
+	 * @param subsystem The drive to execute this command on.
+	 * @param switchToNum The number of the gear to switch to. Is ignored if switchTo isn't null.
+	 * @param switchTo  The gear to switch to. Can be null, and if it is, switchToNum is used instead.
 	 */
 	@JsonCreator
 	public SwitchToGear(@NotNull @JsonProperty(required = true) Shiftable subsystem,
-	                    @NotNull @JsonProperty(required = true) Shiftable.gear switchTo) {
+	                    int switchToNum,
+	                    @Nullable Shiftable.gear switchTo) {
 		this.subsystem = subsystem;
-		this.switchTo = switchTo;
+		if (switchTo != null) {
+			this.switchTo = switchTo.getNumVal();
+		} else {
+			this.switchTo = switchToNum;
+		}
 	}
 
 	/**
