@@ -155,11 +155,6 @@ drive:
                     - '@id': talon3
                       port: 3
                       inverted: true
-        MPHandler:
-            '@id': driveMPHandler
-            talons:
-                - leftMaster
-                - rightMaster
         VelScale: 0.9
         navX:
             '@id': driveNavX

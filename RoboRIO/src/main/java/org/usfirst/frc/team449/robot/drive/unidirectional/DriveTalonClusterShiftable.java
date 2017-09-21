@@ -4,15 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.components.ShiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
-import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.RPSTalon;
 
 
@@ -39,7 +35,6 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	 * @param leftMaster   The master talon on the left side of the drive.
 	 * @param rightMaster  The master talon on the right side of the drive.
 	 * @param navX         The NavX on this drive.
-	 * @param MPHandler    The motion profile handler that runs this drive's motion profiles.
 	 * @param VelScale     The amount to scale the output to the motor by. Defaults to 1.
 	 * @param shiftComponent The component that controls shifting.
 	 */
@@ -47,10 +42,9 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) RPSTalon leftMaster,
 	                                 @NotNull @JsonProperty(required = true) RPSTalon rightMaster,
 	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
-	                                 @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                                 @Nullable Double VelScale,
 	                                 @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {
-		super(leftMaster, rightMaster, navX, MPHandler, VelScale);
+		super(leftMaster, rightMaster, navX, VelScale);
 		//Initialize stuff
 		this.shiftComponent = shiftComponent;
 

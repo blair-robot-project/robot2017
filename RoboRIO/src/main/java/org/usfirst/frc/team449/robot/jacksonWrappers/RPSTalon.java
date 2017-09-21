@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.logger.Logger;
@@ -758,7 +757,7 @@ public class RPSTalon implements SimpleMotor, Shiftable {
 			// Send the point to the Talon's buffer
 			if (!canTalon.pushMotionProfileTrajectory(point)) {
 				//If sending the point doesn't work, log an error and exit.
-				Logger.addEvent("Buffer full!", CANTalonMPComponent.class);
+				Logger.addEvent("Buffer full!", this.getClass());
 				System.out.println("Buffer full!");
 				break;
 			}
