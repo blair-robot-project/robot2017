@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.oi.buttons.FactoryButton;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OIOutreach implements OIUnidirectional{
+public class OIOutreach implements OIUnidirectional {
 
 	/**
 	 * The OI with higher priority that overrides if it has any input.
@@ -44,7 +44,7 @@ public class OIOutreach implements OIUnidirectional{
 	 */
 	@Override
 	public double getLeftOutput() {
-		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()){
+		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()) {
 			return overridingOI.getLeftOutput();
 		} else {
 			return overridenOI.getLeftOutput();
@@ -58,7 +58,7 @@ public class OIOutreach implements OIUnidirectional{
 	 */
 	@Override
 	public double getRightOutput() {
-		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()){
+		if (overridingOI.getLeftOutput() != 0 || overridingOI.getRightOutput() != 0 || button.get()) {
 			return overridingOI.getRightOutput();
 		} else {
 			return overridenOI.getRightOutput();

@@ -70,7 +70,7 @@ task('copyResources') {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
 				put from: fileTree('src/main/resources'), into: './449_resources/'
-				execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true // Just in case
+				execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
 			}
 		}
 	}

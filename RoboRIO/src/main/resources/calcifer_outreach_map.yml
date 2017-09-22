@@ -79,16 +79,15 @@ oi:
                     '@id': overridingGamepad
                     port: 1
                 rotThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridingRotThrottle
                         '@id': overridingRotThrottle
                         stick: overridingGamepad
                         axis: 0
-                        smoothingTimeConstantSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         <<: *overridingRotThrottle
                         '@id': overridingFwdThrottle
                         axis: 5
@@ -102,16 +101,15 @@ oi:
                     '@id': overridenGamepad
                     port: 2
                 rotThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridenRotThrottle
                         '@id': overridenRotThrottle
                         stick: overridenGamepad
                         axis: 0
-                        smoothingTimeConstantSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         <<: *overridenRotThrottle
                         '@id': overridenFwdThrottle
                         axis: 5

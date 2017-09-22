@@ -257,7 +257,9 @@ public class CANTalonMPComponent {
 	 * Start running the loaded profile on the given talons.
 	 */
 	public void startRunningProfile() {
+		stopUpdaterProcess();
 		startRunningProfile(talons);
+		startUpdaterProcess();
 	}
 
 	/**
