@@ -26,9 +26,8 @@ public class RunProfile <T extends YamlSubsystem & SubsystemMPTwoSides> extends 
 	@JsonCreator
 	public RunProfile(@NotNull @JsonProperty(required = true) T subsystem,
 	                  @NotNull @JsonProperty(required = true) MotionProfileData profile,
-	                  @JsonProperty(required = true) double timeout,
-	                  @JsonProperty(required = true) double minRunTimeSecs) {
+	                  @JsonProperty(required = true) double timeout) {
 		addSequential(new LoadProfile(subsystem, profile));
-		addSequential(new RunLoadedProfile<>(subsystem, timeout, true, minRunTimeSecs));
+		addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
 	}
 }

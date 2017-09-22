@@ -162,8 +162,8 @@ public class Robot extends IterativeRobot {
 		Yaml yaml = new Yaml();
 		try {
 			//Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "ballbasaur_map.yml"));
-//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "ballbasaur_map.yml"));
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
 //			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_outreach_map.yml"));
 			YAMLMapper mapper = new YAMLMapper();
 			//Turn the Map read by SnakeYaml into a String so Jackson can read it.
@@ -199,7 +199,7 @@ public class Robot extends IterativeRobot {
 			//Load the test profiles if we're testing.
 			if (robotMap.getTestMP()) {
 				driveSubsystem.loadMotionProfile(robotMap.getLeftTestProfile(), robotMap.getRightTestProfile());
-				autonomousCommand = new RunLoadedProfile<>(driveSubsystem, 15, true, 0);
+				autonomousCommand = new RunLoadedProfile<>(driveSubsystem, 15, true);
 			} else {
 				//Read the data from the input switches
 				boolean redAlliance = robotMap.getAllianceSwitch().getStatus().get(0);

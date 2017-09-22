@@ -349,12 +349,12 @@ boilerAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightBackupBoiler
-                    filename: "calciferLeftRedBackupProfile.csv"
+                    '@id': redLeftBackupBoiler
+                    filename: "calciferRightBlueBackupProfile.csv"
                     inverted: true
                 right:
-                    '@id': blueLeftBackupBoiler
-                    filename: "calciferRightRedBackupProfile.csv"
+                    '@id': redRightBackupBoiler
+                    filename: "calciferLeftBlueBackupProfile.csv"
                     inverted: true
                 timeout: 10
         runBlueBackupProfile:
@@ -365,12 +365,12 @@ boilerAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightBackupBoiler
-                    filename: "calciferLeftRedBackupProfile.csv"
-                    inverted: true
-                right:
                     '@id': blueLeftBackupBoiler
                     filename: "calciferRightRedBackupProfile.csv"
+                    inverted: true
+                right:
+                    '@id': blueRightBackupBoiler
+                    filename: "calciferLeftRedBackupProfile.csv"
                     inverted: true
                 timeout: 10
         driveForwards:
@@ -408,12 +408,12 @@ feederAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': redRightBackup
-                    filename: "calciferLeftRedBackupProfile.csv"
-                    inverted: true
-                right:
                     '@id': redLeftBackup
                     filename: "calciferRightRedBackupProfile.csv"
+                    inverted: true
+                right:
+                    '@id': redRightBackup
+                    filename: "calciferLeftRedBackupProfile.csv"
                     inverted: true
                 timeout: 10
         runBlueBackupProfile:
@@ -424,12 +424,12 @@ feederAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightBackup
-                    filename: "calciferLeftBlueBackupProfile.csv"
-                    inverted: true
-                right:
                     '@id': blueLeftBackup
                     filename: "calciferRightBlueBackupProfile.csv"
+                    inverted: true
+                right:
+                    '@id': blueRightBackup
+                    filename: "calciferLeftBlueBackupProfile.csv"
                     inverted: true
                 timeout: 10
         driveForwards:

@@ -38,9 +38,6 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 	 */
 	private boolean runningProfile;
 
-	private long minRunTimeSecs;
-
-
 	/**
 	 * Default constructor.
 	 *
@@ -51,8 +48,7 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 	@JsonCreator
 	public RunLoadedProfile(@NotNull @JsonProperty(required = true) T subsystem,
 	                        @JsonProperty(required = true) double timeout,
-	                        @JsonProperty(required = true) boolean require,
-	                        @JsonProperty(required = true) double minRunTimeSecs) {
+	                        @JsonProperty(required = true) boolean require) {
 		this.subsystem = subsystem;
 		//Require if specified.
 		if (require) {
@@ -61,7 +57,6 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 
 		//Convert to milliseconds.
 		this.timeout = (long) (timeout * 1000.);
-		this.minRunTimeSecs = (long) (minRunTimeSecs * 1000.);
 
 		runningProfile = false;
 	}
@@ -100,7 +95,7 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 			System.out.println("RunLoadedProfile timed out!");
 			return true;
 		}
-		return runningProfile && subsystem.profileFinished() && Robot.currentTimeMillis() - startTime > minRunTimeSecs;
+		return runningProfile && subsystem.profileFinished();
 	}
 
 	/**

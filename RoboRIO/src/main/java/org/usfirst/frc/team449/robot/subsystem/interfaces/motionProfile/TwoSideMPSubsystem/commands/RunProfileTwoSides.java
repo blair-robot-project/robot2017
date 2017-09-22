@@ -29,9 +29,8 @@ public class RunProfileTwoSides <T extends YamlSubsystem & SubsystemMPTwoSides> 
 	public RunProfileTwoSides(@NotNull @JsonProperty(required = true) T subsystem,
 	                          @NotNull @JsonProperty(required = true) MotionProfileData left,
 	                          @NotNull @JsonProperty(required = true) MotionProfileData right,
-	                          @JsonProperty(required = true) double timeout,
-	                          @JsonProperty(required = true) double minRunTimeSecs) {
+	                          @JsonProperty(required = true) double timeout) {
 		addParallel(new LoadProfileTwoSides(subsystem, left, right));
-		addParallel(new RunLoadedProfile<>(subsystem, timeout, true, minRunTimeSecs));
+		addParallel(new RunLoadedProfile<>(subsystem, timeout, true));
 	}
 }
