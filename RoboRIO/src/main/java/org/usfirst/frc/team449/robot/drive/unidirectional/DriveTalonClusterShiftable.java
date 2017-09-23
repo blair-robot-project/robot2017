@@ -32,24 +32,26 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	/**
 	 * Default constructor.
 	 *
-	 * @param leftMaster     The master talon on the left side of the drive.
-	 * @param rightMaster    The master talon on the right side of the drive.
-	 * @param navX           The NavX on this drive.
-	 * @param VelScale       The amount to scale the output to the motor by. Defaults to 1.
-	 * @param shiftComponent The component that controls shifting.
+	 * @param leftMaster                The master talon on the left side of the drive.
+	 * @param rightMaster               The master talon on the right side of the drive.
+	 * @param navX                      The NavX on this drive.
+	 * @param VelScale                  The amount to scale the output to the motor by. Defaults to 1.
+	 * @param shiftComponent            The component that controls shifting.
+	 * @param startingOverrideAutoshift Whether to start with autoshift disabled. Defaults to false.
 	 */
 	@JsonCreator
 	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
 	                                  @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
 	                                  @NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                                  @Nullable Double VelScale,
-	                                  @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {
+	                                  @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent,
+	                                  boolean startingOverrideAutoshift) {
 		super(leftMaster, rightMaster, navX, VelScale);
 		//Initialize stuff
 		this.shiftComponent = shiftComponent;
 
 		// Initialize shifting constants, assuming robot is stationary.
-		overrideAutoshift = false;
+		overrideAutoshift = startingOverrideAutoshift;
 	}
 
 	/**
@@ -76,7 +78,8 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	 */
 	@Override
 	public void setOutput(double left, double right) {
-		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current gear
+		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current
+		// gear
 		if (overrideAutoshift) {
 			super.setOutput(left, right);
 		}

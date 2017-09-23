@@ -28,7 +28,8 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 	 * @param allianceSwitch            The switch indicating which alliance we're on.
 	 * @param runRedBackupProfile       The command for away from the peg, on the red side of the field.
 	 * @param runBlueBackupProfile      The command for moving away from the peg, on the blue side of the field.
-	 * @param driveForwards             The command for moving forwards towards the feeder station.
+	 * @param driveForwardsRed          The command for moving forwards towards the feeder station on the red side.
+	 * @param driveForwardsBlue         The command for moving forwards towards the feeder station on the blue side.
 	 * @param waitBetweenProfilesMillis How long to wait between each motion profile. Defaults to 50 if less than 50.
 	 */
 	@JsonCreator
@@ -38,7 +39,8 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 	                      @NotNull @JsonProperty(required = true) MappedDigitalInput allianceSwitch,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runRedBackupProfile,
 	                      @NotNull @JsonProperty(required = true) RunProfileTwoSides runBlueBackupProfile,
-	                      @NotNull @JsonProperty(required = true) YamlCommand driveForwards,
+	                      @NotNull @JsonProperty(required = true) YamlCommand driveForwardsRed,
+	                      @NotNull @JsonProperty(required = true) YamlCommand driveForwardsBlue,
 	                      long waitBetweenProfilesMillis) {
 		waitBetweenProfilesMillis = Math.max(50, waitBetweenProfilesMillis);
 		addSequential(runWallToPegProfile);
@@ -57,6 +59,10 @@ public class Auto2017Feeder extends YamlCommandGroupWrapper {
 
 		addSequential(new WaitForMillis(waitBetweenProfilesMillis));
 
-		addSequential(driveForwards.getCommand());
+		if (allianceSwitch.getStatus().get(0)) {
+			addSequential(driveForwardsRed.getCommand());
+		} else {
+			addSequential(driveForwardsBlue.getCommand());
+		}
 	}
 }
