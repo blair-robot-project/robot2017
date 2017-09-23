@@ -55,10 +55,10 @@ oi:
                 joystick: overridingGamepad
                 buttonNumber: 6
 drive:
-    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
         leftMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
@@ -68,7 +68,7 @@ drive:
                 fwdPeakOutputVoltage: 12
                 highGearFwdNominalOutputVoltage: 1.3
                 lowGearFwdNominalOutputVoltage: 0.7
-                inchesPerRotation: 11.78097
+                feetPerRotation: 0.9817
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
@@ -83,7 +83,7 @@ drive:
                       port: 6
                       inverted: true
         rightMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
@@ -109,12 +109,19 @@ drive:
         navX:
             '@id': driveNavX
             port: kMXP
-        shifter:
-            '@id': driveShifter
-            module: 15
-            forward: 2
-            reverse: 3
-        startingGear: LOW
+        shiftComponent:
+            org.usfirst.frc.team449.robot.components.shiftComponent:
+                '@id': driveShiftComponent
+                otherShiftables:
+                    - leftMaster
+                    - rightMaster
+                piston:
+                    '@id': driveShifter
+                    module: 15
+                    forward: 2
+                    reverse: 3
+                lowGearPistonPos: kForward
+                startingGear: LOW
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
         '@id': defaultDriveCommand
@@ -128,7 +135,7 @@ climber:
     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
         talonSRX:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 '@id': climberTalon
                 port: 5
                 inverted: false

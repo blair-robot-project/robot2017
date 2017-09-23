@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  * Turn a certain number of degrees from the current heading.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends NavXTurnToAngle {
+public class NavXTurnToAngleRelative<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends NavXTurnToAngle {
 
 	/**
 	 * Default constructor.

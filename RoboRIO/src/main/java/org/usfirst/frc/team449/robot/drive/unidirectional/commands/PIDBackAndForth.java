@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
  * Drive back and forth to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDBackAndForth <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandGroupWrapper {
+public class PIDBackAndForth<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Instantiate the CommandGroup

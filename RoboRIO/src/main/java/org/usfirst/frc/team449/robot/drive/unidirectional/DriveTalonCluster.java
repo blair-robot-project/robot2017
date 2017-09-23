@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
@@ -32,25 +31,19 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * Right master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon rightMaster;
+	protected final FPSTalon rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon leftMaster;
+	protected final FPSTalon leftMaster;
 
 	/**
 	 * The NavX gyro
 	 */
 	@NotNull
 	private final AHRS navX;
-
-	/**
-	 * A helper class that loads and runs profiles on the Talons.
-	 */
-	@NotNull
-	private final CANTalonMPComponent mpHandler;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -63,21 +56,18 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
 	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
-	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
-	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
-	                         @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
+	public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+	                         @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
 	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
-	                         @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                         @Nullable Double VelScale) {
 		super();
 		//Initialize stuff
 		this.VEL_SCALE = VelScale != null ? VelScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
-		this.mpHandler = MPHandler;
 		this.navX = navX;
 	}
 
@@ -130,8 +120,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void enableMotors() {
-		leftMaster.getCanTalon().enable();
-		rightMaster.getCanTalon().enable();
+		leftMaster.enable();
+		rightMaster.enable();
 	}
 
 	/**
@@ -221,12 +211,12 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getSpeed(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
-				leftMaster.getCanTalon().getOutputCurrent(),
-				rightMaster.getCanTalon().getOutputCurrent(),
-				leftMaster.getCanTalon().getOutputVoltage(),
-				rightMaster.getCanTalon().getOutputVoltage(),
-				leftMaster.getCanTalon().getPosition(),
-				rightMaster.getCanTalon().getPosition(),
+				leftMaster.getOutputCurrent(),
+				rightMaster.getOutputCurrent(),
+				leftMaster.getOutputVoltage(),
+				rightMaster.getOutputVoltage(),
+				leftMaster.getPositionFeet(),
+				rightMaster.getPositionFeet(),
 				navX.getAngle()};
 	}
 
@@ -249,7 +239,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData profile) {
-		mpHandler.loadTopLevel(profile);
+		leftMaster.loadProfile(profile);
+		rightMaster.loadProfile(profile);
 	}
 
 	/**
@@ -257,7 +248,10 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
-		mpHandler.startRunningProfile();
+		leftMaster.clearMPUnderrun();
+		rightMaster.clearMPUnderrun();
+		leftMaster.startRunningMP();
+		rightMaster.startRunningMP();
 	}
 
 	/**
@@ -267,7 +261,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public boolean profileFinished() {
-		return mpHandler.isFinished();
+		return leftMaster.MPIsFinished() && rightMaster.MPIsFinished();
 	}
 
 	/**
@@ -275,7 +269,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void disable() {
-		mpHandler.disableTalons();
+		leftMaster.disable();
+		rightMaster.disable();
 	}
 
 	/**
@@ -283,7 +278,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void holdPosition() {
-		mpHandler.holdTalons();
+		leftMaster.holdPositionMP();
+		rightMaster.holdPositionMP();
 	}
 
 	/**
@@ -293,7 +289,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public boolean readyToRunProfile() {
-		return mpHandler.isReady();
+		return leftMaster.readyForMP() && rightMaster.readyForMP();
 	}
 
 	/**
@@ -301,7 +297,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void stopMPProcesses() {
-		mpHandler.stopUpdaterProcess();
+		leftMaster.stopMPProcesses();
+		rightMaster.stopMPProcesses();
 	}
 
 	/**
@@ -312,11 +309,15 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
+		leftMaster.loadProfile(left);
+		rightMaster.loadProfile(right);
 	}
 
+	/**
+	 * Reset the motor positions.
+	 */
 	public void resetPosition() {
-		leftMaster.getCanTalon().setEncPosition(0);
-		rightMaster.getCanTalon().setEncPosition(0);
+		leftMaster.resetPosition();
+		rightMaster.resetPosition();
 	}
 }

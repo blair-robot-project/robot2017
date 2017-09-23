@@ -47,7 +47,7 @@ public class ThrottleDeadbanded extends Throttle {
 	 * Gets the value from the joystick and deadbands it. The non-deadband values are scaled to avoid a discontinuity,
 	 * so the graph of joystick input to deadbanded output looks like this:
 	 * <p>
-	 *  _/
+	 * _/
 	 * /
 	 *
 	 * @return The joystick's value, after being deadbanded.

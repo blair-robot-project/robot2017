@@ -1,43 +1,34 @@
-package org.usfirst.frc.team449.robot.drive.shifting.commands;
+package org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.logger.Logger;
 
 /**
- * Switches to a specified gear.
+ * Shifts gears. Basically a "ToggleGear" command.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SwitchToGear extends YamlCommandWrapper {
+public class ShiftGears extends YamlCommandWrapper {
 
 	/**
-	 * The drive to execute this command on.
+	 * The drive to execute this command on
 	 */
 	@NotNull
-	private final DriveShifting subsystem;
-
-	/**
-	 * The gear to switch to.
-	 */
-	@NotNull
-	private final DriveShifting.gear switchTo;
+	private final Shiftable subsystem;
 
 	/**
 	 * Default constructor
 	 *
 	 * @param subsystem The drive to execute this command on
-	 * @param switchTo  The gear to switch to.
 	 */
 	@JsonCreator
-	public SwitchToGear(@NotNull @JsonProperty(required = true) DriveShifting subsystem,
-	                    @NotNull @JsonProperty(required = true) DriveShifting.gear switchTo) {
+	public ShiftGears(@NotNull @JsonProperty(required = true) Shiftable subsystem) {
 		this.subsystem = subsystem;
-		this.switchTo = switchTo;
 	}
 
 	/**
@@ -45,15 +36,15 @@ public class SwitchToGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void initialize() {
-		Logger.addEvent("SwitchToGear init.", this.getClass());
+		Logger.addEvent("ShiftGears init.", this.getClass());
 	}
 
 	/**
-	 * Switch to the specified gear
+	 * Switch gears
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setGear(switchTo);
+		subsystem.setGear(subsystem.getGear() == Shiftable.gear.LOW.getNumVal() ? Shiftable.gear.HIGH.getNumVal() : Shiftable.gear.LOW.getNumVal());
 	}
 
 	/**
@@ -71,7 +62,7 @@ public class SwitchToGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void end() {
-		Logger.addEvent("SwitchToGear end.", this.getClass());
+		Logger.addEvent("ShiftGears end.", this.getClass());
 	}
 
 	/**
@@ -79,6 +70,6 @@ public class SwitchToGear extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("SwitchToGear Interrupted!", this.getClass());
+		Logger.addEvent("ShiftGears Interrupted!", this.getClass());
 	}
 }

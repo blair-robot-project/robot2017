@@ -72,28 +72,28 @@ drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
         '@id': drive
         leftMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 &leftMaster
                 '@id': leftMaster
                 port: 5
                 inverted: false
                 enableBrakeMode: true
-                fwdPeakOutputVoltage: 12
-                maxClosedLoopVoltage: 12
-                highGearFwdNominalOutputVoltage: 0
-                inchesPerRotation: 12.02
+                feetPerRotation: 1.002
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
                 reverseOutput: false
-                maxSpeedHigh: 11
-                highGearP: 0.3
-                highGearI: 0.0
-                highGearD: 3.0
-                motionProfileP: 1.0
-                motionProfileI: 0.0
-                motionProfileD: 0.0
+                perGearSettings:
+                  - fwdPeakOutputVoltage: 12
+                    fwdNominalOutputVoltage: 0.0
+                    maxSpeed: 11.8
+                    kP: 0.3
+                    kI: 0.0
+                    kD: 3.0
+                    motionProfileP: 1.0
+                    motionProfileI: 0.0
+                    motionProfileD: 0.0
                 slaves:
                     - '@id': talon1
                       port: 6
@@ -102,7 +102,7 @@ drive:
                       port: 1
                       inverted: false
         rightMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
                 port: 2

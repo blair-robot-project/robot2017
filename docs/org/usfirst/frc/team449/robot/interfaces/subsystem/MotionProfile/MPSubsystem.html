@@ -52,7 +52,7 @@ var activeTableTab = "activeTableTab";
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" target="_top">Frames</a></li>
+<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html" target="_top">Frames</a></li>
 <li><a href="MPSubsystem.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
@@ -91,7 +91,7 @@ var activeTableTab = "activeTableTab";
 <!-- ========= END OF TOP NAVBAR ========= -->
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="subTitle">org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile</div>
+<div class="subTitle">org.usfirst.frc.team449.robot.object.interfaces.motionProfile</div>
 <h2 title="Interface MPSubsystem" class="title">Interface MPSubsystem</h2>
 </div>
 <div class="contentContainer">
@@ -100,7 +100,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Known Subinterfaces:</dt>
-<dd><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></dd>
+<dd><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/TwoSideMPSubsystem/TwoSideMPSubsystem.html" title="interface in org.usfirst.frc.team449.robot.object.interfaces.motionProfile.TwoSideMPSubsystem">TwoSideMPSubsystem</a></dd>
 </dl>
 <dl>
 <dt>All Known Implementing Classes:</dt>
@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">MPSubsystem</span></pre>
-<div class="block">A subsystem that can have motion profiles run on it.</div>
+<div class="block">A object that can have motion profiles run on it.</div>
 </li>
 </ul>
 </div>
@@ -130,43 +130,43 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#disable--">disable</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#disable--">disable</a></span>()</code>
 <div class="block">Disable the motors.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#holdPosition--">holdPosition</a></span>()</code>
 <div class="block">Hold the current position.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;profile)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#loadMotionProfile-org.usfirst.frc.team449.robot.other.MotionProfileData-">loadMotionProfile</a></span>(<a href="../../../../../../../../org/usfirst/frc/team449/robot/util/MotionProfileData.html" title="class in org.usfirst.frc.team449.robot.logger">MotionProfileData</a>&nbsp;profile)</code>
 <div class="block">Loads a profile into the MP buffer.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a></span>()</code>
-<div class="block">Get whether this subsystem has finished running the profile loaded in it.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#profileFinished--">profileFinished</a></span>()</code>
+<div class="block">Get whether this object has finished running the profile loaded in it.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a></span>()</code>
-<div class="block">Get whether the subsystem is ready to run the loaded profile.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#readyToRunProfile--">readyToRunProfile</a></span>()</code>
+<div class="block">Get whether the object is ready to run the loaded profile.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#startRunningLoadedProfile--">startRunningLoadedProfile</a></span>()</code>
 <div class="block">Start running the profile that's currently loaded into the MP buffer.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../../../org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html#stopMPProcesses--">stopMPProcesses</a></span>()</code>
 <div class="block">Stops any MP-related threads currently running.</div>
 </td>
 </tr>
@@ -217,7 +217,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>profileFinished</h4>
 <pre>boolean&nbsp;profileFinished()</pre>
-<div class="block">Get whether this subsystem has finished running the profile loaded in it.</div>
+<div class="block">Get whether this object has finished running the profile loaded in it.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if there's no profile loaded and no profile running, false otherwise.</dd>
@@ -251,7 +251,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>readyToRunProfile</h4>
 <pre>boolean&nbsp;readyToRunProfile()</pre>
-<div class="block">Get whether the subsystem is ready to run the loaded profile.</div>
+<div class="block">Get whether the object is ready to run the loaded profile.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if a profile is loaded and ready to run, false otherwise.</dd>
@@ -299,7 +299,7 @@ var activeTableTab = "activeTableTab";
 <li>Next&nbsp;Class</li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/subsystem/MotionProfile/MPSubsystem.html" target="_top">Frames</a></li>
+<li><a href="../../../../../../../../index.html?org/usfirst/frc/team449/robot/interfaces/object/MotionProfile/MPSubsystem.html" target="_top">Frames</a></li>
 <li><a href="MPSubsystem.html" target="_top">No&nbsp;Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">

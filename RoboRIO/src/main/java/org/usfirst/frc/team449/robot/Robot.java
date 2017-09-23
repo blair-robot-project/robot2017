@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
@@ -260,9 +260,6 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.stopMPProcesses();
 		driveSubsystem.fullStop();
 
-		//Enable the motors in case they got disabled somehow
-		driveSubsystem.enableMotors();
-
 		//Set the default command
 		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
 
@@ -356,10 +353,11 @@ public class Robot extends IterativeRobot {
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
 		//Switch to starting gear
-		if (driveSubsystem.getClass().equals(DriveTalonClusterShifting.class)) {
-			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));
+		if (driveSubsystem.getClass().equals(DriveTalonClusterShiftable.class)) {
+			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShiftable) driveSubsystem, ((DriveTalonClusterShiftable) driveSubsystem).getStartingGear(), null));
 		}
 
+		driveSubsystem.enableMotors();
 		driveSubsystem.resetPosition();
 
 		//Start the compressor if it exists
