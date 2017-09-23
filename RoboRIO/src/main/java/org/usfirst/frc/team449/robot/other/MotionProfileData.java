@@ -35,9 +35,10 @@ public class MotionProfileData {
 	/**
 	 * Default constructor
 	 *
-	 * @param filename The filename of the .csv with the motion profile data. The first line must be the number of other
-	 *                 lines.
-	 * @param inverted Whether or not the profile is inverted (would be inverted if we're driving it backwards)
+	 * @param filename     The filename of the .csv with the motion profile data. The first line must be the number of other
+	 *                     lines.
+	 * @param inverted     Whether or not the profile is inverted (would be inverted if we're driving it backwards)
+	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to false.
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,

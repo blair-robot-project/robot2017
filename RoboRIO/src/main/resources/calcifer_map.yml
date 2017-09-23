@@ -103,14 +103,12 @@ drive:
                 inverted: false
                 reverseOutput: true
                 enableBrakeMode: false
-                fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 1.3
-                lowGearFwdNominalOutputVoltage: 0.7
                 feetPerRotation: 0.9817
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
+                startingGear: LOW
                 perGearSettings:
                     - &lowGear
                       gear: LOW
@@ -160,11 +158,13 @@ drive:
             '@id': driveNavX
             port: kMXP
         shiftComponent:
-            org.usfirst.frc.team449.robot.components.shiftComponent:
+            org.usfirst.frc.team449.robot.components.ShiftComponent:
                 '@id': driveShiftComponent
                 otherShiftables:
-                    - leftMaster
-                    - rightMaster
+                    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                        leftMaster
+                    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                        rightMaster
                 piston:
                     '@id': driveShifter
                     module: 15

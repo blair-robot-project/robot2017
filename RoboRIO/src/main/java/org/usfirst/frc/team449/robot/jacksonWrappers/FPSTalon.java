@@ -209,9 +209,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		}
 		currentGearSettings = this.perGearSettings.get(currentGear);
 
-		//Set up gear-based settings.
-		setGear(currentGear);
-
 		//Only enable the limit switches if it was specified if they're normally open or closed.
 		boolean fwdSwitchEnable = false, revSwitchEnable = false;
 		if (fwdLimitSwitchNormallyOpen != null) {
@@ -252,6 +249,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		//postEncoderGearing defaults to 1
 		this.postEncoderGearing = postEncoderGearing != null ? postEncoderGearing : 1.;
 
+		//Set up gear-based settings.
+		setGear(currentGear);
+
 		//Set the current limit if it was given
 		if (currentLimit != null) {
 			canTalon.setCurrentLimit(currentLimit);
@@ -280,8 +280,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 				tmp.enableLimitSwitch(false, false);
 				tmp.enableForwardSoftLimit(false);
 				tmp.enableReverseSoftLimit(false);
-				tmp.configNominalOutputVoltage(0, 0);
-				tmp.configPeakOutputVoltage(12, -12);
 				tmp.configMaxOutputVoltage(12);
 
 				//Brake mode and current limiting don't automatically follow master, so we set them up for each slave.
