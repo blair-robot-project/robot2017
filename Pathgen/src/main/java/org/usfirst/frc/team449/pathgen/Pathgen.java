@@ -22,18 +22,17 @@ public class Pathgen {
 		final double BACK_FROM_PEG = -6;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
-		final double BLUE_WALL_TO_CENTER_PEG = 114.3;
-		final double BLUE_WALL_TO_SIDE_PEG = 131.9;
-		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 92.;
-		final double BLUE_HALF_KEY_LENGTH = 154.5/2.;
-		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 24.;
-		final double RED_WALL_TO_CENTER_PEG = 114.3;
-		final double RED_WALL_TO_SIDE_PEG = 131.;
-		final double RED_BACK_CORNER_TO_SIDE_PEG = 99.;
-		final double RED_HALF_KEY_LENGTH = 157/2.;
-		final double RED_KEY_CORNER_TO_SIDE_PEG = 27.;
-		//final double AIRSHIP_PARALLEL_OFFSET = 6.-2.5;
-		final double AIRSHIP_PARALLEL_OFFSET = 6.;
+		final double BLUE_WALL_TO_CENTER_PEG = 113.75;
+		final double BLUE_WALL_TO_SIDE_PEG = 130.75;
+		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 91.;
+		final double BLUE_HALF_KEY_LENGTH = 150.5/2.;
+		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 15.;
+		final double RED_WALL_TO_CENTER_PEG = 114.;
+		final double RED_WALL_TO_SIDE_PEG = 130.;
+		final double RED_BACK_CORNER_TO_SIDE_PEG = 93.5;
+		final double RED_HALF_KEY_LENGTH = 152.5/2.;
+		final double RED_KEY_CORNER_TO_SIDE_PEG = 18.75;
+		final double AIRSHIP_PARALLEL_OFFSET = 0.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
