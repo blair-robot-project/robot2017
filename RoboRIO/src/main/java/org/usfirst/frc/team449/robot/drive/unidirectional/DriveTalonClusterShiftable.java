@@ -5,20 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-	 import org.jetbrains.annotations.Nullable;
-	 import org.usfirst.frc.team449.robot.components.ShiftComponent;
-	 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
-	 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-	 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
+import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.ShiftComponent;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 
 
-	 /**
-	 * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
-	 */
-	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-	public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
+/**
+ * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
+ */
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
 
-		/**
+	/**
 	 * The component that controls shifting.
 	 */
 	@NotNull
@@ -32,18 +32,18 @@ import org.jetbrains.annotations.NotNull;
 	/**
 	 * Default constructor.
 	 *
-	 * @param leftMaster   The master talon on the left side of the drive.
-	 * @param rightMaster  The master talon on the right side of the drive.
-	 * @param navX         The NavX on this drive.
-	 * @param VelScale     The amount to scale the output to the motor by. Defaults to 1.
+	 * @param leftMaster     The master talon on the left side of the drive.
+	 * @param rightMaster    The master talon on the right side of the drive.
+	 * @param navX           The NavX on this drive.
+	 * @param VelScale       The amount to scale the output to the motor by. Defaults to 1.
 	 * @param shiftComponent The component that controls shifting.
 	 */
 	@JsonCreator
 	public DriveTalonClusterShiftable(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
-	                                 @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-	                                 @NotNull @JsonProperty(required = true) MappedAHRS navX,
-	                                 @Nullable Double VelScale,
-	                                 @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {
+	                                  @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
+	                                  @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                                  @Nullable Double VelScale,
+	                                  @NotNull @JsonProperty(required = true) ShiftComponent shiftComponent) {
 		super(leftMaster, rightMaster, navX, VelScale);
 		//Initialize stuff
 		this.shiftComponent = shiftComponent;

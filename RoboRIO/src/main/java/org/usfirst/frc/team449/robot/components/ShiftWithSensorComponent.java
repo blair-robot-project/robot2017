@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
@@ -38,41 +37,37 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 */
 	@NotNull
 	private final List<SimpleMotor> motorsToDisable;
-
+	/**
+	 * The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
+	 */
+	@NotNull
+	private final BufferTimer motorDisableTimer;
+	/**
+	 * The Notifier that runs checkToReenable periodically.
+	 */
+	@NotNull
+	private final Notifier sensorChecker;
+	/**
+	 * The period for the loop that checks the sensors and enables/disables the motors, in seconds.
+	 */
+	private final double sensorCheckerPeriodSecs;
 	/**
 	 * Whether the piston's position was correct the last time checkToReenable was run.
 	 */
 	private boolean pistonWasCorrect;
 
 	/**
-	 * The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
-	 */
-	@NotNull
-	private final BufferTimer motorDisableTimer;
-
-	/**
-	 * The Notifier that runs checkToReenable periodically.
-	 */
-	@NotNull
-	private final Notifier sensorChecker;
-
-	/**
-	 * The period for the loop that checks the sensors and enables/disables the motors, in seconds.
-	 */
-	private final double sensorCheckerPeriodSecs;
-
-	/**
 	 * Default constructor.
 	 *
-	 * @param otherShiftables  All objects that should be shifted when this component's piston is.
-	 * @param piston           The piston that shifts.
-	 * @param lowGearPistonPos The piston position for low gear. Defaults to Forward.
-	 * @param startingGear     The gear to start in. Can be null, and if it is, the starting gear is gotten from the
-	 *                         piston's position.
-	 * @param highGearSensors The reed switches that detect if the shifter pistons are in high gear.
-	 * @param lowGearSensors The reed switches that detect if the shifter pistons are in low gear.
-	 * @param motorsToDisable The motors that should be disabled while the piston is shifting.
-	 * @param motorDisableTimer The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
+	 * @param otherShiftables         All objects that should be shifted when this component's piston is.
+	 * @param piston                  The piston that shifts.
+	 * @param lowGearPistonPos        The piston position for low gear. Defaults to Forward.
+	 * @param startingGear            The gear to start in. Can be null, and if it is, the starting gear is gotten from the
+	 *                                piston's position.
+	 * @param highGearSensors         The reed switches that detect if the shifter pistons are in high gear.
+	 * @param lowGearSensors          The reed switches that detect if the shifter pistons are in low gear.
+	 * @param motorsToDisable         The motors that should be disabled while the piston is shifting.
+	 * @param motorDisableTimer       The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
 	 * @param sensorCheckerPeriodSecs The period for the loop that checks the sensors and enables/disables the motors, in seconds.
 	 */
 	@JsonCreator
@@ -98,7 +93,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	/**
 	 * Check the sensors and enable/disable the motors accordingly.
 	 */
-	private void checkToReenable(){
+	private void checkToReenable() {
 		//Check if the piston is in correct position by making sure each sensor is reading correctly.
 		boolean pistonCorrect = true;
 		if (currentGear == Shiftable.gear.HIGH.getNumVal()) {
@@ -115,10 +110,10 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 
 		//If the pistons haven't been correct for more than a certain amount of time, we assume something went wrong and
 		// keep the motors enabled (essentially ignoring the sensors) so the robot can still drive.
-		if (motorDisableTimer.get(!pistonCorrect)){
+		if (motorDisableTimer.get(!pistonCorrect)) {
 			//We set pistonCorrect here because we're basically just overriding what the sensors say.
 			pistonCorrect = true;
-			for (SimpleMotor motor : motorsToDisable){
+			for (SimpleMotor motor : motorsToDisable) {
 				motor.enable();
 			}
 			sensorChecker.stop();
@@ -126,15 +121,15 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 		//Otherwise, if the piston is wrong, disable all the motors. We do this constantly in case some other part of
 		//the code tries to re-enable them.
 		//TODO set up a lock system so no other part of the code can re-enable the motors.
-		else if (!pistonCorrect){
-			for (SimpleMotor motor : motorsToDisable){
+		else if (!pistonCorrect) {
+			for (SimpleMotor motor : motorsToDisable) {
 				motor.disable();
 			}
 		}
 		//If the piston is correct, but wasn't the last time we checked, that means the piston has finished shifting and
 		//we should re-enable the motors.
-		else if (!pistonWasCorrect){
-			for (SimpleMotor motor : motorsToDisable){
+		else if (!pistonWasCorrect) {
+			for (SimpleMotor motor : motorsToDisable) {
 				motor.enable();
 			}
 			sensorChecker.stop();

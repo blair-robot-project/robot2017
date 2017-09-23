@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.Sole
  * intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoadShooter <T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
+public class LoadShooter<T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Constructs a LoadShooter command group

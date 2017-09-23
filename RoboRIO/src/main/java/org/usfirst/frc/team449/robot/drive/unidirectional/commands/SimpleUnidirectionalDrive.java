@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
  * Very simple unidirectional drive control.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class SimpleUnidirectionalDrive <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class SimpleUnidirectionalDrive<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The OI used for input.

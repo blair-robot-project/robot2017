@@ -30,9 +30,9 @@ public class SwitchToGear extends YamlCommandWrapper {
 	/**
 	 * Default constructor
 	 *
-	 * @param subsystem The drive to execute this command on.
+	 * @param subsystem   The drive to execute this command on.
 	 * @param switchToNum The number of the gear to switch to. Is ignored if switchTo isn't null.
-	 * @param switchTo  The gear to switch to. Can be null, and if it is, switchToNum is used instead.
+	 * @param switchTo    The gear to switch to. Can be null, and if it is, switchToNum is used instead.
 	 */
 	@JsonCreator
 	public SwitchToGear(@NotNull @JsonProperty(required = true) Shiftable subsystem,

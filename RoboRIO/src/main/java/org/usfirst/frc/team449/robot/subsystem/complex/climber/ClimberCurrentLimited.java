@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -115,7 +115,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	public Object[] getData() {
 		return new Object[]{canTalonSRX.getOutputCurrent(),
 				canTalonSRX.getOutputVoltage(),
-				canTalonSRX.getOutputCurrent()*canTalonSRX.getOutputVoltage()};
+				canTalonSRX.getOutputCurrent() * canTalonSRX.getOutputVoltage()};
 	}
 
 	/**
@@ -162,6 +162,6 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	@Override
 	public boolean isConditionTrue() {
-		return powerLimitTimer.get(Math.abs(canTalonSRX.getOutputCurrent()*canTalonSRX.getOutputVoltage()) > maxPower);
+		return powerLimitTimer.get(Math.abs(canTalonSRX.getOutputCurrent() * canTalonSRX.getOutputVoltage()) > maxPower);
 	}
 }

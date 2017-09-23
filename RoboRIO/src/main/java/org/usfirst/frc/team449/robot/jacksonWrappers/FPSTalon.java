@@ -118,7 +118,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
 	 *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
 	 *                                   final output. Defaults to 1.
-	 * @param feetPerRotation          The number of feet travelled per rotation of the motor this is attached to. Defaults to 1.
+	 * @param feetPerRotation            The number of feet travelled per rotation of the motor this is attached to. Defaults to 1.
 	 * @param currentLimit               The max amps this device can draw. If this is null, no current limit is used.
 	 * @param maxClosedLoopVoltage       The voltage to scale closed-loop output based on, e.g. closed-loop output of 1
 	 *                                   will produce this voltage, output of 0.5 will produce half, etc. This feature
