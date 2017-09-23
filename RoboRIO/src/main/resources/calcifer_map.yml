@@ -380,19 +380,34 @@ boilerAuto:
                     filename: "calciferLeftRedBackupProfile.csv"
                     inverted: true
                 timeout: 10
-        driveForwards:
+        driveForwardsRed:
             org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': driveForwardsMPBoiler
+                '@id': driveForwardsMPBoilerRed
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
                 left:
-                    '@id': leftForwardsProfileBoiler
-                    filename: "calciferLeftBoilerToLoadingProfile.csv"
+                    '@id': leftForwardsProfileBoilerRed
+                    filename: "calciferLeftRedBoilerToLoadingProfile.csv"
                     inverted: false
                 right:
-                    '@id': rightForwardsProfileBoiler
-                    filename: "calciferRightBoilerToLoadingProfile.csv"
+                    '@id': rightForwardsProfileBoilerRed
+                    filename: "calciferRightRedBoilerToLoadingProfile.csv"
+                    inverted: false
+                timeout: 10
+        driveForwardsBlue:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': driveForwardsMPBoilerBlue
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+                left:
+                    '@id': leftForwardsProfileBoilerBlue
+                    filename: "calciferLeftBlueBoilerToLoadingProfile.csv"
+                    inverted: false
+                right:
+                    '@id': rightForwardsProfileBoilerBlue
+                    filename: "calciferRightBlueBoilerToLoadingProfile.csv"
                     inverted: false
                 timeout: 10
         waitBetweenProfilesMillis: 50
@@ -443,19 +458,34 @@ feederAuto:
                     filename: "calciferLeftBlueBackupProfile.csv"
                     inverted: true
                 timeout: 10
-        driveForwards:
+        driveForwardsRed:
             org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': driveForwardsMP
+                '@id': driveForwardsMPRed
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
                 left:
-                    '@id': leftForwardsProfileFeeder
-                    filename: "calciferLeftLoadingToLoadingProfile.csv"
+                    '@id': leftForwardsProfileFeederRed
+                    filename: "calciferLeftRedLoadingToLoadingProfile.csv"
                     inverted: false
                 right:
-                    '@id': rightForwardsProfileFeeder
-                    filename: "calciferRightLoadingToLoadingProfile.csv"
+                    '@id': rightForwardsProfileFeederRed
+                    filename: "calciferRightRedLoadingToLoadingProfile.csv"
+                    inverted: false
+                timeout: 10
+        driveForwardsBlue:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
+                '@id': driveForwardsMPBlue
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+                left:
+                    '@id': leftForwardsProfileFeederBlue
+                    filename: "calciferLeftBlueLoadingToLoadingProfile.csv"
+                    inverted: false
+                right:
+                    '@id': rightForwardsProfileFeederBlue
+                    filename: "calciferRightBlueLoadingToLoadingProfile.csv"
                     inverted: false
                 timeout: 10
         waitBetweenProfilesMillis: 50

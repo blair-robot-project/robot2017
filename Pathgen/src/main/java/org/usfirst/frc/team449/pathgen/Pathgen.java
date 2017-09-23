@@ -19,7 +19,7 @@ public class Pathgen {
 		final double CENTER_TO_FRONT = 27./2.;
 		final double CENTER_TO_BACK = 27./2. + 3.25;
 		final double CENTER_TO_SIDE = 29./2. + 3.25;
-		final double BACK_FROM_PEG = -6;
+		final double BACK_FROM_PEG = -3;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
 		final double BLUE_WALL_TO_CENTER_PEG = 113.75;
@@ -32,7 +32,7 @@ public class Pathgen {
 		final double RED_BACK_CORNER_TO_SIDE_PEG = 93.5;
 		final double RED_HALF_KEY_LENGTH = 152.5/2.;
 		final double RED_KEY_CORNER_TO_SIDE_PEG = 18.75;
-		final double AIRSHIP_PARALLEL_OFFSET = 0.;
+		final double AIRSHIP_PARALLEL_OFFSET = 6.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
@@ -103,15 +103,26 @@ public class Pathgen {
 				new Waypoint(3, -1, -Math.PI/3)
 		};
 
-		Waypoint[] loadingToLoading = new Waypoint[]{
+		Waypoint[] blueLoadingToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
 				new Waypoint(27, -5, 0)
 		};
 
-		Waypoint[] boilerToLoading = new Waypoint[]{
+		Waypoint[] blueBoilerToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
 				new Waypoint(5, 0, 0),
 				new Waypoint(27, -15, 0)
+		};
+
+		Waypoint[] redLoadingToLoading = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(27, 5, 0)
+		};
+
+		Waypoint[] redBoilerToLoading = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(5, 0, 0),
+				new Waypoint(27, 15, 0)
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
@@ -125,8 +136,10 @@ public class Pathgen {
 		profiles.put("BlueShoot", bluePegToKey);
 		profiles.put("RedBackup", backupRed);
 		profiles.put("BlueBackup", backupBlue);
-		profiles.put("LoadingToLoading", loadingToLoading);
-		profiles.put("BoilerToLoading", boilerToLoading);
+		profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
+		profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
+		profiles.put("RedLoadingToLoading", redLoadingToLoading);
+		profiles.put("RedBoilerToLoading", redBoilerToLoading);
 
 		final String ROBOT_NAME = "calcifer";
 
@@ -141,7 +154,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 5., 3, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 6., 4.5, 9); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
