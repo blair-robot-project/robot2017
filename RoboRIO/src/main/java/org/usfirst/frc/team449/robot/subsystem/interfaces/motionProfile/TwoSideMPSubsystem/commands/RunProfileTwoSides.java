@@ -30,7 +30,7 @@ public class RunProfileTwoSides <T extends YamlSubsystem & SubsystemMPTwoSides> 
 	                          @NotNull @JsonProperty(required = true) MotionProfileData left,
 	                          @NotNull @JsonProperty(required = true) MotionProfileData right,
 	                          @JsonProperty(required = true) double timeout) {
-		addSequential(new LoadProfileTwoSides(subsystem, left, right));
-		addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+		addParallel(new LoadProfileTwoSides(subsystem, left, right));
+		addParallel(new RunLoadedProfile<>(subsystem, timeout, true));
 	}
 }

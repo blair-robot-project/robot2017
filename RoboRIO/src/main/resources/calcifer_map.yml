@@ -76,22 +76,35 @@ oi:
             '@id': driverGamepad
             port: 1
         rotThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 &rotThrottle
                 '@id': rotThrottle
                 stick: driverGamepad
                 axis: 0
-                smoothingTimeConstantSecs: 0.04
                 deadband: 0.05
                 inverted: false
+                polynomial:
+                    '@id': rotPoly
+                    powerToCoefficientMap: !!map
+                        2 : 1
         fwdThrottle:
-            org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+            org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 <<: *rotThrottle
                 '@id': fwdThrottle
                 axis: 5
                 inverted: true
+                polynomial:
+                    '@id': fwdPoly
+                    powerToCoefficientMap: !!map
+                        2 : 1
         invertDPad: false
         dPadShift: 0.1
+        turnInPlaceRotScale: 0.3
+        scaleRotByFwdPoly:
+            '@id': scaleRotByFwdPoly
+            powerToCoefficientMap: !!map
+                0.5: 0.6
+                0: 0.1
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
         '@id': drive
@@ -105,7 +118,7 @@ drive:
                 enableBrakeMode: false
                 fwdPeakOutputVoltage: 12
                 highGearFwdNominalOutputVoltage: 1.3
-                lowGearFwdNominalOutputVoltage: 0.7
+                lowGearFwdNominalOutputVoltage: 0.5
                 inchesPerRotation: 11.78097
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
@@ -116,7 +129,7 @@ drive:
                 highGearI: 0.0
                 highGearD: 3.0
                 maxSpeedLow: 6.3
-                lowGearP: 0.3
+                lowGearP: 0.2
                 lowGearI: 0.0
                 lowGearD: 0.0
                 motionProfileP: 1.5
@@ -314,7 +327,7 @@ centerAuto:
                 velocity: -0.5
                 seconds: 0.5
 boilerAuto:
-    org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Boiler:
+    org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Feeder:
         '@id': boilerAuto
         runWallToPegProfile:
             org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile:
@@ -328,38 +341,50 @@ boilerAuto:
             dropGearSwitch
         allianceSwitch:
             allianceSwitch
-        runRedPegToKeyProfile:
+        runRedBackupProfile:
             org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runRedPegToKeyProfile
+                '@id': runRedBackupProfileBoiler
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': redRightShoot
-                    filename: "calciferRightRedShootProfile.csv"
+                    '@id': redLeftBackupBoiler
+                    filename: "calciferRightBlueBackupProfile.csv"
                     inverted: true
                 right:
-                    '@id': redLeftShoot
-                    filename: "calciferLeftRedShootProfile.csv"
+                    '@id': redRightBackupBoiler
+                    filename: "calciferLeftBlueBackupProfile.csv"
                     inverted: true
                 timeout: 10
-        runBluePegToKeyProfile:
+        runBlueBackupProfile:
             org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runBluePegToKeyProfile
+                '@id': runBlueBackupProfileBoiler
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightShoot
-                    filename: "calciferRightBlueShootProfile.csv"
+                    '@id': blueLeftBackupBoiler
+                    filename: "calciferRightRedBackupProfile.csv"
                     inverted: true
                 right:
-                    '@id': blueLeftShoot
-                    filename: "calciferLeftBlueShootProfile.csv"
+                    '@id': blueRightBackupBoiler
+                    filename: "calciferLeftRedBackupProfile.csv"
                     inverted: true
                 timeout: 10
+        driveForwards:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunProfile:
+                '@id': driveForwardsMPBoiler
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+                        drive
+                profile:
+                    '@id': forwardsProfileBoiler
+                    filename: "forwardProfile.csv"
+                    inverted: false
+                timeout: 5
+        waitBetweenProfilesMillis: 50
 feederAuto:
     org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Feeder:
         '@id': feederAuto
@@ -383,11 +408,11 @@ feederAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': redRightBackup
+                    '@id': redLeftBackup
                     filename: "calciferRightRedBackupProfile.csv"
                     inverted: true
                 right:
-                    '@id': redLeftBackup
+                    '@id': redRightBackup
                     filename: "calciferLeftRedBackupProfile.csv"
                     inverted: true
                 timeout: 10
@@ -399,11 +424,11 @@ feederAuto:
                         drive
                 left:
                     #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightBackup
+                    '@id': blueLeftBackup
                     filename: "calciferRightBlueBackupProfile.csv"
                     inverted: true
                 right:
-                    '@id': blueLeftBackup
+                    '@id': blueRightBackup
                     filename: "calciferLeftBlueBackupProfile.csv"
                     inverted: true
                 timeout: 10
@@ -418,6 +443,7 @@ feederAuto:
                     filename: "forwardProfile.csv"
                     inverted: false
                 timeout: 5
+        waitBetweenProfilesMillis: 50
 nonMPAutoCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:
         '@id': determineNominalVoltage

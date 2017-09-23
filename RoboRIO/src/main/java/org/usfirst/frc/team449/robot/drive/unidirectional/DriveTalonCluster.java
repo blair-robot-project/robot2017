@@ -205,7 +205,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"left_voltage",
 				"right_voltage",
 				"left_pos",
-				"right_pos"};
+				"right_pos",
+				"raw_angle"};
 	}
 
 	/**
@@ -225,7 +226,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				leftMaster.getCanTalon().getOutputVoltage(),
 				rightMaster.getCanTalon().getOutputVoltage(),
 				leftMaster.getCanTalon().getPosition(),
-				rightMaster.getCanTalon().getPosition()};
+				rightMaster.getCanTalon().getPosition(),
+				navX.getAngle()};
 	}
 
 	/**
@@ -313,7 +315,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
 	}
 
-	public void resetPosition(){
+	public void resetPosition() {
 		leftMaster.getCanTalon().setEncPosition(0);
 		rightMaster.getCanTalon().setEncPosition(0);
 	}
