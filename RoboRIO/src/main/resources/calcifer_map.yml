@@ -381,16 +381,20 @@ boilerAuto:
                     inverted: true
                 timeout: 10
         driveForwards:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunProfile:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
                 '@id': driveForwardsMPBoiler
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
-                profile:
-                    '@id': forwardsProfileBoiler
-                    filename: "forwardProfile.csv"
+                left:
+                    '@id': leftForwardsProfileBoiler
+                    filename: "calciferLeftBoilerToLoadingProfile.csv"
                     inverted: false
-                timeout: 5
+                right:
+                    '@id': rightForwardsProfileBoiler
+                    filename: "calciferRightBoilerToLoadingProfile.csv"
+                    inverted: false
+                timeout: 10
         waitBetweenProfilesMillis: 50
 feederAuto:
     org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Feeder:
@@ -440,16 +444,20 @@ feederAuto:
                     inverted: true
                 timeout: 10
         driveForwards:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunProfile:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
                 '@id': driveForwardsMP
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
-                profile:
-                    '@id': forwardsProfile
-                    filename: "forwardProfile.csv"
+                left:
+                    '@id': leftForwardsProfileFeeder
+                    filename: "calciferLeftLoadingToLoadingProfile.csv"
                     inverted: false
-                timeout: 5
+                right:
+                    '@id': rightForwardsProfileFeeder
+                    filename: "calciferRightLoadingToLoadingProfile.csv"
+                    inverted: false
+                timeout: 10
         waitBetweenProfilesMillis: 50
 nonMPAutoCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:

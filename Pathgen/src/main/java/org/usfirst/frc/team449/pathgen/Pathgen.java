@@ -103,9 +103,15 @@ public class Pathgen {
 				new Waypoint(3, -1, -Math.PI/3)
 		};
 
-		Waypoint[] forward = new Waypoint[]{
+		Waypoint[] loadingToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(15, 0, 0)
+				new Waypoint(27, -5, 0)
+		};
+
+		Waypoint[] boilerToLoading = new Waypoint[]{
+				new Waypoint(0, 0, 0),
+				new Waypoint(5, 0, 0),
+				new Waypoint(27, -15, 0)
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
@@ -119,6 +125,8 @@ public class Pathgen {
 		profiles.put("BlueShoot", bluePegToKey);
 		profiles.put("RedBackup", backupRed);
 		profiles.put("BlueBackup", backupBlue);
+		profiles.put("LoadingToLoading", loadingToLoading);
+		profiles.put("BoilerToLoading", boilerToLoading);
 
 		final String ROBOT_NAME = "calcifer";
 
