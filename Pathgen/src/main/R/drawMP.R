@@ -178,26 +178,26 @@ centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
 
-#out <- plotProfile(profileName = "BlueRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= -10.3449+centerToSide, usePosition = TRUE)
-#drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
-#tmp <- out[length(out[,1]),]
-#drawRobot("robot.csv", tmp)
-#out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
-#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-#tmp2 <- out2[length(out2[,1]),]
-#drawRobot("robot.csv", out2[length(out2[,1]),])
-#out3 <- plotProfile(profileName = "LoadingToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
-#drawProfile(coords = out3, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
-#drawRobot("robot.csv", out3[length(out3[,1]),])
-
-out <- plotProfile(profileName = "BlueLeft", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= 10.3449-centerToSide, usePosition = TRUE)
+out <- plotProfile(profileName = "BlueRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= -10.3449+centerToSide, usePosition = TRUE)
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
-out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
 drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
 tmp2 <- out2[length(out2[,1]),]
 drawRobot("robot.csv", out2[length(out2[,1]),])
-out3 <- plotProfile(profileName = "BoilerToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
+out3 <- plotProfile(profileName = "BlueLoadingToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
 drawProfile(coords = out3, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
 drawRobot("robot.csv", out3[length(out3[,1]),])
+
+#out <- plotProfile(profileName = "BlueLeft", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= 10.3449-centerToSide, usePosition = TRUE)
+#drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
+#tmp <- out[length(out[,1]),]
+#drawRobot("robot.csv", tmp)
+#out2 <- plotProfile(profileName = "RedBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+#drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
+#tmp2 <- out2[length(out2[,1]),]
+#drawRobot("robot.csv", out2[length(out2[,1]),])
+#out3 <- plotProfile(profileName = "BoilerToLoading",inverted = FALSE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp2)
+#drawProfile(coords = out3, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
+#drawRobot("robot.csv", out3[length(out3[,1]),])

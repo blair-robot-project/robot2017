@@ -19,7 +19,7 @@ public class Pathgen {
 		final double CENTER_TO_FRONT = 27./2.;
 		final double CENTER_TO_BACK = 27./2. + 3.25;
 		final double CENTER_TO_SIDE = 29./2. + 3.25;
-		final double BACK_FROM_PEG = -3;
+		final double BACK_FROM_PEG = -5;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
 		final double BLUE_WALL_TO_CENTER_PEG = 113.75;
@@ -154,7 +154,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 6., 4.5, 9); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 5., 3, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);

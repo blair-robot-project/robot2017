@@ -29,7 +29,7 @@ oi:
                 dPadShift: 0.1
                 turnInPlaceRotScale: 0.3
                 scaleRotByFwdPoly:
-                    '@id': scaleRotByFwdPoly
+                    '@id': scaleRotByFwdPolyOverriding
                     powerToCoefficientMap: !!map
                         0.5: 0.6
                         0: 0.1
@@ -38,7 +38,7 @@ oi:
                 '@id': overridenOi
                 gamepad:
                     '@id': overridenGamepad
-                    port: 2
+                    port: 3
                 rotThrottle:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridenRotThrottle
@@ -57,7 +57,7 @@ oi:
                 dPadShift: 0.1
                 turnInPlaceRotScale: 0.3
                 scaleRotByFwdPoly:
-                    '@id': scaleRotByFwdPoly
+                    '@id': scaleRotByFwdPolyOverriden
                     powerToCoefficientMap: !!map
                         0.5: 0.6
                         0: 0.1
@@ -151,7 +151,7 @@ defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
         '@id': defaultDriveCommand
         subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
@@ -203,6 +203,18 @@ pneumatics:
             port: 0
             oversampleBits: 0
             averageBits: 0
+logger:
+    '@id': logger
+    subsystems:
+        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+            drive
+        - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+            pneumatics
+        - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+            climber
+    loopTimeSecs: 0.05
+    eventLogFilename: "/home/lvuser/logs/outreachEventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/outreachTelemetryLog-"
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
