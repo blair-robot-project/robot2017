@@ -162,7 +162,7 @@ public class Robot extends IterativeRobot {
 		Yaml yaml = new Yaml();
 		try {
 			//Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "ballbasaur_map.yml"));
 			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
 //			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_outreach_map.yml"));
 			YAMLMapper mapper = new YAMLMapper();
@@ -229,6 +229,7 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("position: " + position, this.getClass());
 
 				SmartDashboard.putString("Position", allianceString + " " + position);
+				SmartDashboard.putBoolean("DropGear", dropGear);
 
 				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),

@@ -20,13 +20,12 @@ repositories {
 }
 
 wpi {
-	wpilibVersion = "+"
-	// The WPILib version to use. For this version of GradleRIO, must be a 2017 version
-	ntcoreVersion = "+"                   // The NetworkTables Core version to use.
-	opencvVersion = "3.1.0"               // The OpenCV version to use
-	cscoreVersion = "+"                   // The CSCore version to use
-
-	talonSrxVersion = "4.4.1.14"                // The CTRE Toolsuite (Talon SRX) version to use.
+	wpilibVersion = "2017.3.1"      // The WPILib version to use. For this version of GradleRIO, must be a 2017 version.
+	ntcoreVersion = "3.1.7"         // The NetworkTables Core version to use.
+	opencvVersion = "3.1.0"         // The OpenCV version to use.
+	cscoreVersion = "1.0.2"         // The CSCore version to use.
+	talonSrxVersion = "4.4.1.14"    // The CTRE Toolsuite (Talon SRX) version to use.
+	navxVersion = "3.0.331"         // The NavX-MXP library version to use.
 }
 
 dependencies {
@@ -43,17 +42,6 @@ dependencies {
 	compile wpilib()
 	compile talonSrx()
 	compile navx()
-}
-
-task convertFiles {
-	doLast {
-		fileTree("src/main/resources").matching { include "*.txt" }.each { aFile ->
-			exec {
-				commandLine 'dos2unix'
-				args aFile.absolutePath
-			}
-		}
-	}
 }
 
 /* GradleRIO stuff */
@@ -75,13 +63,14 @@ def robotManifest = {
 	attributes 'Robot-Class': frc.robotClass
 }
 
-task('copyResources', dependsOn: convertFiles) {
+task('copyResources') {
 	doLast {
 		ssh.run {
 			session(remotes.rio) {
 				execute 'mkdir ~/449_resources', ignoreError: true
 				execute 'mkdir ~/logs', ignoreError: true
 				put from: fileTree('src/main/resources'), into: './449_resources/'
+				execute ". /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -t -r", ignoreError: true
 			}
 		}
 	}

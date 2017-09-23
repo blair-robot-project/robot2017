@@ -5,20 +5,20 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.ShiftComponent;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
-import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
+	 import org.jetbrains.annotations.Nullable;
+	 import org.usfirst.frc.team449.robot.components.ShiftComponent;
+	 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
+	 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
+	 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 
 
-/**
- * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
- */
-@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
+	 /**
+	 * A drive with a cluster of any number of CANTalonSRX controlled motors on each side and a high and low gear.
+	 */
+	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+	public class DriveTalonClusterShiftable extends DriveTalonCluster implements DriveShiftable {
 
-	/**
+		/**
 	 * The component that controls shifting.
 	 */
 	@NotNull
@@ -77,7 +77,7 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	@Override
 	public void setOutput(double left, double right) {
 		//If we're not shifting or using PID, or we're just turning in place, scale by the max speed in the current gear
-		if (overrideAutoshift || left == -right) {
+		if (overrideAutoshift) {
 			super.setOutput(left, right);
 		}
 		//If we are shifting, scale by the high gear max speed to make acceleration smoother and faster.
