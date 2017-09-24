@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShoot
  * A flywheel multiSubsystem with a single flywheel and a single-motor feeder system.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemShooter {
+public class LoggingShooter extends YamlSubsystem implements Loggable, SubsystemShooter {
 
 	/**
 	 * The flywheel's Talon
@@ -61,11 +61,11 @@ public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemS
 	 *                        Defaults to 0.
 	 */
 	@JsonCreator
-	public LoggingFeeder(@NotNull @JsonProperty(required = true) FPSTalon shooterTalon,
-	                     @JsonProperty(required = true) double shooterThrottle,
-	                     @NotNull @JsonProperty(required = true) SimpleMotor feederMotor,
-	                     @JsonProperty(required = true) double feederThrottle,
-	                     double spinUpTimeSecs) {
+	public LoggingShooter(@NotNull @JsonProperty(required = true) FPSTalon shooterTalon,
+	                      @JsonProperty(required = true) double shooterThrottle,
+	                      @NotNull @JsonProperty(required = true) SimpleMotor feederMotor,
+	                      @JsonProperty(required = true) double feederThrottle,
+	                      double spinUpTimeSecs) {
 		this.shooterTalon = shooterTalon;
 		this.shooterThrottle = shooterThrottle;
 		this.feederMotor = feederMotor;
@@ -137,7 +137,6 @@ public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemS
 	 */
 	@Override
 	public void turnShooterOff() {
-		shooterTalon.setPercentVbus(0);
 		shooterTalon.disable();
 	}
 
@@ -146,6 +145,7 @@ public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemS
 	 */
 	@Override
 	public void turnFeederOn() {
+		feederMotor.enable();
 		feederMotor.setVelocity(feederThrottle);
 	}
 
@@ -154,7 +154,7 @@ public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemS
 	 */
 	@Override
 	public void turnFeederOff() {
-		feederMotor.setVelocity(0);
+		feederMotor.disable();
 	}
 
 	/**

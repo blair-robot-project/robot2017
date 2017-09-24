@@ -21,7 +21,7 @@ import org.usfirst.frc.team449.robot.logger.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
-import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingFeeder;
+import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
@@ -62,7 +62,7 @@ public class Robot extends IterativeRobot {
 	 * The shooter subsystem (flywheel and feeder)
 	 */
 	@Nullable
-	private LoggingFeeder shooterSingleFlywheelSubsystem;
+	private LoggingShooter shooterSingleFlywheelSubsystem;
 
 	/**
 	 * The intake subsystem (intake motors and pistons)

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.VictorSP;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDoubleSolenoid;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
@@ -16,27 +16,27 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 
 /**
- * A subsystem that picks up balls from the ground.
+ * An intake with a piston that actuates it and a fixed and actuated motor.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSolenoid, SubsystemIntake {
 
 	/**
-	 * VictorSP for the fixed intake
+	 * Motor for the fixed intake
 	 */
 	@NotNull
-	private final VictorSP fixedVictor;
+	private final SimpleMotor fixedMotor;
 
 	/**
-	 * VictorSP for the actuated intake
+	 * Motor for the actuated intake
 	 */
-	@Nullable
-	private final VictorSP actuatedVictor;
+	@NotNull
+	private final SimpleMotor actuatedMotor;
 
 	/**
 	 * Piston for raising and lowering the intake
 	 */
-	@Nullable
+	@NotNull
 	private final DoubleSolenoid piston;
 
 	/**
@@ -55,9 +55,9 @@ public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSo
 	private final double actuatedSpeed;
 
 	/**
-	 * Whether intake is currently up
+	 * The intake's position.
 	 */
-	private boolean intakeUp;
+	private DoubleSolenoid.Value pistonPos;
 
 	/**
 	 * The mode the intake's currently in.
@@ -68,58 +68,37 @@ public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSo
 	/**
 	 * Default constructor.
 	 *
-	 * @param fixedVictor       The VictorSP powering the fixed intake.
+	 * @param fixedMotor       The SimpleMotor powering the fixed intake.
 	 * @param fixedAgitateSpeed The speed to run the fixed victor at to agitate balls, on [-1, 1]
 	 * @param fixedIntakeSpeed  The speed to run the fixed victor to intake balls, on [-1, 1]
-	 * @param actuatedVictor    The VictorSP powering the actuated intake. Can be null.
-	 * @param actuatedSpeed     The speed to run the actuated victor to intake balls, on [-1, 1]. Defaults to 0.
-	 * @param piston            The piston for raising and lowering the actuated intake. Can be null.
+	 * @param actuatedMotor    The SimpleMotor powering the actuated intake.
+	 * @param actuatedSpeed     The speed to run the actuated victor to intake balls, on [-1, 1].
+	 * @param piston            The piston for raising and lowering the actuated intake.
 	 */
 	@JsonCreator
-	public IntakeFixedAndActuated(@NotNull @JsonProperty(required = true) MappedVictor fixedVictor,
+	public IntakeFixedAndActuated(@NotNull @JsonProperty(required = true) MappedVictor fixedMotor,
 	                              @JsonProperty(required = true) double fixedAgitateSpeed,
 	                              @JsonProperty(required = true) double fixedIntakeSpeed,
-	                              @Nullable MappedVictor actuatedVictor,
-	                              double actuatedSpeed,
-	                              @Nullable MappedDoubleSolenoid piston) {
+	                              @NotNull @JsonProperty(required = true) MappedVictor actuatedMotor,
+	                              @JsonProperty(required = true) double actuatedSpeed,
+	                              @NotNull @JsonProperty(required = true) MappedDoubleSolenoid piston) {
 		//Instantiate stuff.
-		this.fixedVictor = fixedVictor;
+		this.fixedMotor = fixedMotor;
 		this.fixedIntakeSpeed = fixedIntakeSpeed;
 		this.fixedAgitateSpeed = fixedAgitateSpeed;
-		this.actuatedVictor = actuatedVictor;
+		this.actuatedMotor = actuatedMotor;
 		this.actuatedSpeed = actuatedSpeed;
 		this.piston = piston;
 		mode = IntakeMode.OFF;
 	}
 
 	/**
-	 * Set the speed of the actuated victor if it exists.
-	 *
-	 * @param sp speed to set it to, from [-1, 1]
-	 */
-	private void setActuatedVictor(double sp) {
-		if (actuatedVictor != null) {
-			actuatedVictor.set(sp);
-		}
-	}
-
-	/**
-	 * Set the speed of the fixed victor.
-	 *
-	 * @param sp speed to set it to, from [-1, 1]
-	 */
-	private void setFixedVictor(double sp) {
-		fixedVictor.set(sp);
-	}
-
-	/**
 	 * @param value The position to set the solenoid to.
 	 */
+	@Override
 	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
-		if (piston != null) {
-			piston.set(value);
-			intakeUp = (value == DoubleSolenoid.Value.kReverse);
-		}
+		piston.set(value);
+		pistonPos = value;
 	}
 
 	/**
@@ -127,7 +106,7 @@ public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSo
 	 */
 	@NotNull
 	public DoubleSolenoid.Value getSolenoidPosition() {
-		return intakeUp ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
+		return pistonPos;
 	}
 
 	/**
@@ -157,18 +136,21 @@ public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSo
 		this.mode = mode;
 		switch (mode) {
 			case OFF:
-				setActuatedVictor(0);
-				setFixedVictor(0);
+				actuatedMotor.disable();
+				fixedMotor.disable();
 				break;
 			case IN_FAST:
 				//In fast is used for picking up balls.
-				setFixedVictor(fixedIntakeSpeed);
-				setActuatedVictor(actuatedSpeed);
+				actuatedMotor.enable();
+				fixedMotor.enable();
+				fixedMotor.setVelocity(fixedIntakeSpeed);
+				actuatedMotor.setVelocity(actuatedSpeed);
 				break;
 			case IN_SLOW:
 				//In slow is used for agitation.
-				setActuatedVictor(0);
-				setFixedVictor(fixedAgitateSpeed);
+				actuatedMotor.disable();
+				fixedMotor.enable();
+				fixedMotor.setVelocity(fixedAgitateSpeed);
 				break;
 			default:
 				Logger.addEvent("Unsupported mode!", this.getClass());
