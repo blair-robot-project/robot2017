@@ -88,10 +88,8 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 }
 
 task copyDocs(type: Copy, dependsOn: genJavadoc){
-	doLast {
-		from 'build/docs/javadoc'
-		into '../docs'
-	}
+	from 'build/docs/javadoc'
+	into '../docs'
 }
 
 artifacts {
