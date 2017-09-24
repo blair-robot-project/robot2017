@@ -111,10 +111,10 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *                                   the forward limit switch is disabled.
 	 * @param revLimitSwitchNormallyOpen Whether the reverse limit switch is normally open or closed. If this is null,
 	 *                                   the reverse limit switch is disabled.
-	 * @param fwdSoftLimit               The forward software limit. If this is null, the forward software limit is
-	 *                                   disabled. TODO figure out units
-	 * @param revSoftLimit               The reverse software limit. If this is null, the reverse software limit is
-	 *                                   disabled. TODO figure out units
+	 * @param fwdSoftLimit               The forward software limit, in feet. If this is null, the forward software limit is
+	 *                                   disabled.
+	 * @param revSoftLimit               The reverse software limit, in feet. If this is null, the reverse software limit is
+	 *                                   disabled.
 	 * @param postEncoderGearing         The coefficient the output changes by after being measured by the encoder, e.g.
 	 *                                   this would be 1/70 if there was a 70:1 gearing between the encoder and the
 	 *                                   final output. Defaults to 1.
@@ -224,13 +224,13 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		//Only enable the software limits if they were given a value.
 		if (fwdSoftLimit != null) {
 			canTalon.enableForwardSoftLimit(true);
-			canTalon.setForwardSoftLimit(fwdSoftLimit);
+			canTalon.setForwardSoftLimit(feetToEncoder(fwdSoftLimit));
 		} else {
 			canTalon.enableForwardSoftLimit(false);
 		}
 		if (revSoftLimit != null) {
 			canTalon.enableReverseSoftLimit(true);
-			canTalon.setReverseSoftLimit(revSoftLimit);
+			canTalon.setReverseSoftLimit(feetToEncoder(revSoftLimit));
 		} else {
 			canTalon.enableReverseSoftLimit(false);
 		}
