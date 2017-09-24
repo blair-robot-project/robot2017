@@ -87,6 +87,13 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
+task copyDocs(type: Copy, dependsOn: genJavadoc){
+	doLast {
+		from 'build/docs/javadoc'
+		into '../docs'
+	}
+}
+
 artifacts {
 	archives genJavadoc
 }
