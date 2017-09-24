@@ -221,20 +221,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		}
 		canTalon.enableLimitSwitch(fwdSwitchEnable, revSwitchEnable);
 
-		//Only enable the software limits if they were given a value.
-		if (fwdSoftLimit != null) {
-			canTalon.enableForwardSoftLimit(true);
-			canTalon.setForwardSoftLimit(feetToEncoder(fwdSoftLimit));
-		} else {
-			canTalon.enableForwardSoftLimit(false);
-		}
-		if (revSoftLimit != null) {
-			canTalon.enableReverseSoftLimit(true);
-			canTalon.setReverseSoftLimit(feetToEncoder(revSoftLimit));
-		} else {
-			canTalon.enableReverseSoftLimit(false);
-		}
-
 		//Set up the feedback device if it exists.
 		if (feedbackDevice != null) {
 			this.feedbackDevice = feedbackDevice;
@@ -259,6 +245,20 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		} else {
 			//If we don't have a current limit, disable current limiting.
 			canTalon.EnableCurrentLimit(false);
+		}
+
+		//Only enable the software limits if they were given a value.
+		if (fwdSoftLimit != null) {
+			canTalon.enableForwardSoftLimit(true);
+			canTalon.setForwardSoftLimit(feetToEncoder(fwdSoftLimit));
+		} else {
+			canTalon.enableForwardSoftLimit(false);
+		}
+		if (revSoftLimit != null) {
+			canTalon.enableReverseSoftLimit(true);
+			canTalon.setReverseSoftLimit(feetToEncoder(revSoftLimit));
+		} else {
+			canTalon.enableReverseSoftLimit(false);
 		}
 
 		//Set the nominal closed loop battery voltage. Different thing from NominalOutputVoltage.
@@ -347,15 +347,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
-	}
-
-	/**
-	 * @return the max speed of the gear the talon is currently in, in FPS, as given in the map, or null if no value
-	 * given.
-	 */
-	@Nullable
-	public Double getMaxSpeed() {
-		return currentGearSettings.getMaxSpeed();
 	}
 
 	/**
@@ -474,7 +465,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *
 	 * @param velocitySp velocity setpoint in revolutions per second
 	 */
-	public void setSpeed(double velocitySp) {
+	private void setSpeed(double velocitySp) {
 		//Switch control mode to speed closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
 		canTalon.set(FPSToEncoder(velocitySp));
@@ -556,8 +547,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Override
 	public void setVelocity(double velocity) {
-		if (getMaxSpeed() != null) {
-			setSpeed(velocity * getMaxSpeed());
+		if (currentGearSettings.getMaxSpeed() != null) {
+			setSpeed(velocity * currentGearSettings.getMaxSpeed());
 		} else {
 			setPercentVbus(velocity);
 		}

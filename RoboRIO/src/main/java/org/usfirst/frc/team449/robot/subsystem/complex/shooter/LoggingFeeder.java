@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import edu.wpi.first.wpilibj.VictorSP;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
-import org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Loggable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
@@ -16,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShoot
  * A flywheel multiSubsystem with a single flywheel and a single-motor feeder system.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, SubsystemShooter {
+public class LoggingFeeder extends YamlSubsystem implements Loggable, SubsystemShooter {
 
 	/**
 	 * The flywheel's Talon
@@ -25,10 +24,10 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	private final FPSTalon shooterTalon;
 
 	/**
-	 * The feeder's Victor
+	 * The feeder's motor
 	 */
 	@NotNull
-	private final VictorSP feederVictor;
+	private final SimpleMotor feederMotor;
 
 	/**
 	 * How fast to run the feeder, from [-1, 1]
@@ -56,64 +55,23 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 *
 	 * @param shooterTalon    The TalonSRX controlling the flywheel.
 	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the multiSubsystem.
-	 * @param feederVictor    The VictorSP controlling the feeder.
+	 * @param feederMotor    The motor controlling the feeder.
 	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
 	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the multiSubsystem to get up to speed.
 	 *                        Defaults to 0.
 	 */
 	@JsonCreator
-	public ShooterWithVictorFeeder(@NotNull @JsonProperty(required = true) FPSTalon shooterTalon,
-	                               @JsonProperty(required = true) double shooterThrottle,
-	                               @NotNull @JsonProperty(required = true) MappedVictor feederVictor,
-	                               @JsonProperty(required = true) double feederThrottle,
-	                               double spinUpTimeSecs) {
+	public LoggingFeeder(@NotNull @JsonProperty(required = true) FPSTalon shooterTalon,
+	                     @JsonProperty(required = true) double shooterThrottle,
+	                     @NotNull @JsonProperty(required = true) SimpleMotor feederMotor,
+	                     @JsonProperty(required = true) double feederThrottle,
+	                     double spinUpTimeSecs) {
 		this.shooterTalon = shooterTalon;
 		this.shooterThrottle = shooterThrottle;
-		this.feederVictor = feederVictor;
+		this.feederMotor = feederMotor;
 		this.feederThrottle = feederThrottle;
 		state = ShooterState.OFF;
 		spinUpTime = (long) (spinUpTimeSecs * 1000.);
-	}
-
-	/**
-	 * Set the flywheel's percent voltage
-	 *
-	 * @param sp percent voltage setpoint [-1, 1]
-	 */
-	private void setFlywheelVBusSpeed(double sp) {
-		shooterTalon.setPercentVbus(sp);
-	}
-
-	/**
-	 * Set the flywheel's percent PID velocity setpoint
-	 *
-	 * @param sp percent PID velocity setpoint [-1, 1]
-	 */
-	private void setFlywheelPIDSpeed(double sp) {
-		if (shooterTalon.getMaxSpeed() == null) {
-			setFlywheelVBusSpeed(sp);
-			System.out.println("You're trying to set PID throttle, but the multiSubsystem talon doesn't have PID constants defined. Using voltage control instead.");
-		} else {
-			shooterTalon.setSpeed(shooterTalon.getMaxSpeed() * sp);
-		}
-	}
-
-	/**
-	 * A wrapper around the speed method we're currently using/testing
-	 *
-	 * @param sp The velocity to go at [-1, 1]
-	 */
-	private void setFlywheelDefaultSpeed(double sp) {
-		setFlywheelPIDSpeed(sp);
-	}
-
-	/**
-	 * Set the speed of the feeder motor.
-	 *
-	 * @param sp The velocity to go at from [-1, 1]
-	 */
-	private void setFeederSpeed(double sp) {
-		feederVictor.set(sp);
 	}
 
 	/**
@@ -171,7 +129,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	@Override
 	public void turnShooterOn() {
 		shooterTalon.enable();
-		setFlywheelDefaultSpeed(shooterThrottle);
+		shooterTalon.setVelocity(shooterThrottle);
 	}
 
 	/**
@@ -179,7 +137,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 */
 	@Override
 	public void turnShooterOff() {
-		setFlywheelVBusSpeed(0);
+		shooterTalon.setPercentVbus(0);
 		shooterTalon.disable();
 	}
 
@@ -188,7 +146,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 */
 	@Override
 	public void turnFeederOn() {
-		setFeederSpeed(feederThrottle);
+		feederMotor.setVelocity(feederThrottle);
 	}
 
 	/**
@@ -196,7 +154,7 @@ public class ShooterWithVictorFeeder extends YamlSubsystem implements Loggable, 
 	 */
 	@Override
 	public void turnFeederOff() {
-		setFeederSpeed(0);
+		feederMotor.setVelocity(0);
 	}
 
 	/**

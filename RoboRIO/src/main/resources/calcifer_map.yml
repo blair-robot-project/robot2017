@@ -236,7 +236,7 @@ climber:
             '@id': powerLimitTimer
             bufferTimeSeconds: 0.005
 #multiSubsystem:
-#    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingFeeder:
 #        '@id': multiSubsystem
 #        shooterTalon:
 #            '@id': shooterTalon
@@ -299,7 +299,7 @@ logger:
             pneumatics
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
-#        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#        - org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingFeeder:
 #            multiSubsystem
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
@@ -700,7 +700,7 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.FireShooter:
 #                '@id': fireShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingFeeder:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
 #    -   button:
@@ -717,7 +717,7 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.RackShooter:
 #                '@id': rackShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingFeeder:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
 #    -   button:
@@ -730,6 +730,6 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.ResetShooter:
 #                '@id': resetShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingFeeder:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
