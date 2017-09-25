@@ -634,16 +634,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Clear the underrun flag for motion profiles.
-	 */
-	public void clearMPUnderrun() {
-		canTalon.clearMotionProfileHasUnderrun();
-	}
-
-	/**
 	 * Reset all MP-related stuff, including all points loaded in both the API and bottom-level buffers.
 	 */
-	public void clearMP() {
+	private void clearMP() {
 		canTalon.clearMotionProfileHasUnderrun();
 		canTalon.clearMotionProfileTrajectories();
 	}

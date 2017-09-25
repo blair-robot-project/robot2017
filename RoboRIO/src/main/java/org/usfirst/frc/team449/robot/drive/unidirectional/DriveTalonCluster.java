@@ -248,8 +248,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
-		leftMaster.clearMPUnderrun();
-		rightMaster.clearMPUnderrun();
 		leftMaster.startRunningMP();
 		rightMaster.startRunningMP();
 	}
