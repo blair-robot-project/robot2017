@@ -56,12 +56,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private final double feetPerRotation;
 
 	/**
-	 * A list of all the gears this robot has and their settings.
-	 */
-	@NotNull
-	private final Map<Integer, PerGearSettings> perGearSettings;
-
-	/**
 	 * The minimum number of points that must be in the bottom-level MP buffer before starting a profile.
 	 */
 	private final int minNumPointsInBottomBuffer;
@@ -71,6 +65,12 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@NotNull
 	private final CANTalon.MotionProfileStatus motionProfileStatus;
+
+	/**
+	 * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
+	 * traffic.
+	 */
+	private long timeMPStatusLastRead;
 
 	/**
 	 * A notifier that moves points from the API-level buffer to the talon-level one.
@@ -83,21 +83,16 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private final double updaterProcessPeriodSecs;
 
 	/**
-	 * The current gear this Talon is in
+	 * A list of all the gears this robot has and their settings.
 	 */
-	private int currentGear;
+	@NotNull
+	private final Map<Integer, PerGearSettings> perGearSettings;
 
 	/**
 	 * The settings currently being used by this Talon.
 	 */
 	@NotNull
 	private PerGearSettings currentGearSettings;
-
-	/**
-	 * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
-	 * traffic.
-	 */
-	private long timeMPStatusLastRead;
 
 	/**
 	 * Default constructor.
@@ -135,7 +130,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @param startingGearNum            The number of the gear to start in. Ignored if startingGear isn't null.
 	 *                                   Defaults to the lowest gear.
 	 * @param minNumPointsInBottomBuffer The minimum number of points that must be in the bottom-level MP buffer before
-	 *                                   starting a profile. Defaults to 128.
+	 *                                   starting a profile. Defaults to 20.
 	 * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
 	 *                                   seconds. Defaults to 0.005.
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
@@ -174,7 +169,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		//Set fields
 		this.feetPerRotation = feetPerRotation != null ? feetPerRotation : 1;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
-		this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 128;
+		this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 20;
 
 		//Initialize
 		this.motionProfileStatus = new CANTalon.MotionProfileStatus();
@@ -192,6 +187,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			}
 		}
 
+		int currentGear;
 		//If the starting gear isn't given, assume we start in low gear.
 		if (startingGear == null) {
 			if (startingGearNum == null) {
@@ -324,7 +320,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Override
 	public int getGear() {
-		return currentGear;
+		return currentGearSettings.getGear();
 	}
 
 	/**
@@ -334,7 +330,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Override
 	public void setGear(int gear) {
-		currentGear = gear;
 		currentGearSettings = perGearSettings.get(gear);
 		canTalon.configPeakOutputVoltage(currentGearSettings.getFwdPeakOutputVoltage(), currentGearSettings.getRevPeakOutputVoltage());
 		canTalon.configNominalOutputVoltage(currentGearSettings.getFwdNominalOutputVoltage(), currentGearSettings.getRevNominalOutputVoltage());
@@ -347,6 +342,37 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
+	}
+
+	/**
+	 * Convert from native units read by an encoder to feet moved. Note this DOES account for post-encoder gearing.
+	 *
+	 * @param nativeUnits A distance native units as measured by the encoder.
+	 * @return That distance in feet, or null if no encoder CPR was given.
+	 */
+	@Nullable
+	private Double encoderToFeet(double nativeUnits) {
+		if (encoderCPR == null) {
+			return null;
+		}
+		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
+		return rotations * feetPerRotation;
+	}
+
+	/**
+	 * Convert a distance from feet to encoder reading in native units. Note this DOES account for post-encoder
+	 * gearing.
+	 *
+	 * @param feet A distance in feet.
+	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR was given.
+	 */
+	@Nullable
+	private Double feetToEncoder(double feet) {
+		if (encoderCPR == null) {
+			return null;
+		}
+		double rotations = feet / feetPerRotation;
+		return rotations * (encoderCPR * 4) / postEncoderGearing;
 	}
 
 	/**
@@ -391,22 +417,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Convert from output RPS to the CANTalon native velocity units. Note this DOES NOT account for post-encoder
-	 * gearing.
-	 *
-	 * @param RPS The RPS velocity you want to convert.
-	 * @return That velocity in CANTalon native units, or null if no encoder CPR was given.
-	 */
-	@Contract(pure = true)
-	@Nullable
-	private Double RPSToNative(double RPS) {
-		if (encoderCPR == null) {
-			return null;
-		}
-		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
-	}
-
-	/**
 	 * Convert from CANTalon native velocity units to output rotations per second. Note this DOES NOT account for
 	 * post-encoder gearing.
 	 *
@@ -420,6 +430,22 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			return null;
 		}
 		return (nat / (encoderCPR * 4)) * 10; //4 edges per count, and 10 100ms per second.
+	}
+
+	/**
+	 * Convert from output RPS to the CANTalon native velocity units. Note this DOES NOT account for post-encoder
+	 * gearing.
+	 *
+	 * @param RPS The RPS velocity you want to convert.
+	 * @return That velocity in CANTalon native units, or null if no encoder CPR was given.
+	 */
+	@Contract(pure = true)
+	@Nullable
+	private Double RPSToNative(double RPS) {
+		if (encoderCPR == null) {
+			return null;
+		}
+		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
 	}
 
 	/**
@@ -501,37 +527,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	public double getOutputCurrent() {
 		return canTalon.getOutputCurrent();
-	}
-
-	/**
-	 * Convert from native units read by an encoder to feet moved. Note this DOES account for post-encoder gearing.
-	 *
-	 * @param nativeUnits A distance native units as measured by the encoder.
-	 * @return That distance in feet, or null if no encoder CPR was given.
-	 */
-	@Nullable
-	private Double encoderToFeet(double nativeUnits) {
-		if (encoderCPR == null) {
-			return null;
-		}
-		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * feetPerRotation;
-	}
-
-	/**
-	 * Convert a distance from feet to encoder reading in native units. Note this DOES account for post-encoder
-	 * gearing.
-	 *
-	 * @param feet A distance in feet.
-	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR was given.
-	 */
-	@Nullable
-	private Double feetToEncoder(double feet) {
-		if (encoderCPR == null) {
-			return null;
-		}
-		double rotations = feet / feetPerRotation;
-		return rotations * (encoderCPR * 4) / postEncoderGearing;
 	}
 
 	/**
