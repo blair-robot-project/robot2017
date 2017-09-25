@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;

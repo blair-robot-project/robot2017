@@ -87,7 +87,12 @@ task genJavadoc(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
-task copyDocs(type: Copy, dependsOn: genJavadoc){
+task deleteDocs(type: Delete){
+	delete '../docs'
+	followSymlinks = false
+}
+
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
 	from 'build/docs/javadoc'
 	into '../docs'
 }

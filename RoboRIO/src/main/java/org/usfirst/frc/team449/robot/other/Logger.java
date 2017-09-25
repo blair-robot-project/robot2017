@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.logger;
+package org.usfirst.frc.team449.robot.other;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.other.LogEvent;
 
 import java.io.FileWriter;

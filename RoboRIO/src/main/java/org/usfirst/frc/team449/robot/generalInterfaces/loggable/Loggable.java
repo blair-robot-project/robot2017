@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.logger;
+package org.usfirst.frc.team449.robot.generalInterfaces.loggable;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.NotNull;

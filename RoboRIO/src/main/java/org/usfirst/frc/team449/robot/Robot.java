@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToGear;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
  * Switches to a specified gear.
