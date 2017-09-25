@@ -92,7 +92,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getLeftVel() {
-		return leftMaster.getSpeed();
+		return leftMaster.getVelocity();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getRightVel() {
-		return rightMaster.getSpeed();
+		return rightMaster.getVelocity();
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void fullStop() {
-		leftMaster.setPercentVbus(0);
-		rightMaster.setPercentVbus(0);
+		leftMaster.setPercentVoltage(0);
+		rightMaster.setPercentVoltage(0);
 	}
 
 	/**
@@ -207,8 +207,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@NotNull
 	public Object[] getData() {
-		return new Object[]{leftMaster.getSpeed(),
-				rightMaster.getSpeed(),
+		return new Object[]{leftMaster.getVelocity(),
+				rightMaster.getVelocity(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
 				leftMaster.getOutputCurrent(),

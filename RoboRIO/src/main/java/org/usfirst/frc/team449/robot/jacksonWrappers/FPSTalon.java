@@ -301,22 +301,22 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Give a PercentVbus setpoint (set to PercentVbus mode and set)
+	 * Set the motor output voltage to a given percent of available voltage.
 	 *
-	 * @param percentVbus percent of total voltage from [-1, 1]
+	 * @param percentVoltage percent of total voltage from [-1, 1]
 	 */
-	public void setPercentVbus(double percentVbus) {
+	public void setPercentVoltage(double percentVoltage) {
 		//Warn the user if they're setting Vbus to a number that's outside the range of values.
-		if (Math.abs(percentVbus) > 1.0) {
-			Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVbus, this.getClass());
-			percentVbus = Math.signum(percentVbus);
+		if (Math.abs(percentVoltage) > 1.0) {
+			Logger.addEvent("WARNING: YOU ARE CLIPPING MAX PERCENT VBUS AT " + percentVoltage, this.getClass());
+			percentVoltage = Math.signum(percentVoltage);
 		}
 
 		//Switch to voltage mode
 		canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 
 		//Set the setpoint to the input given.
-		canTalon.set(percentVbus);
+		canTalon.set(percentVoltage);
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Converts the velocity read by the talon's getSpeed() method to the FPS of the output shaft. Note this DOES
+	 * Converts the velocity read by the talon's getVelocity() method to the FPS of the output shaft. Note this DOES
 	 * account for post-encoder gearing.
 	 *
 	 * @param encoderReading The velocity read from the encoder with no conversions.
@@ -373,7 +373,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Converts from the velocity of the output shaft to what the talon's getSpeed() method would read at that velocity.
+	 * Converts from the velocity of the output shaft to what the talon's getVelocity() method would read at that velocity.
 	 * Note this DOES account for post-encoder gearing.
 	 *
 	 * @param FPS The velocity of the output shaft, in FPS.
@@ -445,30 +445,24 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	}
 
 	/**
-	 * Get the velocity of the CANTalon in FPS
-	 * <p>
-	 * Note: This method is called getSpeed since the {@link CANTalon} method is called getSpeed. However, the output is
-	 * signed and is actually a velocity.
+	 * Get the velocity of the CANTalon in FPS.
 	 *
 	 * @return The CANTalon's velocity in FPS, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	public Double getSpeed() {
+	public Double getVelocity() {
 		return encoderToFPS(canTalon.getSpeed());
 	}
 
 	/**
-	 * Give a velocity closed loop setpoint in FPS
-	 * <p>
-	 * Note: This method is called setSpeed since the {@link CANTalon} method is called getSpeed. However, the input
-	 * argument is signed and is actually a velocity.
+	 * Give a velocity closed loop setpoint in FPS.
 	 *
-	 * @param velocitySp velocity setpoint in revolutions per second
+	 * @param velocity velocity setpoint in FPS.
 	 */
-	private void setSpeed(double velocitySp) {
-		//Switch control mode to speed closed-loop
+	private void setVelocityFPS(double velocity) {
+		//Switch control mode to velocity closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
-		canTalon.set(FPSToEncoder(velocitySp));
+		canTalon.set(FPSToEncoder(velocity));
 	}
 
 	/**
@@ -548,9 +542,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	@Override
 	public void setVelocity(double velocity) {
 		if (currentGearSettings.getMaxSpeed() != null) {
-			setSpeed(velocity * currentGearSettings.getMaxSpeed());
+			setVelocityFPS(velocity * currentGearSettings.getMaxSpeed());
 		} else {
-			setPercentVbus(velocity);
+			setPercentVoltage(velocity);
 		}
 	}
 
@@ -578,9 +572,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	public void setGearScaledVelocity(double velocity, int gear) {
 		if (currentGearSettings.getMaxSpeed() == null) {
-			setPercentVbus(velocity);
+			setPercentVoltage(velocity);
 		} else {
-			setSpeed(perGearSettings.get(gear).getMaxSpeed() * velocity);
+			setVelocityFPS(perGearSettings.get(gear).getMaxSpeed() * velocity);
 		}
 	}
 

@@ -86,7 +86,7 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 * @param percentVbus The voltage to give the motor, from -1 to 1.
 	 */
 	private void setPercentVbus(double percentVbus) {
-		canTalonSRX.setPercentVbus(percentVbus);
+		canTalonSRX.setPercentVoltage(percentVbus);
 		if (simpleMotor != null) {
 			simpleMotor.setVelocity(percentVbus);
 		}

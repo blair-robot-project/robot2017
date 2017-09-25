@@ -105,7 +105,7 @@ public class LoggingShooter extends YamlSubsystem implements Loggable, Subsystem
 	@NotNull
 	@Override
 	public Object[] getData() {
-		return new Object[]{shooterTalon.getSpeed(),
+		return new Object[]{shooterTalon.getVelocity(),
 				shooterTalon.getSetpoint(),
 				shooterTalon.getError(),
 				shooterTalon.getOutputVoltage(),
