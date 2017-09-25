@@ -107,11 +107,4 @@ public class DriveTalonClusterShiftable extends DriveTalonCluster implements Dri
 	public void setGear(int gear) {
 		shiftComponent.shiftToGear(gear);
 	}
-
-	/**
-	 * @return The gear this subsystem starts auto and teleop in.
-	 */
-	public int getStartingGear() {
-		return shiftComponent.getStartingGear();
-	}
 }

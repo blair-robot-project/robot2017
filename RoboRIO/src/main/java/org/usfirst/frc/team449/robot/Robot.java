@@ -59,50 +59,9 @@ public class Robot extends IterativeRobot {
 	private static long startTime;
 
 	/**
-	 * The shooter subsystem (flywheel and feeder)
-	 */
-	@Nullable
-	private LoggingShooter shooterSingleFlywheelSubsystem;
-
-	/**
-	 * The intake subsystem (intake motors and pistons)
-	 */
-	@Nullable
-	private IntakeFixedAndActuated intakeSubsystem;
-
-	/**
-	 * The climber
-	 */
-	@Nullable
-	private ClimberCurrentLimited climber;
-
-	/**
-	 * The compressor and pressure sensor
-	 */
-	@Nullable
-	private Pneumatics pneumatics;
-
-	/**
 	 * The drive
 	 */
 	private DriveTalonCluster driveSubsystem;
-
-	/**
-	 * The OI containing the joysticks to get input from.
-	 */
-	private OIUnidirectional oi;
-
-	/**
-	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
-	 */
-	@Nullable
-	private CameraNetwork cameraNetwork;
-
-	/**
-	 * The active gear subsystem.
-	 */
-	@Nullable
-	private SolenoidSimple gearSubsystem;
 
 	/**
 	 * The object constructed directly from the yaml map.
@@ -126,11 +85,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Nullable
 	private I2C robotInfo;
-
-	/**
-	 * The logger for the robot.
-	 */
-	private Logger logger;
 
 	/**
 	 * The command to run during autonomous. Null to do nothing during autonomous.
@@ -178,15 +132,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 		//Set fields from the map.
-		this.logger = robotMap.getLogger();
-		this.loggerNotifier = new Notifier(this.logger);
-		this.climber = robotMap.getClimber();
-		this.shooterSingleFlywheelSubsystem = robotMap.getShooter();
-		this.cameraNetwork = robotMap.getCamera();
-		this.intakeSubsystem = robotMap.getIntake();
-		this.pneumatics = robotMap.getPneumatics();
-		this.gearSubsystem = robotMap.getGearHandler();
-		this.oi = robotMap.getOI();
+		this.loggerNotifier = new Notifier(robotMap.getLogger());
 		this.driveSubsystem = robotMap.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.
@@ -248,7 +194,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		//Run the logger to write all the events that happened during initialization to a file.
-		logger.run();
+		robotMap.getLogger().run();
 	}
 
 	/**
@@ -256,15 +202,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		//Stop the drive for safety reasons
+		//Do the startup tasks
 		driveSubsystem.stopMPProcesses();
-		driveSubsystem.fullStop();
+		doStartupTasks();
+		if (robotMap.getTeleopStartupCommand() != null) {
+			robotMap.getTeleopStartupCommand().start();
+		}
 
 		//Set the default command
 		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
-
-		//Do the startup tasks
-		doStartupTasks();
 
 		//Tell the RIOduino that we're in teleop
 		sendModeOverI2C(robotInfo, "teleop");
@@ -286,11 +232,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//Stop the drive for safety reasons
-		driveSubsystem.fullStop();
-
 		//Do startup tasks
 		doStartupTasks();
+		if (robotMap.getAutoStartupCommand() != null) {
+			robotMap.getAutoStartupCommand().start();
+		}
 
 		//Start running the autonomous command
 		if (autonomousCommand != null) {
@@ -348,31 +294,14 @@ public class Robot extends IterativeRobot {
 	 * Do tasks that should be done when we first enable, in both auto and teleop.
 	 */
 	private void doStartupTasks() {
-		//Start running the logger
-		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
-		//Switch to starting gear
-		if (driveSubsystem.getClass().equals(DriveTalonClusterShiftable.class)) {
-			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShiftable) driveSubsystem, ((DriveTalonClusterShiftable) driveSubsystem).getStartingGear(), null));
-		}
 
+		//Start running the logger
+		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
+
+		//Enable and reset the drive
 		driveSubsystem.enableMotors();
 		driveSubsystem.resetPosition();
-
-		//Start the compressor if it exists
-		if (pneumatics != null) {
-			Scheduler.getInstance().add(new StartCompressor(pneumatics));
-		}
-
-		//Put up the intake if it exists
-		if (intakeSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
-		}
-
-		//Close the gear handler if it exists
-		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
-		}
 	}
 }

@@ -179,6 +179,18 @@ public class RobotMap2017 {
 	private final Command nonMPAutoCommand;
 
 	/**
+	 * The command to be run when first enabled in autonomous mode.
+	 */
+	@Nullable
+	private final Command autoStartupCommand;
+
+	/**
+	 * The command to be run when first enabled in teleoperated mode.
+	 */
+	@Nullable
+	private final Command teleopStartupCommand;
+
+	/**
 	 * Whether to run the test or real motion profile during autonomous.
 	 */
 	private final boolean testMP;
@@ -227,6 +239,8 @@ public class RobotMap2017 {
 	 *                            Can be null if doMP is false or testMP is true, but otherwise must have a value.
 	 * @param nonMPAutoCommand    The command to run during autonomous if doMP is false. Can be null, and if it is, no
 	 *                            command is run during autonomous.
+	 * @param autoStartupCommand The command to be run when first enabled in autonomous mode.
+	 * @param teleopStartupCommand    The command to be run when first enabled in teleoperated mode.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
 	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
 	 */
@@ -252,6 +266,8 @@ public class RobotMap2017 {
 	                    @Nullable MotionProfileData leftTestProfile, @Nullable MotionProfileData rightTestProfile,
 	                    @Nullable Map<String, MotionProfileData> leftProfiles, @Nullable Map<String, MotionProfileData> rightProfiles,
 	                    @Nullable YamlCommand nonMPAutoCommand,
+	                    @Nullable YamlCommand autoStartupCommand,
+	                    @Nullable YamlCommand teleopStartupCommand,
 	                    boolean testMP,
 	                    @Nullable Boolean doMP) {
 		this.buttons = buttons;
@@ -276,16 +292,11 @@ public class RobotMap2017 {
 		this.leftProfiles = leftProfiles;
 		this.rightProfiles = rightProfiles;
 		this.defaultDriveCommand = defaultDriveCommand.getCommand();
-		if (nonMPAutoCommand != null) {
-			this.nonMPAutoCommand = nonMPAutoCommand.getCommand();
-		} else {
-			this.nonMPAutoCommand = null;
-		}
+		this.nonMPAutoCommand = nonMPAutoCommand != null ? nonMPAutoCommand.getCommand() : null;
+		this.autoStartupCommand = autoStartupCommand != null ? autoStartupCommand.getCommand() : null;
+		this.teleopStartupCommand = teleopStartupCommand != null ? teleopStartupCommand.getCommand() : null;
 		this.testMP = testMP;
-		if (doMP == null) {
-			doMP = true;
-		}
-		this.doMP = doMP;
+		this.doMP = doMP != null ? doMP : true;
 	}
 
 	/**
@@ -489,6 +500,22 @@ public class RobotMap2017 {
 	 */
 	public boolean getTestMP() {
 		return testMP;
+	}
+
+	/**
+	 * @return The command to be run when first enabled in autonomous mode.
+	 */
+	@Nullable
+	public Command getAutoStartupCommand() {
+		return autoStartupCommand;
+	}
+
+	/**
+	 * @return The command to be run when first enabled in teleoperated mode.
+	 */
+	@Nullable
+	public Command getTeleopStartupCommand() {
+		return teleopStartupCommand;
 	}
 
 	/**

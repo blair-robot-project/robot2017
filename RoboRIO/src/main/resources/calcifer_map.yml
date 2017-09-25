@@ -496,6 +496,28 @@ nonMPAutoCommand:
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startupCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
+                '@id': startupSwitchToLowCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+            - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
+                '@id': startCompressor
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+                        pneumatics
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+                '@id': closeGearHandlerStartup
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+                        gearHandler
+teleopStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startupCommand
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
