@@ -244,6 +244,18 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
+	 * Loads given profiles into the left and right sides of the drive.
+	 *
+	 * @param left  The profile to load into the left side.
+	 * @param right The profile to load into the right side.
+	 */
+	@Override
+	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
+		leftMaster.loadProfile(left);
+		rightMaster.loadProfile(right);
+	}
+
+	/**
 	 * Start running the profile that's currently loaded into the MP buffer.
 	 */
 	@Override
@@ -297,18 +309,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	public void stopMPProcesses() {
 		leftMaster.stopMPProcesses();
 		rightMaster.stopMPProcesses();
-	}
-
-	/**
-	 * Loads given profiles into the left and right sides of the drive.
-	 *
-	 * @param left  The profile to load into the left side.
-	 * @param right The profile to load into the right side.
-	 */
-	@Override
-	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		leftMaster.loadProfile(left);
-		rightMaster.loadProfile(right);
 	}
 
 	/**
