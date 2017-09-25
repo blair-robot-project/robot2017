@@ -122,8 +122,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *                                   null if there is no encoder attached to this Talon.
 	 * @param encoderCPR                 The counts per rotation of the encoder on this Talon. Can be null if
 	 *                                   feedbackDevice is, but otherwise must have a value.
-	 * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Can be
-	 *                                   null if feedbackDevice is, but otherwise must have a value.
+	 * @param reverseSensor              Whether or not to reverse the reading from the encoder on this Talon. Ignored if feedbackDevice is null. Defaults to false.
 	 * @param perGearSettings            The settings for each gear this motor has. Can be null to use default values
 	 *                                   and gear # of zero. Gear numbers can't be repeated.
 	 * @param startingGear               The gear to start in. Can be null to use startingGearNum instead.
@@ -150,7 +149,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	                double maxClosedLoopVoltage,
 	                @Nullable CANTalon.FeedbackDevice feedbackDevice,
 	                @Nullable Integer encoderCPR,
-	                @Nullable Boolean reverseSensor,
+	                boolean reverseSensor,
 	                @Nullable List<PerGearSettings> perGearSettings,
 	                @Nullable Shiftable.gear startingGear,
 	                @Nullable Integer startingGearNum,
@@ -219,8 +218,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 
 		//Set up the feedback device if it exists.
 		if (feedbackDevice != null) {
-			this.feedbackDevice = feedbackDevice;
-			canTalon.setFeedbackDevice(feedbackDevice);
+			//CTRE encoder use RPM instead of native units, and can be used as QuadEncoders, so we switch them to avoid
+			//having to support RPM.
+			if (feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Absolute) ||
+					feedbackDevice.equals(CANTalon.FeedbackDevice.CtreMagEncoder_Relative)){
+				this.feedbackDevice= CANTalon.FeedbackDevice.QuadEncoder;
+			} else {
+				this.feedbackDevice = feedbackDevice;
+			}
+			canTalon.setFeedbackDevice(this.feedbackDevice);
 			this.encoderCPR = encoderCPR;
 			canTalon.reverseSensor(reverseSensor);
 		} else {
@@ -385,17 +391,11 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Nullable
 	private Double encoderToFPS(double encoderReading) {
-		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
-			//CTRE encoders use RPM
-			return RPMToRPS(encoderReading) * postEncoderGearing * feetPerRotation;
-		} else {
-			//All other feedback devices use native units.
-			Double RPS = nativeToRPS(encoderReading);
-			if (RPS == null) {
-				return null;
-			}
-			return RPS * postEncoderGearing * feetPerRotation;
+		Double RPS = nativeToRPS(encoderReading);
+		if (RPS == null) {
+			return null;
 		}
+		return RPS * postEncoderGearing * feetPerRotation;
 	}
 
 	/**
@@ -407,13 +407,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Nullable
 	private Double FPSToEncoder(double FPS) {
-		if (feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Absolute || feedbackDevice == CANTalon.FeedbackDevice.CtreMagEncoder_Relative) {
-			//CTRE encoders use RPM
-			return RPSToRPM(FPS / postEncoderGearing / feetPerRotation);
-		} else {
-			//All other feedback devices use native units.
-			return RPSToNative((FPS / postEncoderGearing) / feetPerRotation);
-		}
+		return RPSToNative((FPS / postEncoderGearing) / feetPerRotation);
 	}
 
 	/**
@@ -446,28 +440,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			return null;
 		}
 		return (RPS / 10) * (encoderCPR * 4); //4 edges per count, and 10 100ms per second.
-	}
-
-	/**
-	 * Convert from RPM to RPS. Note this DOES NOT account for post-encoder gearing.
-	 *
-	 * @param rpm A velocity in RPM.
-	 * @return That velocity in RPS.
-	 */
-	@Contract(pure = true)
-	private double RPMToRPS(double rpm) {
-		return rpm / 60.;
-	}
-
-	/**
-	 * Convert from RPS to RPM. Note this DOES NOT account for post-encoder gearing.
-	 *
-	 * @param rps A velocity in RPS.
-	 * @return That velocity in RPM.
-	 */
-	@Contract(pure = true)
-	private double RPSToRPM(double rps) {
-		return rps * 60.;
 	}
 
 	/**
