@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.logger.Logger;
-import org.usfirst.frc.team449.robot.logger.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Logger;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.YamlCommandWrapper;
 
 /**
  * A command that does an instantaneous change (extend a piston, turn on a motor, etc.)

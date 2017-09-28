@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -82,8 +82,10 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	@Override
 	public void execute() {
 		//Auto-shifting
-		autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
-				subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+		if (!subsystem.getOverrideAutoshift()) {
+			autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
+					subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+		}
 		super.execute();
 	}
 

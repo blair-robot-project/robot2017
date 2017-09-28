@@ -35,11 +35,6 @@ public class ShiftComponent {
 	private final DoubleSolenoid.Value lowGearPistonPos;
 
 	/**
-	 * The gear to start in.
-	 */
-	private final int startingGear;
-
-	/**
 	 * The gear this component is currently in.
 	 */
 	protected int currentGear;
@@ -68,7 +63,6 @@ public class ShiftComponent {
 			//Get the starting gear from the piston's position if it's not provided
 			this.currentGear = piston.get() == lowGearPistonPos ? Shiftable.gear.LOW.getNumVal() : Shiftable.gear.HIGH.getNumVal();
 		}
-		this.startingGear = currentGear;
 
 		//Set all the shiftables to the starting gear.
 		for (Shiftable shiftable : otherShiftables) {
@@ -97,13 +91,6 @@ public class ShiftComponent {
 	 */
 	public int getCurrentGear() {
 		return currentGear;
-	}
-
-	/**
-	 * @return The gear to start in.
-	 */
-	public int getStartingGear() {
-		return startingGear;
 	}
 
 	/**

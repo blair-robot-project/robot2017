@@ -1,9 +1,9 @@
 plugins {
 	id 'org.hidetake.ssh' version "2.9.0"
-	id "java"
-	id "eclipse"
-	id "idea"
-	id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'jaci.openrio.gradle.GradleRIO' version "2017.1.5"
 }
 
 group 'org.usfirst.frc.team449.robot2017'
@@ -85,6 +85,16 @@ jar {
 task genJavadoc(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
+}
+
+task deleteDocs(type: Delete){
+	delete '../docs'
+	followSymlinks = false
+}
+
+task copyDocs(type: Copy, dependsOn: [genJavadoc, deleteDocs]){
+	from 'build/docs/javadoc'
+	into '../docs'
 }
 
 artifacts {
