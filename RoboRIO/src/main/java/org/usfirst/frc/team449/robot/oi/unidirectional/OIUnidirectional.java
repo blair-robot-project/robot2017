@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.unidirectional;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.usfirst.frc.team449.robot.oi.OI;
 
 /**
  * An OI to control a robot with a unidirectional drive that has a left and right side (e.g. not meccanum, swerve, or
