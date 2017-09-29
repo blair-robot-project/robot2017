@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
  * A Jackson-compatible wrapper on a {@link Joystick}.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class MappedJoystick extends Joystick implements Rumbleable{
+public class MappedJoystick extends Joystick implements Rumbleable {
 
 	/**
 	 * Default constructor

@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.Sole
  * Command group to reset everything. Turns everything off, raises intake
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetShooter<T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
+public class ResetShooter <T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Constructs a ResetShooter command group

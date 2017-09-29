@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.tank.OITank;
+import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
  * Drives straight when using a tank drive.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveStraight<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class DriveStraight <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The oi that this command gets input from.

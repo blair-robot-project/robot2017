@@ -33,8 +33,8 @@ public class NavXRumbleComponent {
 	private final List<Rumbleable> rumbleables;
 
 	/**
-	 * The minimum jerk that will trigger rumbling, in Gs/millisecond. Should be greater than 2, which is the error margin on the
-	 * measurement.
+	 * The minimum jerk that will trigger rumbling, in Gs/millisecond. Should be greater than 2, which is the error
+	 * margin on the measurement.
 	 */
 	private final double minJerk;
 
@@ -116,8 +116,8 @@ public class NavXRumbleComponent {
 		}
 
 		//Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice versa
-		left = ((frontBack-lastFrontBackAccel) - (leftRight-lastLeftRightAccel))/(Robot.currentTimeMillis()-timeLastCalled);
-		right = ((frontBack-lastFrontBackAccel) + (leftRight-lastLeftRightAccel))/(Robot.currentTimeMillis()-timeLastCalled);
+		left = ((frontBack - lastFrontBackAccel) - (leftRight - lastLeftRightAccel)) / (Robot.currentTimeMillis() - timeLastCalled);
+		right = ((frontBack - lastFrontBackAccel) + (leftRight - lastLeftRightAccel)) / (Robot.currentTimeMillis() - timeLastCalled);
 
 		if (left > minJerk) {
 			left = (left - minJerk) / maxJerk;

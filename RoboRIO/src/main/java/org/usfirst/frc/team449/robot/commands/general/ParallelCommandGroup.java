@@ -14,7 +14,7 @@ import java.util.Set;
  * A command group for running many commands in parallel.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ParallelCommandGroup extends YamlCommandGroupWrapper{
+public class ParallelCommandGroup extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor

@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
 
 /**
@@ -55,7 +55,7 @@ public class LoggingShooter extends YamlSubsystem implements Loggable, Subsystem
 	 *
 	 * @param shooterTalon    The TalonSRX controlling the flywheel.
 	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the multiSubsystem.
-	 * @param feederMotor    The motor controlling the feeder.
+	 * @param feederMotor     The motor controlling the feeder.
 	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
 	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the multiSubsystem to get up to speed.
 	 *                        Defaults to 0.
