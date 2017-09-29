@@ -206,6 +206,17 @@ defaultDriveCommand:
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
+        navXRumbleComponent:
+            '@id': rumbleComponent
+            navX:
+                driveNavX
+            rumbleables:
+                - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                    driverGamepad
+                - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                    gunnerGamepad
+            minJerk: 804
+            maxJerk: 2412
         autoshiftComponent:
             '@id': autoshiftComponent
             upshiftSpeed: 4

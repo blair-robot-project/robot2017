@@ -4,17 +4,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kauailabs.navx.frc.AHRS;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 
 import java.util.List;
 
 /**
- * A component to rumble controllers based off the acceleration measurements from a NavX.
+ * A component to rumble controllers based off the jerk measurements from a NavX.
  */
 public class NavXRumbleComponent {
 
 	/**
-	 * The NavX to get acceleration measurements from.
+	 * The factor to multiply feet/(sec^3) by to get Gs/millisecond, according to WolframAlpha.
+	 */
+	private static final double FPS_CUBED_TO_GS_PER_MILLIS = 3.108e-5;
+
+	/**
+	 * The NavX to get jerk measurements from.
 	 */
 	@NotNull
 	private final AHRS navX;
@@ -26,24 +33,23 @@ public class NavXRumbleComponent {
 	private final List<Rumbleable> rumbleables;
 
 	/**
-	 * The minimum acceleration that will trigger rumbling, in Gs. Should be greater than 2, which is the error margin
-	 * on the measurement.
+	 * The minimum jerk that will trigger rumbling, in Gs/millisecond. Should be greater than 2, which is the error margin on the
+	 * measurement.
 	 */
-	private final double minAccel;
+	private final double minJerk;
 
 	/**
-	 * The acceleration, in Gs, that's scaled to maximum rumble. All accelerations of greater magnitude are capped at
-	 * 1.
+	 * The jerk, in Gs/millisecond, that's scaled to maximum rumble. All jerks of greater magnitude are capped at 1.
 	 */
-	private final double maxAccel;
+	private final double maxJerk;
 
 	/**
-	 * Whether the NavX Y-axis measures forwards-back acceleration or left-right acceleration.
+	 * Whether the NavX Y-axis measures forwards-back jerk or left-right jerk.
 	 */
 	private final boolean yIsFrontBack;
 
 	/**
-	 * Whether to invert the left-right acceleration measurement.
+	 * Whether to invert the left-right jerk measurement.
 	 */
 	private final boolean invertLeftRight;
 
@@ -51,7 +57,7 @@ public class NavXRumbleComponent {
 	 * Variables for the per-call rumble calculation representing the directional accelerations. Fields to avoid garbage
 	 * collection.
 	 */
-	private double frontBack, leftRight;
+	private double lastFrontBackAccel, lastLeftRightAccel;
 
 	/**
 	 * Variables for the per-call rumble calculation representing the rumble outputs. Fields to avoid garbage
@@ -60,56 +66,67 @@ public class NavXRumbleComponent {
 	private double left, right;
 
 	/**
+	 * The time at which the acceleration was last measured.
+	 */
+	private long timeLastCalled;
+
+	/**
 	 * Default constructor.
 	 *
-	 * @param navX            The NavX to get acceleration measurements from.
+	 * @param navX            The NavX to get jerk measurements from.
 	 * @param rumbleables     The things to rumble.
-	 * @param minAccel        The minimum acceleration that will trigger rumbling, in Gs. Should be greater than 2,
-	 *                        which is the error margin on the measurement.
-	 * @param maxAccel        The acceleration, in Gs, that's scaled to maximum rumble. All accelerations of greater
-	 *                        magnitude are capped at 1.
-	 * @param yIsFrontBack    Whether the NavX Y-axis measures forwards-back acceleration or left-right acceleration.
-	 *                        Defaults to false.
-	 * @param invertLeftRight Whether to invert the left-right acceleration measurement. Defaults to false.
+	 * @param minJerk         The minimum jerk that will trigger rumbling, in feet/(sec^3).
+	 * @param maxJerk         The jerk, in feet/(sec^3), that's scaled to maximum rumble. All jerks of greater magnitude
+	 *                        are capped at 1.
+	 * @param yIsFrontBack    Whether the NavX Y-axis measures forwards-back jerk or left-right jerk. Defaults to
+	 *                        false.
+	 * @param invertLeftRight Whether to invert the left-right jerk measurement. Defaults to false.
 	 */
 	@JsonCreator
-	public NavXRumbleComponent(@NotNull @JsonProperty(required = true) AHRS navX,
+	public NavXRumbleComponent(@NotNull @JsonProperty(required = true) MappedAHRS navX,
 	                           @NotNull @JsonProperty(required = true) List<Rumbleable> rumbleables,
-	                           @JsonProperty(required = true) double minAccel,
-	                           @JsonProperty(required = true) double maxAccel,
+	                           @JsonProperty(required = true) double minJerk,
+	                           @JsonProperty(required = true) double maxJerk,
 	                           boolean yIsFrontBack,
 	                           boolean invertLeftRight) {
 		this.navX = navX;
 		this.rumbleables = rumbleables;
-		this.minAccel = minAccel;
-		this.maxAccel = maxAccel;
+		//Convert from feet/(sec^3) to Gs/millis.
+		this.minJerk = minJerk * FPS_CUBED_TO_GS_PER_MILLIS;
+		this.maxJerk = maxJerk * FPS_CUBED_TO_GS_PER_MILLIS;
 		this.yIsFrontBack = yIsFrontBack;
 		this.invertLeftRight = invertLeftRight;
+		timeLastCalled = 0;
+		lastFrontBackAccel = 0;
+		lastLeftRightAccel = 0;
 	}
 
 	/**
-	 * Read the NavX acceleration data and rumble the joysticks based off of it.
+	 * Read the NavX jerk data and rumble the joysticks based off of it.
 	 */
 	public void rumble() {
+		double frontBack, leftRight;
 		if (yIsFrontBack) {
+			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
 			frontBack = Math.abs(navX.getWorldLinearAccelY());
 			leftRight = navX.getWorldLinearAccelX() * (invertLeftRight ? -1 : 1);
 		} else {
 			frontBack = Math.abs(navX.getWorldLinearAccelX());
 			leftRight = navX.getWorldLinearAccelY() * (invertLeftRight ? -1 : 1);
 		}
-		//Left is negative accel, so we subtract it from left so that when we're going left, left is bigger and vice versa
-		left = frontBack - leftRight;
-		right = frontBack + leftRight;
 
-		if (left > minAccel) {
-			left = (left - minAccel) / maxAccel;
+		//Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice versa
+		left = ((frontBack-lastFrontBackAccel) - (leftRight-lastLeftRightAccel))/(Robot.currentTimeMillis()-timeLastCalled);
+		right = ((frontBack-lastFrontBackAccel) + (leftRight-lastLeftRightAccel))/(Robot.currentTimeMillis()-timeLastCalled);
+
+		if (left > minJerk) {
+			left = (left - minJerk) / maxJerk;
 		} else {
 			left = 0;
 		}
 
-		if (right > minAccel) {
-			right = (right - minAccel) / maxAccel;
+		if (right > minJerk) {
+			right = (right - minJerk) / maxJerk;
 		} else {
 			right = 0;
 		}
@@ -117,6 +134,10 @@ public class NavXRumbleComponent {
 		for (Rumbleable rumbleable : rumbleables) {
 			rumbleable.rumble(left, right);
 		}
+
+		lastLeftRightAccel = leftRight;
+		lastFrontBackAccel = frontBack;
+		timeLastCalled = Robot.currentTimeMillis();
 	}
 
 }
