@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.SubsystemMP;
 
 /**
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends YamlCommandWrapper {
+public class RunLoadedProfile<T extends YamlSubsystem & SubsystemMP> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.
@@ -37,7 +37,6 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 	 * Whether we're running a profile or waiting for the bottom-level buffer to fill.
 	 */
 	private boolean runningProfile;
-
 
 	/**
 	 * Default constructor.
@@ -91,12 +90,12 @@ public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends Ya
 	 */
 	@Override
 	protected boolean isFinished() {
-		if (Robot.currentTimeMillis() - startTime > timeout){
+		if (Robot.currentTimeMillis() - startTime > timeout) {
 			Logger.addEvent("Command timed out", this.getClass());
 			System.out.println("RunLoadedProfile timed out!");
 			return true;
 		}
-		return subsystem.profileFinished();
+		return runningProfile && subsystem.profileFinished();
 	}
 
 	/**

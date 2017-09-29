@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
-import org.usfirst.frc.team449.robot.drive.shifting.DriveShifting;
+import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -18,7 +18,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShifting> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
@@ -82,8 +82,10 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	@Override
 	public void execute() {
 		//Auto-shifting
-		autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
-				subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+		if (!subsystem.getOverrideAutoshift()) {
+			autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
+					subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+		}
 		super.execute();
 	}
 

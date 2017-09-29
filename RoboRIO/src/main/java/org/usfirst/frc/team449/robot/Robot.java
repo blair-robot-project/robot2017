@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToGear;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting;
-import org.usfirst.frc.team449.robot.logger.Logger;
+import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToGear;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
-import org.usfirst.frc.team449.robot.subsystem.complex.shooter.ShooterWithVictorFeeder;
+import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
@@ -59,50 +59,9 @@ public class Robot extends IterativeRobot {
 	private static long startTime;
 
 	/**
-	 * The shooter subsystem (flywheel and feeder)
-	 */
-	@Nullable
-	private ShooterWithVictorFeeder shooterSingleFlywheelSubsystem;
-
-	/**
-	 * The intake subsystem (intake motors and pistons)
-	 */
-	@Nullable
-	private IntakeFixedAndActuated intakeSubsystem;
-
-	/**
-	 * The climber
-	 */
-	@Nullable
-	private ClimberCurrentLimited climber;
-
-	/**
-	 * The compressor and pressure sensor
-	 */
-	@Nullable
-	private Pneumatics pneumatics;
-
-	/**
 	 * The drive
 	 */
 	private DriveTalonCluster driveSubsystem;
-
-	/**
-	 * The OI containing the joysticks to get input from.
-	 */
-	private OIUnidirectional oi;
-
-	/**
-	 * The cameras on the robot and the code to stream them to SmartDashboard (NOT computer vision!)
-	 */
-	@Nullable
-	private CameraNetwork cameraNetwork;
-
-	/**
-	 * The active gear subsystem.
-	 */
-	@Nullable
-	private SolenoidSimple gearSubsystem;
 
 	/**
 	 * The object constructed directly from the yaml map.
@@ -126,11 +85,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Nullable
 	private I2C robotInfo;
-
-	/**
-	 * The logger for the robot.
-	 */
-	private Logger logger;
 
 	/**
 	 * The command to run during autonomous. Null to do nothing during autonomous.
@@ -178,15 +132,7 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 		//Set fields from the map.
-		this.logger = robotMap.getLogger();
-		this.loggerNotifier = new Notifier(this.logger);
-		this.climber = robotMap.getClimber();
-		this.shooterSingleFlywheelSubsystem = robotMap.getShooter();
-		this.cameraNetwork = robotMap.getCamera();
-		this.intakeSubsystem = robotMap.getIntake();
-		this.pneumatics = robotMap.getPneumatics();
-		this.gearSubsystem = robotMap.getGearHandler();
-		this.oi = robotMap.getOI();
+		this.loggerNotifier = new Notifier(robotMap.getLogger());
 		this.driveSubsystem = robotMap.getDrive();
 
 		//Set up RIOduino I2C channel if it's in the map.
@@ -228,7 +174,8 @@ public class Robot extends IterativeRobot {
 				Logger.addEvent("dropGear: " + dropGear, this.getClass());
 				Logger.addEvent("position: " + position, this.getClass());
 
-				SmartDashboard.putString("Position",allianceString+" "+position);
+				SmartDashboard.putString("Position", allianceString + " " + position);
+				SmartDashboard.putBoolean("DropGear", dropGear);
 
 				//Load the first profile we want to run
 				driveSubsystem.loadMotionProfile(robotMap.getLeftProfiles().get(allianceString + "_" + position),
@@ -247,7 +194,7 @@ public class Robot extends IterativeRobot {
 		}
 
 		//Run the logger to write all the events that happened during initialization to a file.
-		logger.run();
+		robotMap.getLogger().run();
 	}
 
 	/**
@@ -255,18 +202,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
-		//Stop the drive for safety reasons
+		//Do the startup tasks
 		driveSubsystem.stopMPProcesses();
-		driveSubsystem.fullStop();
-
-		//Enable the motors in case they got disabled somehow
-		driveSubsystem.enableMotors();
+		doStartupTasks();
+		if (robotMap.getTeleopStartupCommand() != null) {
+			robotMap.getTeleopStartupCommand().start();
+		}
 
 		//Set the default command
 		driveSubsystem.setDefaultCommandManual(robotMap.getDefaultDriveCommand());
-
-		//Do the startup tasks
-		doStartupTasks();
 
 		//Tell the RIOduino that we're in teleop
 		sendModeOverI2C(robotInfo, "teleop");
@@ -288,11 +232,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//Stop the drive for safety reasons
-		driveSubsystem.fullStop();
-
 		//Do startup tasks
 		doStartupTasks();
+		if (robotMap.getAutoStartupCommand() != null) {
+			robotMap.getAutoStartupCommand().start();
+		}
 
 		//Start running the autonomous command
 		if (autonomousCommand != null) {
@@ -350,30 +294,14 @@ public class Robot extends IterativeRobot {
 	 * Do tasks that should be done when we first enable, in both auto and teleop.
 	 */
 	private void doStartupTasks() {
-		//Start running the logger
-		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 		//Refresh the current time.
 		currentTimeMillis = System.currentTimeMillis();
-		//Switch to starting gear
-		if (driveSubsystem.getClass().equals(DriveTalonClusterShifting.class)) {
-			Scheduler.getInstance().add(new SwitchToGear((DriveTalonClusterShifting) driveSubsystem, ((DriveTalonClusterShifting) driveSubsystem).getStartingGear()));
-		}
 
+		//Start running the logger
+		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
+
+		//Enable and reset the drive
+		driveSubsystem.enableMotors();
 		driveSubsystem.resetPosition();
-
-		//Start the compressor if it exists
-		if (pneumatics != null) {
-			Scheduler.getInstance().add(new StartCompressor(pneumatics));
-		}
-
-		//Put up the intake if it exists
-		if (intakeSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidReverse(intakeSubsystem));
-		}
-
-		//Close the gear handler if it exists
-		if (gearSubsystem != null) {
-			Scheduler.getInstance().add(new SolenoidForward(gearSubsystem));
-		}
 	}
 }

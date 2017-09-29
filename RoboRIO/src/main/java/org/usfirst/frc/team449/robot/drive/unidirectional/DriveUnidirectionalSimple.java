@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.other.SimpleMotor;
 
 /**
  * A generic example of a subsystem.
@@ -30,7 +30,7 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	/**
 	 * Default constructor
 	 *
-	 * @param leftMotor The motor for the left side of the drive.
+	 * @param leftMotor  The motor for the left side of the drive.
 	 * @param rightMotor The motor for the right side of the drive.
 	 */
 	@JsonCreator

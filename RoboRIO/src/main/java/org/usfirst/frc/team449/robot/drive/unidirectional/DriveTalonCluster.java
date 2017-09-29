@@ -6,11 +6,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.components.CANTalonMPComponent;
+import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
-import org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.logger.Loggable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -32,25 +31,19 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * Right master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon rightMaster;
+	protected final FPSTalon rightMaster;
 
 	/**
 	 * Left master Talon
 	 */
 	@NotNull
-	protected final RotPerSecCANTalon leftMaster;
+	protected final FPSTalon leftMaster;
 
 	/**
 	 * The NavX gyro
 	 */
 	@NotNull
 	private final AHRS navX;
-
-	/**
-	 * A helper class that loads and runs profiles on the Talons.
-	 */
-	@NotNull
-	private final CANTalonMPComponent mpHandler;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -63,21 +56,18 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
 	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
-	 * @param MPHandler   The motion profile handler that runs this drive's motion profiles.
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
-	public DriveTalonCluster(@NotNull @JsonProperty(required = true) RotPerSecCANTalon leftMaster,
-	                         @NotNull @JsonProperty(required = true) RotPerSecCANTalon rightMaster,
+	public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
+	                         @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
 	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
-	                         @NotNull @JsonProperty(required = true) CANTalonMPComponent MPHandler,
 	                         @Nullable Double VelScale) {
 		super();
 		//Initialize stuff
 		this.VEL_SCALE = VelScale != null ? VelScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
-		this.mpHandler = MPHandler;
 		this.navX = navX;
 	}
 
@@ -102,7 +92,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getLeftVel() {
-		return leftMaster.getSpeed();
+		return leftMaster.getVelocity();
 	}
 
 	/**
@@ -113,7 +103,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getRightVel() {
-		return rightMaster.getSpeed();
+		return rightMaster.getVelocity();
 	}
 
 	/**
@@ -121,8 +111,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void fullStop() {
-		leftMaster.setPercentVbus(0);
-		rightMaster.setPercentVbus(0);
+		leftMaster.setPercentVoltage(0);
+		rightMaster.setPercentVoltage(0);
 	}
 
 	/**
@@ -130,8 +120,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void enableMotors() {
-		leftMaster.getCanTalon().enable();
-		rightMaster.getCanTalon().enable();
+		leftMaster.enable();
+		rightMaster.enable();
 	}
 
 	/**
@@ -206,7 +196,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"right_voltage",
 				"left_pos",
 				"right_pos",
-				"gyro_heading"};
+				"gyro_heading",
+				"raw_angle"};
 	}
 
 	/**
@@ -217,17 +208,18 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@NotNull
 	public Object[] getData() {
-		return new Object[]{leftMaster.getSpeed(),
-				rightMaster.getSpeed(),
+		return new Object[]{leftMaster.getVelocity(),
+				rightMaster.getVelocity(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
-				leftMaster.getCanTalon().getOutputCurrent(),
-				rightMaster.getCanTalon().getOutputCurrent(),
-				leftMaster.getCanTalon().getOutputVoltage(),
-				rightMaster.getCanTalon().getOutputVoltage(),
-				leftMaster.nativeToFeet(leftMaster.getCanTalon().getPosition()),
-				rightMaster.nativeToFeet(rightMaster.getCanTalon().getPosition()),
-				navX.pidGet()};
+				leftMaster.getOutputCurrent(),
+				rightMaster.getOutputCurrent(),
+				leftMaster.getOutputVoltage(),
+				rightMaster.getOutputVoltage(),
+				leftMaster.getPositionFeet(),
+				rightMaster.getPositionFeet(),
+				navX.pidGet(),
+				navX.getAngle()};
 	}
 
 	/**
@@ -249,59 +241,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData profile) {
-		mpHandler.loadTopLevel(profile);
-	}
-
-	/**
-	 * Start running the profile that's currently loaded into the MP buffer.
-	 */
-	@Override
-	public void startRunningLoadedProfile() {
-		mpHandler.startRunningProfile();
-	}
-
-	/**
-	 * Get whether this subsystem has finished running the profile loaded in it.
-	 *
-	 * @return true if there's no profile loaded and no profile running, false otherwise.
-	 */
-	@Override
-	public boolean profileFinished() {
-		return mpHandler.isFinished();
-	}
-
-	/**
-	 * Disable the motors.
-	 */
-	@Override
-	public void disable() {
-		mpHandler.disableTalons();
-	}
-
-	/**
-	 * Hold the current position.
-	 */
-	@Override
-	public void holdPosition() {
-		mpHandler.holdTalons();
-	}
-
-	/**
-	 * Get whether the subsystem is ready to run the loaded profile.
-	 *
-	 * @return true if a profile is loaded and ready to run, false otherwise.
-	 */
-	@Override
-	public boolean readyToRunProfile() {
-		return mpHandler.isReady();
-	}
-
-	/**
-	 * Stops any MP-related threads currently running. Normally called at the start of teleop.
-	 */
-	@Override
-	public void stopMPProcesses() {
-		mpHandler.stopUpdaterProcess();
+		leftMaster.loadProfile(profile);
+		rightMaster.loadProfile(profile);
 	}
 
 	/**
@@ -312,11 +253,71 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		mpHandler.loadIndividualProfiles(new MotionProfileData[]{left, right});
+		leftMaster.loadProfile(left);
+		rightMaster.loadProfile(right);
 	}
 
-	public void resetPosition(){
-		leftMaster.getCanTalon().setEncPosition(0);
-		rightMaster.getCanTalon().setEncPosition(0);
+	/**
+	 * Start running the profile that's currently loaded into the MP buffer.
+	 */
+	@Override
+	public void startRunningLoadedProfile() {
+		leftMaster.startRunningMP();
+		rightMaster.startRunningMP();
+	}
+
+	/**
+	 * Get whether this subsystem has finished running the profile loaded in it.
+	 *
+	 * @return true if there's no profile loaded and no profile running, false otherwise.
+	 */
+	@Override
+	public boolean profileFinished() {
+		return leftMaster.MPIsFinished() && rightMaster.MPIsFinished();
+	}
+
+	/**
+	 * Disable the motors.
+	 */
+	@Override
+	public void disable() {
+		leftMaster.disable();
+		rightMaster.disable();
+	}
+
+	/**
+	 * Hold the current position.
+	 */
+	@Override
+	public void holdPosition() {
+		leftMaster.holdPositionMP();
+		rightMaster.holdPositionMP();
+	}
+
+	/**
+	 * Get whether the subsystem is ready to run the loaded profile.
+	 *
+	 * @return true if a profile is loaded and ready to run, false otherwise.
+	 */
+	@Override
+	public boolean readyToRunProfile() {
+		return leftMaster.readyForMP() && rightMaster.readyForMP();
+	}
+
+	/**
+	 * Stops any MP-related threads currently running. Normally called at the start of teleop.
+	 */
+	@Override
+	public void stopMPProcesses() {
+		leftMaster.stopMPProcesses();
+		rightMaster.stopMPProcesses();
+	}
+
+	/**
+	 * Reset the motor positions.
+	 */
+	public void resetPosition() {
+		leftMaster.resetPosition();
+		rightMaster.resetPosition();
 	}
 }

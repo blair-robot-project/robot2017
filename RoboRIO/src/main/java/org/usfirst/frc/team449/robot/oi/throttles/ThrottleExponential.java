@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
  * An exponentially-scaled throttle.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ThrottleExponential extends ThrottleSmoothed {
+public class ThrottleExponential extends ThrottleDeadbanded {
 
 	/**
 	 * The base that is raised to the power of the joystick input.
@@ -31,26 +31,24 @@ public class ThrottleExponential extends ThrottleSmoothed {
 	/**
 	 * A basic constructor.
 	 *
-	 * @param stick                     The Joystick object being used
-	 * @param axis                      The axis being used.
-	 * @param smoothingTimeConstantSecs How many seconds of past input strongly effect the smoothing algorithm.
-	 * @param deadband                  The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
-	 * @param inverted                  Whether or not to invert the joystick input. Defaults to false.
-	 * @param base                      The base that is raised to the power of the joystick input.
+	 * @param stick    The Joystick object being used
+	 * @param axis     The axis being used.
+	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
+	 * @param base     The base that is raised to the power of the joystick input.
 	 */
 	@JsonCreator
 	public ThrottleExponential(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                           @JsonProperty(required = true) int axis,
-	                           double smoothingTimeConstantSecs,
 	                           double deadband,
 	                           boolean inverted,
 	                           @JsonProperty(required = true) double base) {
-		super(stick, axis, smoothingTimeConstantSecs, deadband, inverted);
+		super(stick, axis, deadband, inverted);
 		this.base = base;
 	}
 
 	/**
-	 * Raises the base to the value of the smoothed joystick output, adjusting for sign.
+	 * Raises the base to the value of the deadbanded joystick output, adjusting for sign.
 	 *
 	 * @return The processed value of the joystick
 	 */
