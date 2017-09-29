@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
+import org.usfirst.frc.team449.robot.components.NavXRumbleComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
@@ -18,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
@@ -54,6 +55,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	 * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
+	 * @param navXRumbleComponent         The component for rumbling stuff based off the NavX acceleration.
 	 * @param autoshiftComponent          The helper object for autoshifting.
 	 */
 	@JsonCreator
@@ -69,9 +71,10 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	                                              @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+	                                              @Nullable NavXRumbleComponent navXRumbleComponent,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
-				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
+				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, navXRumbleComponent);
 		this.autoshiftComponent = autoshiftComponent;
 		this.subsystem = subsystem;
 	}

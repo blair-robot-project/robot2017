@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.commands.multiInterface.drive;
 import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.components.NavXRumbleComponent;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.logger.Logger;
@@ -16,7 +17,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngle
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -40,6 +41,12 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 	 */
 	@NotNull
 	private final BufferTimer driveStraightLoopEntryTimer;
+
+	/**
+	 * The component for rumbling stuff based off the NavX acceleration.
+	 */
+	@Nullable
+	private final NavXRumbleComponent navXRumbleComponent;
 
 	/**
 	 * Whether or not we should be using the NavX to drive straight stably.
@@ -68,6 +75,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 	 * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
+	 * @param navXRumbleComponent         The component for rumbling stuff based off the NavX acceleration.
 	 */
 	@JsonCreator
 	public UnidirectionalNavXDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -81,11 +89,13 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 	                                      int kD,
 	                                      @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
-	                                      @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
+	                                      @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+	                                      @Nullable NavXRumbleComponent navXRumbleComponent) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;
 		this.subsystem = subsystem;
+		this.navXRumbleComponent = navXRumbleComponent;
 
 		this.driveStraightLoopEntryTimer = driveStraightLoopEntryTimer;
 		this.maxAngularVelToEnterLoop = maxAngularVelToEnterLoop != null ? maxAngularVelToEnterLoop : 180;
@@ -135,6 +145,11 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
 			Logger.addEvent("Switching to DriveStraight.", this.getClass());
+		}
+
+		//Rumble
+		if (navXRumbleComponent != null) {
+			navXRumbleComponent.rumble();
 		}
 	}
 
