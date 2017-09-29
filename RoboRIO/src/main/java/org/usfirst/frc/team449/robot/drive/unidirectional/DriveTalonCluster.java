@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.logger.Loggable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -92,7 +92,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getLeftVel() {
-		return leftMaster.getSpeed();
+		return leftMaster.getVelocity();
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@Nullable
 	public Double getRightVel() {
-		return rightMaster.getSpeed();
+		return rightMaster.getVelocity();
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void fullStop() {
-		leftMaster.setPercentVbus(0);
-		rightMaster.setPercentVbus(0);
+		leftMaster.setPercentVoltage(0);
+		rightMaster.setPercentVoltage(0);
 	}
 
 	/**
@@ -207,8 +207,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@NotNull
 	public Object[] getData() {
-		return new Object[]{leftMaster.getSpeed(),
-				rightMaster.getSpeed(),
+		return new Object[]{leftMaster.getVelocity(),
+				rightMaster.getVelocity(),
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
 				leftMaster.getOutputCurrent(),
@@ -244,12 +244,22 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
+	 * Loads given profiles into the left and right sides of the drive.
+	 *
+	 * @param left  The profile to load into the left side.
+	 * @param right The profile to load into the right side.
+	 */
+	@Override
+	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
+		leftMaster.loadProfile(left);
+		rightMaster.loadProfile(right);
+	}
+
+	/**
 	 * Start running the profile that's currently loaded into the MP buffer.
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
-		leftMaster.clearMPUnderrun();
-		rightMaster.clearMPUnderrun();
 		leftMaster.startRunningMP();
 		rightMaster.startRunningMP();
 	}
@@ -299,18 +309,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	public void stopMPProcesses() {
 		leftMaster.stopMPProcesses();
 		rightMaster.stopMPProcesses();
-	}
-
-	/**
-	 * Loads given profiles into the left and right sides of the drive.
-	 *
-	 * @param left  The profile to load into the left side.
-	 * @param right The profile to load into the right side.
-	 */
-	@Override
-	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		leftMaster.loadProfile(left);
-		rightMaster.loadProfile(right);
 	}
 
 	/**

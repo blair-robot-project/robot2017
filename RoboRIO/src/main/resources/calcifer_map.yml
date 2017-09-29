@@ -247,7 +247,7 @@ climber:
             '@id': powerLimitTimer
             bufferTimeSeconds: 0.005
 #multiSubsystem:
-#    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #        '@id': multiSubsystem
 #        shooterTalon:
 #            '@id': shooterTalon
@@ -310,7 +310,7 @@ logger:
             pneumatics
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
-#        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#        - org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #            multiSubsystem
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
@@ -507,6 +507,28 @@ nonMPAutoCommand:
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startupCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
+                '@id': startupSwitchToLowCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+            - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
+                '@id': startCompressor
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+                        pneumatics
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+                '@id': closeGearHandlerStartup
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+                        gearHandler
+teleopStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startupCommand
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
@@ -524,6 +546,28 @@ buttons:
         action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+                switchToLowButton
+        command:
+            org.usfirst.frc.team449.robot.drive.shifting.commands.OverrideAutoShift:
+                '@id': overrideShifting
+                drive:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+                override: true
+        action: WHEN_PRESSED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+                switchToLowButton
+        command:
+            org.usfirst.frc.team449.robot.drive.shifting.commands.OverrideAutoShift:
+                '@id': unoverrideShifting
+                drive:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+                override: false
+        action: WHEN_RELEASED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
                 '@id': switchToHighButton
                 joystick:
                     gunnerGamepad
@@ -535,6 +579,20 @@ buttons:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
         action: WHEN_PRESSED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+                switchToHighButton
+        command:
+            org.usfirst.frc.team449.robot.drive.shifting.commands.OverrideAutoShift:
+                overrideShifting
+        action: WHEN_PRESSED
+    -   button:
+            org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
+                switchToHighButton
+        command:
+            org.usfirst.frc.team449.robot.drive.shifting.commands.OverrideAutoShift:
+                unoverrideShifting
+        action: WHEN_RELEASED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': overrideNavXButton
@@ -675,7 +733,7 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.FireShooter:
 #                '@id': fireShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
 #    -   button:
@@ -692,7 +750,7 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.RackShooter:
 #                '@id': rackShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
 #    -   button:
@@ -705,6 +763,6 @@ buttons:
 #            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.ResetShooter:
 #                '@id': resetShooterCommand
 #                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
+#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #                        multiSubsystem
 #        action: WHEN_PRESSED
