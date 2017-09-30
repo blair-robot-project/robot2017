@@ -144,7 +144,7 @@ public class Pathgen {
 		profiles.put("RedBoilerToLoading", redBoilerToLoading);*/
 		profiles.put("forward100In", points);
 
-		final String ROBOT_NAME = "calcifer";
+		final String ROBOT_NAME = "ballbasaur";
 
 		//Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
 		// the circumference of a circle moved by the robot via C = 360 * n / θ

@@ -4,7 +4,7 @@ testMP: true
 leftTestProfile:
     &leftTest
     '@id': leftTest
-    filename: "forward100InProfile.csv"
+    filename: "ballbasaurForward100InProfile.csv"
     inverted: false
     maxAccel: 15
     maxVel: 11.02
