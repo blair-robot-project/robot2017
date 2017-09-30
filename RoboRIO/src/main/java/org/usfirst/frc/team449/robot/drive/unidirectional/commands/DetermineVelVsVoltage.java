@@ -35,7 +35,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	/**
 	 * A list of all the voltages to be tested, from (0, 1].
 	 */
-	private final double[] voltagesToTest;
+	private final double[] voltagePercentsToTest;
 
 	/**
 	 * The maximum measured speed, in feet/sec, for the current trial.
@@ -63,7 +63,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	 * @param subsystem The subsystem to execute this command on.
 	 * @param distanceToDrive How far, in feet, to drive for each trial.
 	 * @param numTrials How many trials to do for each voltage.
-	 * @param voltagesToTest A list of all the voltages to be tested, from (0, 1].
+	 * @param voltagesToTest A list of all the voltages to be tested, from (0, 12].
 	 */
 	@JsonCreator
 	public DetermineVelVsVoltage(@NotNull @JsonProperty(required = true) T subsystem,
@@ -73,7 +73,12 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 		this.subsystem = subsystem;
 		this.distanceToDrive = distanceToDrive;
 		this.numTrials = numTrials;
-		this.voltagesToTest = voltagesToTest;
+
+		//Convert from volts to percentages because CANTalons.
+		this.voltagePercentsToTest = new double[voltagesToTest.length];
+		for (int i = 0; i < voltagesToTest.length; i++){
+			this.voltagePercentsToTest[i] = voltagesToTest[i]/12.;
+		}
 	}
 
 	/**
@@ -125,13 +130,13 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 				voltageIndex++;
 
 				//Exit if we've done all trials for all voltages
-				if (voltageIndex >= voltagesToTest.length){
+				if (voltageIndex >= voltagePercentsToTest.length){
 					return;
 				}
 			}
 
 			//Set the output to the correct voltage and sign
-			subsystem.setOutput(sign*voltagesToTest[voltageIndex], sign*voltagesToTest[voltageIndex]);
+			subsystem.setOutput(sign* voltagePercentsToTest[voltageIndex], sign* voltagePercentsToTest[voltageIndex]);
 		}
 	}
 
@@ -142,7 +147,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	 */
 	@Override
 	protected boolean isFinished() {
-		return voltageIndex >= voltagesToTest.length;
+		return voltageIndex >= voltagePercentsToTest.length;
 	}
 
 	/**
