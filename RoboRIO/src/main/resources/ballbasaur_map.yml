@@ -6,8 +6,7 @@ leftTestProfile:
     '@id': leftTest
     filename: "ballbasaurForward100InProfile.csv"
     inverted: false
-    maxAccel: 15
-    maxVel: 11.02
+    velocityOnly: false
 rightTestProfile:
     <<: *leftTest
     '@id': rightTest
@@ -37,6 +36,7 @@ drive:
                     motionProfileP: 1.0
                     motionProfileI: 0.0
                     motionProfileD: 0.0
+                    maxAccel: 15
                 slaves:
                     - '@id': talon1
                       port: 6
