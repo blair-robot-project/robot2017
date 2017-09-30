@@ -129,3 +129,25 @@ defaultDriveCommand:
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startupCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
+                '@id': startCompressor
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+                        pneumatics
+            - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
+                '@id': enableMotors
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                        drive
+            - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
+                '@id': resetPosition
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                        drive
+teleopStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startupCommand

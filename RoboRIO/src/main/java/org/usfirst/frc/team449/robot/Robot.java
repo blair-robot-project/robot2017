@@ -299,9 +299,5 @@ public class Robot extends IterativeRobot {
 
 		//Start running the logger
 		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
-
-		//Enable and reset the drive
-		driveSubsystem.enableMotors();
-		driveSubsystem.resetPosition();
 	}
 }

@@ -65,7 +65,7 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	@Override
@@ -76,11 +76,33 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	@Override
 	public Double getRightVel() {
+		return null;
+	}
+
+	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPos() {
+		return null;
+	}
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPos() {
 		return null;
 	}
 
@@ -100,5 +122,13 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	public void enableMotors() {
 		leftMotor.enable();
 		rightMotor.enable();
+	}
+
+	/**
+	 * Reset the position of the drive if it has encoders.
+	 */
+	@Override
+	public void resetPosition() {
+		//No encoders, do nothing
 	}
 }

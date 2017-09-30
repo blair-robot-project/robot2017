@@ -336,9 +336,17 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Override
 	public void setGear(int gear) {
+		//Set the current gear
 		currentGearSettings = perGearSettings.get(gear);
+
+		//Set general max voltage
+		canTalon.configMaxOutputVoltage(Math.max(currentGearSettings.getFwdPeakOutputVoltage(), -currentGearSettings.getRevPeakOutputVoltage()));
+
+		//Set closed loop max and min voltages
 		canTalon.configPeakOutputVoltage(currentGearSettings.getFwdPeakOutputVoltage(), currentGearSettings.getRevPeakOutputVoltage());
 		canTalon.configNominalOutputVoltage(currentGearSettings.getFwdNominalOutputVoltage(), currentGearSettings.getRevNominalOutputVoltage());
+
+		//Set PID stuff
 		if (currentGearSettings.getMaxSpeed() != null) {
 			//Put driving constants in slot 0
 			canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),

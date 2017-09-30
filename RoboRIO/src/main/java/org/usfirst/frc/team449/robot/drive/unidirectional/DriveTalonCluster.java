@@ -87,7 +87,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
@@ -98,12 +98,34 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
 	public Double getRightVel() {
 		return rightMaster.getVelocity();
+	}
+
+	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPos() {
+		return leftMaster.getPositionFeet();
+	}
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPos() {
+		return rightMaster.getPositionFeet();
 	}
 
 	/**
@@ -314,8 +336,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
-	 * Reset the motor positions.
+	 * Reset the position of the drive if it has encoders.
 	 */
+	@Override
 	public void resetPosition() {
 		leftMaster.resetPosition();
 		rightMaster.resetPosition();
