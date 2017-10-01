@@ -61,14 +61,19 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 		this.yThrottle = yThrottle;
 	}
 
+	/**
+	 * Calculate the theta and vel values, can be called multiple times per tic but will only execute logic once.
+	 */
 	protected void calcValues(){
 		if (timeLastUpdated != Robot.currentTimeMillis()){
 			x = xThrottle.getValue();
 			y = yThrottle.getValue();
+			//0,0 has no angle so null
 			if (x == 0 && y == 0){
 				theta = null;
 				vel = 0;
 			} else {
+				//Use atan2 to get angle from -180 to 180
 				theta = Math.toDegrees(Math.atan2(y,x));
 				if (theta > 90){
 					vel = -Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
