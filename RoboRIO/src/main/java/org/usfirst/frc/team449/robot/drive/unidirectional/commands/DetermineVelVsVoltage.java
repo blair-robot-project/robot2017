@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
@@ -42,6 +44,8 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	 */
 	private double maxSpeedForTrial;
 
+	private long timeMaxMeasuredAt;
+
 	/**
 	 * The index, in the list of voltages to test, of the voltage currently being tested.
 	 */
@@ -50,7 +54,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	/**
 	 * How many trials are left for the current voltage.
 	 */
-	private double trialsRemaining;
+	private int trialsRemaining;
 
 	/**
 	 * The current sign of the output. Alternates every trial so we just drive back and forth.
@@ -90,7 +94,10 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 		sign = 1;
 		voltageIndex = 0;
 		maxSpeedForTrial = 0;
+		timeMaxMeasuredAt = 0;
 		trialsRemaining = numTrials;
+		subsystem.setOutput(voltagePercentsToTest[voltageIndex], voltagePercentsToTest[voltageIndex]);
+		SmartDashboard.putNumber("Desired voltage", voltagePercentsToTest[voltageIndex]*12);
 	}
 
 	/**
@@ -100,43 +107,61 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	protected void execute() {
 		//Multiply each by sign so that only the movement in the correct direction is counted and leftover momentum from
 		// the previous trial isn't.
-		maxSpeedForTrial = Math.max(maxSpeedForTrial, (sign*subsystem.getLeftVel() + sign*subsystem.getRightVel())/2.);
 
+		double avgSpeed = (sign * subsystem.getLeftVel() + sign * subsystem.getRightVel()) / 2.;
+		if(sign == 1) {
+			if(avgSpeed > maxSpeedForTrial){
+				maxSpeedForTrial = avgSpeed;
+				timeMaxMeasuredAt = Robot.currentTimeMillis();
+			}
+		}
+
+		SmartDashboard.putNumber("Average Distance",(subsystem.getLeftPos()-subsystem.getRightPos())/2.);
+		SmartDashboard.putNumber("Average Speed",avgSpeed);
 		//Check if we've driven past the given distance
 		boolean drivenDistance;
 		if (sign == -1){
-			drivenDistance = (subsystem.getLeftPos()+subsystem.getRightPos())/2. <= 0;
+			drivenDistance = (subsystem.getLeftPos()-subsystem.getRightPos())/2. <= 0;
 		} else {
-			drivenDistance = (subsystem.getLeftPos()+subsystem.getRightPos())/2. >= distanceToDrive;
+			drivenDistance = (subsystem.getLeftPos()-subsystem.getRightPos())/2. >= distanceToDrive;
 		}
 
 		//If we've driven past, log the max speed and reset the variables.
 		if (drivenDistance){
-			//Log
-			Logger.addEvent(Double.toString(maxSpeedForTrial), this.getClass());
 
-			//Reset
-			maxSpeedForTrial = 0;
+			if(sign == -1) {
+				//Log
+				Logger.addEvent(Long.toString(timeMaxMeasuredAt), this.getClass());
 
-			//Switch direction
-			sign *= -1;
+				//Reset
+				maxSpeedForTrial = 0;
 
-			//Finished a trial
-			trialsRemaining--;
+				//Switch direction
+				sign *= -1;
 
-			//Go onto the next voltage if we've done enough trials
-			if (trialsRemaining < 0){
-				trialsRemaining = numTrials;
-				voltageIndex++;
+				//Finished a trial
+				trialsRemaining--;
 
-				//Exit if we've done all trials for all voltages
-				if (voltageIndex >= voltagePercentsToTest.length){
-					return;
+				//Go onto the next voltage if we've done enough trials
+				if (trialsRemaining <= 0) {
+					trialsRemaining = numTrials;
+					voltageIndex++;
+
+					//Exit if we've done all trials for all voltages
+					if (voltageIndex >= voltagePercentsToTest.length) {
+						return;
+					}
 				}
-			}
 
-			//Set the output to the correct voltage and sign
-			subsystem.setOutput(sign* voltagePercentsToTest[voltageIndex], sign* voltagePercentsToTest[voltageIndex]);
+				//Set the output to the correct voltage and sign
+				subsystem.setOutput(sign * voltagePercentsToTest[voltageIndex], sign * voltagePercentsToTest[voltageIndex]);
+				SmartDashboard.putNumber("Desired voltage", voltagePercentsToTest[voltageIndex]*12.);
+			} else {
+				sign = -1;
+				subsystem.setOutput(-0.25, -0.25);
+
+				SmartDashboard.putNumber("Desired voltage", -3);
+			}
 		}
 	}
 

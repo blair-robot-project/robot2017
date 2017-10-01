@@ -4,13 +4,12 @@
 # Created on: 9/30/17
 
 trials = 1
-nominal = 0.9
-voltages = c(nominal, seq(1,12,by=0.5))
+voltages = seq(1.5,5,by=0.5)
 #voltages = c(0.6, 2, 2.5)
-raw <- read.csv("eventLog-2017.09.16.11.04.04.csv")
+raw <- read.csv("eventLog-2017.10.01.13.58.02.csv")
 raw$class <- as.character(raw$class)
-maxes <- raw[grep("class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage", raw$class), ]
-maxes <- c(maxes$message)
+maxes <- raw[grep("class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage", raw$class), 3]
+maxes <- as.numeric(as.vector(maxes))
 
 model <- lm(maxes ~ voltages)
 coeffs <- c(coefficients(model))

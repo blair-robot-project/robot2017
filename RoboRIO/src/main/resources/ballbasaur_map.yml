@@ -18,7 +18,7 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 5
-                inverted: true
+                inverted: false
                 enableBrakeMode: true
                 feetPerRotation: 1.002
                 currentLimit: 40
@@ -49,7 +49,7 @@ drive:
                 <<: *leftMaster
                 '@id': rightMaster
                 port: 2
-                inverted: false
+                inverted: true
                 reverseSensor: true
                 reverseOutput: true
                 slaves:
@@ -88,13 +88,13 @@ oi:
                 stick: driverGamepad
                 axis: 0
                 deadband: 0.05
-                inverted: false
+                inverted: true
         fwdThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                 <<: *rotThrottle
                 '@id': fwdThrottle
                 axis: 5
-                inverted: false
+                inverted: true
         invertDPad: false
         dPadShift: 0.1
         turnInPlaceRotScale: 0.6
@@ -122,45 +122,23 @@ defaultDriveCommand:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
 nonMPAutoCommand:
-    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:
-        '@id': determineNominalVoltage
-        subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-                drive
-        minSpeed: 0.05
-#nonMPAutoCommand:
-#    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage:
-#        '@id': velVsVoltage
+#    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineNominalVoltage:
+#        '@id': determineNominalVoltage
 #        subsystem:
 #            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
 #                drive
-#        distanceToDrive: 15
-#        numTrials: 1
-#        voltagesToTest:
-#            - #Put nominal voltage here
-#            - 1.0
-#            - 1.5
-#            - 2.0
-#            - 2.5
-#            - 3.0
-#            - 3.5
-#            - 4.0
-#            - 4.5
-#            - 5.0
-#            - 5.5
-#            - 6.0
-#            - 6.5
-#            - 7.0
-#            - 7.5
-#            - 8.0
-#            - 8.5
-#            - 9.0
-#            - 9.5
-#            - 10.0
-#            - 10.5
-#            - 11.0
-#            - 11.5
-#            - 12.0
+#        minSpeed: 0.05
+nonMPAutoCommand:
+    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage:
+        '@id': velVsVoltage
+        subsystem:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                drive
+        distanceToDrive: 20
+        numTrials: 2
+        voltagesToTest:
+            - 10.5
+            - 11.0
 autoStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         '@id': startupCommand
