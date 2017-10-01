@@ -1,0 +1,32 @@
+time,class,message
+0,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Drive Robot bueno
+0,class org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork,CameraSubsystem construct start
+0,class org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork,Set URL of MJPGServer to "http://roboRIO-449-frc.local:5800/stream.mjpg"
+0,class org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork,CameraSubsystem construct end
+0,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed,Drive Robot bueno
+0,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed,Drive Robot bueno
+0,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed,Drive Robot bueno
+0,class org.usfirst.frc.team449.robot.Robot,redAlliance: false
+0,class org.usfirst.frc.team449.robot.Robot,dropGear: true
+0,class org.usfirst.frc.team449.robot.Robot,position: right
+9057,class org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToGear,SwitchToGear init.
+9057,class org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToGear,SwitchToGear end.
+9057,class org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor,StartCompressor init.
+9057,class org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor,StartCompressor end.
+9057,class org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward,SolenoidForward init.
+9057,class org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward,SolenoidForward end.
+9057,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,UnidirectionalNavXArcadeDrive init.
+9217,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to DriveStraight.
+19538,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to free drive.
+24077,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to DriveStraight.
+24777,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to free drive.
+50538,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to DriveStraight.
+50878,class org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToLowGear,SwitchToLowGear init.
+50878,class org.usfirst.frc.team449.robot.drive.shifting.commands.SwitchToLowGear,SwitchToLowGear end.
+52960,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to free drive.
+58719,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to DriveStraight.
+59817,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to free drive.
+65738,class org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive,Switching to DriveStraight.
+100,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage,1
+200,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage,1.5
+200,class org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage,2
