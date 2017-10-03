@@ -177,7 +177,7 @@ drive:
                 lowGearPistonPos: kForward
                 startingGear: LOW
 defaultDriveCommand:
-    org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
+    org.usfirst.frc.team449.robot.commands.multiInterface.drive.FieldOrientedUnidirectionalDriveCommandShifting:
         '@id': defaultDriveCommand
         kP: 0.012
         kI: 0.0
@@ -186,17 +186,23 @@ defaultDriveCommand:
         maximumOutput: 0.33333
         toleranceBuffer: 25
         deadband: 2
-        maxAngularVelToEnterLoop: 0.05
         inverted: true
-        driveStraightLoopEntryTimer:
-            '@id': driveStraightLoopEntryTimer
-            bufferTimeSeconds: 0.15
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
+        snapPoints:
+            -   snapTo: 0
+                upperBound: 10
+                lowerBound: -10
+            -   snapTo: 60
+                upperBound: 70
+                lowerBound: 50
+            -   snapTo: -60
+                upperBound: -50
+                lowerBound: -70
         autoshiftComponent:
             '@id': autoshiftComponent
             upshiftSpeed: 4
