@@ -70,16 +70,15 @@ locationDial:
     ports: [0, 1]
 RIOduinoPort: 4
 oi:
-    org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+    org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOrientedPosCos:
         '@id': oi
-        gamepad:
-            '@id': driverGamepad
-            port: 1
-        rotThrottle:
+        xThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
-                &rotThrottle
-                '@id': rotThrottle
-                stick: driverGamepad
+                &xThrottle
+                '@id': xThrottle
+                gamepad:
+                    '@id': driverGamepad
+                    port: 1
                 axis: 0
                 deadband: 0.05
                 inverted: false
@@ -87,24 +86,16 @@ oi:
                     '@id': rotPoly
                     powerToCoefficientMap: !!map
                         2 : 1
-        fwdThrottle:
+        yThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
-                <<: *rotThrottle
-                '@id': fwdThrottle
-                axis: 5
+                <<: *xThrottle
+                '@id': yThrottle
+                axis: 1
                 inverted: true
                 polynomial:
                     '@id': fwdPoly
                     powerToCoefficientMap: !!map
                         2 : 1
-        invertDPad: false
-        dPadShift: 0.1
-        turnInPlaceRotScale: 0.3
-        scaleRotByFwdPoly:
-            '@id': scaleRotByFwdPoly
-            powerToCoefficientMap: !!map
-                0.5: 0.6
-                0: 0.1
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive

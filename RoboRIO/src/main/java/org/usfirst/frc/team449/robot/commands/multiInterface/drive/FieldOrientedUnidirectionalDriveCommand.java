@@ -175,7 +175,7 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	/**
 	 * A data-holding class representing an angular setpoint to "snap" the controller output to.
 	 */
-	private class AngularSnapPoint{
+	protected class AngularSnapPoint{
 
 		/**
 		 * The angle to snap the setpoint to, in degrees.
