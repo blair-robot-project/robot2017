@@ -21,7 +21,7 @@ import java.util.List;
 public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable, Loggable {
 
 	/**
-	 * The wheel-to-wheel diameter of the robot.
+	 * The wheel-to-wheel diameter of the robot, in feet.
 	 */
 	@Nullable
 	private final Double robotDiameter;
@@ -45,7 +45,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	private List<Double> angles;
 
 	/**
-	 * A list of all [x,y] transformation vectors calculated, in order from oldest to newest and in inches.
+	 * A list of all [x,y] transformation vectors calculated, in order from oldest to newest and in feet.
 	 */
 	@NotNull
 	private List<double[]> vectors;
@@ -58,7 +58,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	private List<Long> times;
 
 	/**
-	 * The current x,y position of the robot, in inches.
+	 * The current x,y position of the robot, in feet.
 	 */
 	private double[] currentPos;
 
@@ -68,12 +68,12 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	private long absolutePosTime;
 
 	/**
-	 * The encoder reading of the left encoder the last time the loop ran, in inches.
+	 * The encoder reading of the left encoder the last time the loop ran, in feet.
 	 */
 	private double lastLeftPos;
 
 	/**
-	 * The encoder reading of the right encoder the last time the loop ran, in inches.
+	 * The encoder reading of the right encoder the last time the loop ran, in feet.
 	 */
 	private double lastRightPos;
 
@@ -90,26 +90,24 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	private long lastTime;
 
 	/**
-	 * Whether the run loop is running. To be used for thread safety, currently unimplemented.
+	 * The most recently calculated effective wheelbase diameter (from the Eli method), in feet.
 	 */
-	//TODO implement thread safety.
-	private boolean running;
-
-	/**
-	 * Whether a new absolute position is being added. To be used for thread safety, currently unimplemented.
-	 */
-	private boolean modifyingList;
-
 	private double fudgedWheelbaseDiameter;
 
+	/**
+	 * Whether or not the left side was re-calculated last tic using the Noah method.
+	 */
 	private boolean recalcedLeft;
 
+	/**
+	 * The percent the Noah method changed the wrong encoder reading by.
+	 */
 	private double percentChanged;
 
 	/**
 	 * Default constructor.
 	 *
-	 * @param robotDiameter             The wheel-to-wheel diameter of the robot, in inches.
+	 * @param robotDiameter             The wheel-to-wheel diameter of the robot, in feet.
 	 * @param subsystem                 The subsystem to get gyro and encoder data from.
 	 * @param absolutePosAngleTolerance The maximum amount, in degrees, a new absolute position's angle can be off from
 	 *                                  the gyro reading and still be accepted as valid.
@@ -145,13 +143,32 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		lastTime = 0;
 	}
 
+	private static double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle) {
+		//The vector for how much the robot moves, element 0 is x and element 1 is y.
+		double[] vector = new double[2];
+
+		//If we're going in a straight line
+		if (deltaTheta == 0) {
+			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
+			vector[0] = left * Math.cos(lastAngle + deltaTheta);
+			vector[1] = left * Math.sin(lastAngle + deltaTheta);
+		} else {
+			//This next part is too complicated to explain in comments. Read this wiki page instead:
+			// http://team449.shoutwiki.com/wiki/Pose_Estimation
+			double r = robotDiameter / 2. * (left + right) / (left - right);
+			double vectorAngle = (Math.PI - deltaTheta) / 2. - (Math.PI / 2 - lastAngle);
+			double vectorMagnitude = (r * Math.sin(deltaTheta)) / Math.sin((Math.PI - deltaTheta) / 2.);
+			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
+			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
+		}
+		return vector;
+	}
+
 	/**
 	 * Use the current gyro and encoder data to calculate how the robot has moved since the last time run was called.
 	 */
 	@Override
-	public void run() {
-		running = true;
-
+	public synchronized void run() {
 		//Record everything at the start, as it may change between executing lines of code and that would be bad.
 		double left = subsystem.getLeftPos();
 		double right = subsystem.getRightPos();
@@ -177,21 +194,21 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 			robotDiameter = this.robotDiameter;
 			if (deltaTheta < (deltaLeft - deltaRight) / robotDiameter) {
 				if (deltaLeft > 0) {
-					percentChanged = ((deltaRight + robotDiameter * deltaTheta)-deltaLeft)/deltaLeft;
+					percentChanged = ((deltaRight + robotDiameter * deltaTheta) - deltaLeft) / deltaLeft;
 					deltaLeft = deltaRight + robotDiameter * deltaTheta;
 					recalcedLeft = true;
 				} else {
-					percentChanged = ((deltaLeft - robotDiameter * deltaTheta)-deltaRight)/deltaRight;
+					percentChanged = ((deltaLeft - robotDiameter * deltaTheta) - deltaRight) / deltaRight;
 					deltaRight = deltaLeft - robotDiameter * deltaTheta;
 					recalcedLeft = false;
 				}
 			} else if (deltaTheta > (deltaLeft - deltaRight) / robotDiameter) {
 				if (deltaLeft < 0) {
-					percentChanged = ((deltaRight + robotDiameter * deltaTheta)-deltaLeft)/deltaLeft;
+					percentChanged = ((deltaRight + robotDiameter * deltaTheta) - deltaLeft) / deltaLeft;
 					deltaLeft = deltaRight + robotDiameter * deltaTheta;
 					recalcedLeft = true;
 				} else {
-					percentChanged = ((deltaLeft - robotDiameter * deltaTheta)-deltaRight)/deltaRight;
+					percentChanged = ((deltaLeft - robotDiameter * deltaTheta) - deltaRight) / deltaRight;
 					deltaRight = deltaLeft - robotDiameter * deltaTheta;
 					recalcedLeft = false;
 				}
@@ -227,30 +244,24 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		lastRightPos = right;
 		lastLeftPos = left;
 		lastTime = time;
-
-		running = false;
 	}
 
 	/**
 	 * Add an absolute position at the given time stamp.
 	 *
-	 * @param x    The absolute x, in inches
-	 * @param y    The absolute y, in inches
+	 * @param x    The absolute x, in feet
+	 * @param y    The absolute y, in feet
 	 * @param time The time, in milleseconds after the robot code started, that the absolute position was recorded.
 	 * @return true if the absolute position was the most recent received and was used, false otherwise.
 	 */
-	public boolean addAbsolutePos(double x, double y, long time) {
+	public synchronized boolean addAbsolutePos(double x, double y, long time) {
 		//Ignore it if it's older than the existing absolute position
 		if (time < absolutePosTime) {
 			return false;
 		}
 
-		modifyingList = true;
-
 		//Add the given position
 		addPos(x, y, time, getFirstKeepableIndex(time));
-
-		modifyingList = false;
 		return true;
 	}
 
@@ -258,20 +269,18 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	 * Add an absolute position at the given time stamp, using an angle measured to verify that the absolute position is
 	 * correct.
 	 *
-	 * @param x     The absolute x, in inches
-	 * @param y     The absolute y, in inches
+	 * @param x     The absolute x, in feet
+	 * @param y     The absolute y, in feet
 	 * @param time  The time, in milleseconds after the robot code started, that the absolute position was recorded
 	 * @param angle The absolute angle, in degrees.
 	 * @return true if the absolute position was the most recent received and the angle was correct enough to be used,
 	 * false otherwise.
 	 */
-	public boolean addAbsolutePos(double x, double y, long time, double angle) {
+	public synchronized boolean addAbsolutePos(double x, double y, long time, double angle) {
 		//Ignore it if it's older than the existing absolute position
 		if (time < absolutePosTime) {
 			return false;
 		}
-
-		modifyingList = true;
 
 		//Get the first keepable index
 		int firstKeepableIndex = getFirstKeepableIndex(time);
@@ -290,12 +299,10 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 
 		//If the angle from the gyro and from the absolute position are too different, don't use the absolute position.
 		if (Math.abs(angleAtTime - angle) > absolutePosAngleTolerance) {
-			modifyingList = false;
 			return false;
 		} else {
 			//Otherwise, use it.
 			addPos(x, y, time, firstKeepableIndex);
-			modifyingList = false;
 			return true;
 		}
 	}
@@ -303,7 +310,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	/**
 	 * Get the current absolute position of the robot
 	 *
-	 * @return The current x,y position in inches.
+	 * @return The current x,y position in feet.
 	 */
 	public double[] getPos() {
 		return currentPos;
@@ -312,8 +319,8 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	/**
 	 * An internal helper method that adds an absolute position given a first keepable index.
 	 *
-	 * @param x                  The absolute x, in inches
-	 * @param y                  The absolute y, in inches
+	 * @param x                  The absolute x, in feet
+	 * @param y                  The absolute y, in feet
 	 * @param time               The time, in milleseconds after the robot code started, that the absolute position was
 	 *                           recorded
 	 * @param firstKeepableIndex The first index of the times, vectors, and angles arrays recorded after the given
@@ -366,32 +373,10 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		return firstKeepableIndex;
 	}
 
-	private static double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle){
-		//The vector for how much the robot moves, element 0 is x and element 1 is y.
-		double[] vector = new double[2];
-
-		//If we're going in a straight line
-		if (deltaTheta == 0) {
-			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
-			vector[0] = left * Math.cos(lastAngle+deltaTheta);
-			vector[1] = left * Math.sin(lastAngle+deltaTheta);
-		} else {
-			//This next part is too complicated to explain in comments. Read this wiki page instead:
-			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double r = robotDiameter / 2. * (left + right) / (left - right);
-			double vectorAngle = (Math.PI - deltaTheta) / 2. - (Math.PI / 2 - lastAngle);
-			double vectorMagnitude = (r * Math.sin(deltaTheta)) / Math.sin((Math.PI - deltaTheta) / 2.);
-			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
-			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
-		}
-		return vector;
-	}
-
 	/**
 	 * Get the headers for the data this subsystem logs every loop.
 	 *
-	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by
-	 * getData().
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
 	 */
 	@NotNull
 	@Override
