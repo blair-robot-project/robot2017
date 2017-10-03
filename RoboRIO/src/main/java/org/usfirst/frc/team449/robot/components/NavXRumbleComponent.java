@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * A component to rumble controllers based off the jerk measurements from a NavX.
  */
-public class NavXRumbleComponent {
+public class NavXRumbleComponent implements Runnable{
 
 	/**
 	 * The factor to multiply feet/(sec^3) by to get Gs/millisecond, according to WolframAlpha.
@@ -104,7 +104,8 @@ public class NavXRumbleComponent {
 	/**
 	 * Read the NavX jerk data and rumble the joysticks based off of it.
 	 */
-	public void rumble() {
+	@Override
+	public void run() {
 		double frontBack, leftRight;
 		if (yIsFrontBack) {
 			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.

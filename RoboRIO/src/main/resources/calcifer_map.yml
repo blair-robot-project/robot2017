@@ -206,17 +206,6 @@ defaultDriveCommand:
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
-        navXRumbleComponent:
-            '@id': rumbleComponent
-            navX:
-                driveNavX
-            rumbleables:
-                - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                    driverGamepad
-                - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                    gunnerGamepad
-            minJerk: 804
-            maxJerk: 2412
         autoshiftComponent:
             '@id': autoshiftComponent
             upshiftSpeed: 4
@@ -527,8 +516,25 @@ autoStartupCommand:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
 teleopStartupCommand:
-    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        startupCommand
+    org.usfirst.frc.team449.robot.commands.general.CommandSequence:
+        '@id': teleopStartupCommand
+        commandList:
+            - org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+                startupCommand
+            - org.usfirst.frc.team449.robot.commands.general.runRunnables:
+                '@id': runRunnables
+                runnables:
+                    - org.usfirst.frc.team449.robot.components.navXRumbleComponent:
+                        '@id': rumbleComponent
+                        navX:
+                          driveNavX
+                        rumbleables:
+                          - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                              driverGamepad
+                          - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                              gunnerGamepad
+                        minJerk: 804
+                        maxJerk: 2412
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:

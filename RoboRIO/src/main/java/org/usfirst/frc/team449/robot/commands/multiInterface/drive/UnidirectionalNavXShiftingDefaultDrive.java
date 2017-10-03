@@ -55,7 +55,6 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	 * @param driveStraightLoopEntryTimer The buffer timer for starting to drive straight.
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
-	 * @param navXRumbleComponent         The component for rumbling stuff based off the NavX acceleration.
 	 * @param autoshiftComponent          The helper object for autoshifting.
 	 */
 	@JsonCreator
@@ -71,10 +70,9 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	                                              @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) OIUnidirectional oi,
-	                                              @Nullable NavXRumbleComponent navXRumbleComponent,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
-				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi, navXRumbleComponent);
+				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
 		this.autoshiftComponent = autoshiftComponent;
 		this.subsystem = subsystem;
 	}
