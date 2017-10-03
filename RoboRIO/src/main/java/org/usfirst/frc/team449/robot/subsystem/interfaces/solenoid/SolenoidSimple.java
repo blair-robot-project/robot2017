@@ -22,9 +22,9 @@ public class SolenoidSimple extends YamlSubsystem implements SubsystemSolenoid {
 	private final DoubleSolenoid piston;
 
 	/**
-	 * Whether piston is currently contracted
+	 * The piston's current position
 	 */
-	private boolean contracted;
+	private DoubleSolenoid.Value pistonPos;
 
 	/**
 	 * Default constructor
@@ -41,7 +41,7 @@ public class SolenoidSimple extends YamlSubsystem implements SubsystemSolenoid {
 	 */
 	public void setSolenoid(@NotNull DoubleSolenoid.Value value) {
 		piston.set(value);
-		contracted = (value == DoubleSolenoid.Value.kReverse);
+		pistonPos = value;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class SolenoidSimple extends YamlSubsystem implements SubsystemSolenoid {
 	@NotNull
 	@Override
 	public DoubleSolenoid.Value getSolenoidPosition() {
-		return contracted ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
+		return pistonPos;
 	}
 
 	/**

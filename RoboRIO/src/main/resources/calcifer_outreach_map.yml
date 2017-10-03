@@ -1,73 +1,6 @@
 ---
 doMP: false
 testMP: false
-leftTestProfile:
-    &leftTest
-    '@id': leftTest
-    filename: "100InchProfile.csv"
-    inverted: false
-rightTestProfile:
-    <<: *leftTest
-    '@id': rightTest
-leftProfiles: !!map
-    "blue_center" :
-        '@id': blueLeftCenter
-        filename: "calciferLeftBlueMidProfile.csv"
-        inverted: false
-    "blue_left" :
-        '@id': blueLeftLeft
-        filename: "calciferLeftBlueLeftProfile.csv"
-        inverted: false
-    "blue_right" :
-        '@id': blueLeftRight
-        filename: "calciferLeftBlueRightProfile.csv"
-        inverted: false
-    "red_center" :
-        '@id': redLeftCenter
-        filename: "calciferLeftRedMidProfile.csv"
-        inverted: false
-    "red_left" :
-        '@id': redLeftLeft
-        filename: "calciferLeftRedLeftProfile.csv"
-        inverted: false
-    "red_right" :
-        '@id': redLeftRight
-        filename: "calciferLeftRedRightProfile.csv"
-        inverted: false
-rightProfiles: !!map
-    "blue_center" :
-        '@id': blueRightCenter
-        filename: "calciferRightBlueMidProfile.csv"
-        inverted: false
-    "blue_left" :
-        '@id': blueRightLeft
-        filename: "calciferRightBlueLeftProfile.csv"
-        inverted: false
-    "blue_right" :
-        '@id': blueRightRight
-        filename: "calciferRightBlueRightProfile.csv"
-        inverted: false
-    "red_center" :
-        '@id': redRightCenter
-        filename: "calciferRightRedMidProfile.csv"
-        inverted: false
-    "red_left" :
-        '@id': redRightLeft
-        filename: "calciferRightRedLeftProfile.csv"
-        inverted: false
-    "red_right" :
-        '@id': redRightRight
-        filename: "calciferRightRedRightProfile.csv"
-        inverted: false
-allianceSwitch:
-    '@id': allianceSwitch
-    ports: [3]
-dropGearSwitch:
-    '@id': dropGearSwitch
-    ports: [2]
-locationDial:
-    '@id': locationDial
-    ports: [0, 1]
 RIOduinoPort: 4
 oi:
     org.usfirst.frc.team449.robot.oi.unidirectional.OIOutreach:
@@ -79,82 +12,99 @@ oi:
                     '@id': overridingGamepad
                     port: 1
                 rotThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridingRotThrottle
                         '@id': overridingRotThrottle
                         stick: overridingGamepad
                         axis: 0
-                        smoothingTimeConstantSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         <<: *overridingRotThrottle
                         '@id': overridingFwdThrottle
                         axis: 5
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
+                turnInPlaceRotScale: 0.3
+                scaleRotByFwdPoly:
+                    '@id': scaleRotByFwdPolyOverriding
+                    powerToCoefficientMap: !!map
+                        0.5: 0.6
+                        0: 0.1
         overridenOI:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 '@id': overridenOi
                 gamepad:
                     '@id': overridenGamepad
-                    port: 2
+                    port: 3
                 rotThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridenRotThrottle
                         '@id': overridenRotThrottle
                         stick: overridenGamepad
                         axis: 0
-                        smoothingTimeConstantSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
-                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleSmoothed:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         <<: *overridenRotThrottle
                         '@id': overridenFwdThrottle
                         axis: 5
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
+                turnInPlaceRotScale: 0.3
+                scaleRotByFwdPoly:
+                    '@id': scaleRotByFwdPolyOverriden
+                    powerToCoefficientMap: !!map
+                        0.5: 0.6
+                        0: 0.1
         button:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': overrideButton
                 joystick: overridingGamepad
                 buttonNumber: 6
 drive:
-    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
         leftMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
-                inverted: true
-                reverseOutput: false
-                enableBrakeMode: true
-                fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 1.3
-                lowGearFwdNominalOutputVoltage: 0.7
-                inchesPerRotation: 11.78097
+                inverted: false
+                reverseOutput: true
+                enableBrakeMode: false
+                feetPerRotation: 0.9817
                 currentLimit: 40
                 feedbackDevice: QuadEncoder
                 encoderCPR: 512
                 reverseSensor: false
+                startingGear: LOW
+                perGearSettings:
+                    - &lowGear
+                      gear: LOW
+                      fwdPeakOutputVoltage: 12
+                      fwdNominalOutputVoltage: 0.7
+                      maxSpeed: 6.2
+                      kP: 0.3
+                      kI: 0.0
+                      kD: 0.0
+                      motionProfileP: 1.5
+                      motionProfileI: 0.0
+                      motionProfileD: 0.0
+                    - <<: *lowGear
+                      gear: HIGH
+                      fwdNominalOutputVoltage: 1.3
+                      maxSpeed: 15.71
+                      kP: 0.7
+                      kI: 0.0
+                      kD: 3.0
                 maxClosedLoopVoltage: 12
-#                maxSpeedHigh: 17.5
-#                highGearP: 0.5
-#                highGearI: 0.0
-#                highGearD: 3.0
-#                maxSpeedLow: 6
-#                lowGearP: 0.17
-#                lowGearI: 0.0
-#                lowGearD: 0.0
-#                motionProfileP: 1.5
-#                motionProfileI: 0.0
-#                motionProfileD: 0.0
-                MPUseLowGear: true
+                updaterProcessPeriodSecs: 0.005
+                minNumPointsInBottomBuffer: 10
                 slaves:
                     - '@id': talon8
                       port: 8
@@ -163,7 +113,7 @@ drive:
                       port: 6
                       inverted: true
         rightMaster:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
                 inverted: false
@@ -177,29 +127,31 @@ drive:
                     - '@id': talon3
                       port: 3
                       inverted: true
-        MPHandler:
-            '@id': driveMPHandler
-            talons:
-                - leftMaster
-                - rightMaster
-            updaterProcessPeriodSecs: 0.005
-            minNumPointsInBtmBuffer: 10
-        #This is the number you change to adjust the speed
         VelScale: 0.5
         navX:
             '@id': driveNavX
             port: kMXP
-        shifter:
-            '@id': driveShifter
-            module: 15
-            forward: 2
-            reverse: 3
-        startingGear: LOW
+        shiftComponent:
+            org.usfirst.frc.team449.robot.components.ShiftComponent:
+                '@id': driveShiftComponent
+                otherShiftables:
+                    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                        leftMaster
+                    - org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
+                        rightMaster
+                piston:
+                    '@id': driveShifter
+                    module: 15
+                    forward: 2
+                    reverse: 3
+                lowGearPistonPos: kForward
+                startingGear: LOW
+        startingOverrideAutoshift: true
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.drive.unidirectional.commands.SimpleUnidirectionalDrive:
         '@id': defaultDriveCommand
         subsystem:
-            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
@@ -208,13 +160,11 @@ climber:
     org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
         '@id': climber
         talonSRX:
-            org.usfirst.frc.team449.robot.jacksonWrappers.RotPerSecCANTalon:
+            org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 '@id': climberTalon
                 port: 5
                 inverted: false
                 enableBrakeMode: false
-                fwdPeakOutputVoltage: 12
-                highGearFwdNominalOutputVoltage: 0
         maxPower: 500
         simpleMotor:
             org.usfirst.frc.team449.robot.jacksonWrappers.MappedVictor:
@@ -224,32 +174,6 @@ climber:
         powerLimitTimer:
             '@id': powerLimitTimer
             bufferTimeSeconds: 0.005
-#multiSubsystem:
-#    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
-#        '@id': multiSubsystem
-#        shooterTalon:
-#            '@id': shooterTalon
-#            port: 4
-#            inverted: false
-#            reverseSensor: true
-#            enableBrakeMode: false
-#            fwdPeakOutputVoltage: 12
-#            fwdNominalOutputVoltage: 0
-#            closedLoopRampRate: 12
-#            maxClosedLoopVoltage: 12
-#            feedbackDevice: QuadEncoder
-#            encoderCPR: 1024
-#            maxSpeedHigh: 90
-#            highGearP: 0.15
-#            highGearI: 0.0
-#            highGearD: 0.0
-#        shooterThrottle: 0.72
-#        spinUpTimeSecs: 1
-#        feederVictor:
-#            '@id': feederVictor
-#            port: 1
-#            inverted: true
-#        feederThrottle: 0.66
 gearHandler:
     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
         '@id': gearHandler
@@ -282,151 +206,37 @@ pneumatics:
 logger:
     '@id': logger
     subsystems:
-        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
             drive
         - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
             pneumatics
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
-#        - org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
-#            multiSubsystem
     loopTimeSecs: 0.05
-    eventLogFilename: "/home/lvuser/logs/eventLog-"
-    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
-centerAuto:
-    org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Center:
-        '@id': centerAuto
-        runWallToPegProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile:
-                &runLoadedProfile
-                '@id': runCenterWallToPegProfile
+    eventLogFilename: "/home/lvuser/logs/outreachEventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/outreachTelemetryLog-"
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startupCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
+                '@id': startupSwitchToLowCommand
                 subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
-                timeout: 10
-                require: true
-        dropGear:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-                &openGearHandler
-                '@id': centerOpenGearHandlerCommand
+            - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
+                '@id': startCompressor
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+                        pneumatics
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+                '@id': closeGearHandlerStartup
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
-        dropGearSwitch:
-            dropGearSwitch
-        driveBack:
-            org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed:
-                '@id': driveBackCommand
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                velocity: -0.5
-                seconds: 0.5
-boilerAuto:
-    org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Boiler:
-        '@id': boilerAuto
-        runWallToPegProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile:
-                <<: *runLoadedProfile
-                '@id': runBoilerPegToWallProfile
-        dropGear:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-                <<: *openGearHandler
-                '@id': boilerOpenGearHandler
-        dropGearSwitch:
-            dropGearSwitch
-        allianceSwitch:
-            allianceSwitch
-        runRedPegToKeyProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runRedPegToKeyProfile
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                left:
-                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': redRightShoot
-                    filename: "calciferRightRedShootProfile.csv"
-                    inverted: true
-                right:
-                    '@id': redLeftShoot
-                    filename: "calciferLeftRedShootProfile.csv"
-                    inverted: true
-                timeout: 10
-        runBluePegToKeyProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runBluePegToKeyProfile
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                left:
-                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightShoot
-                    filename: "calciferRightBlueShootProfile.csv"
-                    inverted: true
-                right:
-                    '@id': blueLeftShoot
-                    filename: "calciferLeftBlueShootProfile.csv"
-                    inverted: true
-                timeout: 10
-feederAuto:
-    org.usfirst.frc.team449.robot.commands.autonomous.Auto2017Feeder:
-        '@id': feederAuto
-        runWallToPegProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile:
-                <<: *runLoadedProfile
-                '@id': runFeederWallToPegProfile
-        dropGear:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-                <<: *openGearHandler
-                '@id': feederOpenGearHandler
-        dropGearSwitch:
-            dropGearSwitch
-        allianceSwitch:
-            allianceSwitch
-        runRedBackupProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runRedBackupProfile
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                left:
-                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': redRightBackup
-                    filename: "calciferRightRedBackupProfile.csv"
-                    inverted: true
-                right:
-                    '@id': redLeftBackup
-                    filename: "calciferLeftRedBackupProfile.csv"
-                    inverted: true
-                timeout: 10
-        runBlueBackupProfile:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runBlueBackupProfile
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                left:
-                    #Yes, this is the "right" profile. For inverted profiles, you also have to switch the sides.
-                    '@id': blueRightBackup
-                    filename: "calciferRightBlueBackupProfile.csv"
-                    inverted: true
-                right:
-                    '@id': blueLeftBackup
-                    filename: "calciferLeftBlueBackupProfile.csv"
-                    inverted: true
-                timeout: 10
-        driveForwards:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunProfile:
-                '@id': driveForwardsMP
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-                        drive
-                profile:
-                    '@id': forwardsProfile
-                    filename: "forwardProfile.csv"
-                    inverted: false
-                timeout: 5
+teleopStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startupCommand
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
@@ -467,8 +277,11 @@ buttons:
                 triggerAt: 0.9
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
-                <<: *openGearHandler
+                &openGearHandler
                 '@id': overridingOpenGearHandlerCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+                        gearHandler
         action: WHEN_PRESSED
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
@@ -532,46 +345,3 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
-#    -   button:
-#             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-#               '@id': fireShooterButton
-#               joystick:
-#                   gunnerGamepad
-#               buttonNumber: 6
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.FireShooter:
-#                '@id': fireShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
-#                        multiSubsystem
-#        action: WHEN_PRESSED
-#    -   button:
-#             org.usfirstfirst.frc.team449.robot.oi.buttons.TriggerButton:
-#               '@id': rackShooterButton
-#                throttle:
-#                    '@id': rackShooterThrottle
-#                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
-#                        stick:
-#                            gunnerGamepad
-#                        axis: 3
-#               triggerAt: 0.9
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.RackShooter:
-#                '@id': rackShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
-#                        multiSubsystem
-#        action: WHEN_PRESSED
-#    -   button:
-#            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-#                '@id': resetShooterButton
-#                joystick:
-#                    gunnerGamepad
-#                buttonNumber: 5
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.ResetShooter:
-#                '@id': resetShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.ShooterWithVictorFeeder:
-#                        multiSubsystem
-#        action: WHEN_PRESSED

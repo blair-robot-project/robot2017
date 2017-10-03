@@ -3,7 +3,7 @@ package org.usfirst.frc.team449.robot.jacksonWrappers;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.other.SimpleMotor;
+import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
 
 import java.util.List;
 

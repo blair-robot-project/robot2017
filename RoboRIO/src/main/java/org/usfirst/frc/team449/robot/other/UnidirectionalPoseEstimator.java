@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
-import org.usfirst.frc.team449.robot.logger.Loggable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 import java.util.ArrayList;
@@ -16,11 +16,9 @@ import java.util.List;
 
 /**
  * A Runnable for pose estimation that can take absolute positions.
- *
- * @param <T>
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable, Loggable{
+public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable, Loggable {
 
 	/**
 	 * The wheel-to-wheel diameter of the robot.
@@ -115,8 +113,8 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	 * @param subsystem                 The subsystem to get gyro and encoder data from.
 	 * @param absolutePosAngleTolerance The maximum amount, in degrees, a new absolute position's angle can be off from
 	 *                                  the gyro reading and still be accepted as valid.
-	 * @param startX                    The starting X of the robot, in inches. Defaults to 0.
-	 * @param startY                    The starting Y of the robot, in inches. Defaults to 0.
+	 * @param startX                    The starting X of the robot, in feet. Defaults to 0.
+	 * @param startY                    The starting Y of the robot, in feet. Defaults to 0.
 	 * @param startTheta                The starting angle of the robot, in degrees. Defaults to 0.
 	 */
 	@JsonCreator

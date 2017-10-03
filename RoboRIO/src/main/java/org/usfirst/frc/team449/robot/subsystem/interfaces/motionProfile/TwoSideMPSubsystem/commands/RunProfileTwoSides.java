@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
  * Loads and runs the given profiles into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfileTwoSides <T extends YamlSubsystem & SubsystemMPTwoSides> extends YamlCommandGroupWrapper {
+public class RunProfileTwoSides<T extends YamlSubsystem & SubsystemMPTwoSides> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.
@@ -30,7 +30,7 @@ public class RunProfileTwoSides <T extends YamlSubsystem & SubsystemMPTwoSides> 
 	                          @NotNull @JsonProperty(required = true) MotionProfileData left,
 	                          @NotNull @JsonProperty(required = true) MotionProfileData right,
 	                          @JsonProperty(required = true) double timeout) {
-		addSequential(new LoadProfileTwoSides(subsystem, left, right));
-		addSequential(new RunLoadedProfile<>(subsystem, timeout, true));
+		addParallel(new LoadProfileTwoSides(subsystem, left, right));
+		addParallel(new RunLoadedProfile<>(subsystem, timeout, true));
 	}
 }
