@@ -77,13 +77,13 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	}
 
 	/**
-	 * Autoshift, decide whether or not we should be in free drive or straight drive, and log data.
+	 * Autoshift and decide whether or not we should be in free drive or straight drive
 	 */
 	@Override
 	public void execute() {
 		//Auto-shifting
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
+			autoshiftComponent.autoshift((oi.getLeftOutput() + oi.getRightOutput())/2., subsystem.getLeftVel(),
 					subsystem.getRightVel(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();

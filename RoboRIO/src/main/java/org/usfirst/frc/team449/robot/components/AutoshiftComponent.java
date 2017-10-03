@@ -93,19 +93,18 @@ public class AutoshiftComponent {
 	/**
 	 * Determine whether the robot should downshift.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
 	 * @return True if the drive should downshift, false otherwise.
 	 */
-	public boolean shouldDownshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
+	private boolean shouldDownshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going slower than the downshift speed
 		boolean okToShift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
 		//Or if we're just turning in place.
-		okToShift = okToShift || (leftThrottle == -rightThrottle);
+		okToShift = okToShift || (forwardThrottle == 0);
 		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs((leftThrottle + rightThrottle) / 2.) < upshiftFwdThresh);
+		okToShift = okToShift || (Math.abs(forwardThrottle) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
@@ -123,17 +122,16 @@ public class AutoshiftComponent {
 	/**
 	 * Determine whether the robot should upshift.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
 	 * @return True if the drive should upshift, false otherwise.
 	 */
-	public boolean shouldUpshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
+	private boolean shouldUpshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
 		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs((leftThrottle + rightThrottle) / 2.) > upshiftFwdThresh;
+		okToShift = okToShift && Math.abs(forwardThrottle) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
 		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
@@ -149,17 +147,16 @@ public class AutoshiftComponent {
 	/**
 	 * Determine if the subsystem should shift, and if yes, do the shifting.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
-	 * @param shift         The function to actually shift gears.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
+	 * @param shift           The function to actually shift gears.
 	 */
-	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
-		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
+	public void autoshift(double forwardThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
+		if (shouldDownshift(forwardThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.LOW.getNumVal());
 			System.out.println("Downshifted");
-		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
+		} else if (shouldUpshift(forwardThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.HIGH.getNumVal());
 			System.out.println("Upshifted");
 		}

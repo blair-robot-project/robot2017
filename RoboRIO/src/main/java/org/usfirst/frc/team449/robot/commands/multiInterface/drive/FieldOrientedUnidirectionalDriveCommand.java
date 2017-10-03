@@ -6,8 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
-import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
-import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
@@ -20,7 +18,7 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -49,23 +47,21 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	/**
 	 * Default constructor
 	 *
-	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
-	 *                                    considered on target. Multiply by loop period of ~20 milliseconds for time.
-	 *                                    Defaults to 0.
-	 * @param absoluteTolerance           The maximum number of degrees off from the target at which we can be
-	 *                                    considered within tolerance.
-	 * @param minimumOutput               The minimum output of the loop. Defaults to zero.
-	 * @param maximumOutput               The maximum output of the loop. Can be null, and if it is, no maximum output
-	 *                                    is used.
-	 * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
-	 *                                    to the motors. Defaults to zero.
-	 * @param inverted                    Whether the loop is inverted. Defaults to false.
-	 * @param kP                          Proportional gain. Defaults to zero.
-	 * @param kI                          Integral gain. Defaults to zero.
-	 * @param kD                          Derivative gain. Defaults to zero.
-	 * @param subsystem                   The drive to execute this command on.
-	 * @param oi                          The OI controlling the robot.
-	 * @param snapPoints The points to snap the PID controller input to.
+	 * @param toleranceBuffer   How many consecutive loops have to be run while within tolerance to be considered on
+	 *                          target. Multiply by loop period of ~20 milliseconds for time. Defaults to 0.
+	 * @param absoluteTolerance The maximum number of degrees off from the target at which we can be considered within
+	 *                          tolerance.
+	 * @param minimumOutput     The minimum output of the loop. Defaults to zero.
+	 * @param maximumOutput     The maximum output of the loop. Can be null, and if it is, no maximum output is used.
+	 * @param deadband          The deadband around the setpoint, in degrees, within which no output is given to the
+	 *                          motors. Defaults to zero.
+	 * @param inverted          Whether the loop is inverted. Defaults to false.
+	 * @param kP                Proportional gain. Defaults to zero.
+	 * @param kI                Integral gain. Defaults to zero.
+	 * @param kD                Derivative gain. Defaults to zero.
+	 * @param subsystem         The drive to execute this command on.
+	 * @param oi                The OI controlling the robot.
+	 * @param snapPoints        The points to snap the PID controller input to.
 	 */
 	@JsonCreator
 	public FieldOrientedUnidirectionalDriveCommand(@JsonProperty(required = true) double absoluteTolerance,
@@ -104,16 +100,16 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	}
 
 	/**
-	 * Decide whether or not we should be in free drive or straight drive, and log data.
+	 * Set PID setpoint to processed controller setpoint.
 	 */
 	@Override
 	protected void execute() {
 		//Do nothing
 		theta = oi.getTheta();
-		if(theta != null){
-			for (AngularSnapPoint snapPoint : snapPoints){
+		if (theta != null) {
+			for (AngularSnapPoint snapPoint : snapPoints) {
 				//See if we should snap
-				if (snapPoint.getLowerBound() < theta && theta < snapPoint.getUpperBound()){
+				if (snapPoint.getLowerBound() < theta && theta < snapPoint.getUpperBound()) {
 					theta = snapPoint.getSnapTo();
 					//Break to shorten runtime, we'll never snap twice.
 					break;
@@ -142,40 +138,31 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	}
 
 	/**
-	 * Stop the motors and log when this command is interrupted.
+	 * Log when this command is interrupted.
 	 */
 	@Override
 	protected void interrupted() {
-		Logger.addEvent("FieldOrientedUnidirectionalDriveCommand Interrupted! Stopping the robot.", this.getClass());
-		subsystem.fullStop();
+		Logger.addEvent("FieldOrientedUnidirectionalDriveCommand Interrupted!", this.getClass());
 	}
 
 	/**
-	 * Give the correct output to the motors based on whether we're in free drive or drive straight.
+	 * Give the correct output to the motors based on the PID output and velocity input.
 	 *
 	 * @param output The output of the angular PID loop.
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		//If we're using angular PID
-		if (!subsystem.getOverrideNavX()) {
-			//Process the output (minimumOutput, deadband, etc.)
-			output = processPIDOutput(output);
+		//Process or zero the input depending on whether the NavX is being overriden.
+		output = subsystem.getOverrideNavX() ? 0 : processPIDOutput(output);
 
-			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			subsystem.setOutput(oi.getVel() - output, oi.getVel() + output);
-		}
-		//If we're not using the NavX
-		else {
-			//Just go straight, field-oriented drive can't really do anything without the NavX.
-			subsystem.setOutput(oi.getVel(), oi.getVel());
-		}
+		//Adjust the heading according to the PID output, it'll be positive if we want to go right.
+		subsystem.setOutput(oi.getVel() - output, oi.getVel() + output);
 	}
 
 	/**
 	 * A data-holding class representing an angular setpoint to "snap" the controller output to.
 	 */
-	protected class AngularSnapPoint{
+	protected class AngularSnapPoint {
 
 		/**
 		 * The angle to snap the setpoint to, in degrees.
@@ -195,9 +182,11 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 		/**
 		 * Default constructor.
 		 *
-		 * @param snapTo The angle to snap the setpoint to, in degrees.
-		 * @param upperBound The upper bound, below which all angles above snapTo are changed to snapTo. Measured in degrees.
-		 * @param lowerBound The lower bound, above which all angles below snapTo are changed to snapTo. Measured in degrees.
+		 * @param snapTo     The angle to snap the setpoint to, in degrees.
+		 * @param upperBound The upper bound, below which all angles above snapTo are changed to snapTo. Measured in
+		 *                   degrees.
+		 * @param lowerBound The lower bound, above which all angles below snapTo are changed to snapTo. Measured in
+		 *                   degrees.
 		 */
 		@JsonCreator
 		public AngularSnapPoint(@JsonProperty(required = true) double snapTo,

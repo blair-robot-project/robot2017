@@ -112,7 +112,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 	}
 
 	/**
-	 * Decide whether or not we should be in free drive or straight drive, and log data.
+	 * Decide whether or not we should be in free drive or straight drive.
 	 */
 	@Override
 	protected void execute() {
@@ -123,7 +123,6 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 		if (drivingStraight && (!commandingStraight || subsystem.getOverrideNavX())) {
 			//Switch to free drive
 			drivingStraight = false;
-			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver stops turning:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
@@ -134,7 +133,6 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
 			this.getPIDController().enable();
-			Logger.addEvent("Switching to DriveStraight.", this.getClass());
 		}
 	}
 
