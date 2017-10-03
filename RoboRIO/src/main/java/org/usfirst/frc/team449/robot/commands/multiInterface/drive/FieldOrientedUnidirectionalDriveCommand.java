@@ -12,6 +12,9 @@ import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Unidirectional drive with field-oriented control
  */
@@ -32,6 +35,18 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	protected final OIFieldOriented oi;
 
 	/**
+	 * The points to snap the PID controller input to.
+	 */
+	@NotNull
+	private final List<AngularSnapPoint> snapPoints;
+
+	/**
+	 * The absolute angular setpoint for the robot to go to. Field to avoid garbage collection.
+	 */
+	@Nullable
+	private Double theta;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
@@ -44,31 +59,31 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	 *                                    is used.
 	 * @param deadband                    The deadband around the setpoint, in degrees, within which no output is given
 	 *                                    to the motors. Defaults to zero.
-	 * @param maxAngularVelToEnterLoop    The maximum angular velocity, in degrees/sec, at which the loop will be
-	 *                                    entered. Defaults to 180.
 	 * @param inverted                    Whether the loop is inverted. Defaults to false.
 	 * @param kP                          Proportional gain. Defaults to zero.
 	 * @param kI                          Integral gain. Defaults to zero.
 	 * @param kD                          Derivative gain. Defaults to zero.
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
+	 * @param snapPoints The points to snap the PID controller input to.
 	 */
 	@JsonCreator
 	public FieldOrientedUnidirectionalDriveCommand(@JsonProperty(required = true) double absoluteTolerance,
 	                                               int toleranceBuffer,
 	                                               double minimumOutput, @Nullable Double maximumOutput,
 	                                               double deadband,
-	                                               @Nullable Double maxAngularVelToEnterLoop,
 	                                               boolean inverted,
 	                                               int kP,
 	                                               int kI,
 	                                               int kD,
 	                                               @NotNull @JsonProperty(required = true) T subsystem,
-	                                               @NotNull @JsonProperty(required = true) OIFieldOriented oi) {
+	                                               @NotNull @JsonProperty(required = true) OIFieldOriented oi,
+	                                               @Nullable List<AngularSnapPoint> snapPoints) {
 		//Assign stuff
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, inverted, subsystem, kP, kI, kD);
 		this.oi = oi;
 		this.subsystem = subsystem;
+		this.snapPoints = snapPoints != null ? snapPoints : new ArrayList<>();
 
 		//Needs a requires because it's a default command.
 		requires(this.subsystem);
@@ -94,6 +109,18 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	@Override
 	protected void execute() {
 		//Do nothing
+		theta = oi.getTheta();
+		if(theta != null){
+			for (AngularSnapPoint snapPoint : snapPoints){
+				//See if we should snap
+				if (snapPoint.getLowerBound() < theta && theta < snapPoint.getUpperBound()){
+					theta = snapPoint.getSnapTo();
+					//Break to shorten runtime, we'll never snap twice.
+					break;
+				}
+			}
+			this.getPIDController().setSetpoint(oi.getTheta());
+		}
 	}
 
 	/**
@@ -130,18 +157,76 @@ public class FieldOrientedUnidirectionalDriveCommand<T extends YamlSubsystem & D
 	 */
 	@Override
 	protected void usePIDOutput(double output) {
-		//If we're driving straight..
-		if (drivingStraight) {
+		//If we're using angular PID
+		if (!subsystem.getOverrideNavX()) {
 			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
+			subsystem.setOutput(oi.getVel() - output, oi.getVel() + output);
 		}
-		//If we're free driving...
+		//If we're not using the NavX
 		else {
-			//Set the throttle to normal arcade throttle.
-			subsystem.setOutput(oi.getLeftOutput(), oi.getRightOutput());
+			//Just go straight, field-oriented drive can't really do anything without the NavX.
+			subsystem.setOutput(oi.getVel(), oi.getVel());
+		}
+	}
+
+	/**
+	 * A data-holding class representing an angular setpoint to "snap" the controller output to.
+	 */
+	private class AngularSnapPoint{
+
+		/**
+		 * The angle to snap the setpoint to, in degrees.
+		 */
+		private final double snapTo;
+
+		/**
+		 * The upper bound, below which all angles above snapTo are changed to snapTo. Measured in degrees.
+		 */
+		private final double upperBound;
+
+		/**
+		 * The lower bound, above which all angles below snapTo are changed to snapTo. Measured in degrees.
+		 */
+		private final double lowerBound;
+
+		/**
+		 * Default constructor.
+		 *
+		 * @param snapTo The angle to snap the setpoint to, in degrees.
+		 * @param upperBound The upper bound, below which all angles above snapTo are changed to snapTo. Measured in degrees.
+		 * @param lowerBound The lower bound, above which all angles below snapTo are changed to snapTo. Measured in degrees.
+		 */
+		@JsonCreator
+		public AngularSnapPoint(@JsonProperty(required = true) double snapTo,
+		                        @JsonProperty(required = true) double upperBound,
+		                        @JsonProperty(required = true) double lowerBound) {
+			this.snapTo = snapTo;
+			this.upperBound = upperBound;
+			this.lowerBound = lowerBound;
+		}
+
+		/**
+		 * @return The angle to snap the setpoint to, in degrees.
+		 */
+		public double getSnapTo() {
+			return snapTo;
+		}
+
+		/**
+		 * @return The upper bound, below which all angles above snapTo are changed to snapTo. Measured in degrees.
+		 */
+		public double getUpperBound() {
+			return upperBound;
+		}
+
+		/**
+		 * @return The lower bound, above which all angles below snapTo are changed to snapTo. Measured in degrees.
+		 */
+		public double getLowerBound() {
+			return lowerBound;
 		}
 	}
 }
