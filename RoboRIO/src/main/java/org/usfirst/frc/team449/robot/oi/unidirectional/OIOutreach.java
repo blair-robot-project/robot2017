@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.buttons.Button;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.oi.buttons.FactoryButton;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
+
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class OIOutreach implements OIUnidirectional {
@@ -26,12 +28,12 @@ public class OIOutreach implements OIUnidirectional {
 	 * A button that overrides the lower priority controller
 	 */
 	@NotNull
-	private final FactoryButton button;
+	private final Button button;
 
 	@JsonCreator
 	public OIOutreach(@NotNull @JsonProperty(required = true) OIUnidirectional overridingOI,
 	                  @NotNull @JsonProperty(required = true) OIUnidirectional overridenOI,
-	                  @NotNull @JsonProperty(required = true) FactoryButton button) {
+	                  @NotNull @JsonProperty(required = true) MappedButton button) {
 		this.overridingOI = overridingOI;
 		this.overridenOI = overridenOI;
 		this.button = button;

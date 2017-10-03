@@ -648,7 +648,7 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 '@id': climbButton
                 throttle:
-                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': climbButtonThrottle
                         stick:
                             driverGamepad
@@ -708,7 +708,7 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
                 '@id': pushGearButton
                 throttle:
-                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
+                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': pushGearThrottle
                         stick:
                             driverGamepad
@@ -747,7 +747,7 @@ buttons:
 #               '@id': rackShooterButton
 #                throttle:
 #                    '@id': rackShooterThrottle
-#                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
+#                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
 #                        stick:
 #                            gunnerGamepad
 #                        axis: 3
