@@ -357,7 +357,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return That distance in feet, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double encoderToFeet(double nativeUnits) {
+	protected Double encoderToFeet(double nativeUnits) {
 		if (encoderCPR == null) {
 			return null;
 		}
@@ -406,7 +406,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return What the raw encoder reading would be at that velocity, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double FPSToEncoder(double FPS) {
+	protected Double FPSToEncoder(double FPS) {
 		return RPSToNative((FPS / postEncoderGearing) / feetPerRotation);
 	}
 
@@ -457,7 +457,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *
 	 * @param velocity velocity setpoint in FPS.
 	 */
-	private void setVelocityFPS(double velocity) {
+	protected void setVelocityFPS(double velocity) {
 		//Switch control mode to velocity closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
 		canTalon.set(FPSToEncoder(velocity));
