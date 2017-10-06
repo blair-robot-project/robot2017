@@ -674,7 +674,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * An object representing a slave {@link CANTalon} for use in the map.
 	 */
 	@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-	private static class SlaveTalon {
+	protected static class SlaveTalon {
 
 		/**
 		 * The port number of this Talon.
@@ -717,7 +717,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	/**
 	 * An object representing the CANTalon settings that are different for each gear.
 	 */
-	private static class PerGearSettings {
+	protected static class PerGearSettings {
 
 		/**
 		 * The gear number this is the settings for.
