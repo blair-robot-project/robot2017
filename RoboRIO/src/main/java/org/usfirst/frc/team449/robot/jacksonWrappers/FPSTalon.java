@@ -373,7 +373,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double feetToEncoder(double feet) {
+	protected Double feetToEncoder(double feet) {
 		if (encoderCPR == null) {
 			return null;
 		}
@@ -390,7 +390,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * was given.
 	 */
 	@Nullable
-	private Double encoderToFPS(double encoderReading) {
+	protected Double encoderToFPS(double encoderReading) {
 		Double RPS = nativeToRPS(encoderReading);
 		if (RPS == null) {
 			return null;
