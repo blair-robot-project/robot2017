@@ -164,7 +164,7 @@ public class Logger implements Runnable {
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryData = new StringBuilder();
 		//Loop through each datum
-		telemetryData.append(Robot.currentTimeMillis()).append(",");
+		telemetryData.append(Clock.currentTimeMillis()).append(",");
 		for (int i = 0; i < subsystems.length; i++) {
 			Object[] data = subsystems[i].getData();
 			for (int j = 0; j < data.length; j++) {

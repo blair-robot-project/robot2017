@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 
@@ -574,9 +575,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * the status is only gotten once per tic, to avoid CAN traffic overload.
 	 */
 	private void updateMotionProfileStatus() {
-		if (timeMPStatusLastRead < Robot.currentTimeMillis()) {
+		if (timeMPStatusLastRead < Clock.currentTimeMillis()) {
 			canTalon.getMotionProfileStatus(motionProfileStatus);
-			timeMPStatusLastRead = Robot.currentTimeMillis();
+			timeMPStatusLastRead = Clock.currentTimeMillis();
 		}
 	}
 

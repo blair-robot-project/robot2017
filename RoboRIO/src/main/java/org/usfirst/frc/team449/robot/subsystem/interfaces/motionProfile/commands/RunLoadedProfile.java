@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.SubsystemMP;
 
@@ -67,7 +68,7 @@ public class RunLoadedProfile<T extends YamlSubsystem & SubsystemMP> extends Yam
 	@Override
 	protected void initialize() {
 		//Record the start time.
-		startTime = Robot.currentTimeMillis();
+		startTime = Clock.currentTimeMillis();
 		Logger.addEvent("RunLoadedProfile init", this.getClass());
 		runningProfile = false;
 	}
@@ -90,7 +91,7 @@ public class RunLoadedProfile<T extends YamlSubsystem & SubsystemMP> extends Yam
 	 */
 	@Override
 	protected boolean isFinished() {
-		if (Robot.currentTimeMillis() - startTime > timeout) {
+		if (Clock.currentTimeMillis() - startTime > timeout) {
 			Logger.addEvent("Command timed out", this.getClass());
 			System.out.println("RunLoadedProfile timed out!");
 			return true;

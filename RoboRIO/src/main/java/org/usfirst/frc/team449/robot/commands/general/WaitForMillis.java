@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
+import org.usfirst.frc.team449.robot.other.Clock;
 
 /**
  * A command that does nothing and finishes after a set number of milliseconds. For use to create a delay in sequential
@@ -39,7 +40,7 @@ public class WaitForMillis extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void initialize() {
-		startTime = Robot.currentTimeMillis();
+		startTime = Clock.currentTimeMillis();
 	}
 
 	/**
@@ -49,6 +50,6 @@ public class WaitForMillis extends YamlCommandWrapper {
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Robot.currentTimeMillis() - startTime >= timeout;
+		return Clock.currentTimeMillis() - startTime >= timeout;
 	}
 }

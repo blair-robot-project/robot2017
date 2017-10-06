@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
@@ -112,7 +113,7 @@ public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & Sub
 	@Override
 	protected void initialize() {
 		//Set up start time
-		this.startTime = Robot.currentTimeMillis();
+		this.startTime = Clock.currentTimeMillis();
 		this.setSetpoint(setpoint);
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
@@ -126,7 +127,7 @@ public class NavXTurnToAngle<T extends YamlSubsystem & DriveUnidirectional & Sub
 	@Override
 	protected boolean isFinished() {
 		//The PIDController onTarget() is crap and sometimes never returns true because of floating point errors, so we need a timeout
-		return this.getPIDController().onTarget() || Robot.currentTimeMillis() - startTime > timeout;
+		return this.getPIDController().onTarget() || Clock.currentTimeMillis() - startTime > timeout;
 	}
 
 	/**

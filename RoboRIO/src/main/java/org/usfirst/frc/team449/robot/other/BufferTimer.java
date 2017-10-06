@@ -54,11 +54,11 @@ public class BufferTimer {
 	public boolean get(boolean currentState) {
 		//If the condition just became true, store the current time.
 		if (currentState && !previousState) {
-			timeConditionBecameTrue = Robot.currentTimeMillis();
+			timeConditionBecameTrue = Clock.currentTimeMillis();
 		}
 		//Update previous state
 		previousState = currentState;
 		//Return true if the condition is currently true and has been true for bufferTime milliseconds.
-		return currentState && Robot.currentTimeMillis() - timeConditionBecameTrue >= bufferTime;
+		return currentState && Clock.currentTimeMillis() - timeConditionBecameTrue >= bufferTime;
 	}
 }

@@ -43,7 +43,7 @@ public class LogEvent {
 	@JsonCreator
 	public LogEvent(@NotNull @JsonProperty(required = true) String message,
 	                @NotNull @JsonProperty(required = true) Class caller) {
-		timeCalled = Robot.currentTimeMillis();
+		timeCalled = Clock.currentTimeMillis();
 		this.message = message;
 		this.caller = caller;
 	}
