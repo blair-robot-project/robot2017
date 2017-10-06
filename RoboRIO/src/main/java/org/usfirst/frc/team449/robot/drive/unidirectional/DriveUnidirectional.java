@@ -22,7 +22,7 @@ public interface DriveUnidirectional extends DriveSubsystem {
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	Double getLeftVel();
@@ -30,8 +30,24 @@ public interface DriveUnidirectional extends DriveSubsystem {
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	Double getRightVel();
+
+	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	Double getLeftPos();
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	Double getRightPos();
 }

@@ -6,6 +6,7 @@ org.usfirst.frc.team449.robot.commands.multiInterface.drive
 org.usfirst.frc.team449.robot.commands.multiSubsystem
 org.usfirst.frc.team449.robot.components
 org.usfirst.frc.team449.robot.drive
+org.usfirst.frc.team449.robot.drive.commands
 org.usfirst.frc.team449.robot.drive.shifting
 org.usfirst.frc.team449.robot.drive.shifting.commands
 org.usfirst.frc.team449.robot.drive.unidirectional
