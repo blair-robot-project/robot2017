@@ -30,7 +30,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
 	 */
 	@NotNull
-	private final CANTalon canTalon;
+	protected final CANTalon canTalon;
 
 	/**
 	 * The counts per rotation of the encoder being used, or null if there is no encoder.
