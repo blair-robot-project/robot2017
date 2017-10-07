@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Clock;
@@ -159,10 +158,8 @@ public class AutoshiftComponent {
 	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
 		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.LOW.getNumVal());
-			System.out.println("Downshifted");
 		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.HIGH.getNumVal());
-			System.out.println("Upshifted");
 		}
 	}
 }
