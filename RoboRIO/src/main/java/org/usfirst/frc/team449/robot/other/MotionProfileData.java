@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -47,7 +46,7 @@ public class MotionProfileData {
 		this.inverted = inverted;
 		this.velocityOnly = velocityOnly;
 		try {
-			readFile(Robot.RESOURCES_PATH + filename);
+			readFile("/home/lvuser/449_resources/" + filename);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

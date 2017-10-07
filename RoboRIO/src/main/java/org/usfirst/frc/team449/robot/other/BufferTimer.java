@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.other;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.Robot;
 
 /**
  * A timer that checks if condition has been true for the past n seconds/milliseconds.
