@@ -49,6 +49,8 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	 */
 	private double x, y;
 
+	private double rDeadband;
+
 	/**
 	 * Default constructor
 	 *
@@ -57,9 +59,11 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	 */
 	@JsonCreator
 	public OIFieldOrientedPosCos(@NotNull @JsonProperty(required = true) Throttle xThrottle,
-	                             @NotNull @JsonProperty(required = true) Throttle yThrottle) {
+	                             @NotNull @JsonProperty(required = true) Throttle yThrottle,
+	                             double rDeadband) {
 		this.xThrottle = xThrottle;
 		this.yThrottle = yThrottle;
+		this.rDeadband = rDeadband;
 	}
 
 	/**
@@ -69,8 +73,10 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 		if (timeLastUpdated != Robot.currentTimeMillis()){
 			x = xThrottle.getValue();
 			y = yThrottle.getValue();
-			//0,0 has no angle so null
-			if (x == 0 && y == 0){
+			vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+			//0,0ish has no angle so null
+			if (vel < rDeadband){
 				theta = null;
 				vel = 0;
 				System.out.println("Null");
@@ -78,13 +84,11 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 				//Use atan2 to get angle from -180 to 180
 				theta = Math.toDegrees(Math.atan2(y,x));
 				if (theta > 90){
-					vel = -Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+					vel *= -1;
 					theta -= 180;
 				} else if (theta < -90){
-					vel = -Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+					vel *= -1;
 					theta += 180;
-				} else {
-					vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 				}
 			}
 			timeLastUpdated = Robot.currentTimeMillis();

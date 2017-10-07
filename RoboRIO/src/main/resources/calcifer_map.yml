@@ -80,7 +80,7 @@ oi:
                     '@id': driverGamepad
                     port: 1
                 axis: 1
-                deadband: 0.05
+                deadband: 0.02
                 inverted: true
                 polynomial:
                     '@id': rotPoly
@@ -93,11 +93,12 @@ oi:
                 axis: 0
                 stick:
                     driverGamepad
-                inverted: true
+                inverted: false
                 polynomial:
                     '@id': fwdPoly
                     powerToCoefficientMap: !!map
                         2 : 1
+        rDeadband: 0.1
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
@@ -181,7 +182,7 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.FieldOrientedUnidirectionalDriveCommandShifting:
         '@id': defaultDriveCommand
-        kP: 0.012
+        kP: 0.005
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 1
