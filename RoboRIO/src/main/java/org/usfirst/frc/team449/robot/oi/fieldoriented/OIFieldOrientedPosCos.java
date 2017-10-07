@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
@@ -72,6 +73,7 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 			if (x == 0 && y == 0){
 				theta = null;
 				vel = 0;
+				System.out.println("Null");
 			} else {
 				//Use atan2 to get angle from -180 to 180
 				theta = Math.toDegrees(Math.atan2(y,x));
@@ -100,6 +102,12 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	@Nullable
 	public Double getTheta() {
 		calcValues();
+		if (theta != null) {
+			SmartDashboard.putNumber("theta", theta);
+			SmartDashboard.putBoolean("thetaNull",false);
+		} else {
+			SmartDashboard.putBoolean("thetaNull",true);
+		}
 		return theta;
 	}
 
@@ -111,6 +119,7 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	@Override
 	public double getVel() {
 		calcValues();
+		SmartDashboard.putNumber("Vel",vel);
 		return vel;
 	}
 }

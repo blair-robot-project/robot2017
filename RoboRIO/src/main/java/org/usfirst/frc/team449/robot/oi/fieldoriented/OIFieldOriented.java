@@ -2,12 +2,13 @@ package org.usfirst.frc.team449.robot.oi.fieldoriented;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.oi.OI;
 
 /**
  * An OI that gives an absolute heading, relative to the field, and a velocity.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public interface OIFieldOriented {
+public interface OIFieldOriented extends OI {
 
 	/**
 	 * Get the absolute angle for the robot to move towards.

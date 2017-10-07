@@ -76,12 +76,12 @@ oi:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 &xThrottle
                 '@id': xThrottle
-                gamepad:
+                stick:
                     '@id': driverGamepad
                     port: 1
-                axis: 0
+                axis: 1
                 deadband: 0.05
-                inverted: false
+                inverted: true
                 polynomial:
                     '@id': rotPoly
                     powerToCoefficientMap: !!map
@@ -90,7 +90,9 @@ oi:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 <<: *xThrottle
                 '@id': yThrottle
-                axis: 1
+                axis: 0
+                stick:
+                    driverGamepad
                 inverted: true
                 polynomial:
                     '@id': fwdPoly
@@ -179,7 +181,7 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.FieldOrientedUnidirectionalDriveCommandShifting:
         '@id': defaultDriveCommand
-        kP: 0.012
+        kP: 0.1
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 1
@@ -191,7 +193,7 @@ defaultDriveCommand:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
         oi:
-            org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+            org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOrientedPosCos:
                 oi
         snapPoints:
             -   snapTo: 0
@@ -625,15 +627,11 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': climbButton
-                throttle:
-                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
-                        '@id': climbButtonThrottle
-                        stick:
-                            driverGamepad
-                        axis: 2
-                triggerAt: 0.9
+                joystick:
+                    driverGamepad
+                buttonNumber: 2
         command:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunMotorWhileConditonMet:
                 '@id': climbCommand
@@ -642,7 +640,7 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 climbButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
@@ -685,22 +683,18 @@ buttons:
                         cameras
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': pushGearButton
-                throttle:
-                    org.usfirst.frc.team449.robot.oi.throttles.Throttle:
-                        '@id': pushGearThrottle
-                        stick:
-                            driverGamepad
-                        axis: 3
-                triggerAt: 0.9
+                joystick:
+                    driverGamepad
+                buttonNumber: 1
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
                 <<: *openGearHandler
                 '@id': openGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 pushGearButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:

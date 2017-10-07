@@ -21,5 +21,6 @@ public class MappedAHRS extends AHRS {
 	@JsonCreator
 	public MappedAHRS(@JsonProperty(required = true) SPI.Port port) {
 		super(port);
+		this.reset();
 	}
 }

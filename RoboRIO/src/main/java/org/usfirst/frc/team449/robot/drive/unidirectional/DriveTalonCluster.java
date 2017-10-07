@@ -69,6 +69,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.navX = navX;
+		this.overrideNavX = false;
 	}
 
 	/**
