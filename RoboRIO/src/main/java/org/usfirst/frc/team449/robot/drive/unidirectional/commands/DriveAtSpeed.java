@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
@@ -63,7 +63,7 @@ public class DriveAtSpeed<T extends YamlSubsystem & DriveUnidirectional> extends
 	@Override
 	protected void initialize() {
 		//Set up start time
-		startTime = Robot.currentTimeMillis();
+		startTime = Clock.currentTimeMillis();
 		//Reset drive velocity (for safety reasons)
 		subsystem.fullStop();
 		Logger.addEvent("DriveAtSpeed init", this.getClass());
@@ -85,7 +85,7 @@ public class DriveAtSpeed<T extends YamlSubsystem & DriveUnidirectional> extends
 	 */
 	@Override
 	protected boolean isFinished() {
-		return (Robot.currentTimeMillis() - startTime) * 1e-3 > seconds;
+		return (Clock.currentTimeMillis() - startTime) * 1e-3 > seconds;
 	}
 
 	/**

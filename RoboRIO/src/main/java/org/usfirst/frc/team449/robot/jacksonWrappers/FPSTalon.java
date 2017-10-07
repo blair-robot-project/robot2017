@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj.Notifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.generalInterfaces.simpleMotor.SimpleMotor;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 
@@ -30,7 +30,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * The CTRE CAN Talon SRX that this class is a wrapper on
 	 */
 	@NotNull
-	private final CANTalon canTalon;
+	protected final CANTalon canTalon;
 
 	/**
 	 * The counts per rotation of the encoder being used, or null if there is no encoder.
@@ -92,7 +92,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * The settings currently being used by this Talon.
 	 */
 	@NotNull
-	private PerGearSettings currentGearSettings;
+	protected PerGearSettings currentGearSettings;
 
 	/**
 	 * Default constructor.
@@ -357,7 +357,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return That distance in feet, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double encoderToFeet(double nativeUnits) {
+	protected Double encoderToFeet(double nativeUnits) {
 		if (encoderCPR == null) {
 			return null;
 		}
@@ -373,7 +373,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return That distance in native units as measured by the encoder, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double feetToEncoder(double feet) {
+	protected Double feetToEncoder(double feet) {
 		if (encoderCPR == null) {
 			return null;
 		}
@@ -390,7 +390,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * was given.
 	 */
 	@Nullable
-	private Double encoderToFPS(double encoderReading) {
+	protected Double encoderToFPS(double encoderReading) {
 		Double RPS = nativeToRPS(encoderReading);
 		if (RPS == null) {
 			return null;
@@ -406,7 +406,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return What the raw encoder reading would be at that velocity, or null if no encoder CPR was given.
 	 */
 	@Nullable
-	private Double FPSToEncoder(double FPS) {
+	protected Double FPSToEncoder(double FPS) {
 		return RPSToNative((FPS / postEncoderGearing) / feetPerRotation);
 	}
 
@@ -457,7 +457,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *
 	 * @param velocity velocity setpoint in FPS.
 	 */
-	private void setVelocityFPS(double velocity) {
+	protected void setVelocityFPS(double velocity) {
 		//Switch control mode to velocity closed-loop
 		canTalon.changeControlMode(CANTalon.TalonControlMode.Speed);
 		canTalon.set(FPSToEncoder(velocity));
@@ -574,9 +574,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * the status is only gotten once per tic, to avoid CAN traffic overload.
 	 */
 	private void updateMotionProfileStatus() {
-		if (timeMPStatusLastRead < Robot.currentTimeMillis()) {
+		if (timeMPStatusLastRead < Clock.currentTimeMillis()) {
 			canTalon.getMotionProfileStatus(motionProfileStatus);
-			timeMPStatusLastRead = Robot.currentTimeMillis();
+			timeMPStatusLastRead = Clock.currentTimeMillis();
 		}
 	}
 

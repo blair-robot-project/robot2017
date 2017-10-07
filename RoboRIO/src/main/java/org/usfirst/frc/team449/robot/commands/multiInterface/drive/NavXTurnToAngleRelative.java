@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
@@ -59,7 +59,7 @@ public class NavXTurnToAngleRelative<T extends YamlSubsystem & DriveUnidirection
 	@Override
 	protected void initialize() {
 		//Setup start time
-		this.startTime = Robot.currentTimeMillis();
+		this.startTime = Clock.currentTimeMillis();
 		Logger.addEvent("NavXRelativeTurnToAngle init.", this.getClass());
 		//Do math to setup the setpoint.
 		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroOutput() + setpoint));
