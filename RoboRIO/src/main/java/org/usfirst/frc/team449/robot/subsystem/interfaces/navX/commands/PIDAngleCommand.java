@@ -62,7 +62,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	                       double deadband,
 	                       boolean inverted,
 	                       @NotNull @JsonProperty(required = true) SubsystemNavX subsystem,
-	                       double kP,
+	                       @JsonProperty(required = true) double kP,
 	                       double kI,
 	                       double kD) {
 		//Set P, I and D. I and D will normally be 0 if you're using cascading control, like you should be.

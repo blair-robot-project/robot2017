@@ -76,9 +76,9 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 	                                      double deadband,
 	                                      @Nullable Double maxAngularVelToEnterLoop,
 	                                      boolean inverted,
-	                                      int kP,
-	                                      int kI,
-	                                      int kD,
+	                                      double kP,
+	                                      double kI,
+	                                      double kD,
 	                                      @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
 	                                      @NotNull @JsonProperty(required = true) OIUnidirectional oi) {

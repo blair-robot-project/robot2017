@@ -70,9 +70,9 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 	                                               double minimumOutput, @Nullable Double maximumOutput,
 	                                               double deadband,
 	                                               boolean inverted,
-	                                               int kP,
-	                                               int kI,
-	                                               int kD,
+	                                               double kP,
+	                                               double kI,
+	                                               double kD,
 	                                               @NotNull @JsonProperty(required = true) T subsystem,
 	                                               @NotNull @JsonProperty(required = true) OIFieldOriented oi,
 	                                               @Nullable List<AngularSnapPoint> snapPoints) {
@@ -105,6 +105,9 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 	 */
 	@Override
 	protected void execute() {
+		SmartDashboard.putBoolean("enabled",this.getPIDController().isEnabled());
+		SmartDashboard.putNumber("NavX Error",this.getPIDController().getError());
+		SmartDashboard.putNumber("kP",this.getPIDController().getP());
 		//Do nothing
 		theta = oi.getTheta();
 		if (theta != null) {

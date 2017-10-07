@@ -181,12 +181,10 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.FieldOrientedUnidirectionalDriveCommandShifting:
         '@id': defaultDriveCommand
-        kP: 0.1
+        kP: 0.012
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 1
-        maximumOutput: 0.33333
-        toleranceBuffer: 25
         deadband: 2
         inverted: true
         subsystem:
