@@ -177,6 +177,11 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
 
+			//Deadband if we're stationary
+			if(oi.getLeftOutput() == 0 || oi.getRightOutput() == 0){
+				output=deadbandOutput(output);
+			}
+
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
 			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
 		}

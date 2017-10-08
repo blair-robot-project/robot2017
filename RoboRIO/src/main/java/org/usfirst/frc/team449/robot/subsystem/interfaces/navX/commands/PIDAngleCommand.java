@@ -99,7 +99,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	}
 
 	/**
-	 * Process the output of the PID loop to account for minimum output, deadband, and inversion.
+	 * Process the output of the PID loop to account for minimum output and inversion.
 	 *
 	 * @param output The output from the WPILib angular PID loop.
 	 * @return The processed output, ready to be subtracted from the left side of the drive output and added to the
@@ -112,15 +112,21 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 		} else if (output < 0 && output > -minimumOutput) {
 			output = -minimumOutput;
 		}
-		//Set the output to 0 if we're within the deadband.
-		if (Math.abs(this.getPIDController().getError()) < deadband) {
-			output = 0;
-		}
 		if (inverted) {
 			output *= -1;
 		}
 
 		return output;
+	}
+
+	/**
+	 * Deadband the output of the PID loop.
+	 *
+	 * @param output The output from the WPILib angular PID loop.
+	 * @return That output after being deadbanded with the map-given deadband.
+	 */
+	protected double deadbandOutput(double output){
+		return this.getPIDController().getError() > deadband ? output : 0;
 	}
 
 	/**
