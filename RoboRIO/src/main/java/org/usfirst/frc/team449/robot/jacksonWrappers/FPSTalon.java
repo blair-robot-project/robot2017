@@ -631,7 +631,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	public void holdPositionMP() {
 		canTalon.changeControlMode(CANTalon.TalonControlMode.MotionProfile);
-		canTalon.set(CANTalon.SetValueMotionProfile.Disable.value);
+		canTalon.set(CANTalon.SetValueMotionProfile.Hold.value);
 	}
 
 	/**
@@ -660,7 +660,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			// Set all the fields of the profile point
 			point.position = feetToEncoder(data.getData()[i][0]);
 			velPlusAccel = data.getData()[i][1] + data.getData()[i][2] * currentGearSettings.getKaOverKv() + currentGearSettings.getFrictionCompFPS();
-			System.out.println("VelPlusAccel: "+velPlusAccel);
 			point.velocity = FPSToEncoder(velPlusAccel);
 			//Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
 			if (velPlusAccel > currentGearSettings.getMaxSpeed()) {

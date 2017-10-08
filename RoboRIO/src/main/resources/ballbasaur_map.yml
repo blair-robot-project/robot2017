@@ -26,7 +26,8 @@ drive:
                 reverseSensor: false
                 reverseOutput: false
                 perGearSettings:
-                  - fwdPeakOutputVoltage: 12
+                  - &gearSettings
+                    fwdPeakOutputVoltage: 12
                     fwdNominalOutputVoltage: 0.0
                     maxSpeed: 11.8
                     kP: 0.2
@@ -34,7 +35,7 @@ drive:
                     kD: 1.0
                     motionProfileP: 1.0
                     motionProfileI: 0.0
-                    motionProfileD: 0.0
+                    motionProfileD: 20.0
                     maxAccel: 100
                     maxSpeedMP: 15.132
                     frictionCompFPS: 1.55
@@ -53,16 +54,7 @@ drive:
                 reverseSensor: true
                 reverseOutput: true
                 perGearSettings:
-                  - fwdPeakOutputVoltage: 12
-                    fwdNominalOutputVoltage: 0.0
-                    maxSpeed: 11.8
-                    kP: 0.2
-                    kI: 0.0
-                    kD: 1.0
-                    motionProfileP: 1.0
-                    motionProfileI: 0.0
-                    motionProfileD: 0.0
-                    maxAccel: 100
+                  - <<: *gearSettings
                     maxSpeedMP: 13.619
                     frictionCompFPS: 1.705
                 slaves:

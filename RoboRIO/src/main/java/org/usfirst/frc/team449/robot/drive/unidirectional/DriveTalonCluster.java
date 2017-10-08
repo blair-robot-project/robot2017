@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -286,6 +287,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
+		Logger.addEvent("Started MP",this.getClass());
 		leftMaster.startRunningMP();
 		rightMaster.startRunningMP();
 	}
