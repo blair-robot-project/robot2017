@@ -356,7 +356,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
 			//Put MP constants in slot 1
 			canTalon.setPID(currentGearSettings.getMotionProfileP(), currentGearSettings.getMotionProfileI(), currentGearSettings.getMotionProfileD(),
-					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
+					1023. / FPSToEncoder(currentGearSettings.getMaxSpeedMP()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
 	}
@@ -661,7 +661,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 
 			// Set all the fields of the profile point
 			point.position = feetToEncoder(data.getData()[i][0]);
-			velPlusAccel = data.getData()[i][1] + data.getData()[i][2] * currentGearSettings.getKaOverKv();
+			velPlusAccel = data.getData()[i][1] + data.getData()[i][2] * currentGearSettings.getKaOverKv() + currentGearSettings.getFrictionCompFPS();
 			point.velocity = FPSToEncoder(velPlusAccel);
 			//Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
 			if (velPlusAccel > currentGearSettings.getMaxSpeed()) {
@@ -781,6 +781,17 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		private final double kaOverKv;
 
 		/**
+		 * The "fake" maximum speed to use for MP mode, maxVoltage*(slope of vel vs. voltage curve).
+		 */
+		@Nullable
+		private final Double maxSpeedMP;
+
+		/**
+		 * The speed, in FPS, to add to all MP velocity setpoints to account for friction.
+		 */
+		private final double frictionCompFPS;
+
+		/**
 		 * Default constructor.
 		 *
 		 * @param gearNum                 The gear number this is the settings for. Ignored if gear isn't null.
@@ -814,6 +825,10 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		 * @param maxAccel                The maximum acceleration the robot is capable of in this gear, theoretically
 		 *                                stall torque of the drive output * wheel radius / (robot mass/2). Can be null
 		 *                                to not use acceleration feed-forward.
+		 * @param maxSpeedMP              The "fake" maximum speed to use for MP mode, maxVoltage*(slope of vel vs.
+		 *                                voltage curve). Defaults to regular max speed.
+		 * @param frictionCompFPS         The speed, in FPS, to add to all MP velocity setpoints to account for
+		 *                                friction. Defaults to 0.
 		 */
 		@JsonCreator
 		public PerGearSettings(int gearNum,
@@ -830,7 +845,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		                       double motionProfileP,
 		                       double motionProfileI,
 		                       double motionProfileD,
-		                       Double maxAccel) {
+		                       @Nullable Double maxAccel,
+		                       @Nullable Double maxSpeedMP,
+		                       double frictionCompFPS) {
 			this.gear = gear != null ? gear.getNumVal() : gearNum;
 			this.fwdPeakOutputVoltage = fwdPeakOutputVoltage != null ? fwdPeakOutputVoltage : 12;
 			this.revPeakOutputVoltage = revPeakOutputVoltage != null ? revPeakOutputVoltage : -this.fwdPeakOutputVoltage;
@@ -855,13 +872,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			} else {
 				this.kaOverKv = 0;
 			}
+			this.maxSpeedMP = maxSpeedMP != null ? maxSpeedMP : maxSpeed;
+			this.frictionCompFPS = frictionCompFPS;
 		}
 
 		/**
 		 * Empty constructor that uses all default options.
 		 */
 		public PerGearSettings() {
-			this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null);
+			this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, 0);
 		}
 
 		/**
@@ -963,6 +982,21 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		 */
 		public double getKaOverKv() {
 			return kaOverKv;
+		}
+
+		/**
+		 * @return The "fake" maximum speed to use for MP mode, maxVoltage*(slope of vel vs. voltage curve).
+		 */
+		@Nullable
+		public Double getMaxSpeedMP() {
+			return maxSpeedMP;
+		}
+
+		/**
+		 * @return The speed, in FPS, to add to all MP velocity setpoints to account for friction.
+		 */
+		public double getFrictionCompFPS() {
+			return frictionCompFPS;
 		}
 	}
 }
