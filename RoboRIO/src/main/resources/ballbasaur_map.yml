@@ -29,14 +29,16 @@ drive:
                 perGearSettings:
                   - fwdPeakOutputVoltage: 12
                     fwdNominalOutputVoltage: 0.0
-#                    maxSpeed: 11.8
-#                    kP: 0.1
-#                    kI: 0.0
-#                    kD: 1.0
-#                    motionProfileP: 1.0
-#                    motionProfileI: 0.0
-#                    motionProfileD: 0.0
+                    maxSpeed: 11.8
+                    kP: 0.1
+                    kI: 0.0
+                    kD: 1.0
+                    motionProfileP: 1.0
+                    motionProfileI: 0.0
+                    motionProfileD: 0.0
                     maxAccel: 15
+                    maxSpeedMP: 15.132
+                    frictionCompFPS: 1.55
                 slaves:
                     - '@id': talon1
                       port: 6

@@ -867,12 +867,12 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			this.motionProfileP = motionProfileP;
 			this.motionProfileI = motionProfileI;
 			this.motionProfileD = motionProfileD;
-			if (this.maxSpeed != null && maxAccel != null) {
-				this.kaOverKv = this.maxSpeed / maxAccel;
+			this.maxSpeedMP = maxSpeedMP != null ? maxSpeedMP : maxSpeed;
+			if (this.maxSpeedMP != null && maxAccel != null) {
+				this.kaOverKv = this.maxSpeedMP / maxAccel;
 			} else {
 				this.kaOverKv = 0;
 			}
-			this.maxSpeedMP = maxSpeedMP != null ? maxSpeedMP : maxSpeed;
 			this.frictionCompFPS = frictionCompFPS;
 		}
 
