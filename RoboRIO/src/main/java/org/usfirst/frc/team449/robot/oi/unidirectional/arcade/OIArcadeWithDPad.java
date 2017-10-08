@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
@@ -92,6 +93,7 @@ public class OIArcadeWithDPad extends OIArcade {
 	@Override
 	public double getFwd() {
 		//Scale based on rotational throttle for more responsive turning at high speed
+		SmartDashboard.putNumber("fwd", fwdThrottle.getValue());
 		return fwdThrottle.getValue();
 	}
 
@@ -103,21 +105,24 @@ public class OIArcadeWithDPad extends OIArcade {
 	 */
 	@Override
 	public double getRot() {
+		double toRet;
 		//If the gamepad is being pushed to the left or right
 		if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
 			//Output the shift value
-			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
+			toRet = gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
 		} else {
 			//Return the throttle value if it's outside of the deadband.
 			if (fwdThrottle.getValue() == 0) {
-				return rotThrottle.getValue() * turnInPlaceRotScale;
+				toRet = rotThrottle.getValue() * turnInPlaceRotScale;
 			} else {
 				if (scaleRotByFwdPoly != null) {
-					return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(fwdThrottle.getValue()));
+					toRet = rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(fwdThrottle.getValue()));
 				} else {
-					return rotThrottle.getValue();
+					toRet = rotThrottle.getValue();
 				}
 			}
 		}
+		SmartDashboard.putNumber("Rot",toRet);
+		return toRet;
 	}
 }

@@ -126,7 +126,7 @@ public class Pathgen {
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
-		profiles.put("RedLeft", redLeft);
+		/*profiles.put("RedLeft", redLeft);
 		profiles.put("RedRight", redRight);
 		profiles.put("RedMid", redCenter);
 		profiles.put("BlueLeft", blueLeft);
@@ -136,12 +136,15 @@ public class Pathgen {
 		profiles.put("BlueShoot", bluePegToKey);
 		profiles.put("RedBackup", backupRed);
 		profiles.put("BlueBackup", backupBlue);
+		profiles.put("forward100In", points);
+		profiles.put("BlueBackup", backupBlue);
 		profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
 		profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
 		profiles.put("RedLoadingToLoading", redLoadingToLoading);
-		profiles.put("RedBoilerToLoading", redBoilerToLoading);
+		profiles.put("RedBoilerToLoading", redBoilerToLoading);*/
+		profiles.put("forward100In", points);
 
-		final String ROBOT_NAME = "calcifer";
+		final String ROBOT_NAME = "ballbasaur";
 
 		//Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
 		// the circumference of a circle moved by the robot via C = 360 * n / θ
@@ -154,7 +157,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 5., 3, 6); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 7., 4.5, 9); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);
@@ -168,14 +171,14 @@ public class Pathgen {
 			lfw.write(tm.getLeftTrajectory().length() + "\n");
 			for (int i = 0; i < tm.getLeftTrajectory().length(); i++) {
 				lfw.write(tm.getLeftTrajectory().get(i).position + ",\t" + tm.getLeftTrajectory().get(i).velocity + ",\t"
-						+ tm.getLeftTrajectory().get(i).dt + ",");
+						+ tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getLeftTrajectory().get(i).dt);
 				lfw.write("\n");
 			}
 
 			rfw.write(tm.getRightTrajectory().length() + "\n");
 			for (int i = 0; i < tm.getRightTrajectory().length(); i++) {
-				rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity + "," +
-						"\t" + tm.getRightTrajectory().get(i).dt + ",");
+				rfw.write(tm.getRightTrajectory().get(i).position + ",\t" + tm.getRightTrajectory().get(i).velocity +
+						",\t" + tm.getLeftTrajectory().get(i).acceleration + ",\t" + tm.getRightTrajectory().get(i).dt);
 				rfw.write("\n");
 			}
 

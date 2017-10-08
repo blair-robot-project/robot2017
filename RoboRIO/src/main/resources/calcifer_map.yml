@@ -524,6 +524,16 @@ autoStartupCommand:
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
+            - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
+                '@id': enableMotors
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+            - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
+                '@id': resetPosition
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
 teleopStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         startupCommand

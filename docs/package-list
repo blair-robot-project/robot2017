@@ -6,6 +6,7 @@ org.usfirst.frc.team449.robot.commands.multiInterface.drive
 org.usfirst.frc.team449.robot.commands.multiSubsystem
 org.usfirst.frc.team449.robot.components
 org.usfirst.frc.team449.robot.drive
+org.usfirst.frc.team449.robot.drive.commands
 org.usfirst.frc.team449.robot.drive.shifting
 org.usfirst.frc.team449.robot.drive.shifting.commands
 org.usfirst.frc.team449.robot.drive.unidirectional
@@ -30,9 +31,9 @@ org.usfirst.frc.team449.robot.subsystem.interfaces.conditional
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake
 org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile
-org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem
 org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands
+org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.navX
 org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands
 org.usfirst.frc.team449.robot.subsystem.interfaces.shooter

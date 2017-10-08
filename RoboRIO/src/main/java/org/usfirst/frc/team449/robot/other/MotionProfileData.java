@@ -28,17 +28,19 @@ public class MotionProfileData {
 	private final boolean velocityOnly;
 
 	/**
-	 * A 2D array containing 3 values for each point- position, velocity, and delta time respectively.
+	 * A 2D array containing 4 values for each point- position, velocity, acceleration and delta time respectively, in
+	 * feet, feet per second, feet per (second^2), and milliseconds.
 	 */
 	private double data[][];
 
 	/**
 	 * Default constructor
 	 *
-	 * @param filename     The filename of the .csv with the motion profile data. The first line must be the number of other
-	 *                     lines.
+	 * @param filename     The filename of the .csv with the motion profile data. The first line must be the number of
+	 *                     other lines.
 	 * @param inverted     Whether or not the profile is inverted (would be inverted if we're driving it backwards)
-	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to false.
+	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to
+	 *                     false.
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
@@ -46,6 +48,7 @@ public class MotionProfileData {
 	                         boolean velocityOnly) {
 		this.inverted = inverted;
 		this.velocityOnly = velocityOnly;
+
 		try {
 			readFile(Robot.RESOURCES_PATH + filename);
 		} catch (IOException e) {
@@ -65,7 +68,7 @@ public class MotionProfileData {
 		int numLines = Integer.parseInt(br.readLine());
 
 		//Instantiate data
-		data = new double[numLines][3];
+		data = new double[numLines][4];
 
 		//Declare the arrays outside the loop to avoid garbage collection.
 		String[] line;
@@ -76,19 +79,21 @@ public class MotionProfileData {
 			//split up the line
 			line = br.readLine().split(",\t");
 			//declare as a new double because we already put the old object it referenced in data.
-			tmp = new double[3];
+			tmp = new double[4];
 
-			//Invert the position and velocity if the profile is inverted
+			//Invert the position, acceleration and velocity if the profile is inverted
 			if (inverted) {
 				tmp[0] = -Double.parseDouble(line[0]);
 				tmp[1] = -Double.parseDouble(line[1]);
+				tmp[2] = -Double.parseDouble(line[2]);
 			} else {
 				tmp[0] = Double.parseDouble(line[0]);
 				tmp[1] = Double.parseDouble(line[1]);
+				tmp[2] = Double.parseDouble(line[2]);
 			}
 
-			//Trim the end of line comma
-			tmp[2] = Double.parseDouble(line[2].replace(",", ""));
+			//Convert to milliseconds
+			tmp[3] = Double.parseDouble(line[3]) * 1000;
 			data[i] = tmp;
 		}
 		//Close the reader

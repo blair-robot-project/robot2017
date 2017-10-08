@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -87,7 +88,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
@@ -98,7 +99,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
@@ -109,7 +110,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the position of the left side of the drive.
 	 *
-	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	@Override
@@ -120,7 +121,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the position of the right side of the drive.
 	 *
-	 * @return The signed position in inches, or null if the drive doesn't have encoders.
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
 	 */
 	@Nullable
 	@Override
@@ -286,6 +287,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void startRunningLoadedProfile() {
+		Logger.addEvent("Started MP",this.getClass());
 		leftMaster.startRunningMP();
 		rightMaster.startRunningMP();
 	}
@@ -337,6 +339,10 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 		rightMaster.stopMPProcesses();
 	}
 
+	/**
+	 * Reset the position of the drive if it has encoders.
+	 */
+	@Override
 	public void resetPosition() {
 		leftMaster.resetPosition();
 		rightMaster.resetPosition();
