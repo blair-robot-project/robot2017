@@ -219,7 +219,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"left_pos",
 				"right_pos",
 				"gyro_heading",
-				"raw_angle"};
+				"raw_angle",
+				"average_dist_inches"};
 	}
 
 	/**
@@ -241,7 +242,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				leftMaster.getPositionFeet(),
 				rightMaster.getPositionFeet(),
 				navX.pidGet(),
-				navX.getAngle()};
+				navX.getAngle(),
+				(rightMaster.getPositionFeet()+leftMaster.getPositionFeet())*6.};
 	}
 
 	/**
