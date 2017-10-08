@@ -5,8 +5,8 @@ leftTestProfile:
     &leftTest
     '@id': leftTest
     filename: "ballbasaurForward100InProfile.csv"
-    inverted: false
-    velocityOnly: false
+    inverted: true
+    velocityOnly: true
 rightTestProfile:
     <<: *leftTest
     '@id': rightTest
@@ -37,8 +37,10 @@ drive:
                     motionProfileI: 0.0
                     motionProfileD: 20.0
                     maxAccel: 100
-                    maxSpeedMP: 15.132
-                    frictionCompFPS: 1.55
+                    maxSpeedMPFwd: 15.132
+                    frictionCompFPSFwd: 1.55
+                    maxSpeedMPRev: 13.619
+                    frictionCompFPSRev: 1.705
                 slaves:
                     - '@id': talon1
                       port: 6
@@ -55,8 +57,10 @@ drive:
                 reverseOutput: true
                 perGearSettings:
                   - <<: *gearSettings
-                    maxSpeedMP: 13.619
-                    frictionCompFPS: 1.705
+                    maxSpeedMPFwd: 13.619
+                    frictionCompFPSFwd: 1.705
+                    maxSpeedMPRev: 15.132
+                    frictionCompFPSRev: 1.55
                 slaves:
                     - '@id': talon3
                       port: 9
