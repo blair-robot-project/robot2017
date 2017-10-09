@@ -92,9 +92,9 @@ drive:
                       kP: 0.3
                       kI: 0.0
                       kD: 0.0
-                      motionProfileP: 1.5
-                      motionProfileI: 0.0
-                      motionProfileD: 0.0
+                      motionProfilePFwd: 1.5
+                      motionProfileIFwd: 0.0
+                      motionProfileDFwd: 0.0
                     - <<: *lowGear
                       gear: HIGH
                       fwdNominalOutputVoltage: 1.3

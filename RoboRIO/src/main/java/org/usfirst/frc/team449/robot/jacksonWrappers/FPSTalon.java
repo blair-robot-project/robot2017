@@ -353,7 +353,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			canTalon.setPID(currentGearSettings.getkP(), currentGearSettings.getkI(), currentGearSettings.getkD(),
 					1023. / FPSToEncoder(currentGearSettings.getMaxSpeed()), 0, currentGearSettings.getClosedLoopRampRate(), 0);
 			//Put MP constants in slot 1
-			canTalon.setPID(currentGearSettings.getMotionProfileP(), currentGearSettings.getMotionProfileI(), currentGearSettings.getMotionProfileD(),
+			canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(), currentGearSettings.getMotionProfileDFwd(),
 					1023. / FPSToEncoder(currentGearSettings.getMaxSpeedMPFwd()), 0, currentGearSettings.getClosedLoopRampRate(), 1);
 			canTalon.setProfile(0);
 		}
@@ -651,8 +651,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		//Declare this out here to avoid garbage collection
 		double velPlusAccel;
 
-		double fwdOverRev = currentGearSettings.getMaxSpeedMPFwd()/currentGearSettings.getMaxSpeedMPRev();
-
 		for (int i = 0; i < data.getData().length; ++i) {
 			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 			//Set parameters that are true for all points
@@ -661,13 +659,14 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 
 			// Set all the fields of the profile point
 			point.position = feetToEncoder(data.getData()[i][0]);
-			if (data.getData()[i][1] > 0) {
-				velPlusAccel = data.getData()[i][1] + data.getData()[i][2] * currentGearSettings.getKaOverKv()
-						+ currentGearSettings.getFrictionCompFPSFwd();
+			if (data.isInverted()) {
+				velPlusAccel = -data.getData()[i][1] - currentGearSettings.getFrictionCompFPSRev()
+						+ -data.getData()[i][2] * currentGearSettings.getKaOverKvRev();
 			} else {
-				velPlusAccel = (data.getData()[i][1] - currentGearSettings.getFrictionCompFPSRev())*fwdOverRev
-						+ data.getData()[i][2] * currentGearSettings.getKaOverKv();
+				velPlusAccel = data.getData()[i][1] + data.getData()[i][2] * currentGearSettings.getKaOverKvFwd()
+						+ currentGearSettings.getFrictionCompFPSFwd();
 			}
+			Logger.addEvent("VelPlusAccel: "+velPlusAccel, this.getClass());
 			point.velocity = FPSToEncoder(velPlusAccel);
 			//Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
 			if (velPlusAccel > currentGearSettings.getMaxSpeed()) {
@@ -777,14 +776,19 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		private final double kP, kI, kD;
 
 		/**
-		 * The PID constants for motion profiles in this gear. Ignored if maxSpeed is null.
+		 * The forwards PID constants for motion profiles in this gear. Ignored if maxSpeed is null.
 		 */
-		private final double motionProfileP, motionProfileI, motionProfileD;
+		private final double motionProfilePFwd, motionProfileIFwd, motionProfileDFwd;
+
+		/**
+		 * The reverse PID constants for motion profiles in this gear. Ignored if maxSpeed is null.
+		 */
+		private final double motionProfilePRev, motionProfileIRev, motionProfileDRev;
 
 		/**
 		 * The ratio of acceleration to velocity used to convert acceleration setpoints to delta velocity in each direction.
 		 */
-		private final double kaOverKv;
+		private final double kaOverKvFwd, kaOverKvRev;
 
 		/**
 		 * The "fake" maximum speed to use for MP mode in each direction, maxVoltage*(slope of vel vs. voltage curve).
@@ -822,13 +826,13 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		 *                                null. Defaults to 0.
 		 * @param kD                      The derivative PID constant for the motor in this gear. Ignored if maxSpeed is
 		 *                                null. Defaults to 0.
-		 * @param motionProfileP          The proportional PID constant for motion profiles in this gear. Ignored if
+		 * @param motionProfilePFwd          The proportional PID constant for motion profiles in this gear. Ignored if
 		 *                                maxSpeed is null. Defaults to 0.
-		 * @param motionProfileI          The integral PID constant for motion profiles in this gear. Ignored if
+		 * @param motionProfileIFwd          The integral PID constant for motion profiles in this gear. Ignored if
 		 *                                maxSpeed is null. Defaults to 0.
-		 * @param motionProfileD          The derivative PID constant for motion profiles in this gear. Ignored if
+		 * @param motionProfileDFwd          The derivative PID constant for motion profiles in this gear. Ignored if
 		 *                                maxSpeed is null. Defaults to 0.
-		 * @param maxAccel                The maximum acceleration the robot is capable of in this gear, theoretically
+		 * @param maxAccelFwd                The maximum acceleration the robot is capable of in this gear, theoretically
 		 *                                stall torque of the drive output * wheel radius / (robot mass/2). Can be null
 		 *                                to not use acceleration feed-forward.
 		 * @param maxSpeedMPFwd              The "fake" maximum speed to use for the forwards direction of MP mode, maxVoltage*(slope of vel vs.
@@ -848,10 +852,14 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		                       double kP,
 		                       double kI,
 		                       double kD,
-		                       double motionProfileP,
-		                       double motionProfileI,
-		                       double motionProfileD,
-		                       @Nullable Double maxAccel,
+		                       double motionProfilePFwd,
+		                       double motionProfileIFwd,
+		                       double motionProfileDFwd,
+		                       Double motionProfilePRev,
+		                       Double motionProfileIRev,
+		                       Double motionProfileDRev,
+		                       @Nullable Double maxAccelFwd,
+		                       @Nullable Double maxAccelRev,
 		                       @Nullable Double maxSpeedMPFwd,
 		                       double frictionCompFPSFwd,
 		                       @Nullable Double maxSpeedMPRev,
@@ -872,15 +880,21 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			this.kP = kP;
 			this.kI = kI;
 			this.kD = kD;
-			this.motionProfileP = motionProfileP;
-			this.motionProfileI = motionProfileI;
-			this.motionProfileD = motionProfileD;
+			this.motionProfilePFwd = motionProfilePFwd;
+			this.motionProfileIFwd = motionProfileIFwd;
+			this.motionProfileDFwd = motionProfileDFwd;
+			this.motionProfilePRev = motionProfilePRev != null ? motionProfilePRev : this.motionProfilePFwd;
+			this.motionProfileIRev = motionProfileIRev != null ? motionProfileIRev : this.motionProfileIFwd;
+			this.motionProfileDRev = motionProfileDRev != null ? motionProfileDRev : this.motionProfileDFwd;
 			this.maxSpeedMPFwd = maxSpeedMPFwd != null ? maxSpeedMPFwd : maxSpeed;
-			this.maxSpeedMPRev = maxSpeedMPRev != null ? maxSpeedMPRev : maxSpeedMPFwd;
-			if (this.maxSpeedMPFwd != null && maxAccel != null) {
-				this.kaOverKv = this.maxSpeedMPFwd / maxAccel;
+			this.maxSpeedMPRev = maxSpeedMPRev != null ? maxSpeedMPRev : this.maxSpeedMPFwd;
+
+			if (this.maxSpeedMPFwd != null && maxAccelFwd != null) {
+				this.kaOverKvFwd = this.maxSpeedMPFwd / maxAccelFwd;
+				this.kaOverKvRev = maxAccelRev != null ? this.maxSpeedMPRev / maxAccelRev : this.kaOverKvFwd;
 			} else {
-				this.kaOverKv = 0;
+				this.kaOverKvFwd = 0;
+				this.kaOverKvRev = 0;
 			}
 			this.frictionCompFPSFwd = frictionCompFPSFwd;
 			this.frictionCompFPSRev = frictionCompFPSRev != null ? frictionCompFPSRev : frictionCompFPSFwd;
@@ -890,7 +904,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		 * Empty constructor that uses all default options.
 		 */
 		public PerGearSettings() {
-			this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, 0, null, null);
+			this(0, null, null, null, null, null, null, null, 0, 0, 0, 0, 0, 0, null, null, null, null, null, null, 0, null, null);
 		}
 
 		/**
@@ -969,26 +983,26 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		/**
 		 * @return The proportional PID constant for motion profiles in this gear.
 		 */
-		public double getMotionProfileP() {
-			return motionProfileP;
+		public double getMotionProfilePFwd() {
+			return motionProfilePFwd;
 		}
 
 		/**
 		 * @return The integral PID constant for motion profiles in this gear.
 		 */
-		public double getMotionProfileI() {
-			return motionProfileI;
+		public double getMotionProfileIFwd() {
+			return motionProfileIFwd;
 		}
 
 		/**
 		 * @return The derivative PID constant for motion profiles in this gear.
 		 */
-		public double getMotionProfileD() {
-			return motionProfileD;
+		public double getMotionProfileDFwd() {
+			return motionProfileDFwd;
 		}
 
-		public double getKaOverKv() {
-			return kaOverKv;
+		public double getKaOverKvFwd() {
+			return kaOverKvFwd;
 		}
 
 		@Nullable
@@ -1007,6 +1021,22 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 
 		public double getFrictionCompFPSRev() {
 			return frictionCompFPSRev;
+		}
+
+		public double getMotionProfilePRev() {
+			return motionProfilePRev;
+		}
+
+		public double getMotionProfileIRev() {
+			return motionProfileIRev;
+		}
+
+		public double getMotionProfileDRev() {
+			return motionProfileDRev;
+		}
+
+		public double getKaOverKvRev() {
+			return kaOverKvRev;
 		}
 	}
 }

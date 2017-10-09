@@ -81,16 +81,9 @@ public class MotionProfileData {
 			//declare as a new double because we already put the old object it referenced in data.
 			tmp = new double[4];
 
-			//Invert the position, acceleration and velocity if the profile is inverted
-			if (inverted) {
-				tmp[0] = -Double.parseDouble(line[0]);
-				tmp[1] = -Double.parseDouble(line[1]);
-				tmp[2] = -Double.parseDouble(line[2]);
-			} else {
-				tmp[0] = Double.parseDouble(line[0]);
-				tmp[1] = Double.parseDouble(line[1]);
-				tmp[2] = Double.parseDouble(line[2]);
-			}
+			tmp[0] = Double.parseDouble(line[0]);
+			tmp[1] = Double.parseDouble(line[1]);
+			tmp[2] = Double.parseDouble(line[2]);
 
 			//Convert to milliseconds
 			tmp[3] = Double.parseDouble(line[3]) * 1000;
@@ -113,5 +106,12 @@ public class MotionProfileData {
 	 */
 	public boolean isVelocityOnly() {
 		return velocityOnly;
+	}
+
+	/**
+	 * @return Whether or not the profile is inverted because we're driving it backwards.
+	 */
+	public boolean isInverted(){
+		return inverted;
 	}
 }
