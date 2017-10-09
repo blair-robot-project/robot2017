@@ -36,11 +36,9 @@ drive:
                     motionProfilePFwd: 1.0
                     motionProfileIFwd: 0.0
                     motionProfileDFwd: 20.0
-                    maxAccel: 100
+                    maxAccelFwd: 100
                     maxSpeedMPFwd: 15.132
                     frictionCompFPSFwd: 1.55
-                    maxSpeedMPRev: 15.132
-                    frictionCompFPSRev: 1.55
                 slaves:
                     - '@id': talon1
                       port: 6
@@ -59,8 +57,6 @@ drive:
                   - <<: *gearSettings
                     maxSpeedMPFwd: 13.619
                     frictionCompFPSFwd: 1.705
-                    maxSpeedMPRev: 13.619
-                    frictionCompFPSRev: 1.705
                 slaves:
                     - '@id': talon3
                       port: 9

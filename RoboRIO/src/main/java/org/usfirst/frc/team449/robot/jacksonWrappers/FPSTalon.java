@@ -651,6 +651,20 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		//Declare this out here to avoid garbage collection
 		double velPlusAccel;
 
+		//Set proper PID constants
+		if (data.isInverted()) {
+			canTalon.setPID(currentGearSettings.getMotionProfilePRev(), currentGearSettings.getMotionProfileIRev(),
+					currentGearSettings.getMotionProfileDRev(),
+					1023. / FPSToEncoder(currentGearSettings.getMaxSpeedMPRev()), 0,
+					currentGearSettings.getClosedLoopRampRate(), 1);
+		} else {
+			canTalon.setPID(currentGearSettings.getMotionProfilePFwd(), currentGearSettings.getMotionProfileIFwd(),
+					currentGearSettings.getMotionProfileDFwd(),
+					1023. / FPSToEncoder(currentGearSettings.getMaxSpeedMPFwd()), 0,
+					currentGearSettings.getClosedLoopRampRate(), 1);
+		}
+
+		//Load in profiles
 		for (int i = 0; i < data.getData().length; ++i) {
 			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
 			//Set parameters that are true for all points
@@ -659,6 +673,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 
 			// Set all the fields of the profile point
 			point.position = feetToEncoder(data.getData()[i][0]);
+
+			//Calculate vel based off inversion
 			if (data.isInverted()) {
 				velPlusAccel = -data.getData()[i][1] - currentGearSettings.getFrictionCompFPSRev()
 						+ -data.getData()[i][2] * currentGearSettings.getKaOverKvRev();
@@ -668,8 +684,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			}
 			Logger.addEvent("VelPlusAccel: "+velPlusAccel, this.getClass());
 			point.velocity = FPSToEncoder(velPlusAccel);
+
 			//Doing vel+accel shouldn't lead to impossible setpoints, so if it does, we log so we know to change either the profile or kA.
-			if (velPlusAccel > currentGearSettings.getMaxSpeed()) {
+			if (Math.abs(velPlusAccel) > currentGearSettings.getMaxSpeed()) {
 				System.out.println("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!");
 				Logger.addEvent("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!", this.getClass());
 			}
