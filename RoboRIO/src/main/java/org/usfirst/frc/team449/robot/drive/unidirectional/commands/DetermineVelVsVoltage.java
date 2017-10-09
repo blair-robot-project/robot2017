@@ -109,27 +109,24 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 		// the previous trial isn't.
 
 		double avgSpeed = (sign * subsystem.getLeftVel() + sign * subsystem.getRightVel()) / 2.;
-		if(sign == 1) {
-			if(avgSpeed > maxSpeedForTrial){
-				maxSpeedForTrial = avgSpeed;
-				timeMaxMeasuredAt = Robot.currentTimeMillis();
-			}
+
+		if(avgSpeed > maxSpeedForTrial){
+			maxSpeedForTrial = avgSpeed;
+			timeMaxMeasuredAt = Robot.currentTimeMillis();
 		}
 
-		SmartDashboard.putNumber("Average Distance",(subsystem.getLeftPos()-subsystem.getRightPos())/2.);
+		SmartDashboard.putNumber("Average Distance",(subsystem.getLeftPos()+subsystem.getRightPos())/2.);
 		SmartDashboard.putNumber("Average Speed",avgSpeed);
 		//Check if we've driven past the given distance
 		boolean drivenDistance;
 		if (sign == -1){
-			drivenDistance = (subsystem.getLeftPos()-subsystem.getRightPos())/2. <= 0;
+			drivenDistance = (subsystem.getLeftPos()+subsystem.getRightPos())/2. <= 0;
 		} else {
-			drivenDistance = (subsystem.getLeftPos()-subsystem.getRightPos())/2. >= distanceToDrive;
+			drivenDistance = (subsystem.getLeftPos()+subsystem.getRightPos())/2. >= distanceToDrive;
 		}
 
 		//If we've driven past, log the max speed and reset the variables.
 		if (drivenDistance){
-
-			if(sign == -1) {
 				//Log
 				Logger.addEvent(Long.toString(timeMaxMeasuredAt), this.getClass());
 
@@ -156,12 +153,6 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 				//Set the output to the correct voltage and sign
 				subsystem.setOutput(sign * voltagePercentsToTest[voltageIndex], sign * voltagePercentsToTest[voltageIndex]);
 				SmartDashboard.putNumber("Desired voltage", voltagePercentsToTest[voltageIndex]*12.);
-			} else {
-				sign = -1;
-				subsystem.setOutput(-0.25, -0.25);
-
-				SmartDashboard.putNumber("Desired voltage", -3);
-			}
 		}
 	}
 
