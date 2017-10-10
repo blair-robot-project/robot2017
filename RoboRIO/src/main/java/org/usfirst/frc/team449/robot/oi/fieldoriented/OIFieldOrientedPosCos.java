@@ -49,6 +49,9 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	 */
 	private double x, y;
 
+	/**
+	 * The radius, from [0,1], within which the joystick is considered to be "at rest."
+	 */
 	private double rDeadband;
 
 	/**
@@ -56,6 +59,7 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	 *
 	 * @param xThrottle The throttle for the X-axis, which points towards the opposing driver station.
 	 * @param yThrottle The throttle for the Y-axis, which points towards the driver's left.
+	 * @param rDeadband The radius, from [0,1], within which the joystick is considered to be "at rest." Defaults to 0.
 	 */
 	@JsonCreator
 	public OIFieldOrientedPosCos(@NotNull @JsonProperty(required = true) Throttle xThrottle,
@@ -79,7 +83,6 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 			if (vel < rDeadband){
 				theta = null;
 				vel = 0;
-				System.out.println("Null");
 			} else {
 				//Use atan2 to get angle from -180 to 180
 				theta = Math.toDegrees(Math.atan2(y,x));

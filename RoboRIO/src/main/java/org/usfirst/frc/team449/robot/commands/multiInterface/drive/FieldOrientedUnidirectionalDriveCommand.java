@@ -121,8 +121,6 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 			}
 			this.getPIDController().setSetpoint(theta);
 			SmartDashboard.putNumber("Theta navx setpoint", theta);
-		} else {
-			System.out.println("Null theta");
 		}
 	}
 
