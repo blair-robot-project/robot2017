@@ -73,8 +73,9 @@ oi:
     org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
         '@id': oi
         gamepad:
-            '@id': driverGamepad
-            port: 1
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                '@id': driverGamepad
+                port: 1
         rotThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 &rotThrottle
@@ -521,18 +522,19 @@ teleopStartupCommand:
         commandList:
             - org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
                 startupCommand
-            - org.usfirst.frc.team449.robot.commands.general.runRunnables:
+            - org.usfirst.frc.team449.robot.commands.general.RunRunnables:
                 '@id': runRunnables
                 runnables:
-                    - org.usfirst.frc.team449.robot.components.navXRumbleComponent:
+                    - org.usfirst.frc.team449.robot.components.NavXRumbleComponent:
                         '@id': rumbleComponent
                         navX:
                           driveNavX
                         rumbleables:
                           - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                              driverGamepad
+                                driverGamepad
                           - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                              gunnerGamepad
+                                '@id': gunnerGamepad
+                                port: 3
                         minJerk: 804
                         maxJerk: 2412
 buttons:
@@ -540,8 +542,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
                 '@id': switchToLowButton
                 joystick:
-                    '@id': gunnerGamepad
-                    port: 3
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 angle: 180
         command:
             org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
@@ -576,7 +578,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
                 '@id': switchToHighButton
                 joystick:
-                    gunnerGamepad
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 angle: 0
         command:
             org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToHighGear:
@@ -603,7 +606,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': overrideNavXButton
                 joystick:
-                    gunnerGamepad
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 buttonNumber: 1
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
@@ -628,7 +632,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': jiggleRobotButton
                 joystick:
-                    gunnerGamepad
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 buttonNumber: 8
         command:
             org.usfirst.frc.team449.robot.commands.multiInterface.drive.JiggleRobot:
@@ -651,7 +656,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': climbButtonThrottle
                         stick:
-                            driverGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                driverGamepad
                         axis: 2
                 triggerAt: 0.9
         command:
@@ -675,7 +681,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': manualClimbButton
                 joystick:
-                    gunnerGamepad
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 buttonNumber: 3
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOn:
@@ -695,7 +702,8 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
                 '@id': switchCameraButton
                 joystick:
-                    gunnerGamepad
+                    org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        gunnerGamepad
                 buttonNumber: 9
         command:
             org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.commands.ChangeCam:
@@ -711,7 +719,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': pushGearThrottle
                         stick:
-                            driverGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                driverGamepad
                         axis: 3
                 triggerAt: 0.9
         command:

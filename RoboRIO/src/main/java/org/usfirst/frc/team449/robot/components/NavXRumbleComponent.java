@@ -1,19 +1,23 @@
 package org.usfirst.frc.team449.robot.components;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 
 import java.util.List;
 
 /**
  * A component to rumble controllers based off the jerk measurements from a NavX.
  */
-public class NavXRumbleComponent implements Runnable{
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
+public class NavXRumbleComponent implements MappedRunnable{
 
 	/**
 	 * The factor to multiply feet/(sec^3) by to get Gs/millisecond, according to WolframAlpha.
