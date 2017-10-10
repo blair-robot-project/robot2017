@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
-import org.usfirst.frc.team449.robot.other.LogEvent;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -164,7 +162,7 @@ public class Logger implements Runnable {
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryData = new StringBuilder();
 		//Loop through each datum
-		telemetryData.append(Robot.currentTimeMillis()).append(",");
+		telemetryData.append(Clock.currentTimeMillis()).append(",");
 		for (int i = 0; i < subsystems.length; i++) {
 			Object[] data = subsystems[i].getData();
 			for (int j = 0; j < data.length; j++) {

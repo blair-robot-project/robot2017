@@ -173,7 +173,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		double left = subsystem.getLeftPos();
 		double right = subsystem.getRightPos();
 		double theta = subsystem.getNavX().getAngle();
-		long time = Robot.getTimeSinceInit();
+		long time = Clock.currentTimeMillis();
 
 		//Calculate differences versus the last measurement
 		double deltaLeft = left - lastLeftPos;

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
+import org.usfirst.frc.team449.robot.other.Clock;
 
 import java.util.function.Consumer;
 
@@ -107,7 +107,7 @@ public class AutoshiftComponent {
 		//Or commanding a low speed.
 		okToShift = okToShift || (Math.abs((leftThrottle + rightThrottle) / 2.) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
+		okToShift = okToShift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
@@ -115,7 +115,7 @@ public class AutoshiftComponent {
 
 		//Record the time if we do decide to shift.
 		if (okToShift) {
-			timeLastDownshifted = Robot.currentTimeMillis();
+			timeLastDownshifted = Clock.currentTimeMillis();
 		}
 		return okToShift;
 	}
@@ -135,13 +135,13 @@ public class AutoshiftComponent {
 		//AND the driver's trying to go forward fast.
 		okToShift = okToShift && Math.abs((leftThrottle + rightThrottle) / 2.) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Robot.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
+		okToShift = okToShift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
 		okToShift = upshiftBufferTimer.get(okToShift);
 		if (okToShift) {
-			timeLastUpshifted = Robot.currentTimeMillis();
+			timeLastUpshifted = Clock.currentTimeMillis();
 		}
 		return okToShift;
 	}
@@ -158,10 +158,8 @@ public class AutoshiftComponent {
 	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
 		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.LOW.getNumVal());
-			System.out.println("Downshifted");
 		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.HIGH.getNumVal());
-			System.out.println("Upshifted");
 		}
 	}
 }

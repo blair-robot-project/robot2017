@@ -3,7 +3,6 @@ package org.usfirst.frc.team449.robot.other;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.usfirst.frc.team449.robot.Robot;
 
 /**
  * A timer that checks if condition has been true for the past n seconds/milliseconds.
@@ -54,11 +53,11 @@ public class BufferTimer {
 	public boolean get(boolean currentState) {
 		//If the condition just became true, store the current time.
 		if (currentState && !previousState) {
-			timeConditionBecameTrue = Robot.currentTimeMillis();
+			timeConditionBecameTrue = Clock.currentTimeMillis();
 		}
 		//Update previous state
 		previousState = currentState;
 		//Return true if the condition is currently true and has been true for bufferTime milliseconds.
-		return currentState && Robot.currentTimeMillis() - timeConditionBecameTrue >= bufferTime;
+		return currentState && Clock.currentTimeMillis() - timeConditionBecameTrue >= bufferTime;
 	}
 }

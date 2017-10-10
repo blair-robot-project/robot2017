@@ -11,24 +11,12 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
-import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable;
-import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToGear;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
-import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
-import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
-import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
-import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
-import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
-import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileReader;
@@ -47,16 +35,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@NotNull
 	public static final String RESOURCES_PATH = "/home/lvuser/449_resources/";
-
-	/**
-	 * The current time in milliseconds as it was stored the last time a method in robot was run.
-	 */
-	private static long currentTimeMillis;
-
-	/**
-	 * The time robotInit started running.
-	 */
-	private static long startTime;
 
 	/**
 	 * The drive
@@ -93,33 +71,12 @@ public class Robot extends IterativeRobot {
 	private Command autonomousCommand;
 
 	/**
-	 * Get the time, in milliseconds between when the robot code started running and the beginning of the last periodic
-	 * loop.
-	 *
-	 * @return current time in milliseconds.
-	 */
-	@Contract(pure = true)
-	public static long currentTimeMillis() {
-		return currentTimeMillis - startTime;
-	}
-
-	/**
-	 * Get the actual amount of time since the robot code started running, in milliseconds. This does call {@link
-	 * System}.currentTimeMillis(), so only use it when knowing the actual time within 1 millisecond is very important.
-	 *
-	 * @return current time in milliseconds.
-	 */
-	public static long getTimeSinceInit() {
-		return System.currentTimeMillis() - startTime;
-	}
-
-	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
 		//Set up start time
-		currentTimeMillis = System.currentTimeMillis();
-		startTime = currentTimeMillis;
+		Clock.setStartTime();
+		Clock.updateTime();
 
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
@@ -233,7 +190,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		//Refresh the current time.
-		currentTimeMillis = System.currentTimeMillis();
+		Clock.updateTime();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}
@@ -264,7 +221,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		//Update the current time
-		currentTimeMillis = System.currentTimeMillis();
+		Clock.updateTime();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}
@@ -306,7 +263,7 @@ public class Robot extends IterativeRobot {
 	 */
 	private void doStartupTasks() {
 		//Refresh the current time.
-		currentTimeMillis = System.currentTimeMillis();
+		Clock.updateTime();
 
 		//Start running the logger
 		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());

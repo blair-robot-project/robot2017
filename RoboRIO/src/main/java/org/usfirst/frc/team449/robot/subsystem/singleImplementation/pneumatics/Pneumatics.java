@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Compressor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.PressureSensor;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 
 /**
  * A subsystem representing the pneumatics control system (e.g. the compressor and maybe a pressure sensor)

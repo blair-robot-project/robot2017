@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
 
 /**
@@ -112,7 +113,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 
 		if(avgSpeed > maxSpeedForTrial){
 			maxSpeedForTrial = avgSpeed;
-			timeMaxMeasuredAt = Robot.currentTimeMillis();
+			timeMaxMeasuredAt = Clock.currentTimeMillis();
 		}
 
 		SmartDashboard.putNumber("Average Distance",(subsystem.getLeftPos()+subsystem.getRightPos())/2.);
