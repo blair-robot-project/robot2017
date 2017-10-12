@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import org.jetbrains.annotations.Contract;
 
 /**
  * A Jackson-compatible wrapper for the NavX.
@@ -21,5 +22,15 @@ public class MappedAHRS extends AHRS {
 	@JsonCreator
 	public MappedAHRS(@JsonProperty(required = true) SPI.Port port) {
 		super(port);
+	}
+
+	/**
+	 * Convert from gs (acceleration due to gravity) to feet/(second^2).
+	 * @param accelGs An acceleration in gs.
+	 * @return That acceleration in feet/(sec^2)
+	 */
+	@Contract(pure = true)
+	public static double gsToFeetPerSecondSquared(double accelGs){
+		return accelGs * 32.17; //Wolfram alpha said so
 	}
 }
