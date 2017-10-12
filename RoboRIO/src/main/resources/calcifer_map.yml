@@ -113,7 +113,6 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
-                inverted: false
                 reverseOutput: true
                 enableBrakeMode: false
                 feetPerRotation: 0.9817
@@ -155,7 +154,6 @@ drive:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
-                inverted: false
                 reverseSensor: true
                 reverseOutput: false
                 port: 2
@@ -225,7 +223,6 @@ climber:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 '@id': climberTalon
                 port: 5
-                inverted: false
                 enableBrakeMode: false
         maxPower: 500
         simpleMotor:
