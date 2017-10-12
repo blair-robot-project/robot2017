@@ -196,6 +196,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"right_voltage",
 				"left_pos",
 				"right_pos",
+				"left_error",
+				"right_error",
 				"raw_angle"};
 	}
 
@@ -217,6 +219,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getOutputVoltage(),
 				leftMaster.getPositionFeet(),
 				rightMaster.getPositionFeet(),
+				leftMaster.getError(),
+				rightMaster.getError(),
 				navX.getAngle()};
 	}
 

@@ -557,7 +557,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return the position of the talon in feet, or null of inches per rotation wasn't given.
 	 */
 	public Double getPositionFeet() {
-		return encoderToFeet(canTalon.getEncPosition());
+		return encoderToFeet(canTalon.getPosition());
 	}
 
 	/**

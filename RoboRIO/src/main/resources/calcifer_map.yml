@@ -127,7 +127,7 @@ drive:
                       fwdPeakOutputVoltage: 12
                       fwdNominalOutputVoltage: 0.7
                       maxSpeed: 6.2
-                      kP: 0.3
+                      kP: 0.5
                       kI: 0.0
                       kD: 0.0
                       motionProfileP: 1.5
