@@ -69,7 +69,7 @@ drive:
         VelScale: 0.9
         navX:
             '@id': driveNavX
-            port: kMXP
+            port: kUSB
 pneumatics:
     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
         '@id': pneumatics

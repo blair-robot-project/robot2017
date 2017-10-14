@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.SerialPort;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -20,7 +21,7 @@ public class MappedAHRS extends AHRS {
 	 * @param port The port the NavX is plugged into. It seems like only kMXP (the port on the RIO) works.
 	 */
 	@JsonCreator
-	public MappedAHRS(@JsonProperty(required = true) SPI.Port port) {
+	public MappedAHRS(@JsonProperty(required = true) SerialPort.Port port) {
 		super(port);
 	}
 

@@ -222,7 +222,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"heading",
 				"rotational_velocity",
 				"raw_angle",
-				"x_accel"};
+				"x_accel",
+				"y_accel"};
 	}
 
 	/**
@@ -246,7 +247,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				navX.pidGet(),
 				navX.getRate(),
 				navX.getAngle(),
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX())};
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
 	}
 
 	/**
