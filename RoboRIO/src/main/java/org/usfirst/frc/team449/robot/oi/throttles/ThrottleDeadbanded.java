@@ -9,7 +9,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ThrottleDeadbanded extends Throttle {
+public class ThrottleDeadbanded extends ThrottleBasic {
 
 	/**
 	 * The value below which the joystick input is considered 0.
@@ -47,8 +47,7 @@ public class ThrottleDeadbanded extends Throttle {
 	 * Gets the value from the joystick and deadbands it. The non-deadband values are scaled to avoid a discontinuity,
 	 * so the graph of joystick input to deadbanded output looks like this:
 	 * <p>
-	 * _/
-	 * /
+	 * _/ /
 	 *
 	 * @return The joystick's value, after being deadbanded.
 	 */

@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideM
  * Loads and runs the given profile into the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunProfile<T extends YamlSubsystem & SubsystemMPTwoSides> extends YamlCommandGroupWrapper {
+public class RunProfile <T extends YamlSubsystem & SubsystemMPTwoSides> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor.

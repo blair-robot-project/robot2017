@@ -202,8 +202,6 @@ public class RobotMap2017 {
 	 */
 	private final boolean doMP;
 
-	private UnidirectionalPoseEstimator poseEstimator;
-
 	/**
 	 * Default constructor.
 	 *
@@ -247,7 +245,6 @@ public class RobotMap2017 {
 	 * @param teleopStartupCommand    The command to be run when first enabled in teleoperated mode.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
 	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
-	 * @param poseEstimator        The pose estimation routine to run during auto and teleop.
 	 */
 	@JsonCreator
 	public RobotMap2017(@Nullable List<CommandButton> buttons,
@@ -274,8 +271,7 @@ public class RobotMap2017 {
 	                    @Nullable YamlCommand autoStartupCommand,
 	                    @Nullable YamlCommand teleopStartupCommand,
 	                    boolean testMP,
-	                    @Nullable Boolean doMP,
-	                    @Nullable UnidirectionalPoseEstimator poseEstimator) {
+	                    @Nullable Boolean doMP) {
 		this.buttons = buttons != null ? buttons : new ArrayList<>();
 		this.oi = oi;
 		this.drive = drive;
@@ -303,7 +299,6 @@ public class RobotMap2017 {
 		this.teleopStartupCommand = teleopStartupCommand != null ? teleopStartupCommand.getCommand() : null;
 		this.testMP = testMP;
 		this.doMP = doMP != null ? doMP : true;
-		this.poseEstimator = poseEstimator;
 	}
 
 	/**
@@ -530,9 +525,5 @@ public class RobotMap2017 {
 	 */
 	public boolean getDoMP() {
 		return doMP;
-	}
-
-	public UnidirectionalPoseEstimator getPoseEstimator() {
-		return poseEstimator;
 	}
 }

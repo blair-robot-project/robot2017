@@ -82,6 +82,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@NotNull
 	private final Map<Integer, PerGearSettings> perGearSettings;
+
 	/**
 	 * The settings currently being used by this Talon.
 	 */

@@ -55,7 +55,7 @@ public class LoggingShooter extends YamlSubsystem implements Loggable, Subsystem
 	 *
 	 * @param shooterTalon    The TalonSRX controlling the flywheel.
 	 * @param shooterThrottle The throttle, from [-1, 1], at which to run the multiSubsystem.
-	 * @param feederMotor    The motor controlling the feeder.
+	 * @param feederMotor     The motor controlling the feeder.
 	 * @param feederThrottle  The throttle, from [-1, 1], at which to run the feeder.
 	 * @param spinUpTimeSecs  The amount of time, in seconds, it takes for the multiSubsystem to get up to speed.
 	 *                        Defaults to 0.
