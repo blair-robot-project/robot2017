@@ -140,7 +140,6 @@ drive:
                       kP: 0.7
                       kI: 0.0
                       kD: 3.0
-                maxClosedLoopVoltage: 12
                 updaterProcessPeriodSecs: 0.005
                 minNumPointsInBottomBuffer: 10
                 slaves:
