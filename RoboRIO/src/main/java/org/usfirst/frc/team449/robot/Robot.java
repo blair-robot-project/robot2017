@@ -163,6 +163,7 @@ public class Robot extends IterativeRobot {
 
 		//Run the logger to write all the events that happened during initialization to a file.
 		robotMap.getLogger().run();
+		Clock.updateTime();
 	}
 
 	/**
@@ -235,6 +236,14 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.fullStop();
 		//Tell the RIOduino we're disabled.
 		sendModeOverI2C(robotInfo, "disabled");
+	}
+
+	/**
+	 * Run every tic while disabled
+	 */
+	@Override
+	public void disabledPeriodic(){
+		Clock.updateTime();
 	}
 
 	/**

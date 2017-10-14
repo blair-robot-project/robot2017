@@ -37,7 +37,7 @@ drive:
                     motionProfilePFwd: 1.0
                     motionProfileIFwd: 0.0
                     motionProfileDFwd: 20.0
-                    maxAccelFwd: 100
+                    maxAccelFwd: 51.9
                     maxSpeedMPFwd: 15.132
                     frictionCompFPSFwd: 1.55
                 slaves:
@@ -69,7 +69,7 @@ drive:
         VelScale: 0.9
         navX:
             '@id': driveNavX
-            port: kUSB
+            port: kMXP
 pneumatics:
     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
         '@id': pneumatics
@@ -134,8 +134,8 @@ nonMPAutoCommand:
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                 drive
-        velocity: 0.4
-        seconds: 2
+        velocity: 1.0
+        seconds: 1.5
 autoStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         '@id': startupCommand

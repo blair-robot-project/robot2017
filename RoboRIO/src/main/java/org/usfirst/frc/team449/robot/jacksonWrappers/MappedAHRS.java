@@ -21,7 +21,7 @@ public class MappedAHRS extends AHRS {
 	 * @param port The port the NavX is plugged into. It seems like only kMXP (the port on the RIO) works.
 	 */
 	@JsonCreator
-	public MappedAHRS(@JsonProperty(required = true) SerialPort.Port port) {
+	public MappedAHRS(@JsonProperty(required = true) SPI.Port port) {
 		super(port);
 	}
 
