@@ -94,9 +94,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private long timeMPStatusLastRead;
 
 	/**
+	 * Whether or not to invert the motor in voltage mode.
+	 */
+	private final boolean invertInVoltage;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param port                       CAN port of this Talon.
+	 * @param invertInVoltage Whether or not to invert the motor in voltage mode.
 	 * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
 	 *                                   position PID)
 	 * @param enableBrakeMode            Whether to brake or coast when stopped.
@@ -136,6 +142,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@JsonCreator
 	public FPSTalon(@JsonProperty(required = true) int port,
+	                boolean invertInVoltage,
 	                boolean reverseOutput,
 	                @JsonProperty(required = true) boolean enableBrakeMode,
 	                @Nullable Boolean fwdLimitSwitchNormallyOpen,
@@ -165,6 +172,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		canTalon.enableBrakeMode(enableBrakeMode);
 
 		//Set fields
+		this.invertInVoltage = invertInVoltage;
 		this.feetPerRotation = feetPerRotation != null ? feetPerRotation : 1;
 		this.updaterProcessPeriodSecs = updaterProcessPeriodSecs != null ? updaterProcessPeriodSecs : 0.005;
 		this.minNumPointsInBottomBuffer = minNumPointsInBottomBuffer != null ? minNumPointsInBottomBuffer : 20;
@@ -317,7 +325,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 
 		//Set the setpoint to the input given.
-		canTalon.set(percentVoltage);
+		canTalon.set(percentVoltage*(invertInVoltage ? -1 : 1));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 ---
-doMP: true
+doMP: false
 testMP: true
 leftTestProfile:
     &leftTest
@@ -18,6 +18,7 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 5
+                invertInVoltage: false
                 enableBrakeMode: true
                 feetPerRotation: 1.002
                 currentLimit: 40
@@ -29,10 +30,10 @@ drive:
                   - &gearSettings
                     fwdPeakOutputVoltage: 12
                     fwdNominalOutputVoltage: 0.0
-                    maxSpeed: 11.8
-                    kP: 0.2
-                    kI: 0.0
-                    kD: 1.0
+#                    maxSpeed: 11.8
+#                    kP: 0.2
+#                    kI: 0.0
+#                    kD: 1.0
                     motionProfilePFwd: 1.0
                     motionProfileIFwd: 0.0
                     motionProfileDFwd: 20.0
@@ -51,6 +52,7 @@ drive:
                 <<: *leftMaster
                 '@id': rightMaster
                 port: 2
+                invertInVoltage: true
                 reverseSensor: true
                 reverseOutput: true
                 perGearSettings:
@@ -127,16 +129,13 @@ defaultDriveCommand:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
 nonMPAutoCommand:
-    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DetermineVelVsVoltage:
-        '@id': velVsVoltage
+    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed:
+        '@id': nonMPAuto
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                 drive
-        distanceToDrive: 20
-        numTrials: 2
-        voltagesToTest:
-            - 10.5
-            - 11.0
+        velocity: 0.4
+        seconds: 2
 autoStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         '@id': startupCommand
