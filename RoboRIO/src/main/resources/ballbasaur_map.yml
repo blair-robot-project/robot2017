@@ -158,3 +158,13 @@ autoStartupCommand:
 teleopStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         startupCommand
+startupCommand:
+    org.usfirst.frc.team449.robot.commands.general.RunRunnables:
+        '@id': runRunnables
+        runnables:
+            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                robotDiameter: 31
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                        drive
+                absolutePosAngleTolerance: 5

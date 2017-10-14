@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
  * A Runnable for pose estimation that can take absolute positions.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements Runnable, Loggable {
+public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements MappedRunnable, Loggable {
 
 	/**
 	 * The wheel-to-wheel diameter of the robot, in feet.

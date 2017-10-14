@@ -193,6 +193,12 @@ public class RobotMap2017 {
 	private final Command teleopStartupCommand;
 
 	/**
+	 * The command to be run when first enabled.
+	 */
+	@Nullable
+	private final Command startupCommand;
+
+	/**
 	 * Whether to run the test or real motion profile during autonomous.
 	 */
 	private final boolean testMP;
@@ -243,6 +249,7 @@ public class RobotMap2017 {
 	 *                            command is run during autonomous.
 	 * @param autoStartupCommand The command to be run when first enabled in autonomous mode.
 	 * @param teleopStartupCommand    The command to be run when first enabled in teleoperated mode.
+	 * @param startupCommand The command to be run when first enabled.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
 	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
 	 */
@@ -270,6 +277,7 @@ public class RobotMap2017 {
 	                    @Nullable YamlCommand nonMPAutoCommand,
 	                    @Nullable YamlCommand autoStartupCommand,
 	                    @Nullable YamlCommand teleopStartupCommand,
+	                    @Nullable YamlCommand startupCommand,
 	                    boolean testMP,
 	                    @Nullable Boolean doMP) {
 		this.buttons = buttons != null ? buttons : new ArrayList<>();
@@ -297,6 +305,7 @@ public class RobotMap2017 {
 		this.nonMPAutoCommand = nonMPAutoCommand != null ? nonMPAutoCommand.getCommand() : null;
 		this.autoStartupCommand = autoStartupCommand != null ? autoStartupCommand.getCommand() : null;
 		this.teleopStartupCommand = teleopStartupCommand != null ? teleopStartupCommand.getCommand() : null;
+		this.startupCommand = startupCommand != null ? startupCommand.getCommand() : null;
 		this.testMP = testMP;
 		this.doMP = doMP != null ? doMP : true;
 	}
@@ -525,5 +534,13 @@ public class RobotMap2017 {
 	 */
 	public boolean getDoMP() {
 		return doMP;
+	}
+
+	/**
+	 * @return The command to be run when first enabled.
+	 */
+	@Nullable
+	public Command getStartupCommand() {
+		return startupCommand;
 	}
 }

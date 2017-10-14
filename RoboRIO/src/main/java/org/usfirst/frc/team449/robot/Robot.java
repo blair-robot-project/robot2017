@@ -71,12 +71,19 @@ public class Robot extends IterativeRobot {
 	private Command autonomousCommand;
 
 	/**
+	 * Whether or not the robot has been enabled yet.
+	 */
+	private boolean enabled;
+
+	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
 		//Set up start time
 		Clock.setStartTime();
 		Clock.updateTime();
+
+		enabled = false;
 
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
@@ -171,6 +178,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		//Run startup command if we start in teleop.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
+
 		//Do the startup tasks
 		driveSubsystem.stopMPProcesses();
 		doStartupTasks();
@@ -201,6 +216,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		//Run startup command if we start in auto.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
+
 		//Do startup tasks
 		doStartupTasks();
 		if (robotMap.getAutoStartupCommand() != null) {
@@ -236,6 +259,20 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.fullStop();
 		//Tell the RIOduino we're disabled.
 		sendModeOverI2C(robotInfo, "disabled");
+	}
+
+	/**
+	 * Run when we first enable in test mode.
+	 */
+	@Override
+	public void testInit(){
+		//Run startup command if we start in test mode.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
 	}
 
 	/**
