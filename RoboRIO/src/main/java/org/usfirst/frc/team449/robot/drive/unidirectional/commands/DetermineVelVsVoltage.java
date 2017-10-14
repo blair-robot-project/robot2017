@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
@@ -45,6 +44,9 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	 */
 	private double maxSpeedForTrial;
 
+	/**
+	 * The time the maximum speed for this trial was measured at.
+	 */
 	private long timeMaxMeasuredAt;
 
 	/**
