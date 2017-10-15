@@ -37,7 +37,7 @@ drive:
                     motionProfilePFwd: 1.0
                     motionProfileIFwd: 0.0
                     motionProfileDFwd: 20.0
-                    maxAccelFwd: 51.9
+                    maxAccelFwd: 54
                     maxSpeedMPFwd: 15.132
                     frictionCompFPSFwd: 1.55
                 slaves:
@@ -86,8 +86,9 @@ oi:
     org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
         '@id': oi
         gamepad:
-            '@id': driverGamepad
-            port: 1
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                '@id': driverGamepad
+                port: 1
         rotThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                 &rotThrottle
@@ -163,6 +164,7 @@ startupCommand:
         '@id': runRunnables
         runnables:
             - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                '@id': poseEstimator
                 robotDiameter: 31
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
