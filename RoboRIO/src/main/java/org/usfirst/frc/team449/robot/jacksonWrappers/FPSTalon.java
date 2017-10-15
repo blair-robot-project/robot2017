@@ -139,6 +139,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 *                                   starting a profile. Defaults to 20.
 	 * @param updaterProcessPeriodSecs   The period for the Notifier that moves points between the MP buffers, in
 	 *                                   seconds. Defaults to 0.005.
+	 * @param statusFrameRatesMillis     The update rates, in millis, for each of the Talon status frames.
+	 * @param controlFrameRateMillis     The update rate, in milliseconds, for the control frame. Defaults to 10.
 	 * @param slaves                     The other {@link CANTalon}s that are slaved to this one.
 	 */
 	@JsonCreator
@@ -162,15 +164,24 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	                @Nullable Integer startingGearNum,
 	                @Nullable Integer minNumPointsInBottomBuffer,
 	                @Nullable Double updaterProcessPeriodSecs,
+	                @Nullable Map<CANTalon.StatusFrameRate, Integer> statusFrameRatesMillis,
+	                @Nullable Integer controlFrameRateMillis,
 	                @Nullable List<SlaveTalon> slaves) {
 		//Instantiate the base CANTalon this is a wrapper on.
-		canTalon = new CANTalon(port);
+		canTalon = new CANTalon(port, controlFrameRateMillis != null ? controlFrameRateMillis : 10);
 		//Set this to false because we only use reverseOutput for slaves.
 		canTalon.reverseOutput(reverseOutput);
 		//DONT TOUCH THIS SHIT
 		canTalon.setInverted(false);
 		//Set brake mode
 		canTalon.enableBrakeMode(enableBrakeMode);
+
+		//Set frame rates
+		if (statusFrameRatesMillis != null) {
+			for (CANTalon.StatusFrameRate statusFrameRate : statusFrameRatesMillis.keySet()) {
+				canTalon.setStatusFrameRateMs(statusFrameRate, statusFrameRatesMillis.get(statusFrameRate));
+			}
+		}
 
 		//Set fields
 		this.invertInVoltage = invertInVoltage;
