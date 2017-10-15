@@ -98,7 +98,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * Default constructor.
 	 *
 	 * @param port                       CAN port of this Talon.
-	 * @param inverted                   Whether this Talon is inverted.
 	 * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
 	 *                                   position PID)
 	 * @param enableBrakeMode            Whether to brake or coast when stopped.
@@ -136,7 +135,6 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@JsonCreator
 	public FPSTalon(@JsonProperty(required = true) int port,
-	                @JsonProperty(required = true) boolean inverted,
 	                boolean reverseOutput,
 	                @JsonProperty(required = true) boolean enableBrakeMode,
 	                @Nullable Boolean fwdLimitSwitchNormallyOpen,
@@ -160,8 +158,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		canTalon = new CANTalon(port);
 		//Set this to false because we only use reverseOutput for slaves.
 		canTalon.reverseOutput(reverseOutput);
-		//Set inversion
-		canTalon.setInverted(inverted);
+		//NO TOUCHY
+		canTalon.setInverted(false);
 		//Set brake mode
 		canTalon.enableBrakeMode(enableBrakeMode);
 
@@ -559,7 +557,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 * @return the position of the talon in feet, or null of inches per rotation wasn't given.
 	 */
 	public Double getPositionFeet() {
-		return encoderToFeet(canTalon.getEncPosition());
+		return encoderToFeet(canTalon.getPosition());
 	}
 
 	/**

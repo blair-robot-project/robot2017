@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
+import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
@@ -33,6 +34,11 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	protected final AutoshiftComponent autoshiftComponent;
 
 	/**
+	 * The coefficient to multiply the loop output by in high gear.
+	 */
+	private final double highGearAngularCoefficient;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param toleranceBuffer             How many consecutive loops have to be run while within tolerance to be
@@ -55,6 +61,7 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
 	 * @param autoshiftComponent          The helper object for autoshifting.
+	 * @param highGearAngularCoefficient The coefficient to multiply the loop output by in high gear. Defaults to 1.
 	 */
 	@JsonCreator
 	public UnidirectionalNavXShiftingDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -63,17 +70,19 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	                                              double deadband,
 	                                              @Nullable Double maxAngularVelToEnterLoop,
 	                                              boolean inverted,
-	                                              int kP,
-	                                              int kI,
-	                                              int kD,
+	                                              double kP,
+	                                              double kI,
+	                                              double kD,
 	                                              @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) OIUnidirectional oi,
-	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent) {
+	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
+	                                              Double highGearAngularCoefficient) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
 				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
 		this.autoshiftComponent = autoshiftComponent;
 		this.subsystem = subsystem;
+		this.highGearAngularCoefficient = highGearAngularCoefficient != null ? highGearAngularCoefficient : 1;
 	}
 
 	/**
@@ -104,5 +113,15 @@ public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & Dr
 	protected void interrupted() {
 		Logger.addEvent("ShiftingUnidirectionalNavXArcadeDrive Interrupted! Stopping the robot.", this.getClass());
 		subsystem.fullStop();
+	}
+
+	/**
+	 * Give the correct output to the motors based on whether we're in free drive or drive straight.
+	 *
+	 * @param output The output of the angular PID loop.
+	 */
+	@Override
+	protected void usePIDOutput(double output) {
+		super.usePIDOutput(output * (subsystem.getGear() == Shiftable.gear.HIGH.getNumVal() ? highGearAngularCoefficient : 1));
 	}
 }
