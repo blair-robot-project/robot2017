@@ -30,10 +30,10 @@ drive:
                   - &gearSettings
                     fwdPeakOutputVoltage: 12
                     fwdNominalOutputVoltage: 0.0
-#                    maxSpeed: 11.8
-#                    kP: 0.2
-#                    kI: 0.0
-#                    kD: 1.0
+                    maxSpeed: 11.8
+                    kP: 0.1
+                    kI: 0.0
+                    kD: 1.0
                     motionProfilePFwd: 1.0
                     motionProfileIFwd: 0.0
                     motionProfileDFwd: 20.0
@@ -74,14 +74,6 @@ pneumatics:
     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
         '@id': pneumatics
         nodeID: 15
-logger:
-    '@id': logger
-    subsystems:
-        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-            drive
-    loopTimeSecs: 0.02
-    eventLogFilename: "/home/lvuser/logs/eventLog-"
-    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 oi:
     org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
         '@id': oi
@@ -164,9 +156,27 @@ startupCommand:
         '@id': runRunnables
         runnables:
             - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-                '@id': poseEstimator
-                robotDiameter: 31
+                '@id': noahPoseEstimator
+                robotDiameter: 25
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
                 absolutePosAngleTolerance: 5
+            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                '@id': eliPoseEstimator
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                        drive
+                absolutePosAngleTolerance: 5
+logger:
+    '@id': logger
+    subsystems:
+        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+            drive
+        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+            noahPoseEstimator
+        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+            eliPoseEstimator
+    loopTimeSecs: 0.02
+    eventLogFilename: "/home/lvuser/logs/eventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
