@@ -185,17 +185,15 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
-        kP: 0.0
+        kP: 0.012
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 0
-        maximumOutput: 0.1
         toleranceBuffer: 25
         deadband: 2
-        minimumOutput: 0.025
         maxAngularVelToEnterLoop: 0.05
         inverted: true
-        highGearAngularCoefficient: 3
+        highGearAngularCoefficient: 2
         driveStraightLoopEntryTimer:
             '@id': driveStraightLoopEntryTimer
             bufferTimeSeconds: 0.15
