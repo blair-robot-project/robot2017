@@ -171,7 +171,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		canTalon = new CANTalon(port, controlFrameRateMillis != null ? controlFrameRateMillis : 10);
 		//Set this to false because we only use reverseOutput for slaves.
 		canTalon.reverseOutput(reverseOutput);
-		//DONT TOUCH THIS SHIT
+		//NO TOUCHY
 		canTalon.setInverted(false);
 		//Set brake mode
 		canTalon.enableBrakeMode(enableBrakeMode);

@@ -76,9 +76,9 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 	                                      double deadband,
 	                                      @Nullable Double maxAngularVelToEnterLoop,
 	                                      boolean inverted,
-	                                      int kP,
-	                                      int kI,
-	                                      int kD,
+	                                      double kP,
+	                                      double kI,
+	                                      double kD,
 	                                      @NotNull @JsonProperty(required = true) BufferTimer driveStraightLoopEntryTimer,
 	                                      @NotNull @JsonProperty(required = true) T subsystem,
 	                                      @NotNull @JsonProperty(required = true) OIUnidirectional oi) {
@@ -176,6 +176,11 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 		if (drivingStraight) {
 			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
+
+			//Deadband if we're stationary
+			if(oi.getLeftOutput() == 0 || oi.getRightOutput() == 0){
+				output=deadbandOutput(output);
+			}
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
 			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
