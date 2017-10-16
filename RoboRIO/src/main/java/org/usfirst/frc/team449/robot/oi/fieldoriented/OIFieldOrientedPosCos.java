@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
+import org.usfirst.frc.team449.robot.other.Clock;
 
 /**
  * A field-oriented OI that always points the robot an angle where cosine is positive, i.e. always pointing away from the driver station.
@@ -74,7 +74,7 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 	 * Calculate the theta and vel values, can be called multiple times per tic but will only execute logic once.
 	 */
 	protected void calcValues(){
-		if (timeLastUpdated != Robot.currentTimeMillis()){
+		if (timeLastUpdated != Clock.currentTimeMillis()){
 			x = xThrottle.getValue();
 			y = yThrottle.getValue();
 			vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -94,7 +94,7 @@ public class OIFieldOrientedPosCos implements OIFieldOriented{
 					theta += 180;
 				}
 			}
-			timeLastUpdated = Robot.currentTimeMillis();
+			timeLastUpdated = Clock.currentTimeMillis();
 		}
 	}
 

@@ -6,10 +6,10 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -197,6 +197,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"right_voltage",
 				"left_pos",
 				"right_pos",
+				"left_error",
+				"right_error",
 				"raw_angle"};
 	}
 
@@ -218,6 +220,8 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getOutputVoltage(),
 				leftMaster.getPositionFeet(),
 				rightMaster.getPositionFeet(),
+				leftMaster.getError(),
+				rightMaster.getError(),
 				navX.getAngle()};
 	}
 

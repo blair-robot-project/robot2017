@@ -37,6 +37,7 @@ robot2017.iws
 #Other
 .metadata/
 .DS_Store
+bash.exe.stackdump
 
 #Copied log files
 logs/

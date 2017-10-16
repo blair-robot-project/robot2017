@@ -107,7 +107,6 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 7
-                inverted: false
                 reverseOutput: true
                 enableBrakeMode: false
                 feetPerRotation: 0.9817
@@ -122,7 +121,7 @@ drive:
                       fwdPeakOutputVoltage: 12
                       fwdNominalOutputVoltage: 0.7
                       maxSpeed: 6.2
-                      kP: 0.3
+                      kP: 0.5
                       kI: 0.0
                       kD: 0.0
                       motionProfileP: 1.5
@@ -135,7 +134,6 @@ drive:
                       kP: 0.7
                       kI: 0.0
                       kD: 3.0
-                maxClosedLoopVoltage: 12
                 updaterProcessPeriodSecs: 0.005
                 minNumPointsInBottomBuffer: 10
                 slaves:
@@ -149,7 +147,6 @@ drive:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 <<: *leftMaster
                 '@id': rightMaster
-                inverted: false
                 reverseSensor: true
                 reverseOutput: false
                 port: 2
@@ -185,9 +182,10 @@ defaultDriveCommand:
         kP: 0.005
         kI: 0.0
         kD: 0.0
-        absoluteTolerance: 1
+        absoluteTolerance: 0
         deadband: 2
         inverted: true
+        highGearAngularCoefficient: 2
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
@@ -222,7 +220,6 @@ climber:
             org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon:
                 '@id': climberTalon
                 port: 5
-                inverted: false
                 enableBrakeMode: false
         maxPower: 500
         simpleMotor:

@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
-import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
 
@@ -174,6 +174,11 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 		if (drivingStraight) {
 			//Process the output (minimumOutput, deadband, etc.)
 			output = processPIDOutput(output);
+
+			//Deadband if we're stationary
+			if(oi.getLeftOutput() == 0 || oi.getRightOutput() == 0){
+				output=deadbandOutput(output);
+			}
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
 			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
