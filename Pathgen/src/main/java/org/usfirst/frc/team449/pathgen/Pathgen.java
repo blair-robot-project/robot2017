@@ -126,7 +126,7 @@ public class Pathgen {
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();
-		/*profiles.put("RedLeft", redLeft);
+		profiles.put("RedLeft", redLeft);
 		profiles.put("RedRight", redRight);
 		profiles.put("RedMid", redCenter);
 		profiles.put("BlueLeft", blueLeft);
@@ -141,10 +141,10 @@ public class Pathgen {
 		profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
 		profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
 		profiles.put("RedLoadingToLoading", redLoadingToLoading);
-		profiles.put("RedBoilerToLoading", redBoilerToLoading);*/
-		profiles.put("forward100In", points);
+		profiles.put("RedBoilerToLoading", redBoilerToLoading);
+//		profiles.put("forward100In", points);
 
-		final String ROBOT_NAME = "ballbasaur";
+		final String ROBOT_NAME = "calcifer";
 
 		//Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
 		// the circumference of a circle moved by the robot via C = 360 * n / θ

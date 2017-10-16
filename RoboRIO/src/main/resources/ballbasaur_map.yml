@@ -157,7 +157,7 @@ startupCommand:
         runnables:
             - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
                 '@id': noahPoseEstimator
-                robotDiameter: 25
+                robotDiameter: 2.0833
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
