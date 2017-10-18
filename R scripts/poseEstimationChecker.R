@@ -2,6 +2,36 @@
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
 
+#Get the angle between two points
+angleBetween <- function(leftX, leftY, rightX, rightY){
+  deltaX <- leftX-rightX
+  deltaY <- leftY-rightY
+  if (identical(deltaX, 0)){
+    ans <- pi/2
+  } else {
+    #Pretend it's first quadrant because we manually determine quadrants
+    ans <- atan(abs(deltaY/deltaX))
+  }
+  if (deltaY > 0){
+    if (deltaX > 0){
+      #If it's actually quadrant 1
+      return(ans)
+    }else {
+      #quadrant 2
+      return(pi - ans)
+    }
+    return(ans)
+  } else {
+    if (deltaX > 0){
+      #quadrant 4
+      return(-ans)
+    }else {
+      #quadrant 3
+      return(-(pi - ans))
+    }
+  }
+}
+
 #Calculate the effective wheelbase for a given delta left, right, and angle
 calcWheelbase <- function(deltaLeft, deltaRight, deltaAngle){
   return((deltaLeft-deltaRight)/deltaAngle);
@@ -14,7 +44,7 @@ smoothDerivative <- function(value, timeMillis, n){
 }
 
 #Just kinda does everything
-plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase){
+plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase, fakeWheelbase){
   #Convert because degrees suuuuck
   rawAngle <- deg2rad(rawAngleDegrees)
   
@@ -46,16 +76,21 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   abline(a=avgWheelbase-2.0833, b=0, col='green')
   
   #Eli's algorithm
-  out <- array(dim=c(length(angular),8))
+  out <- array(dim=c(length(timeMillis),8))
   colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","time","wheelbase")
   out[1,] <- c(leftPos[1],rightPos[1],NA,NA,NA,NA,timeMillis[1],NA)
   
   #Noah's algorithm
-  noah <- array(dim=c(length(angular),7))
+  noah <- array(dim=c(length(timeMillis),7))
   colnames(noah) <- c("X","Y","leftX","leftY","rightX","rightY","time")
   angle <- rawAngle[1]
   noah[1,] <- c(leftPos[1],rightPos[1],actualWheelbase/2*cos(angle+pi/2), actualWheelbase/2*sin(angle+pi/2), actualWheelbase/2*cos(angle-pi/2), actualWheelbase/2*sin(angle-pi/2),timeMillis[1])
 
+  #Encoder-only algorithm
+  encOnly <- array(dim=c(length(timeMillis), 7))
+  colnames(encOnly) <- c("X","Y","leftX","leftY","rightX","rightY","time")
+  encOnly[1,] <- c(leftPos[1],rightPos[1],actualWheelbase/2*cos(angle+pi/2), actualWheelbase/2*sin(angle+pi/2), actualWheelbase/2*cos(angle-pi/2), actualWheelbase/2*sin(angle-pi/2),timeMillis[1])
+  
   #Loop through each logged tic, calculating pose iteratively
   for(i in 2:length(timeMillis)){
     #Find change in time, in seconds
@@ -93,6 +128,22 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
       } else {
         out[i,] <- c(x, y, x+wheelbase/2*cos(angle+pi/2), y+wheelbase/2*sin(angle+pi/2), x+wheelbase/2*cos(angle-pi/2), y+wheelbase/2*sin(angle-pi/2), timeMillis[i],wheelbase)
       }
+    }
+    
+    #Encoder only
+    perpendicular <- angleBetween(leftX=encOnly[i-1,3],leftY=encOnly[i-1,4],rightX = encOnly[i-1,5],rightY = encOnly[i-1,6])
+    theta <- (deltaLeft - deltaRight)/fakeWheelbase
+    if(theta == 0){
+      x <- encOnly[i-1,1]+avgMoved*cos(perpendicular)
+      y <- encOnly[i-1,2]+avgMoved*sin(perpendicular)
+      encOnly[i,] <- c(x,y,x+fakeWheelbase/2*cos(perpendicular+pi/2), y+fakeWheelbase/2*sin(perpendicular+pi/2), x+fakeWheelbase/2*cos(perpendicular-pi/2), y+fakeWheelbase/2*sin(perpendicular-pi/2), timeMillis[i])
+    } else {
+      r <- fakeWheelbase / 2. * (deltaLeft + deltaRight) / (deltaLeft - deltaRight);
+      mag <- 2*r*sin(theta/2)
+      encAngle <- perpendicular - theta/2
+      x <- encOnly[i-1,1]+mag*cos(encAngle)
+      y <- encOnly[i-1,2]+mag*sin(encAngle)
+      encOnly[i,] <- c(x,y,x+fakeWheelbase/2*cos(perpendicular+pi/2), y+fakeWheelbase/2*sin(perpendicular+pi/2), x+fakeWheelbase/2*cos(perpendicular-pi/2), y+fakeWheelbase/2*sin(perpendicular-pi/2), timeMillis[i])
     }
     
     #Noah's approach
@@ -135,15 +186,15 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   }
   
   #Plot Eli results, with fake wheelbase, only showing points within 1 actual wheelbase of the path
-  plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], na.rm = TRUE)-actualWheelbase,max(out[,1],na.rm = TRUE)+actualWheelbase), ylim=c(min(out[,2], na.rm = TRUE)-actualWheelbase,max(out[,2], na.rm=TRUE)+actualWheelbase), xlab="X position (Feet)", ylab="Y position (Feet)", main="Eli's Pose Estimation Algorithm")
+  plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], na.rm = TRUE)-actualWheelbase,max(out[,1],na.rm = TRUE)+actualWheelbase), ylim=c(min(out[,2], na.rm = TRUE)-actualWheelbase,max(out[,2], na.rm=TRUE)+actualWheelbase), xlab="X position (Feet)", ylab="Y position (Feet)", main="Eli's Pose Estimation Algorithm", asp=1)
   lines(out[,3], out[,4], col="Green")
   lines(out[,5], out[,6], col="Red")
   
   #Plot Noah results, with real wheelbase
-  plot(noah[,1], noah[,2], t="l", xlim = c(min(noah[,1], noah[,3], noah[,5]),max(noah[,1], noah[,3], noah[,5])), ylim=c(min(noah[,2], noah[,4], noah[,6]),max(noah[,2], noah[,4], noah[,6])), xlab="X position (Feet)", ylab="Y position (Feet)", main="Noah's Pose Estimation Algorithm")
+  plot(noah[,1], noah[,2], t="l", xlim = c(min(noah[,1], noah[,3], noah[,5]),max(noah[,1], noah[,3], noah[,5])), ylim=c(min(noah[,2], noah[,4], noah[,6]),max(noah[,2], noah[,4], noah[,6])), xlab="X position (Feet)", ylab="Y position (Feet)", main="Noah's Pose Estimation Algorithm",asp=1)
   #plot(noah[,1],noah[,2],t="l")
   lines(noah[,3], noah[,4], col="Green")
   lines(noah[,5], noah[,6], col="Red")
   
-  return(noah)
+  return(encOnly)
 }
