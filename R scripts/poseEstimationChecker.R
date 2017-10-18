@@ -84,6 +84,7 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
         deltaRight = deltaLeft - actualWheelbase * deltaTheta;
       }
     }
+    avgMoved <- (deltaLeft+deltaRight)/2
     
     if (deltaTheta == 0){
       noah[i,] <- c(noah[i-1,1]+avgMoved*cos(rawAngle[i]),noah[i-1,2]+avgMoved*sin(rawAngle[i]), NA, NA, NA, NA, timeMillis[i])
