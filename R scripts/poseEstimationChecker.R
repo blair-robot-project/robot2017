@@ -41,27 +41,68 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   abline(a=avgWheelbase-2.0833, b=0, col='green')
   
   sumLeft <- 0
-  out <- array(dim=c(length(angular),7))
-  colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","time")
-  out[1,] <- c(leftPos[1],rightPos[1],NA,NA,NA,NA,timeMillis[1])
+  out <- array(dim=c(length(angular),8))
+  noah <- array(dim=c(length(angular),7))
+  actualWheelbase <- 2.0833
+  colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","time","wheelbase")
+  out[1,] <- c(leftPos[1],rightPos[1],NA,NA,NA,NA,timeMillis[1],NA)
   for(i in 2:length(angular)){
     deltaTime <- (timeMillis[i] - out[i-1,7])/1000
     deltaLeft <- leftPos[i]-leftPos[i-1]
     deltaRight <- rightPos[i]-rightPos[i-1]
     deltaTheta <- rawAngle[i]-rawAngle[i-1]
+    wheelbase <- calcWheelbase(deltaLeft, deltaRight, deltaTheta)
     avgMoved <- (deltaLeft+deltaRight)/2
     
+    #Eli's approach
     sumLeft <- sumLeft + deltaLeft
     if (deltaTheta == 0){
-      out[i,] <- c(out[i-1,1]+avgMoved*cos(rawAngle[i]),out[i-1,2]+avgMoved*sin(rawAngle[i]), NA, NA, NA, NA, timeMillis[i])
+      out[i,] <- c(out[i-1,1]+avgMoved*cos(rawAngle[i]),out[i-1,2]+avgMoved*sin(rawAngle[i]), NA, NA, NA, NA, timeMillis[i],NA)
     } else {
       angle <- rawAngle[i-1]-(deltaTheta/2)
       mag <- 2*(avgMoved/deltaTheta)*sin(deltaTheta/2)
-      out[i,] <- c(out[i-1,1]+mag*cos(angle), out[i-1,2]+mag*sin(angle), NA, NA, NA, NA, timeMillis[i])
+      x <- out[i-1,1]+mag*cos(angle)
+      y <- out[i-1,2]+mag*sin(angle)
+      if (deltaTheta/deltaTime < angularVelThreshRad){
+        out[i,] <- c(x, y, NA,NA,NA,NA, timeMillis[i],NA)
+      } else {
+        out[i,] <- c(x, y, x+wheelbase/2*cos(angle+pi/2), y+wheelbase/2*sin(angle+pi/2), x+wheelbase/2*cos(angle-pi/2), y+wheelbase/2*sin(angle-pi/2), timeMillis[i],wheelbase)
+      }
+    }
+    
+    #Noah's approach
+    if (deltaTheta < (deltaLeft - deltaRight) / actualWheelbase) {
+      if (deltaLeft > 0) {
+        deltaLeft = deltaRight + actualWheelbase * deltaTheta;
+      } else {
+        deltaRight = deltaLeft - actualWheelbase * deltaTheta;
+      }
+    } else if (deltaTheta > (deltaLeft - deltaRight) / actualWheelbase) {
+      if (deltaLeft < 0) {
+        deltaLeft = deltaRight + actualWheelbase * deltaTheta;
+      } else {
+        deltaRight = deltaLeft - actualWheelbase * deltaTheta;
+      }
+    }
+    
+    if (deltaTheta == 0){
+      noah[i,] <- c(noah[i-1,1]+avgMoved*cos(rawAngle[i]),noah[i-1,2]+avgMoved*sin(rawAngle[i]), NA, NA, NA, NA, timeMillis[i])
+    } else {
+      angle <- rawAngle[i-1]-(deltaTheta/2)
+      mag <- 2*(avgMoved/deltaTheta)*sin(deltaTheta/2)
+      x <- noah[i-1,1]+mag*cos(angle)
+      y <- noah[i-1,2]+mag*sin(angle)
+      if (deltaTheta/deltaTime < angularVelThreshRad){
+        noah[i,] <- c(x, y, NA,NA,NA,NA, timeMillis[i])
+      } else {
+        noah[i,] <- c(x, y, x+wheelbase/2*cos(angle+pi/2), y+wheelbase/2*sin(angle+pi/2), x+wheelbase/2*cos(angle-pi/2), y+wheelbase/2*sin(angle-pi/2), timeMillis[i])
+      }
     }
   }
   
-  plot(out[,1], out[,2], t="l")
+  plot(out[,1], out[,2], t="l", xlim = c(-5,15), ylim=c(-7,13), xlab="")
+  lines(out[,3], out[,4], col="Green")
+  lines(out[,5], out[,6], col="Red")
   
   return(sumLeft)
 }
