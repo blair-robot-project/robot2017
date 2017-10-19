@@ -157,7 +157,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 7., 4.5, 9); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 5., 3., 6.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);

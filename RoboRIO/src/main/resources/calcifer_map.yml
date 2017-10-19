@@ -4,7 +4,7 @@ testMP: false
 leftTestProfile:
     &leftTest
     '@id': leftTest
-    filename: "100InchProfile.csv"
+    filename: "forward100InProfile.csv"
     inverted: false
 rightTestProfile:
     <<: *leftTest
@@ -269,7 +269,7 @@ gearHandler:
 camera:
     org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork:
         '@id': cameras
-        serverPort: 5800
+        serverPort: 1180
         serverName: "Cameras"
         cameras:
             - '@id': cam0
@@ -287,13 +287,6 @@ pneumatics:
             port: 0
             oversampleBits: 0
             averageBits: 0
-poseEstimator:
-    '@id': poseEstimator
-    robotDiameter: 25
-    subsystem:
-        org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShifting:
-            drive
-    absolutePosAngleTolerance: 5
 logger:
     '@id': logger
     subsystems:
@@ -304,7 +297,12 @@ logger:
         - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
             climber
         - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-            poseEstimator
+            '@id': poseEstimator
+            robotDiameter: 25
+            subsystem:
+                org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                    drive
+            absolutePosAngleTolerance: 5
 #        - org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #            multiSubsystem
     loopTimeSecs: 0.05
@@ -504,7 +502,7 @@ nonMPAutoCommand:
                 drive
 autoStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        '@id': startupCommand
+        '@id': startModeCommand
         commandSet:
             - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
                 '@id': startupSwitchToLowCommand
@@ -532,26 +530,26 @@ autoStartupCommand:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
 teleopStartupCommand:
-    org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-        '@id': teleopStartupCommand
-        commandList:
-            - org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-                startupCommand
-            - org.usfirst.frc.team449.robot.commands.general.RunRunnables:
-                '@id': runRunnables
-                runnables:
-                    - org.usfirst.frc.team449.robot.components.NavXRumbleComponent:
-                        '@id': rumbleComponent
-                        navX:
-                          driveNavX
-                        rumbleables:
-                          - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                                driverGamepad
-                          - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
-                                '@id': gunnerGamepad
-                                port: 3
-                        minJerk: 804
-                        maxJerk: 2412
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startModeCommand
+startupCommand:
+    org.usfirst.frc.team449.robot.commands.general.RunRunnables:
+        '@id': runRunnables
+        runnables:
+            - org.usfirst.frc.team449.robot.components.NavXRumbleComponent:
+                '@id': rumbleComponent
+                navX:
+                  driveNavX
+                rumbleables:
+                  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        driverGamepad
+                  - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                        '@id': gunnerGamepad
+                        port: 3
+                minJerk: 804
+                maxJerk: 2412
+            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                poseEstimator
 buttons:
     -   button:
             org.usfirst.frc.team449.robot.oi.buttons.dPadButton:
