@@ -43,7 +43,9 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   
   #Plot wheelbase vs turn radius
   plot(x=combinedAngular[,3]/combinedAngular[,1], y=combinedAngular[,2]-2.0833, xlab="Turn Radius (feet)", ylab="Error in wheelbase diameter (feet)", main="Error in Wheelbase Diameter vs. Turn Radius")
-  abline(a=avgWheelbase-2.0833, b=0, col='green')
+  abline(a=avgWheelbase, b=0, col='green')
+  
+  return(avgWheelbase)
 }
 
 #A pose estimation algorithm that assumes the left and right sides have equal scrub, in opposite directions
@@ -207,10 +209,11 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
       mag <- 2*(avgMoved/theta)*sin(theta/2)
     }
     
-    angle <- perpendicular - (theta/2)
+    angle <- perpendicular + (theta/2)
     x <- out[i-1,1]+mag*cos(angle)
     y <- out[i-1,2]+mag*sin(angle)
-    out[i,] <- c(x,y,x+wheelRadius*cos(angle+pi/2), y+wheelRadius*sin(angle+pi/2), x+wheelRadius*cos(angle-pi/2), y+wheelRadius*sin(angle-pi/2), angle, timeMillis[i])
+    newHeading <- perpendicular + theta
+    out[i,] <- c(x,y,x+wheelRadius*cos(newHeading+pi/2), y+wheelRadius*sin(newHeading+pi/2), x+wheelRadius*cos(newHeading-pi/2), y+wheelRadius*sin(newHeading-pi/2), newHeading, timeMillis[i])
   }
   
   #Plot results, with fake wheelbase
@@ -221,10 +224,10 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   return(out)
 }
 
-#Make all the graphs, for wheelbase and all 3 algorithms
-doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase, fakeWheelbase){
-  plotWheelVsVel(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst)
+#Make all the graphs, for wheelbase and all 3 algorithms, using the average effective wheelbase for encoder-only
+doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase){
+  avg <- plotWheelVsVel(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst)
   equalScrubPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad)
   ignoreWorstPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase)
-  encoderOnlyPoseEstimation(leftPos, rightPos, rawAngleDegrees[1], timeMillis, fakeWheelbase)
+  encoderOnlyPoseEstimation(leftPos=leftPos, rightPos=rightPos, startingAngleDegrees=rawAngleDegrees[1], timeMillis=timeMillis, fakeWheelbase=avg)
 }
