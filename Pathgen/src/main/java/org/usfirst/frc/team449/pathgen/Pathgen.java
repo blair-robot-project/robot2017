@@ -149,7 +149,7 @@ public class Pathgen {
 		//Calculated by driving each wheel n inches in opposite directions, then taking the angle moved, θ, and finding
 		// the circumference of a circle moved by the robot via C = 360 * n / θ
 		//You then find the diameter via C / π.
-		double balbasaurWheelbase = 33.3 / 12.;
+		double balbasaurWheelbase = 16. / 12.;
 		//200 in: 29.96
 		//50 in: 34.2
 
