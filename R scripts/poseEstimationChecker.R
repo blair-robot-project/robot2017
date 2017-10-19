@@ -2,36 +2,6 @@
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
 
-#Get the angle between two points
-angleBetween <- function(leftX, leftY, rightX, rightY){
-  deltaX <- leftX-rightX
-  deltaY <- leftY-rightY
-  if (identical(deltaX, 0)){
-    ans <- pi/2
-  } else {
-    #Pretend it's first quadrant because we manually determine quadrants
-    ans <- atan(abs(deltaY/deltaX))
-  }
-  if (deltaY > 0){
-    if (deltaX > 0){
-      #If it's actually quadrant 1
-      return(ans)
-    }else {
-      #quadrant 2
-      return(pi - ans)
-    }
-    return(ans)
-  } else {
-    if (deltaX > 0){
-      #quadrant 4
-      return(-ans)
-    }else {
-      #quadrant 3
-      return(-(pi - ans))
-    }
-  }
-}
-
 #Calculate the effective wheelbase for a given delta left, right, and angle
 calcWheelbase <- function(deltaLeft, deltaRight, deltaAngle){
   return((deltaLeft-deltaRight)/deltaAngle);
@@ -209,9 +179,9 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   wheelRadius <- fakeWheelbase/2
   
   #Set up output array
-  out <- array(dim=c(length(timeMillis), 7))
-  colnames(out) <- c("X","Y","leftX","leftY","rightX","rightY","time")
-  out[1,] <- c(leftPos[1],rightPos[1],wheelRadius*cos(startingAngle+pi/2), wheelRadius*sin(startingAngle+pi/2), wheelRadius*cos(startingAngle-pi/2), wheelRadius*sin(startingAngle-pi/2),timeMillis[1])
+  out <- array(dim=c(length(timeMillis), 8))
+  colnames(out) <- c("X","Y","leftX","leftY","rightX","rightY","angle","time")
+  out[1,] <- c(leftPos[1],rightPos[1],wheelRadius*cos(startingAngle+pi/2), wheelRadius*sin(startingAngle+pi/2), wheelRadius*cos(startingAngle-pi/2), wheelRadius*sin(startingAngle-pi/2),startingAngle,timeMillis[1])
   
   #Loop through each logged tic, calculating pose iteratively
   for(i in 2:length(timeMillis)){
@@ -224,7 +194,7 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
     avgMoved <- (deltaLeft+deltaRight)/2
     
     #Points in the direction the robot is facing at the start of tic
-    perpendicular <- angleBetween(leftX=out[i-1,3],leftY=out[i-1,4],rightX = out[i-1,5],rightY = out[i-1,6])-pi/2
+    perpendicular <- out[i-1,7]
     
     #The angle of the sector the path is tracing
     theta <- (deltaLeft - deltaRight)/fakeWheelbase
@@ -240,7 +210,7 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
     angle <- perpendicular - (theta/2)
     x <- out[i-1,1]+mag*cos(angle)
     y <- out[i-1,2]+mag*sin(angle)
-    out[i,] <- c(x,y,x+wheelRadius*cos(angle+pi/2), y+wheelRadius*sin(angle+pi/2), x+wheelRadius*cos(angle-pi/2), y+wheelRadius*sin(angle-pi/2), timeMillis[i])
+    out[i,] <- c(x,y,x+wheelRadius*cos(angle+pi/2), y+wheelRadius*sin(angle+pi/2), x+wheelRadius*cos(angle-pi/2), y+wheelRadius*sin(angle-pi/2), angle, timeMillis[i])
   }
   
   #Plot results, with fake wheelbase
