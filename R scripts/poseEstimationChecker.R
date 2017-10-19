@@ -206,10 +206,12 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   #Convert because degrees suuuuck
   startingAngle <- deg2rad(startingAngleDegrees)
   
+  wheelRadius <- fakeWheelbase/2
+  
   #Set up output array
   out <- array(dim=c(length(timeMillis), 7))
   colnames(out) <- c("X","Y","leftX","leftY","rightX","rightY","time")
-  out[1,] <- c(leftPos[1],rightPos[1],fakeWheelbase/2*cos(startingAngle+pi/2), fakeWheelbase/2*sin(startingAngle+pi/2), fakeWheelbase/2*cos(startingAngle-pi/2), fakeWheelbase/2*sin(startingAngle-pi/2),timeMillis[1])
+  out[1,] <- c(leftPos[1],rightPos[1],wheelRadius*cos(startingAngle+pi/2), wheelRadius*sin(startingAngle+pi/2), wheelRadius*cos(startingAngle-pi/2), wheelRadius*sin(startingAngle-pi/2),timeMillis[1])
   
   #Loop through each logged tic, calculating pose iteratively
   for(i in 2:length(timeMillis)){
@@ -229,18 +231,16 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
     
     #If not turning, magnitude is just the average moved
     if(theta == 0){
-      x <- out[i-1,1]+avgMoved*cos(perpendicular)
-      y <- out[i-1,2]+avgMoved*sin(perpendicular)
-      out[i,] <- c(x,y,x+fakeWheelbase/2*cos(perpendicular+pi/2), y+fakeWheelbase/2*sin(perpendicular+pi/2), x+fakeWheelbase/2*cos(perpendicular-pi/2), y+fakeWheelbase/2*sin(perpendicular-pi/2), timeMillis[i])
+      mag <- avgMoved
     } else {
       #If turning, calculate the radius and use that to get the magnitude of the turn
-      r <- avgMoved/theta;
-      mag <- 2*r*sin(theta/2)
-      angle <- perpendicular + theta/2
-      x <- out[i-1,1]+mag*cos(angle)
-      y <- out[i-1,2]+mag*sin(angle)
-      out[i,] <- c(x,y,x+fakeWheelbase/2*cos(angle+pi/2), y+fakeWheelbase/2*sin(angle+pi/2), x+fakeWheelbase/2*cos(angle-pi/2), y+fakeWheelbase/2*sin(angle-pi/2), timeMillis[i])
+      mag <- 2*(avgMoved/theta)*sin(theta/2)
     }
+    
+    angle <- perpendicular - (theta/2)
+    x <- out[i-1,1]+mag*cos(angle)
+    y <- out[i-1,2]+mag*sin(angle)
+    out[i,] <- c(x,y,x+wheelRadius*cos(angle+pi/2), y+wheelRadius*sin(angle+pi/2), x+wheelRadius*cos(angle-pi/2), y+wheelRadius*sin(angle-pi/2), timeMillis[i])
   }
   
   #Plot results, with fake wheelbase
@@ -256,5 +256,5 @@ doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angular
   plotWheelVsVel(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst)
   equalScrubPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad)
   ignoreWorstPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase)
-  return(encoderOnlyPoseEstimation(leftPos, rightPos, rawAngleDegrees[1], timeMillis, fakeWheelbase))
+  encoderOnlyPoseEstimation(leftPos, rightPos, rawAngleDegrees[1], timeMillis, fakeWheelbase)
 }
