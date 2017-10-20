@@ -157,7 +157,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
 			double r = ((left+right)/2.)/deltaTheta;
-			double vectorAngle = lastAngle - deltaTheta/2.;
+			double vectorAngle = lastAngle + deltaTheta/2.;
 			double vectorMagnitude = 2. * r * Math.sin(deltaTheta / 2.);
 			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
 			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
@@ -183,7 +183,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 			} else {
 				r = robotDiameter / 2. * (left + right) / (left - right);
 			}
-			double vectorAngle = lastAngle - deltaTheta/2.;
+			double vectorAngle = lastAngle + deltaTheta/2.;
 			double vectorMagnitude = 2. * r * Math.sin(deltaTheta / 2.);
 			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
 			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
