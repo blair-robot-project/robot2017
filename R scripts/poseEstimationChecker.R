@@ -2,6 +2,11 @@
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
 
+#Find the distance between the end position of two things
+dist <- function(x1, y1, x2, y2){
+  return(sqrt((x1[length(x1)] - x2[length(x2)])^2+(y1[length(y1)] - y2[length(y2)])^2))
+}
+
 #Calculate the effective wheelbase for a given delta left, right, and angle
 calcWheelbase <- function(deltaLeft, deltaRight, deltaAngle){
   return((deltaLeft-deltaRight)/deltaAngle);
@@ -75,7 +80,7 @@ equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMil
     avgMoved <- (deltaLeft+deltaRight)/2
     
     #The angle of the movement vector
-    angle <- rawAngle[i-1]-(deltaTheta/2)
+    angle <- rawAngle[i-1]+(deltaTheta/2)
 
     if (deltaTheta == 0){
       #If we're driving straight, we know the magnitude is just the average of the two sides
@@ -92,7 +97,7 @@ equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMil
       if (deltaTheta/deltaTime < angularVelThreshRad){
         out[i,] <- c(x, y, NA,NA,NA,NA, timeMillis[i],NA)
       } else {
-        out[i,] <- c(x, y, x+wheelbase/2*cos(angle+pi/2), y+wheelbase/2*sin(angle+pi/2), x+wheelbase/2*cos(angle-pi/2), y+wheelbase/2*sin(angle-pi/2), timeMillis[i],wheelbase)
+        out[i,] <- c(x, y, x+wheelbase/2*cos(rawAngle[i]+pi/2), y+wheelbase/2*sin(rawAngle[i]+pi/2), x+wheelbase/2*cos(rawAngle[i]-pi/2), y+wheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i],wheelbase)
       }
     }
   }
@@ -125,7 +130,7 @@ ignoreWorstPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMi
     deltaTheta <- rawAngle[i]-rawAngle[i-1]
     
     #The angle of the movement vector
-    angle <- rawAngle[i-1]-(deltaTheta/2)
+    angle <- rawAngle[i-1]+(deltaTheta/2)
 
     #Take the side that slipped more and recalculate it from the wheelbase, change in angle, and other side's change
     if (deltaTheta < (deltaLeft - deltaRight) / actualWheelbase) {
@@ -161,7 +166,7 @@ ignoreWorstPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMi
       #Vector decomposition
       x <- out[i-1,1]+mag*cos(angle)
       y <- out[i-1,2]+mag*sin(angle)
-      out[i,] <- c(x, y, x+actualWheelbase/2*cos(angle+pi/2), y+actualWheelbase/2*sin(angle+pi/2), x+actualWheelbase/2*cos(angle-pi/2), y+actualWheelbase/2*sin(angle-pi/2), timeMillis[i])
+      out[i,] <- c(x, y, x+actualWheelbase/2*cos(rawAngle[i]+pi/2), y+actualWheelbase/2*sin(rawAngle[i]+pi/2), x+actualWheelbase/2*cos(rawAngle[i]-pi/2), y+actualWheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i])
     }
   }
   
@@ -230,4 +235,5 @@ doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angular
   equalScrubPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad)
   ignoreWorstPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase)
   encoderOnlyPoseEstimation(leftPos=leftPos, rightPos=rightPos, startingAngleDegrees=rawAngleDegrees[1], timeMillis=timeMillis, fakeWheelbase=avg)
+  return(avg)
 }
