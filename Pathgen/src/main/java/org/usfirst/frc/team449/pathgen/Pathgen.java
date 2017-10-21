@@ -32,8 +32,8 @@ public class Pathgen {
 		final double RED_BACK_CORNER_TO_SIDE_PEG = 97.;
 		final double RED_HALF_KEY_LENGTH = 152./2.;
 		final double RED_KEY_CORNER_TO_SIDE_PEG = 21.;
-		final double AIRSHIP_PARALLEL_OFFSET_BLUE = 0.;
-		final double AIRSHIP_PARALLEL_OFFSET_RED = 0.;
+		final double AIRSHIP_PARALLEL_OFFSET_BLUE = 1.;
+		final double AIRSHIP_PARALLEL_OFFSET_RED = 2.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
@@ -106,24 +106,24 @@ public class Pathgen {
 
 		Waypoint[] blueLoadingToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(27, -5, 0)
+				new Waypoint(22, -5, 0)
 		};
 
 		Waypoint[] blueBoilerToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
 				new Waypoint(5, 0, 0),
-				new Waypoint(27, -15, 0)
+				new Waypoint(22, -15, 0)
 		};
 
 		Waypoint[] redLoadingToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint(27, 5, 0)
+				new Waypoint(22, 5, 0)
 		};
 
 		Waypoint[] redBoilerToLoading = new Waypoint[]{
 				new Waypoint(0, 0, 0),
 				new Waypoint(5, 0, 0),
-				new Waypoint(27, 15, 0)
+				new Waypoint(22, 15, 0)
 		};
 
 		Map<String, Waypoint[]> profiles = new HashMap<>();

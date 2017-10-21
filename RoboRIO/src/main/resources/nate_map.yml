@@ -117,7 +117,7 @@ oi:
             '@id': scaleRotByFwdPoly
             powerToCoefficientMap: !!map
                 0.5: 0.6
-                0: 0.1
+                0: 0.2
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
