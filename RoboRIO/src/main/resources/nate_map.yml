@@ -95,7 +95,7 @@ oi:
                     - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                         <<: *rotThrottle
                         '@id': fwdTrigger
-                        axis: 2
+                        axis: 3
                         inverted: false
                         polynomial:
                             '@id': fwdPoly
@@ -104,7 +104,7 @@ oi:
                     - org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                         <<: *rotThrottle
                         '@id': revTrigger
-                        axis: 3
+                        axis: 2
                         inverted: true
                         polynomial:
                             '@id': revPoly
@@ -653,7 +653,7 @@ buttons:
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
                         driverGamepad
-                buttonNumber: 5
+                buttonNumber: 2
         command:
             org.usfirst.frc.team449.robot.commands.multiInterface.RunMotorWhileConditonMet:
                 '@id': climbCommand
@@ -712,7 +712,7 @@ buttons:
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
                         driverGamepad
-                buttonNumber: 6
+                buttonNumber: 1
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse:
                 <<: *openGearHandler

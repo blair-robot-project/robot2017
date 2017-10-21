@@ -22,17 +22,18 @@ public class Pathgen {
 		final double BACK_FROM_PEG = -5;
 		//DO NOT TOUCH THE ONES BELOW
 		final double CARRIAGE_LEN = 3.63;
-		final double BLUE_WALL_TO_CENTER_PEG = 113.75;
-		final double BLUE_WALL_TO_SIDE_PEG = 130.75;
-		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 91.;
-		final double BLUE_HALF_KEY_LENGTH = 150.5/2.;
-		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 15.;
-		final double RED_WALL_TO_CENTER_PEG = 114.;
-		final double RED_WALL_TO_SIDE_PEG = 130.;
-		final double RED_BACK_CORNER_TO_SIDE_PEG = 93.5;
-		final double RED_HALF_KEY_LENGTH = 152.5/2.;
-		final double RED_KEY_CORNER_TO_SIDE_PEG = 18.75;
-		final double AIRSHIP_PARALLEL_OFFSET = 6.;
+		final double BLUE_WALL_TO_CENTER_PEG = 114.;
+		final double BLUE_WALL_TO_SIDE_PEG = 130.5;
+		final double BLUE_BACK_CORNER_TO_SIDE_PEG = 89.;
+		final double BLUE_HALF_KEY_LENGTH = 152./2.;
+		final double BLUE_KEY_CORNER_TO_SIDE_PEG = 16.;
+		final double RED_WALL_TO_CENTER_PEG = 113.5;
+		final double RED_WALL_TO_SIDE_PEG = 131.;
+		final double RED_BACK_CORNER_TO_SIDE_PEG = 97.;
+		final double RED_HALF_KEY_LENGTH = 152./2.;
+		final double RED_KEY_CORNER_TO_SIDE_PEG = 21.;
+		final double AIRSHIP_PARALLEL_OFFSET_BLUE = 0.;
+		final double AIRSHIP_PARALLEL_OFFSET_RED = 0.;
 
 		final double PEG_BASE_TO_CENTER = CENTER_TO_FRONT + CARRIAGE_LEN + BACK_FROM_PEG;
 
@@ -43,14 +44,14 @@ public class Pathgen {
 
 		Waypoint[] blueLeft = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,-(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
+				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE*Math.cos(5.*Math.PI/6.))/12.
+						,-(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] blueRight = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
+				new Waypoint((BLUE_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE*Math.cos(5.*Math.PI/6.))/12.
+						,(BLUE_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_BLUE*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] blueCenter = new Waypoint[]{
@@ -60,14 +61,14 @@ public class Pathgen {
 
 		Waypoint[] redLeft = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,-(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
+				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED*Math.cos(5.*Math.PI/6.))/12.
+						,-(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED*Math.sin(5.*Math.PI/6.))/12.,-Math.PI/3.)
 		};
 
 		Waypoint[] redRight = new Waypoint[]{
 				new Waypoint(0, 0, 0),
-				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.cos(5.*Math.PI/6.))/12.
-						,(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
+				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED*Math.cos(5.*Math.PI/6.))/12.
+						,(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER + AIRSHIP_PARALLEL_OFFSET_RED*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
 		};
 
 		Waypoint[] redCenter = new Waypoint[]{
@@ -157,7 +158,7 @@ public class Pathgen {
 		double calciferWheelbase = 26./12.;
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
-				0.05, 5., 3., 6.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
+				0.05, 5., 4.5, 9.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)
 
 		for (String profile : profiles.keySet()) {
 			Trajectory trajectory = Pathfinder.generate(profiles.get(profile), config);

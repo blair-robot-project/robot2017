@@ -690,7 +690,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			point.velocityOnly = velocityOnly;  // true => no position servo just velocity feedforward
 
 			// Set all the fields of the profile point
-			point.position = feetToEncoder(data.getData()[i][0]);
+			point.position = feetToEncoder(data.getData()[i][0]) * (data.isInverted() ? -1 : 1);
 
 			//Calculate vel based off inversion
 			if (data.isInverted()) {
