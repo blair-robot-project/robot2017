@@ -232,32 +232,6 @@ climber:
         powerLimitTimer:
             '@id': powerLimitTimer
             bufferTimeSeconds: 0.005
-#multiSubsystem:
-#    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
-#        '@id': multiSubsystem
-#        shooterTalon:
-#            '@id': shooterTalon
-#            port: 4
-#            inverted: false
-#            reverseSensor: true
-#            enableBrakeMode: false
-#            fwdPeakOutputVoltage: 12
-#            fwdNominalOutputVoltage: 0
-#            closedLoopRampRate: 12
-#            maxClosedLoopVoltage: 12
-#            feedbackDevice: QuadEncoder
-#            encoderCPR: 1024
-#            maxSpeedHigh: 90
-#            highGearP: 0.15
-#            highGearI: 0.0
-#            highGearD: 0.0
-#        shooterThrottle: 0.72
-#        spinUpTimeSecs: 1
-#        feederVictor:
-#            '@id': feederVictor
-#            port: 1
-#            inverted: true
-#        feederThrottle: 0.66
 gearHandler:
     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
         '@id': gearHandler
@@ -298,13 +272,12 @@ logger:
             climber
         - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
             '@id': poseEstimator
-            robotDiameter: 25
             subsystem:
                 org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                     drive
             absolutePosAngleTolerance: 5
-#        - org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
-#            multiSubsystem
+        - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+            oi
     loopTimeSecs: 0.05
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
@@ -751,46 +724,3 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
-#    -   button:
-#             org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-#               '@id': fireShooterButton
-#               joystick:
-#                   gunnerGamepad
-#               buttonNumber: 6
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.FireShooter:
-#                '@id': fireShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
-#                        multiSubsystem
-#        action: WHEN_PRESSED
-#    -   button:
-#             org.usfirstfirst.frc.team449.robot.oi.buttons.TriggerButton:
-#               '@id': rackShooterButton
-#                throttle:
-#                    '@id': rackShooterThrottle
-#                    org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
-#                        stick:
-#                            gunnerGamepad
-#                        axis: 3
-#               triggerAt: 0.9
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.RackShooter:
-#                '@id': rackShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
-#                        multiSubsystem
-#        action: WHEN_PRESSED
-#    -   button:
-#            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
-#                '@id': resetShooterButton
-#                joystick:
-#                    gunnerGamepad
-#                buttonNumber: 5
-#        command:
-#            org.usfirst.frc.team449.robot.commands.multiSubsystembsystem.ResetShooter:
-#                '@id': resetShooterCommand
-#                shooter:
-#                    org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
-#                        multiSubsystem
-#        action: WHEN_PRESSED
