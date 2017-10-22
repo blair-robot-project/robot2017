@@ -16,7 +16,7 @@ public interface SubsystemNavX {
 	 *
 	 * @return robot heading, in degrees, on [-180, 180]
 	 */
-	double getGyroOutput();
+	double getGyroHeading();
 
 	/**
 	 * @return true if the navX is currently overriden, false otherwise.

@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  * Turn a certain number of degrees from the current heading.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngleRelative<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends NavXTurnToAngle {
+public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends NavXTurnToAngle {
 
 	/**
 	 * Default constructor.
@@ -62,7 +62,7 @@ public class NavXTurnToAngleRelative<T extends YamlSubsystem & DriveUnidirection
 		this.startTime = Clock.currentTimeMillis();
 		Logger.addEvent("NavXRelativeTurnToAngle init.", this.getClass());
 		//Do math to setup the setpoint.
-		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroOutput() + setpoint));
+		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroHeading() + setpoint));
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}

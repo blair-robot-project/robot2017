@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class JiggleRobot<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends YamlCommandGroupWrapper {
+public class JiggleRobot <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Instantiate the CommandGroup

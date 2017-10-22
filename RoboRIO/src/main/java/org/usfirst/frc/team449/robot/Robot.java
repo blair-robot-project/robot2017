@@ -71,6 +71,11 @@ public class Robot extends IterativeRobot {
 	private Command autonomousCommand;
 
 	/**
+	 * Whether or not the robot has been enabled yet.
+	 */
+	private boolean enabled;
+
+	/**
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
@@ -78,14 +83,17 @@ public class Robot extends IterativeRobot {
 		Clock.setStartTime();
 		Clock.updateTime();
 
+		enabled = false;
+
 		//Yes this should be a print statement, it's useful to know that robotInit started.
 		System.out.println("Started robotInit.");
 
 		Yaml yaml = new Yaml();
 		try {
 			//Read the yaml file with SnakeYaml so we can use anchors and merge syntax.
-//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "ballbasaur_map.yml"));
-			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_map.yml"));
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH+"ballbasaur_map.yml"));
+//			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "naveen_map.yml"));
+			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "nate_map.yml"));
 //			Map<?, ?> normalized = (Map<?, ?>) yaml.load(new FileReader(RESOURCES_PATH + "calcifer_outreach_map.yml"));
 			YAMLMapper mapper = new YAMLMapper();
 			//Turn the Map read by SnakeYaml into a String so Jackson can read it.
@@ -163,6 +171,7 @@ public class Robot extends IterativeRobot {
 
 		//Run the logger to write all the events that happened during initialization to a file.
 		robotMap.getLogger().run();
+		Clock.updateTime();
 	}
 
 	/**
@@ -170,6 +179,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		//Run startup command if we start in teleop.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
+
 		//Do the startup tasks
 		driveSubsystem.stopMPProcesses();
 		doStartupTasks();
@@ -200,6 +217,14 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		//Run startup command if we start in auto.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
+
 		//Do startup tasks
 		doStartupTasks();
 		if (robotMap.getAutoStartupCommand() != null) {
@@ -238,6 +263,28 @@ public class Robot extends IterativeRobot {
 	}
 
 	/**
+	 * Run when we first enable in test mode.
+	 */
+	@Override
+	public void testInit(){
+		//Run startup command if we start in test mode.
+		if(!enabled){
+			if (robotMap.getStartupCommand() != null) {
+				robotMap.getStartupCommand().start();
+			}
+			enabled = true;
+		}
+	}
+
+	/**
+	 * Run every tic while disabled
+	 */
+	@Override
+	public void disabledPeriodic(){
+		Clock.updateTime();
+	}
+
+	/**
 	 * Sends the current mode (auto, teleop, or disabled) over I2C.
 	 *
 	 * @param i2C  The I2C channel to send the data over.
@@ -267,9 +314,5 @@ public class Robot extends IterativeRobot {
 
 		//Start running the logger
 		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
-
-		//Enable and reset the drive
-		driveSubsystem.enableMotors();
-		driveSubsystem.resetPosition();
 	}
 }

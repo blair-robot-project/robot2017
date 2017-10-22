@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngle
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -132,7 +132,7 @@ public class UnidirectionalNavXDefaultDrive<T extends YamlSubsystem & DriveUnidi
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the navX
 			this.getPIDController().reset();
-			this.getPIDController().setSetpoint(subsystem.getGyroOutput());
+			this.getPIDController().setSetpoint(subsystem.getGyroHeading());
 			this.getPIDController().enable();
 			Logger.addEvent("Switching to DriveStraight.", this.getClass());
 		}

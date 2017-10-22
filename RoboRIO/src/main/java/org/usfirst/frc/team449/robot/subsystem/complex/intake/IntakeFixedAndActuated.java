@@ -67,10 +67,10 @@ public class IntakeFixedAndActuated extends YamlSubsystem implements SubsystemSo
 	/**
 	 * Default constructor.
 	 *
-	 * @param fixedMotor       The SimpleMotor powering the fixed intake.
+	 * @param fixedMotor        The SimpleMotor powering the fixed intake.
 	 * @param fixedAgitateSpeed The speed to run the fixed victor at to agitate balls, on [-1, 1]
 	 * @param fixedIntakeSpeed  The speed to run the fixed victor to intake balls, on [-1, 1]
-	 * @param actuatedMotor    The SimpleMotor powering the actuated intake.
+	 * @param actuatedMotor     The SimpleMotor powering the actuated intake.
 	 * @param actuatedSpeed     The speed to run the actuated victor to intake balls, on [-1, 1].
 	 * @param piston            The piston for raising and lowering the actuated intake.
 	 */

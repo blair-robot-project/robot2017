@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /**
  * A Button triggered by pushing the D-pad to a specific angle.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class dPadButton extends FactoryButton {
+public class dPadButton extends MappedButton {
 
 	/**
 	 * The angle that the D-pad must be pushed to to trigger this button.

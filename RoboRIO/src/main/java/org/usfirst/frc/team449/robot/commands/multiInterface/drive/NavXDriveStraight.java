@@ -17,7 +17,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngle
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to give output to.

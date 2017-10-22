@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
+import org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
 import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
@@ -19,6 +20,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimpl
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -191,6 +193,12 @@ public class RobotMap2017 {
 	private final Command teleopStartupCommand;
 
 	/**
+	 * The command to be run when first enabled.
+	 */
+	@Nullable
+	private final Command startupCommand;
+
+	/**
 	 * Whether to run the test or real motion profile during autonomous.
 	 */
 	private final boolean testMP;
@@ -203,7 +211,7 @@ public class RobotMap2017 {
 	/**
 	 * Default constructor.
 	 *
-	 * @param buttons             The buttons for controlling this robot.
+	 * @param buttons             The buttons for controlling this robot. Can be null for an empty list.
 	 * @param oi                  The OI for controlling this robot's drive.
 	 * @param logger              The logger for recording events and telemetry data.
 	 * @param drive               The drive.
@@ -241,11 +249,12 @@ public class RobotMap2017 {
 	 *                            command is run during autonomous.
 	 * @param autoStartupCommand The command to be run when first enabled in autonomous mode.
 	 * @param teleopStartupCommand    The command to be run when first enabled in teleoperated mode.
+	 * @param startupCommand The command to be run when first enabled.
 	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
 	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@NotNull @JsonProperty(required = true) List<CommandButton> buttons,
+	public RobotMap2017(@Nullable List<CommandButton> buttons,
 	                    @NotNull @JsonProperty(required = true) OIUnidirectional oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
@@ -268,9 +277,10 @@ public class RobotMap2017 {
 	                    @Nullable YamlCommand nonMPAutoCommand,
 	                    @Nullable YamlCommand autoStartupCommand,
 	                    @Nullable YamlCommand teleopStartupCommand,
+	                    @Nullable YamlCommand startupCommand,
 	                    boolean testMP,
 	                    @Nullable Boolean doMP) {
-		this.buttons = buttons;
+		this.buttons = buttons != null ? buttons : new ArrayList<>();
 		this.oi = oi;
 		this.drive = drive;
 		this.climber = climber;
@@ -295,6 +305,7 @@ public class RobotMap2017 {
 		this.nonMPAutoCommand = nonMPAutoCommand != null ? nonMPAutoCommand.getCommand() : null;
 		this.autoStartupCommand = autoStartupCommand != null ? autoStartupCommand.getCommand() : null;
 		this.teleopStartupCommand = teleopStartupCommand != null ? teleopStartupCommand.getCommand() : null;
+		this.startupCommand = startupCommand != null ? startupCommand.getCommand() : null;
 		this.testMP = testMP;
 		this.doMP = doMP != null ? doMP : true;
 	}
@@ -523,5 +534,13 @@ public class RobotMap2017 {
 	 */
 	public boolean getDoMP() {
 		return doMP;
+	}
+
+	/**
+	 * @return The command to be run when first enabled.
+	 */
+	@Nullable
+	public Command getStartupCommand() {
+		return startupCommand;
 	}
 }

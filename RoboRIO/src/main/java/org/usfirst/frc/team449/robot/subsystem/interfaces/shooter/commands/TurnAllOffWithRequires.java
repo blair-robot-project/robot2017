@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShoot
  * continue running.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnAllOffWithRequires<T extends YamlSubsystem & SubsystemShooter> extends TurnAllOff {
+public class TurnAllOffWithRequires <T extends YamlSubsystem & SubsystemShooter> extends TurnAllOff {
 
 	/**
 	 * Default constructor

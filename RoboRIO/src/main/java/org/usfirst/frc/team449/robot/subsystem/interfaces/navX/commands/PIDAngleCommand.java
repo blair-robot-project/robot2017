@@ -139,7 +139,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 */
 	@Override
 	protected double returnPIDInput() {
-		return subsystem.getGyroOutput();
+		return subsystem.getGyroHeading();
 	}
 
 	/**

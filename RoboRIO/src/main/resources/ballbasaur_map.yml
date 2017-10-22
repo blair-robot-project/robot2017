@@ -1,73 +1,15 @@
 ---
-doMP: true
-testMP: false
+doMP: false
+testMP: true
 leftTestProfile:
     &leftTest
     '@id': leftTest
-    filename: "100InchProfile.csv"
-    inverted: false
+    filename: "ballbasaurForward100InProfile.csv"
+    inverted: true
+    velocityOnly: true
 rightTestProfile:
     <<: *leftTest
     '@id': rightTest
-leftProfiles: !!map
-    "blue_center" :
-        '@id': blueLeftCenter
-        filename: "calciferLeftBlueMidProfile.csv"
-        inverted: false
-    "blue_left" :
-        '@id': blueLeftLeft
-        filename: "calciferLeftBlueLeftProfile.csv"
-        inverted: false
-    "blue_right" :
-        '@id': blueLeftRight
-        filename: "calciferLeftBlueRightProfile.csv"
-        inverted: false
-    "red_center" :
-        '@id': redLeftCenter
-        filename: "calciferLeftRedMidProfile.csv"
-        inverted: false
-    "red_left" :
-        '@id': redLeftLeft
-        filename: "calciferLeftRedLeftProfile.csv"
-        inverted: false
-    "red_right" :
-        '@id': redLeftRight
-        filename: "calciferLeftRedRightProfile.csv"
-        inverted: false
-rightProfiles: !!map
-    "blue_center" :
-        '@id': blueRightCenter
-        filename: "calciferRightBlueMidProfile.csv"
-        inverted: false
-    "blue_left" :
-        '@id': blueRightLeft
-        filename: "calciferRightBlueLeftProfile.csv"
-        inverted: false
-    "blue_right" :
-        '@id': blueRightRight
-        filename: "calciferRightBlueRightProfile.csv"
-        inverted: false
-    "red_center" :
-        '@id': redRightCenter
-        filename: "calciferRightRedMidProfile.csv"
-        inverted: false
-    "red_left" :
-        '@id': redRightLeft
-        filename: "calciferRightRedLeftProfile.csv"
-        inverted: false
-    "red_right" :
-        '@id': redRightRight
-        filename: "calciferRightRedRightProfile.csv"
-        inverted: false
-allianceSwitch:
-    '@id': allianceSwitch
-    ports: [3]
-dropGearSwitch:
-    '@id': dropGearSwitch
-    ports: [2]
-locationDial:
-    '@id': locationDial
-    ports: [0, 1]
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
         '@id': drive
@@ -76,7 +18,7 @@ drive:
                 &leftMaster
                 '@id': leftMaster
                 port: 5
-                inverted: false
+                invertInVoltage: false
                 enableBrakeMode: true
                 feetPerRotation: 1.002
                 currentLimit: 40
@@ -85,15 +27,19 @@ drive:
                 reverseSensor: false
                 reverseOutput: false
                 perGearSettings:
-                  - fwdPeakOutputVoltage: 12
+                  - &gearSettings
+                    fwdPeakOutputVoltage: 12
                     fwdNominalOutputVoltage: 0.0
                     maxSpeed: 11.8
-                    kP: 0.3
+                    kP: 0.1
                     kI: 0.0
-                    kD: 3.0
-                    motionProfileP: 1.0
-                    motionProfileI: 0.0
-                    motionProfileD: 0.0
+                    kD: 1.0
+                    motionProfilePFwd: 1.0
+                    motionProfileIFwd: 0.0
+                    motionProfileDFwd: 20.0
+                    maxAccelFwd: 54
+                    maxSpeedMPFwd: 15.132
+                    frictionCompFPSFwd: 1.55
                 slaves:
                     - '@id': talon1
                       port: 6
@@ -106,9 +52,13 @@ drive:
                 <<: *leftMaster
                 '@id': rightMaster
                 port: 2
-                inverted: false
+                invertInVoltage: true
                 reverseSensor: true
                 reverseOutput: true
+                perGearSettings:
+                  - <<: *gearSettings
+                    maxSpeedMPFwd: 13.619
+                    frictionCompFPSFwd: 1.705
                 slaves:
                     - '@id': talon3
                       port: 9
@@ -116,13 +66,6 @@ drive:
                     - '@id': talon5
                       port: 8
                       inverted: false
-        MPHandler:
-            '@id': driveMPHandler
-            talons:
-                - leftMaster
-                - rightMaster
-            updaterProcessPeriodSecs: 0.005
-            minNumPointsInBtmBuffer: 10
         VelScale: 0.9
         navX:
             '@id': driveNavX
@@ -131,20 +74,13 @@ pneumatics:
     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
         '@id': pneumatics
         nodeID: 15
-logger:
-    '@id': logger
-    subsystems:
-        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-            drive
-    loopTimeSecs: 0.02
-    eventLogFilename: "/home/lvuser/logs/eventLog-"
-    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 oi:
     org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
         '@id': oi
         gamepad:
-            '@id': driverGamepad
-            port: 1
+            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                '@id': driverGamepad
+                port: 1
         rotThrottle:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                 &rotThrottle
@@ -185,48 +121,62 @@ defaultDriveCommand:
         oi:
             org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
                 oi
-centerAuto:
-    org.usfirst.frc.team449.robot.commands.general.CommandSequence:
-        '@id': centerAuto
-        commandList:
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.commands.RunLoadedProfile:
-                '@id': runCenterWallToPegProfile
+nonMPAutoCommand:
+    org.usfirst.frc.team449.robot.drive.unidirectional.commands.DriveAtSpeed:
+        '@id': nonMPAuto
+        subsystem:
+            org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                drive
+        velocity: 1.0
+        seconds: 1.5
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startupCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
+                '@id': startCompressor
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
+                        pneumatics
+            - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
+                '@id': enableMotors
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
-                timeout: 10
-                require: true
-                minRunTimeSecs: 0.1
-            - org.usfirst.frc.team449.robot.commands.general.WaitForMillis:
-                '@id': waitCommand1
-                time: 50
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': runBackupProfile
+            - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
+                '@id': resetPosition
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
-                left:
-                    '@id': blueLeftCenterReverse
-                    filename: "calciferLeftBlueMidProfile.csv"
-                    inverted: true
-                right:
-                    '@id': blueRightCenterReverse
-                    filename: "calciferRightBlueMidProfile.csv"
-                    inverted: true
-                timeout: 10
-                minRunTimeSecs: 0.5
-            - org.usfirst.frc.team449.robot.commands.general.WaitForMillis:
-                '@id': waitCommand2
-                time: 50
-            - org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.commands.RunProfileTwoSides:
-                '@id': fwdAgain
+teleopStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        startupCommand
+startupCommand:
+    org.usfirst.frc.team449.robot.commands.general.RunRunnables:
+        '@id': runRunnables
+        runnables:
+            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                '@id': noahPoseEstimator
+                robotDiameter: 2.0833
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
-                left:
-                    blueLeftCenter
-                right:
-                    blueRightCenter
-                timeout: 10
-                minRunTimeSecs: 0.5
-buttons:
+                absolutePosAngleTolerance: 5
+            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+                '@id': eliPoseEstimator
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                        drive
+                absolutePosAngleTolerance: 5
+logger:
+    '@id': logger
+    subsystems:
+        - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+            drive
+        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+            noahPoseEstimator
+        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
+            eliPoseEstimator
+    loopTimeSecs: 0.02
+    eventLogFilename: "/home/lvuser/logs/eventLog-"
+    telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"

@@ -10,6 +10,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
+import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
@@ -87,7 +88,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the left side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
@@ -98,12 +99,34 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Get the velocity of the right side of the drive.
 	 *
-	 * @return The signed velocity in rotations per second, or null if the drive doesn't have encoders.
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
 	 */
 	@Override
 	@Nullable
 	public Double getRightVel() {
 		return rightMaster.getVelocity();
+	}
+
+	/**
+	 * Get the position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPos() {
+		return leftMaster.getPositionFeet();
+	}
+
+	/**
+	 * Get the position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPos() {
+		return rightMaster.getPositionFeet();
 	}
 
 	/**
@@ -148,7 +171,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * @return robot heading, in degrees, on [-180, 180]
 	 */
 	@Override
-	public double getGyroOutput() {
+	public double getGyroHeading() {
 		return navX.pidGet();
 	}
 
@@ -198,7 +221,11 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"right_pos",
 				"left_error",
 				"right_error",
-				"raw_angle"};
+				"heading",
+				"rotational_velocity",
+				"raw_angle",
+				"x_accel",
+				"y_accel"};
 	}
 
 	/**
@@ -221,7 +248,11 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getPositionFeet(),
 				leftMaster.getError(),
 				rightMaster.getError(),
-				navX.getAngle()};
+				navX.pidGet(),
+				navX.getRate(),
+				navX.getAngle(),
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
 	}
 
 	/**
@@ -255,7 +286,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
+		Logger.addEvent("Loading left",this.getClass());
 		leftMaster.loadProfile(left);
+		Logger.addEvent("Loading right",this.getClass());
 		rightMaster.loadProfile(right);
 	}
 
@@ -316,8 +349,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
-	 * Reset the motor positions.
+	 * Reset the position of the drive if it has encoders.
 	 */
+	@Override
 	public void resetPosition() {
 		leftMaster.resetPosition();
 		rightMaster.resetPosition();

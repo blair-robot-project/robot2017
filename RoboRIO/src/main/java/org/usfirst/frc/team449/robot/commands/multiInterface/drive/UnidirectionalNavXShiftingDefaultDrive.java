@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
+import org.usfirst.frc.team449.robot.components.NavXRumbleComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
@@ -19,7 +20,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
