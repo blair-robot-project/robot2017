@@ -112,7 +112,7 @@ public class Logger implements Runnable {
 		//Delete the trailing comma
 		telemetryHeader.deleteCharAt(telemetryHeader.length() - 1);
 
-		telemetryHeader.append(",\n");
+		telemetryHeader.append("\n");
 		//Write the telemetry file header
 		telemetryLogWriter.write(telemetryHeader.toString());
 		eventLogWriter.close();
