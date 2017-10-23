@@ -305,7 +305,7 @@ logger:
             absolutePosAngleTolerance: 5
 #        - org.usfirst.frc.team449.robot.subsystem.complexooter.LoggingShooter:
 #            multiSubsystem
-    loopTimeSecs: 0.05
+    loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
 centerAuto:

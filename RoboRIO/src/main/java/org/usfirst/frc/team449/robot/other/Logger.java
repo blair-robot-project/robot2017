@@ -60,6 +60,11 @@ public class Logger implements Runnable {
 	private final double loopTimeSecs;
 
 	/**
+	 * The time this that logging started. We don't use {@link Clock} because this is a separate thread.
+	 */
+	private final long startTime;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param subsystems           The subsystems to log telemetry data from.
@@ -77,6 +82,7 @@ public class Logger implements Runnable {
 	              @NotNull @JsonProperty(required = true) String telemetryLogFilename) throws IOException {
 		//Set up the file names, using a time stamp to avoid overwriting old log files.
 		String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+		startTime = System.currentTimeMillis();
 		this.eventLogFilename = eventLogFilename + timeStamp + ".csv";
 		this.telemetryLogFilename = telemetryLogFilename + timeStamp + ".csv";
 
@@ -95,7 +101,7 @@ public class Logger implements Runnable {
 		eventLogWriter.write("time,class,message"+"\n");
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryHeader = new StringBuilder();
-		telemetryHeader.append("time,");
+		telemetryHeader.append("time,Clock.time,");
 		for (int i = 0; i < this.subsystems.length; i++) {
 			String[] items = this.subsystems[i].getHeader();
 			//Initialize itemNames rows
@@ -161,8 +167,12 @@ public class Logger implements Runnable {
 		events = new ArrayList<>();
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryData = new StringBuilder();
-		//Loop through each datum
+
+		//Log the times
+		telemetryData.append(System.currentTimeMillis()-startTime).append(",");
 		telemetryData.append(Clock.currentTimeMillis()).append(",");
+
+		//Loop through each datum
 		for (int i = 0; i < subsystems.length; i++) {
 			Object[] data = subsystems[i].getData();
 			for (int j = 0; j < data.length; j++) {

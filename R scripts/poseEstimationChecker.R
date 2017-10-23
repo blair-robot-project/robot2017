@@ -2,36 +2,8 @@
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
 
-angleBetween <- function(leftX, leftY, rightX, rightY){
-  deltaX <- leftX-rightX
-  deltaY <- leftY-rightY
-  if (identical(deltaX, 0)){
-    ans <- pi/2
-  } else {
-    #Pretend it's first quadrant because we manually determine quadrants
-    ans <- atan(abs(deltaY/deltaX))
-  }
-  if (deltaY > 0){
-    if (deltaX > 0){
-      #If it's actually quadrant 1
-      return(ans)
-    }else {
-      #quadrant 2
-      return(pi - ans)
-    }
-    return(ans)
-  } else {
-    if (deltaX > 0){
-      #quadrant 4
-      return(-ans)
-    }else {
-      #quadrant 3
-      return(-(pi - ans))
-    }
-  }
-}
-
 logLogSlope <- function(effectiveWheelbase, angularVel, n){
+  library("zoo")
   avg <- weighted.mean(x=effectiveWheelbase, w=angularVel, na.rm=TRUE)
   error <- effectiveWheelbase-avg
   error <- error^2
@@ -44,12 +16,10 @@ logLogSlope <- function(effectiveWheelbase, angularVel, n){
   return(model)
 }
 
-drawRobot <- function(robotFile, robotPos){
-  theta <- angleBetween(leftX = robotPos[2], leftY = robotPos[3], rightX = robotPos[4], rightY = robotPos[5])
-  perp <- theta - pi/2
-  robotCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
+drawRobot <- function(robotFile, x, y, theta){
+  robotCenter <- c(x,y)
   robot <- read.csv(robotFile)
-  rotMatrix <- matrix(c(cos(perp), -sin(perp), sin(perp), cos(perp)), nrow=2, ncol=2, byrow=TRUE)
+  rotMatrix <- matrix(c(cos(theta), -sin(theta), sin(theta), cos(theta)), nrow=2, ncol=2, byrow=TRUE)
   
   point1s <- rotMatrix %*% matrix(c(robot$x1, robot$y1), nrow = 2, ncol = length(robot$x1), byrow = TRUE) 
   point1s <- point1s + c(robotCenter[1], robotCenter[2])
@@ -69,7 +39,7 @@ plotField <- function(filename, xOffset=0, yOffset=0){
   #Strings are read as factors by default, so we need to do this to make it read them as strings
   field$col <- as.character(field$col)
   for (i in 1:length(field$x1)){
-    lines(c(field$x1[i]+xOffset, field$x2[i]+xOffset), c(field$y1[i]+yOffset, field$y2[i]+yOffset), col=field$col[i])
+    lines(c(field$x1[i]+xOffset, field$x2[i]+xOffset), c(-field$y1[i]+yOffset, -field$y2[i]+yOffset), col=field$col[i])
   }
 }
 
@@ -109,7 +79,6 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   #Find the mean wheelbase, weighted by angular vel because higher angular vel decreases variance
   avgWheelbase = weighted.mean(x=combinedAngular[,2], w=combinedAngular[,1], na.rm=TRUE)
   
-  return(combinedAngular)
   #plot wheelbase vs angular vel
   plot(x=combinedAngular[,1], y=combinedAngular[,2], xlab="Angular Velocity (rad/sec)", ylab="Effective wheelbase diameter (feet)", main="Effective Wheelbase Diameter vs. Angular Velocity")
   abline(a=avgWheelbase, b=0, col='green')
@@ -119,7 +88,7 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   abline(a=avgWheelbase, b=0, col='green')
   
   #Plot wheelbase vs turn radius
-  plot(x=combinedAngular[,3]/combinedAngular[,1], y=combinedAngular[,2]-2.0833, xlab="Turn Radius (feet)", ylab="Error in wheelbase diameter (feet)", main="Error in Wheelbase Diameter vs. Turn Radius")
+  plot(x=combinedAngular[,3]/combinedAngular[,1], y=combinedAngular[,2], xlab="Turn Radius (feet)", ylab="Effective wheelbase diameter (feet)", main="Effective Wheelbase Diameter vs. Turn Radius")
   abline(a=avgWheelbase, b=0, col='green')
   
   return(avgWheelbase)
@@ -325,3 +294,41 @@ doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angular
   encoderOnlyPoseEstimation(leftPos=leftPos, rightPos=rightPos, startingAngleDegrees=rawAngleDegrees[1], timeMillis=timeMillis, fakeWheelbase=avg)
   return(avg)
 }
+
+animateRobot <- function(x, y, headingRadians, deltaTime, fieldFile, robotFile, robotRadius, frameSize=-1, filename="animation.mp4"){
+  library("animation")
+  theta <- deg2rad(headingRadians)
+  saveVideo({
+    for(i in 1:length(x)){
+      #Set up frame
+      if(frameSize == -1){
+        plot(x=c(),y=c(),xlim=c(min(x)-robotRadius, max(x)+robotRadius),ylim=c(min(y)-robotRadius, max(y)+robotRadius), asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      } else {
+        plot(x=c(),y=c(),xlim=c(x[i]-frameSize/2, x[i]+frameSize/2),ylim=c(y[i]-frameSize/2, y[i]+frameSize/2),asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      }
+      plotField(fieldFile, 0, 0)
+      drawRobot(robotFile, x[i],y[i],theta[i])
+    }
+  }, interval = deltaTime, ani.width = 600, ani.height = 600, video.name=filename)
+}
+
+tracedAnimation <- function(x, y, leftX, leftY, rightX, rightY, headingRadians, deltaTime, fieldFile, robotFile, robotRadius, frameSize=-1, filename="animation.mp4"){
+  library("animation")
+  theta <- deg2rad(headingRadians)
+  saveVideo({
+    for(i in 1:length(x)){
+      #Set up frame
+      if(frameSize == -1){
+        plot(x=c(),y=c(),xlim=c(min(x)-robotRadius, max(x)+robotRadius),ylim=c(min(y)-robotRadius, max(y)+robotRadius), asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      } else {
+        plot(x=c(),y=c(),xlim=c(x[i]-frameSize/2, x[i]+frameSize/2),ylim=c(y[i]-frameSize/2, y[i]+frameSize/2),asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      }
+      lines(x=leftX[1:i], y=leftY[1:i], col="Green")
+      lines(x=rightX[1:i], y=rightY[1:i], col="Red")
+      plotField(fieldFile, 0, 0)
+      drawRobot(robotFile, x[i],y[i],theta[i])
+    }
+  }, interval = deltaTime, ani.width = 1920, ani.height = 1080, video.name=filename)
+}
+
+#tracedAnimation(equalScrub[,1],equalScrub[,2], equalScrub[,3],equalScrub[,4],equalScrub[,5],equalScrub[,6],rel$Drive.raw_angle,0.05,"field.csv","robot.csv",27.138/12, -1, "traceAnimation.mp4")
