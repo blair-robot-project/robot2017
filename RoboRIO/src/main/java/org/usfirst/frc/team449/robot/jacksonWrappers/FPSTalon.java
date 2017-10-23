@@ -709,7 +709,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 				Logger.addEvent("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!", this.getClass());
 			}
 			point.timeDurMs = (int) data.getData()[i][3];
-			point.zeroPos = i == 0; // If it's the first point, set the encoder position to 0.
+			point.zeroPos = i == 0 && data.resetPosition(); // If it's the first point, set the encoder position to 0.
 			point.isLastPoint = (i + 1) == data.getData().length; // If it's the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer

@@ -51,18 +51,10 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
     # If theta is 0, we're going straight and need to treat it as a special case.
     if (identical(theta, 0)){
       
-      #If inverted, swap which wheel gets which input
-      if(inverted){
-        out[i, 2] <- out[i-1,2]+deltaRight*cos(perpendicular)
-        out[i, 3] <- out[i-1,3]+deltaRight*sin(perpendicular)
-        out[i, 4] <- out[i-1,4]+deltaLeft*cos(perpendicular)
-        out[i, 5] <- out[i-1,5]+deltaLeft*sin(perpendicular)
-      } else {
         out[i, 2] <- out[i-1,2]+deltaLeft*cos(perpendicular)
         out[i, 3] <- out[i-1,3]+deltaLeft*sin(perpendicular)
         out[i, 4] <- out[i-1,4]+deltaRight*cos(perpendicular)
         out[i, 5] <- out[i-1,5]+deltaRight*sin(perpendicular)
-      }
     } else {
       
       #We do this with sectors, so this is the radius of the turning circle for the
@@ -79,18 +71,11 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       #wheel divided by the radius of the turning circle.
       vectorDistanceWithoutR <- 2*sin(theta/2)
       
-      #If inverted, swap which wheel gets which input
-      if(inverted){
-        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
-        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
-        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
-        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
-      } else {
         out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
         out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
         out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
         out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
-      }
+    
     }
   }
   return(out)
@@ -177,12 +162,12 @@ wheelbaseDiameter <- 26./12.
 centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
-
-out <- plotProfile(profileName = "BlueRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startY= -10.3449+centerToSide, usePosition = TRUE)
+#                                                                                                                                                                                         Time, Left X, Left Y, Right X, Right Y
+out <- plotProfile(profileName = "RedRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos=c(0, 54 - centerToBack, 10.3449-wheelbaseDiameter,54-centerToBack,10.3449), usePosition = TRUE)
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
-out2 <- plotProfile(profileName = "BlueBackup",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
+out2 <- plotProfile(profileName = "RedShoot",inverted = TRUE,wheelbaseDiameter =  wheelbaseDiameter,centerToFront = centerToFront,centerToBack = centerToBack,centerToSide = centerToSide,startPos = tmp)
 drawProfile(coords = out2, centerToFront = centerToFront, centerToBack = centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = FALSE)
 tmp2 <- out2[length(out2[,1]),]
 drawRobot("robot.csv", out2[length(out2[,1]),])

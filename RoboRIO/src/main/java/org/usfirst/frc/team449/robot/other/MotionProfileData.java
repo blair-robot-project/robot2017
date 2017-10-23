@@ -23,6 +23,11 @@ public class MotionProfileData {
 	private final boolean inverted;
 
 	/**
+	 * Whether or not to reset the talon position when this profile starts.
+	 */
+	private final boolean resetPosition;
+
+	/**
 	 * Whether to use position PID or not.
 	 */
 	private final boolean velocityOnly;
@@ -41,13 +46,16 @@ public class MotionProfileData {
 	 * @param inverted     Whether or not the profile is inverted (would be inverted if we're driving it backwards)
 	 * @param velocityOnly Whether or not to only use velocity feed-forward. Used for tuning kV and kA. Defaults to
 	 *                     false.
+	 * @param resetPosition Whether or not to reset the talon position when this profile starts.
 	 */
 	@JsonCreator
 	public MotionProfileData(@NotNull @JsonProperty(required = true) String filename,
 	                         @JsonProperty(required = true) boolean inverted,
-	                         boolean velocityOnly) {
+	                         boolean velocityOnly,
+	                         boolean resetPosition) {
 		this.inverted = inverted;
 		this.velocityOnly = velocityOnly;
+		this.resetPosition = resetPosition;
 
 		try {
 			readFile(Robot.RESOURCES_PATH + filename);
@@ -113,5 +121,12 @@ public class MotionProfileData {
 	 */
 	public boolean isInverted(){
 		return inverted;
+	}
+
+	/**
+	 * @return Whether or not to reset the talon position when this profile starts.
+	 */
+	public boolean resetPosition() {
+		return resetPosition;
 	}
 }

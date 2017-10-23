@@ -6,6 +6,7 @@ leftTestProfile:
     '@id': leftTest
     filename: "forward100InProfile.csv"
     inverted: false
+    resetPosition: true
 rightTestProfile:
     <<: *leftTest
     '@id': rightTest
@@ -14,51 +15,63 @@ leftProfiles: !!map
         '@id': blueLeftCenter
         filename: "calciferLeftBlueMidProfile.csv"
         inverted: false
+        resetPosition: true
     "blue_left" :
         '@id': blueLeftLeft
         filename: "calciferLeftBlueLeftProfile.csv"
         inverted: false
+        resetPosition: true
     "blue_right" :
         '@id': blueLeftRight
         filename: "calciferLeftBlueRightProfile.csv"
         inverted: false
+        resetPosition: true
     "red_center" :
         '@id': redLeftCenter
         filename: "calciferLeftRedMidProfile.csv"
         inverted: false
+        resetPosition: true
     "red_left" :
         '@id': redLeftLeft
         filename: "calciferLeftRedLeftProfile.csv"
         inverted: false
+        resetPosition: true
     "red_right" :
         '@id': redLeftRight
         filename: "calciferLeftRedRightProfile.csv"
         inverted: false
+        resetPosition: true
 rightProfiles: !!map
     "blue_center" :
         '@id': blueRightCenter
         filename: "calciferRightBlueMidProfile.csv"
         inverted: false
+        resetPosition: true
     "blue_left" :
         '@id': blueRightLeft
         filename: "calciferRightBlueLeftProfile.csv"
         inverted: false
+        resetPosition: true
     "blue_right" :
         '@id': blueRightRight
         filename: "calciferRightBlueRightProfile.csv"
         inverted: false
+        resetPosition: true
     "red_center" :
         '@id': redRightCenter
         filename: "calciferRightRedMidProfile.csv"
         inverted: false
+        resetPosition: true
     "red_left" :
         '@id': redRightLeft
         filename: "calciferRightRedLeftProfile.csv"
         inverted: false
+        resetPosition: true
     "red_right" :
         '@id': redRightRight
         filename: "calciferRightRedRightProfile.csv"
         inverted: false
+        resetPosition: true
 allianceSwitch:
     '@id': allianceSwitch
     ports: [3]
