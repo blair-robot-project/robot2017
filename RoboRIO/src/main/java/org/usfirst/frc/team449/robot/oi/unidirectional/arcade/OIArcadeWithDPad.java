@@ -8,15 +8,17 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Polynomial;
 
 /**
  * An arcade OI with an option to use the D-pad for turning.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OIArcadeWithDPad extends OIArcade {
+public class OIArcadeWithDPad extends OIArcade implements Loggable {
 
 	/**
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
@@ -55,6 +57,16 @@ public class OIArcadeWithDPad extends OIArcade {
 	private final double turnInPlaceRotScale;
 
 	/**
+	 * Cached forwards and rotation values.
+	 */
+	private double cachedFwd, cachedRot;
+
+	/**
+	 * The time velocity and rotation were cached at.
+	 */
+	private long timeLastCached;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param gamepad             The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
@@ -82,6 +94,31 @@ public class OIArcadeWithDPad extends OIArcade {
 		this.gamepad = gamepad;
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
+		timeLastCached = 0;
+	}
+
+	/**
+	 * Calculate and cache the values of fwd and rot.
+	 */
+	private void cacheValues(){
+		if (Clock.currentTimeMillis() > timeLastCached){
+			timeLastCached = Clock.currentTimeMillis();
+
+			//Forwards is simple
+			cachedFwd = fwdThrottle.getValue();
+
+			//If the gamepad is being pushed to the left or right
+			if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
+				//Output the shift value
+				cachedRot = gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
+			} else if (cachedFwd == 0) { //Turning in place
+				cachedRot = rotThrottle.getValue() * turnInPlaceRotScale;
+			} else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
+				cachedRot = rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(cachedFwd));
+			} else { //Plain and simple
+				cachedRot = rotThrottle.getValue();
+			}
+		}
 	}
 
 	/**
@@ -92,9 +129,8 @@ public class OIArcadeWithDPad extends OIArcade {
 	 */
 	@Override
 	public double getFwd() {
-		//Scale based on rotational throttle for more responsive turning at high speed
-		SmartDashboard.putNumber("fwd", fwdThrottle.getValue());
-		return fwdThrottle.getValue();
+		cacheValues();
+		return cachedFwd;
 	}
 
 	/**
@@ -105,24 +141,46 @@ public class OIArcadeWithDPad extends OIArcade {
 	 */
 	@Override
 	public double getRot() {
-		double toRet;
-		//If the gamepad is being pushed to the left or right
-		if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
-			//Output the shift value
-			toRet = gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
-		} else {
-			//Return the throttle value if it's outside of the deadband.
-			if (fwdThrottle.getValue() == 0) {
-				toRet = rotThrottle.getValue() * turnInPlaceRotScale;
-			} else {
-				if (scaleRotByFwdPoly != null) {
-					toRet = rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(fwdThrottle.getValue()));
-				} else {
-					toRet = rotThrottle.getValue();
-				}
-			}
-		}
-		SmartDashboard.putNumber("Rot",toRet);
-		return toRet;
+		cacheValues();
+		return cachedRot;
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"Fwd",
+				"Rot"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				getFwd(),
+				getRot()
+		};
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return A string that will identify this object in the log file.
+	 */
+	@NotNull
+	@Override
+	public String getName() {
+		return "OI";
 	}
 }
