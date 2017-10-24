@@ -141,6 +141,8 @@ public class Robot extends IterativeRobot {
 				//Set up the alliance strings for easily selecting profiles.
 				if (redAlliance) {
 					allianceString = "red";
+					//Swap NavX because we want absolute angle
+					driveSubsystem.setHeading(180);
 				} else {
 					allianceString = "blue";
 				}
