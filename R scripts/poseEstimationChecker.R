@@ -216,11 +216,38 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   return(out)
 }
 
-#Make all the graphs, for wheelbase and all 3 algorithms, using the average effective wheelbase for encoder-only
-doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase){
+accelerometerOnlyPoseEstimation <- function(xAccel, yAccel, rawAngleDegrees, timeMillis, realWheelbase){
+  #Convert because degrees suuuuck
+  rawAngle <- deg2rad(rawAngleDegrees)
+  
+  #Set up output array
+  out <- array(dim=c(length(timeMillis),9))
+  colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","xVel","yVel","time")
+  out[1,] <- c(0,0, realWheelbase/2*cos(rawAngle[1]+pi/2), realWheelbase/2*sin(rawAngle[1]+pi/2), realWheelbase/2*cos(rawAngle[1]-pi/2), realWheelbase/2*sin(rawAngle[1]-pi/2),0,0, timeMillis[1])
+  
+  #Loop through each logged tic, calculating pose iteratively
+  for(i in 2:length(timeMillis)){
+    #Find change in time, in seconds
+    deltaTime <- (timeMillis[i] - out[i-1,9])/1000
+    xVel <- out[i-1,7]+xAccel[i]*deltaTime
+    yVel <- out[i-1,8]+yAccel[i]*deltaTime
+    x <- out[i-1,1]+xVel*deltaTime
+    y <- out[i-1,2]+yVel*deltaTime
+    angle <- rawAngle[i]
+    out[i,] <- c(x,y,x+realWheelbase/2*cos(angle+pi/2),y+realWheelbase/2*sin(angle+pi/2),x+realWheelbase/2*cos(angle-pi/2),y+realWheelbase/2*sin(angle-pi/2),xVel,yVel, timeMillis[i])
+  }
+  
+  #Plot results
+  plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], out[,3], out[,5]),max(out[,1], out[,3], out[,5])), ylim=c(min(out[,2], out[,4], out[,6]),max(out[,2], out[,4], out[,6])), xlab="X position (Feet)", ylab="Y position (Feet)", main="Accelerometer-only Pose Estimation Algorithm",asp=1)
+  lines(out[,3], out[,4], col="Green")
+  lines(out[,5], out[,6], col="Red")
+  return(out)
+}
+
+#Make all the graphs, for wheelbase and both algorithms, using the average effective wheelbase for encoder-only
+doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst){
   avg <- plotWheelVsVel(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst)
   equalScrubPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad)
-  ignoreWorstPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase)
   encoderOnlyPoseEstimation(leftPos=leftPos, rightPos=rightPos, startingAngleDegrees=rawAngleDegrees[1], timeMillis=timeMillis, fakeWheelbase=avg)
   return(avg)
 }
