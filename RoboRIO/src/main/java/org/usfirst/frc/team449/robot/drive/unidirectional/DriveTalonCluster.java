@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.unidirectional;
 
 import com.fasterxml.jackson.annotation.*;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +43,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 * The NavX gyro
 	 */
 	@NotNull
-	private final AHRS navX;
+	private final MappedAHRS navX;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -172,7 +171,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public double getGyroHeading() {
-		return navX.pidGet();
+		return navX.getHeading();
 	}
 
 	/**
@@ -192,11 +191,19 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
+	 * @param headingDegrees The angle, in degrees from [-180, 180], to set the NavX's heading to.
+	 */
+	@Override
+	public void setHeading(double headingDegrees) {
+		navX.setHeading(headingDegrees);
+	}
+
+	/**
 	 * @return An AHRS object representing this subsystem's NavX.
 	 */
 	@Override
 	@NotNull
-	public AHRS getNavX() {
+	public MappedAHRS getNavX() {
 		return navX;
 	}
 
@@ -222,8 +229,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				"left_error",
 				"right_error",
 				"heading",
+				"9_axis_heading",
 				"rotational_velocity",
-				"raw_angle",
+				"angular_displacement",
 				"x_accel",
 				"y_accel"};
 	}
@@ -248,11 +256,12 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 				rightMaster.getPositionFeet(),
 				leftMaster.getError(),
 				rightMaster.getError(),
-				navX.pidGet(),
-				navX.getRate(),
-				navX.getAngle(),
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
+				navX.getHeading(),
+				navX.get9AxisHeading(),
+				navX.getAngularVelocity(),
+				navX.getAngularDisplacement(),
+				navX.getXAccel(),
+				navX.getYAccel()};
 	}
 
 	/**

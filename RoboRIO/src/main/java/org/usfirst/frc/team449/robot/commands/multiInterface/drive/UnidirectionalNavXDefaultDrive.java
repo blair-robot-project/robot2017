@@ -127,7 +127,7 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 		}
 		//If we're free driving and the driver stops turning:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
-				commandingStraight && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
+				commandingStraight && Math.abs(subsystem.getNavX().getAngularVelocity()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the navX

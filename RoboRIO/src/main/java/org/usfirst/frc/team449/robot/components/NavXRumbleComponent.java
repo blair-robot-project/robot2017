@@ -29,7 +29,7 @@ public class NavXRumbleComponent implements MappedRunnable{
 	 * The NavX to get jerk measurements from.
 	 */
 	@NotNull
-	private final AHRS navX;
+	private final MappedAHRS navX;
 
 	/**
 	 * The things to rumble.
@@ -38,13 +38,12 @@ public class NavXRumbleComponent implements MappedRunnable{
 	private final List<Rumbleable> rumbleables;
 
 	/**
-	 * The minimum jerk that will trigger rumbling, in Gs/millisecond. Should be greater than 2, which is the error
-	 * margin on the measurement.
+	 * The minimum jerk that will trigger rumbling, in feet/second^3.
 	 */
 	private final double minJerk;
 
 	/**
-	 * The jerk, in Gs/millisecond, that's scaled to maximum rumble. All jerks of greater magnitude are capped at 1.
+	 * The jerk, in feet/second^3, that's scaled to maximum rumble. All jerks of greater magnitude are capped at 1.
 	 */
 	private final double maxJerk;
 
@@ -96,9 +95,8 @@ public class NavXRumbleComponent implements MappedRunnable{
 	                           boolean invertLeftRight) {
 		this.navX = navX;
 		this.rumbleables = rumbleables;
-		//Convert from feet/(sec^3) to Gs/millis.
-		this.minJerk = minJerk * FPS_CUBED_TO_GS_PER_MILLIS;
-		this.maxJerk = maxJerk * FPS_CUBED_TO_GS_PER_MILLIS;
+		this.minJerk = minJerk;
+		this.maxJerk = maxJerk;
 		this.yIsFrontBack = yIsFrontBack;
 		this.invertLeftRight = invertLeftRight;
 		timeLastCalled = 0;
@@ -114,11 +112,11 @@ public class NavXRumbleComponent implements MappedRunnable{
 		double frontBack, leftRight;
 		if (yIsFrontBack) {
 			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
-			frontBack = Math.abs(navX.getWorldLinearAccelY());
-			leftRight = navX.getWorldLinearAccelX() * (invertLeftRight ? -1 : 1);
+			frontBack = Math.abs(navX.getYAccel());
+			leftRight = navX.getXAccel() * (invertLeftRight ? -1 : 1);
 		} else {
-			frontBack = Math.abs(navX.getWorldLinearAccelX());
-			leftRight = navX.getWorldLinearAccelY() * (invertLeftRight ? -1 : 1);
+			frontBack = Math.abs(navX.getYAccel());
+			leftRight = navX.getXAccel() * (invertLeftRight ? -1 : 1);
 		}
 
 		//Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice versa

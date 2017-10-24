@@ -486,9 +486,9 @@ nonMPAutoCommand:
         subsystem:
             org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                 drive
-autoStartupCommand:
+teleopStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        '@id': startModeCommand
+        '@id': startTeleopCommand
         commandSet:
             - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
                 '@id': startupSwitchToLowCommand
@@ -510,14 +510,17 @@ autoStartupCommand:
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startAutoCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+                startTeleopCommand
             - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
                 '@id': resetPosition
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
-teleopStartupCommand:
-    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        startModeCommand
 startupCommand:
     org.usfirst.frc.team449.robot.commands.general.RunRunnables:
         '@id': runRunnables
