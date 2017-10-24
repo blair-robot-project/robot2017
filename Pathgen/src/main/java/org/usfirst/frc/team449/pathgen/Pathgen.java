@@ -77,20 +77,12 @@ public class Pathgen {
 		};
 
 		Waypoint[] redPegToKey = new Waypoint[]{
-//				new Waypoint(0, 0, 0),
-//				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + RED_WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(30))
-//				+ RED_HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(165)))/12.,
-//						(RED_WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30))
-//								+ RED_HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(165)))/12.,
-//						-Math.toRadians(16))
-				new Waypoint((CENTER_TO_BACK*Math.cos(Math.PI)+(RED_BACK_CORNER_TO_SIDE_PEG-CENTER_TO_SIDE-RED_KEY_CORNER_TO_SIDE_PEG)*Math.cos(Math.PI/2)+
-						RED_HALF_KEY_LENGTH*Math.cos(-Math.PI/4)+CENTER_TO_BACK*Math.cos(Math.PI/4))/12.,
-						(CENTER_TO_BACK*Math.sin(Math.PI)+(RED_BACK_CORNER_TO_SIDE_PEG-CENTER_TO_SIDE-RED_KEY_CORNER_TO_SIDE_PEG)*Math.sin(Math.PI/2)+
-								RED_HALF_KEY_LENGTH*Math.sin(-Math.PI/4)+CENTER_TO_BACK*Math.sin(Math.PI/4))/12.,Math.PI/4.),
-				new Waypoint((RED_WALL_TO_SIDE_PEG-CENTER_TO_BACK - 0.5*PEG_BASE_TO_CENTER +
-						AIRSHIP_PARALLEL_OFFSET_RED*Math.cos(5.*Math.PI/6.))/12.,
-						(RED_BACK_CORNER_TO_SIDE_PEG - CENTER_TO_SIDE - (Math.sqrt(3.)/2.)*PEG_BASE_TO_CENTER +
-								AIRSHIP_PARALLEL_OFFSET_RED*Math.sin(5.*Math.PI/6.))/12.,Math.PI/3.)
+				new Waypoint(0, 0, 0),
+				new Waypoint((PEG_BASE_TO_CENTER*Math.cos(Math.toRadians(180)) + RED_WALL_TO_SIDE_PEG*Math.cos(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.cos(Math.toRadians(30))
+				+ RED_HALF_KEY_LENGTH*Math.cos(Math.toRadians(75)) + CENTER_TO_BACK*Math.cos(Math.toRadians(165)))/12.,
+						(RED_WALL_TO_SIDE_PEG*Math.sin(Math.toRadians(-60)) + RED_KEY_CORNER_TO_SIDE_PEG*Math.sin(Math.toRadians(30))
+								+ RED_HALF_KEY_LENGTH*Math.sin(Math.toRadians(75)) + CENTER_TO_BACK*Math.sin(Math.toRadians(165)))/12.,
+						-Math.toRadians(16))
 		};
 
 		Waypoint[] bluePegToKey = new Waypoint[]{

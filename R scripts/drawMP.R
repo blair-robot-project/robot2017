@@ -1,4 +1,4 @@
-plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1), usePosition = TRUE){
+plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, centerToFront, centerToBack, centerToSide, startY = 0, startPos = c(-1,-1,-1,-1,-1,-1), usePosition = TRUE){
   left <- read.csv(paste("../calciferLeft",profileName,"Profile.csv",sep=""), header=FALSE)
   right <- read.csv(paste("../calciferRight",profileName,"Profile.csv",sep=""), header=FALSE)
   startingCenter <- c(startY, centerToBack)
@@ -11,17 +11,19 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
   #Position,Velocity,Delta t, Elapsed time
   left$V4 <- (0:(length(left$V1)-1))*left$V3[1]
   right$V4 <- (0:(length(right$V1)-1))*right$V3[1]
-  #Time, Left X, Left Y, Right X, Right Y
-  out <- array(dim=c(length(left$V1),5))
-  if(identical(startPos, c(-1,-1,-1,-1,-1))){
-    out[1,]<-c(0, startingCenter[2], (startingCenter[1]+wheelbaseDiameter/2.), startingCenter[2], (startingCenter[1]-wheelbaseDiameter/2.))
+  #Time, Left X, Left Y, Right X, Right Y, Angle
+  out <- array(dim=c(length(left$V1),6))
+  if(identical(startPos, c(-1,-1,-1,-1,-1,-1))){
+    out[1,]<-c(0, startingCenter[2], (startingCenter[1]+wheelbaseDiameter/2.), startingCenter[2], (startingCenter[1]-wheelbaseDiameter/2.), 0)
   } else {
     out[1,]<-startPos
   }
   
   for(i in 2:length(left$V4)){
     #Get the angle the robot is facing.
-    perpendicular <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])-pi/2
+    #perpendicular <- angleBetween(leftX = out[i-1,2], leftY = out[i-1,3], rightX = out[i-1,4], rightY = out[i-1,5])-pi/2
+    perpendicular <- out[i-1,6]
+    print(perpendicular)
     
     #Add the change in time
     out[i,1] <- out[i-1,1]+left$V3[i]
@@ -41,25 +43,34 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       deltaRight <- -deltaRight
     }
     
+    diffTerm <- deltaRight - deltaLeft
     #So in this next part, we figure out the turning center of the robot
     #and the angle it turns around that center. Note that the turning center is
     #often outside of the robot.
     
     #Calculate how much we turn first, because if theta = 0, turning center is infinitely far away and can't be calcualted.
-    theta <- (deltaLeft - deltaRight)/wheelbaseDiameter
+    theta <- diffTerm/wheelbaseDiameter
+    
+    out[i,6] <- out[i-1,6]+theta
     
     # If theta is 0, we're going straight and need to treat it as a special case.
     if (identical(theta, 0)){
-      
+      if(inverted){
+        out[i, 2] <- out[i-1,2]+deltaRight*cos(perpendicular)
+        out[i, 3] <- out[i-1,3]+deltaRight*sin(perpendicular)
+        out[i, 4] <- out[i-1,4]+deltaLeft*cos(perpendicular)
+        out[i, 5] <- out[i-1,5]+deltaLeft*sin(perpendicular)
+      } else{
         out[i, 2] <- out[i-1,2]+deltaLeft*cos(perpendicular)
         out[i, 3] <- out[i-1,3]+deltaLeft*sin(perpendicular)
         out[i, 4] <- out[i-1,4]+deltaRight*cos(perpendicular)
         out[i, 5] <- out[i-1,5]+deltaRight*sin(perpendicular)
+      }
     } else {
       
       #We do this with sectors, so this is the radius of the turning circle for the
       #left and right sides. They just differ by the diameter of the wheelbase.
-      rightR <- (wheelbaseDiameter/2) * (deltaLeft + deltaRight) / (deltaLeft - deltaRight) - wheelbaseDiameter/2
+      rightR <- (wheelbaseDiameter/2) * (deltaRight + deltaLeft) / diffTerm - wheelbaseDiameter/2
       leftR <- rightR + wheelbaseDiameter
       
       #This is the angle for the vector pointing towards the new position of each
@@ -71,10 +82,17 @@ plotProfile <- function(profileName, inverted = FALSE, wheelbaseDiameter, center
       #wheel divided by the radius of the turning circle.
       vectorDistanceWithoutR <- 2*sin(theta/2)
       
+      if(inverted){
+        out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
+        out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
+        out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
+        out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
+      } else {
         out[i, 2] <- out[i-1,2]+vectorDistanceWithoutR*leftR*cos(vectorTheta)
         out[i, 3] <- out[i-1,3]+vectorDistanceWithoutR*leftR*sin(vectorTheta)
         out[i, 4] <- out[i-1,4]+vectorDistanceWithoutR*rightR*cos(vectorTheta)
         out[i, 5] <- out[i-1,5]+vectorDistanceWithoutR*rightR*sin(vectorTheta)
+      }
     
     }
   }
@@ -109,38 +127,9 @@ drawProfile <- function (coords, centerToFront, centerToBack, wheelbaseDiameter,
   }
 }
 
-angleBetween <- function(leftX, leftY, rightX, rightY){
-  deltaX <- leftX-rightX
-  deltaY <- leftY-rightY
-  if (identical(deltaX, 0)){
-    ans <- pi/2
-  } else {
-    #Pretend it's first quadrant because we manually determine quadrants
-    ans <- atan(abs(deltaY/deltaX))
-  }
-  if (deltaY > 0){
-    if (deltaX > 0){
-      #If it's actually quadrant 1
-      return(ans)
-    }else {
-      #quadrant 2
-      return(pi - ans)
-    }
-    return(ans)
-  } else {
-    if (deltaX > 0){
-      #quadrant 4
-      return(-ans)
-    }else {
-      #quadrant 3
-      return(-(pi - ans))
-    }
-  }
-}
-
 drawRobot <- function(robotFile, robotPos){
-  theta <- angleBetween(leftX = robotPos[2], leftY = robotPos[3], rightX = robotPos[4], rightY = robotPos[5])
-  perp <- theta - pi/2
+  theta <- atan2(robotPos[5] - robotPos[3], robotPos[4] - robotPos[2])
+  perp <- theta + pi/2
   robotCenter <- c((robotPos[2]+robotPos[4])/2.,(robotPos[3]+robotPos[5])/2.)
   robot <- read.csv(robotFile)
   rotMatrix <- matrix(c(cos(perp), -sin(perp), sin(perp), cos(perp)), nrow=2, ncol=2, byrow=TRUE)
@@ -163,7 +152,7 @@ centerToFront <- (27./2.)/12.
 centerToBack <- (27./2.+3.25)/12.
 centerToSide <- (29./2.+3.25)/12.
 #                                                                                                                                                                                         Time, Left X, Left Y, Right X, Right Y
-out <- plotProfile(profileName = "RedRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos=c(0, 54 - centerToBack, 10.3449-wheelbaseDiameter,54-centerToBack,10.3449), usePosition = TRUE)
+out <- plotProfile(profileName = "RedRight", inverted = FALSE, wheelbaseDiameter = wheelbaseDiameter, centerToFront = centerToFront,centerToBack =  centerToBack,centerToSide = centerToSide, startPos=c(0, 54 - centerToBack, 10.3449-wheelbaseDiameter,54-centerToBack,10.3449, pi), usePosition = TRUE)
 drawProfile(coords=out, centerToFront=centerToFront, centerToBack=centerToBack, wheelbaseDiameter = wheelbaseDiameter, clear = TRUE, linePlot = TRUE)
 tmp <- out[length(out[,1]),]
 drawRobot("robot.csv", tmp)
