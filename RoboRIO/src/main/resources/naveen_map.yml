@@ -491,7 +491,7 @@ teleopStartupCommand:
         '@id': startTeleopCommand
         commandSet:
             - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
-                '@id': startupSwitchToLowCommand
+                '@id': startTeleSwitchToLowCommand
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
@@ -501,12 +501,12 @@ teleopStartupCommand:
                     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
                         pneumatics
             - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
-                '@id': closeGearHandlerStartup
+                '@id': startTeleCloseGearHandler
                 subsystem:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
             - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
-                '@id': enableMotors
+                '@id': startTeleEnableMotors
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
@@ -514,8 +514,21 @@ autoStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
         '@id': startAutoCommand
         commandSet:
-            - org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-                startTeleopCommand
+            - org.usfirst.frc.team449.robot.generalInterfaces.shiftable.commands.SwitchToLowGear:
+                '@id': startAutoSwitchToLowCommand
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+            - org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
+                '@id': startAutoCloseGearHandler
+                subsystem:
+                    org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
+                        gearHandler
+            - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
+                '@id': startAutoEnableMotors
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
             - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
                 '@id': resetPosition
                 subsystem:
