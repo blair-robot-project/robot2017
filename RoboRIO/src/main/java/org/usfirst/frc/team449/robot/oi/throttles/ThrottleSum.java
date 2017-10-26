@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * A Throttle that sums any number of other Throttles.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ThrottleSum implements Throttle{
+public class ThrottleSum implements Throttle {
 
 	/**
 	 * The throttles to sum.
@@ -36,14 +36,14 @@ public class ThrottleSum implements Throttle{
 	public double getValue() {
 		//sum throttles
 		double sum = 0;
-		for (Throttle throttle : throttles){
+		for (Throttle throttle : throttles) {
 			sum += throttle.getValue();
 		}
 
 		//clip to [-1, 1]
-		if (sum >= 1){
+		if (sum >= 1) {
 			return 1;
-		} else if (sum <= -1){
+		} else if (sum <= -1) {
 			return -1;
 		} else {
 			return sum;

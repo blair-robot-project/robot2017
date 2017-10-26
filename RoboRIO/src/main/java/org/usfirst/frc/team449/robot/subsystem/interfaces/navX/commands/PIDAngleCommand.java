@@ -125,7 +125,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * @param output The output from the WPILib angular PID loop.
 	 * @return That output after being deadbanded with the map-given deadband.
 	 */
-	protected double deadbandOutput(double output){
+	protected double deadbandOutput(double output) {
 		return this.getPIDController().getError() > deadband ? output : 0;
 	}
 
