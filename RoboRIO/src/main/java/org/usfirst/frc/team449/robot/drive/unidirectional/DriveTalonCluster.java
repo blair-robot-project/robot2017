@@ -286,9 +286,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		Logger.addEvent("Loading left",this.getClass());
+		Logger.addEvent("Loading left", this.getClass());
 		leftMaster.loadProfile(left);
-		Logger.addEvent("Loading right",this.getClass());
+		Logger.addEvent("Loading right", this.getClass());
 		rightMaster.loadProfile(right);
 	}
 

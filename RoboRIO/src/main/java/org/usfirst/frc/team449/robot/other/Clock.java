@@ -20,19 +20,20 @@ public class Clock {
 	/**
 	 * Make constructor private so it can't be called
 	 */
-	private Clock(){}
+	private Clock() {
+	}
 
 	/**
 	 * Updates the current time.
 	 */
-	public synchronized static void updateTime(){
-		currentTime = System.currentTimeMillis()-startTime;
+	public synchronized static void updateTime() {
+		currentTime = System.currentTimeMillis() - startTime;
 	}
 
 	/**
 	 * Sets the start time to the current time.
 	 */
-	public synchronized static void setStartTime(){
+	public synchronized static void setStartTime() {
 		startTime = System.currentTimeMillis();
 	}
 
@@ -40,7 +41,7 @@ public class Clock {
 	 * @return The time since the start time, in milliseconds.
 	 */
 	@Contract(pure = true)
-	public synchronized static long currentTimeMillis(){
+	public synchronized static long currentTimeMillis() {
 		return currentTime;
 	}
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
@@ -144,7 +143,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		lastTime = 0;
 	}
 
-	private static double[] calcEliVector(double left, double right, double deltaTheta, double lastAngle){
+	private static double[] calcEliVector(double left, double right, double deltaTheta, double lastAngle) {
 		//The vector for how much the robot moves, element 0 is x and element 1 is y.
 		double[] vector = new double[2];
 
@@ -156,8 +155,8 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		} else {
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double r = ((left+right)/2.)/deltaTheta;
-			double vectorAngle = lastAngle + deltaTheta/2.;
+			double r = ((left + right) / 2.) / deltaTheta;
+			double vectorAngle = lastAngle + deltaTheta / 2.;
 			double vectorMagnitude = 2. * r * Math.sin(deltaTheta / 2.);
 			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
 			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
@@ -178,12 +177,12 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
 			double r;
-			if (left-right == 0){
-				r = left/deltaTheta;
+			if (left - right == 0) {
+				r = left / deltaTheta;
 			} else {
 				r = robotDiameter / 2. * (left + right) / (left - right);
 			}
-			double vectorAngle = lastAngle + deltaTheta/2.;
+			double vectorAngle = lastAngle + deltaTheta / 2.;
 			double vectorMagnitude = 2. * r * Math.sin(deltaTheta / 2.);
 			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
 			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
@@ -207,7 +206,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		double deltaRight = right - lastRightPos;
 		double deltaTheta = theta - lastTheta;
 		double robotDiameter;
-		if (deltaTheta == 0){
+		if (deltaTheta == 0) {
 			fudgedWheelbaseDiameter = -1;
 		} else {
 			fudgedWheelbaseDiameter = (deltaLeft - deltaRight) / deltaTheta;
@@ -447,7 +446,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 	@NotNull
 	@Override
 	public String getName() {
-		if(robotDiameter != null){
+		if (robotDiameter != null) {
 			return "NoahPoseEstimator";
 		}
 		return "EliPoseEstimator";

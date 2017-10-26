@@ -44,7 +44,7 @@ public class RunRunnables extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		for (Runnable runnable : runnables){
+		for (Runnable runnable : runnables) {
 			runnable.run();
 		}
 	}

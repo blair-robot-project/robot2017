@@ -1,6 +1,9 @@
 package org.usfirst.frc.team449.robot.oi.throttles;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
@@ -9,7 +12,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
  * A class representing a single axis on a joystick.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ThrottleBasic implements Throttle{
+public class ThrottleBasic implements Throttle {
 
 	/**
 	 * The stick we're using
@@ -36,8 +39,8 @@ public class ThrottleBasic implements Throttle{
 	 */
 	@JsonCreator
 	public ThrottleBasic(@NotNull @JsonProperty(required = true) MappedJoystick stick,
-	                @JsonProperty(required = true) int axis,
-	                boolean inverted) {
+	                     @JsonProperty(required = true) int axis,
+	                     boolean inverted) {
 		this.stick = stick;
 		this.axis = axis;
 		this.inverted = inverted;

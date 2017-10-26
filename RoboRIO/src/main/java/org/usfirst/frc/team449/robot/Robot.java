@@ -180,7 +180,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		//Run startup command if we start in teleop.
-		if(!enabled){
+		if (!enabled) {
 			if (robotMap.getStartupCommand() != null) {
 				robotMap.getStartupCommand().start();
 			}
@@ -218,7 +218,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//Run startup command if we start in auto.
-		if(!enabled){
+		if (!enabled) {
 			if (robotMap.getStartupCommand() != null) {
 				robotMap.getStartupCommand().start();
 			}
@@ -266,9 +266,9 @@ public class Robot extends IterativeRobot {
 	 * Run when we first enable in test mode.
 	 */
 	@Override
-	public void testInit(){
+	public void testInit() {
 		//Run startup command if we start in test mode.
-		if(!enabled){
+		if (!enabled) {
 			if (robotMap.getStartupCommand() != null) {
 				robotMap.getStartupCommand().start();
 			}
@@ -280,7 +280,7 @@ public class Robot extends IterativeRobot {
 	 * Run every tic while disabled
 	 */
 	@Override
-	public void disabledPeriodic(){
+	public void disabledPeriodic() {
 		Clock.updateTime();
 	}
 
