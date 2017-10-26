@@ -138,7 +138,6 @@ public class Pathgen {
 		profiles.put("RedBackup", backupRed);
 		profiles.put("BlueBackup", backupBlue);
 		profiles.put("forward100In", points);
-		profiles.put("BlueBackup", backupBlue);
 		profiles.put("BlueLoadingToLoading", blueLoadingToLoading);
 		profiles.put("BlueBoilerToLoading", blueBoilerToLoading);
 		profiles.put("RedLoadingToLoading", redLoadingToLoading);
