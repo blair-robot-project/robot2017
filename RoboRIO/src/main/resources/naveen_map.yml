@@ -83,6 +83,7 @@ oi:
                 stick: driverGamepad
                 axis: 0
                 deadband: 0.05
+                smoothingTimeSecs: 0.04
                 inverted: false
                 polynomial:
                     '@id': rotPoly
@@ -92,7 +93,7 @@ oi:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 <<: *rotThrottle
                 '@id': fwdThrottle
-                axis: 5
+                axis: 1
                 inverted: true
                 polynomial:
                     '@id': fwdPoly
