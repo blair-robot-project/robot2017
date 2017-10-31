@@ -83,7 +83,6 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 		this.gamepad = gamepad;
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
-		timeLastCached = 0;
 	}
 	
 	/**

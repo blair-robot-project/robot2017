@@ -159,7 +159,8 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 		lastTime = 0;
 	}
 
-	private static double[] calcEliVector(double left, double right, double deltaTheta, double lastAngle) {
+	@NotNull
+	private double[] calcEliVector(double left, double right, double deltaTheta, double lastAngle) {
 
 		//If we're going in a straight line
 		if (deltaTheta == 0) {
@@ -168,13 +169,14 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 		} else {
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double vectorAngle = lastAngle + deltaTheta / 2.;
-			double vectorMagnitude = 2. * ((left + right) / 2.) / deltaTheta * Math.sin(deltaTheta / 2.);
+			vectorAngle = lastAngle + deltaTheta / 2.;
+			vectorMagnitude = 2. * ((left + right) / 2.) / deltaTheta * Math.sin(deltaTheta / 2.);
 			return new double[]{vectorMagnitude * Math.cos(vectorAngle), vectorMagnitude * Math.sin(vectorAngle)};
 		}
 	}
 
-	private static double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle) {
+	@NotNull
+	private double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle) {
 
 		//If we're going in a straight line
 		if (deltaTheta == 0) {
@@ -183,7 +185,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 		} else {
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double r;
 			if (left - right == 0) {
 				vectorMagnitude = 2* left / deltaTheta * Math.sin(deltaTheta / 2.);
 			} else {
