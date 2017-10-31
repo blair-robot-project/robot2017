@@ -48,6 +48,9 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	private boolean motorSpinning;
 
+	/**
+	 * Whether the condition was met last time caching was done.
+	 */
 	private boolean conditionMetCached;
 
 

@@ -9,8 +9,14 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class OIArcade implements OIUnidirectional {
 
+	/**
+	 * Cached output values.
+	 */
 	private double rotCached, fwdCached, leftCached, rightCached;
 
+	/**
+	 * Whether the driver was trying to drive straight when values were cached.
+	 */
 	private boolean commandingStraightCached;
 
 	/**

@@ -30,8 +30,14 @@ public class OIOutreach implements OIUnidirectional {
 	@NotNull
 	private final Button button;
 
+	/**
+	 * The cached outputs for the left and right sides of the drive.
+	 */
 	private double cachedLeftOutput, cachedRightOutput;
 
+	/**
+	 * Whether the driver was trying to drive straight when values were cached.
+	 */
 	private boolean cachedCommandingStraight;
 
 	@JsonCreator

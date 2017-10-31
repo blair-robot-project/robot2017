@@ -9,6 +9,9 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class OITank implements OIUnidirectional {
 
+	/**
+	 * Cached left and right throttle values.
+	 */
 	private double leftThrottleCached, rightThrottleCached;
 
 	/**
