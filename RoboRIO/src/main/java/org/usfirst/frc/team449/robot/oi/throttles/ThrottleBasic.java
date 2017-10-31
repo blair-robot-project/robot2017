@@ -31,6 +31,11 @@ public class ThrottleBasic implements Throttle {
 	private final boolean inverted;
 
 	/**
+	 * The cached value of the output.
+	 */
+	protected double cachedOutput;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param stick    The Joystick object being used
@@ -53,5 +58,23 @@ public class ThrottleBasic implements Throttle {
 	 */
 	public double getValue() {
 		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
+	}
+
+	/**
+	 * Get the cached output of the throttle this object represents.
+	 *
+	 * @return The output from [-1, 1].
+	 */
+	@Override
+	public double getValueCached() {
+		return cachedOutput;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		cachedOutput = getValue();
 	}
 }

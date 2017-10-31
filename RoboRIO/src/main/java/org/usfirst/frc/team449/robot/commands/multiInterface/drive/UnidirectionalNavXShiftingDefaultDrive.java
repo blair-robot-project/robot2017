@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
 
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
@@ -19,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
@@ -92,8 +92,8 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	public void execute() {
 		//Auto-shifting
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
-					subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+			autoshiftComponent.autoshift(oi.getLeftOutputCached(), oi.getRightOutputCached(), subsystem.getLeftVelCached(),
+					subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();
 	}

@@ -107,6 +107,50 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	}
 
 	/**
+	 * Get the cached velocity of the left side of the drive.
+	 *
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftVelCached() {
+		return null;
+	}
+
+	/**
+	 * Get the cached velocity of the right side of the drive.
+	 *
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightVelCached() {
+		return null;
+	}
+
+	/**
+	 * Get the cached position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPosCached() {
+		return null;
+	}
+
+	/**
+	 * Get the cached position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPosCached() {
+		return null;
+	}
+
+	/**
 	 * Completely stop the robot by setting the voltage to each side to be 0.
 	 */
 	@Override
@@ -130,5 +174,13 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	@Override
 	public void resetPosition() {
 		//No encoders, do nothing
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		//Do nothing
 	}
 }

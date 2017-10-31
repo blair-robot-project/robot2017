@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
 
 /**
@@ -16,7 +16,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngle
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -117,22 +117,22 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 	@Override
 	protected void execute() {
 		//Check whether we're commanding to drive straight or turn.
-		boolean commandingStraight = oi.commandingStraight();
+		boolean commandingStraight = oi.commandingStraightCached();
 
 		//If we're driving straight but the driver tries to turn or overrides the navX:
-		if (drivingStraight && (!commandingStraight || subsystem.getOverrideNavX())) {
+		if (drivingStraight && (!commandingStraight || subsystem.getOverrideGyro())) {
 			//Switch to free drive
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver stops turning:
-		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideNavX()) && !(drivingStraight) &&
-				commandingStraight && Math.abs(subsystem.getNavX().getRate()) <= maxAngularVelToEnterLoop)) {
+		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideGyro()) && !(drivingStraight) &&
+				commandingStraight && Math.abs(subsystem.getAngularVelCached()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the navX
 			this.getPIDController().reset();
-			this.getPIDController().setSetpoint(subsystem.getGyroHeading());
+			this.getPIDController().setSetpoint(subsystem.getHeadingCached());
 			this.getPIDController().enable();
 			Logger.addEvent("Switching to DriveStraight.", this.getClass());
 		}
@@ -178,17 +178,17 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 			output = processPIDOutput(output);
 
 			//Deadband if we're stationary
-			if (oi.getLeftOutput() == 0 || oi.getRightOutput() == 0) {
+			if (oi.getLeftOutputCached() == 0 || oi.getRightOutputCached() == 0) {
 				output = deadbandOutput(output);
 			}
 
 			//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-			subsystem.setOutput(oi.getLeftOutput() - output, oi.getRightOutput() + output);
+			subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getRightOutputCached() + output);
 		}
 		//If we're free driving...
 		else {
 			//Set the throttle to normal arcade throttle.
-			subsystem.setOutput(oi.getLeftOutput(), oi.getRightOutput());
+			subsystem.setOutput(oi.getLeftOutputCached(), oi.getRightOutputCached());
 		}
 	}
 }

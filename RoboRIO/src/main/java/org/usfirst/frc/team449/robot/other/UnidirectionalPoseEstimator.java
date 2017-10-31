@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
  * A Runnable for pose estimation that can take absolute positions.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidirectional> implements MappedRunnable, Loggable {
+public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidirectional> implements MappedRunnable, Loggable {
 
 	/**
 	 * The wheel-to-wheel diameter of the robot, in feet.
@@ -198,7 +198,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemNavX & DriveUnidire
 		//Record everything at the start, as it may change between executing lines of code and that would be bad.
 		double left = subsystem.getLeftPos();
 		double right = subsystem.getRightPos();
-		double theta = Math.toRadians(subsystem.getNavX().getAngle());
+		double theta = Math.toRadians(subsystem.getAngularDisplacement());
 		long time = Clock.currentTimeMillis();
 
 		//Calculate differences versus the last measurement

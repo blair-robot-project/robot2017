@@ -19,6 +19,11 @@ public class ThrottleSum implements Throttle {
 	protected final Throttle[] throttles;
 
 	/**
+	 * The cached output.
+	 */
+	protected double cachedValue;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param throttles The throttles to sum.
@@ -48,5 +53,23 @@ public class ThrottleSum implements Throttle {
 		} else {
 			return sum;
 		}
+	}
+
+	/**
+	 * Get the cached output of the throttle this object represents.
+	 *
+	 * @return The output from [-1, 1].
+	 */
+	@Override
+	public double getValueCached() {
+		return cachedValue;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		cachedValue = getValue();
 	}
 }

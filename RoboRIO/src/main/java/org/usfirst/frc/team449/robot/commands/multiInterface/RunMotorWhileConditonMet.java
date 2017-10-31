@@ -57,7 +57,7 @@ public class RunMotorWhileConditonMet <T extends YamlSubsystem & SubsystemBinary
 	 */
 	@Override
 	protected boolean isFinished() {
-		return subsystem.isConditionTrue();
+		return subsystem.isConditionTrueCached();
 	}
 
 	/**
