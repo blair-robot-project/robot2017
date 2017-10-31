@@ -116,18 +116,15 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 	 */
 	@Override
 	protected void execute() {
-		//Check whether we're commanding to drive straight or turn.
-		boolean commandingStraight = oi.commandingStraightCached();
-
 		//If we're driving straight but the driver tries to turn or overrides the navX:
-		if (drivingStraight && (!commandingStraight || subsystem.getOverrideGyro())) {
+		if (drivingStraight && (!oi.commandingStraightCached() || subsystem.getOverrideGyro())) {
 			//Switch to free drive
 			drivingStraight = false;
 			Logger.addEvent("Switching to free drive.", this.getClass());
 		}
 		//If we're free driving and the driver stops turning:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideGyro()) && !(drivingStraight) &&
-				commandingStraight && Math.abs(subsystem.getAngularVelCached()) <= maxAngularVelToEnterLoop)) {
+				oi.commandingStraightCached() && Math.abs(subsystem.getAngularVelCached()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
 			//Set the setpoint to the current heading and reset the navX

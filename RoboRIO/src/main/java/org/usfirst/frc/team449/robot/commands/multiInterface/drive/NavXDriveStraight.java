@@ -87,15 +87,11 @@ public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & 
 		output = processPIDOutput(output);
 
 		//Set throttle to the specified stick.
-		double throttle;
 		if (useLeft) {
-			throttle = oi.getLeftThrottleCached();
+			subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getLeftOutputCached() + output);
 		} else {
-			throttle = oi.getRightThrottleCached();
+			subsystem.setOutput(oi.getRightOutputCached() - output, oi.getRightOutputCached() + output);
 		}
-
-		//Set the output to the throttle velocity adjusted by the PID output.
-		subsystem.setOutput(throttle - output, throttle + output);
 	}
 
 	/**

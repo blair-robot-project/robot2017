@@ -24,6 +24,11 @@ public class ThrottleSum implements Throttle {
 	protected double cachedValue;
 
 	/**
+	 * The sum. Field to avoid garbage collection.
+	 */
+	private double sum;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param throttles The throttles to sum.
@@ -40,7 +45,7 @@ public class ThrottleSum implements Throttle {
 	 */
 	public double getValue() {
 		//sum throttles
-		double sum = 0;
+		sum = 0;
 		for (Throttle throttle : throttles) {
 			sum += throttle.getValue();
 		}

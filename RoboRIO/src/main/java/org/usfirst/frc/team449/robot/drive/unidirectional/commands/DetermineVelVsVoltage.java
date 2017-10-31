@@ -65,6 +65,16 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 	private int sign;
 
 	/**
+	 * The average speed of the two sides. Field to avoid garbage collection.
+	 */
+	private double avgSpeed;
+
+	/**
+	 * Whether the distance for this trial has been driven. Field to avoid garbage collection.
+	 */
+	private boolean drivenDistance;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param subsystem       The subsystem to execute this command on.
@@ -111,7 +121,7 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 		//Multiply each by sign so that only the movement in the correct direction is counted and leftover momentum from
 		// the previous trial isn't.
 
-		double avgSpeed = (sign * subsystem.getLeftVelCached() + sign * subsystem.getRightVelCached()) / 2.;
+		avgSpeed = (sign * subsystem.getLeftVelCached() + sign * subsystem.getRightVelCached()) / 2.;
 
 		if (avgSpeed > maxSpeedForTrial) {
 			maxSpeedForTrial = avgSpeed;
@@ -120,8 +130,8 @@ public class DetermineVelVsVoltage <T extends YamlSubsystem & DriveUnidirectiona
 
 		SmartDashboard.putNumber("Average Distance", (subsystem.getLeftPosCached() + subsystem.getRightPosCached()) / 2.);
 		SmartDashboard.putNumber("Average Speed", avgSpeed);
+
 		//Check if we've driven past the given distance
-		boolean drivenDistance;
 		if (sign == -1) {
 			drivenDistance = (subsystem.getLeftPosCached() + subsystem.getRightPosCached()) / 2. <= 0;
 		} else {

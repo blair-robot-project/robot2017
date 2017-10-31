@@ -35,11 +35,6 @@ public class DriveStraight <T extends YamlSubsystem & DriveUnidirectional> exten
 	private final T subsystem;
 
 	/**
-	 * The throttle gotten from the joystick. This is a field instead of a local variable to avoid garbage collection.
-	 */
-	private double throttle;
-
-	/**
 	 * Drive straight without NavX stabilization.
 	 *
 	 * @param subsystem The drive subsystem to execute this command on.
@@ -71,12 +66,10 @@ public class DriveStraight <T extends YamlSubsystem & DriveUnidirectional> exten
 	@Override
 	protected void execute() {
 		if (useLeft) {
-			throttle = oi.getLeftThrottle();
+			subsystem.setOutput(oi.getLeftOutputCached(), oi.getLeftOutputCached());
 		} else {
-			throttle = oi.getRightThrottle();
+			subsystem.setOutput(oi.getRightOutputCached(), oi.getRightOutputCached());;
 		}
-
-		subsystem.setOutput(throttle, throttle);
 	}
 
 	/**
