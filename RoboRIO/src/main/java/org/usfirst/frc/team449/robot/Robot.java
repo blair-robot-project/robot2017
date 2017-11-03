@@ -107,6 +107,10 @@ public class Robot extends IterativeRobot {
 			System.out.println("Config file is bad/nonexistent!");
 			e.printStackTrace();
 		}
+
+		//Read sensors
+		this.robotMap.getUpdater().run();
+
 		//Set fields from the map.
 		this.loggerNotifier = new Notifier(robotMap.getLogger());
 		this.driveSubsystem = robotMap.getDrive();
@@ -179,6 +183,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		//Do the startup tasks
+		doStartupTasks();
+
+		//Read sensors
+		this.robotMap.getUpdater().run();
+
 		//Run startup command if we start in teleop.
 		if (!enabled) {
 			if (robotMap.getStartupCommand() != null) {
@@ -187,9 +197,8 @@ public class Robot extends IterativeRobot {
 			enabled = true;
 		}
 
-		//Do the startup tasks
 		driveSubsystem.stopMPProcesses();
-		doStartupTasks();
+
 		if (robotMap.getTeleopStartupCommand() != null) {
 			robotMap.getTeleopStartupCommand().start();
 		}
@@ -208,6 +217,10 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 		//Refresh the current time.
 		Clock.updateTime();
+
+		//Read sensors
+		this.robotMap.getUpdater().run();
+
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}
@@ -217,6 +230,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		//Do startup tasks
+		doStartupTasks();
+
+		//Read sensors
+		this.robotMap.getUpdater().run();
+
 		//Run startup command if we start in auto.
 		if (!enabled) {
 			if (robotMap.getStartupCommand() != null) {
@@ -225,8 +244,6 @@ public class Robot extends IterativeRobot {
 			enabled = true;
 		}
 
-		//Do startup tasks
-		doStartupTasks();
 		if (robotMap.getAutoStartupCommand() != null) {
 			robotMap.getAutoStartupCommand().start();
 		}
@@ -247,6 +264,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		//Update the current time
 		Clock.updateTime();
+		//Read sensors
+		this.robotMap.getUpdater().run();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 	}
@@ -282,6 +301,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void disabledPeriodic() {
 		Clock.updateTime();
+		//Read sensors
+		this.robotMap.getUpdater().run();
 	}
 
 	/**

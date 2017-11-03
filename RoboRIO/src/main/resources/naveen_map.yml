@@ -724,3 +724,17 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
+updater:
+    org.usfirst.frc.team449.robot.other.Updater:
+        '@id': updater
+        updatables:
+            - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                drive
+            - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                climber
+            - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                oi
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                pushGearThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                climbButtonThrottle
