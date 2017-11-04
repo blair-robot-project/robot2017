@@ -43,7 +43,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 * The NavX gyro
 	 */
 	@NotNull
-	private final MappedAHRS navX;
+	private final MappedAHRS ahrs;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -62,20 +62,20 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 *
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
-	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
+	 * @param ahrs        The NavX gyro for calculating this drive's heading and angular velocity.
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
 	public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
 	                         @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                         @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
 	                         @Nullable Double VelScale) {
 		super();
 		//Initialize stuff
 		this.VEL_SCALE = VelScale != null ? VelScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
-		this.navX = navX;
+		this.ahrs = ahrs;
 		this.overrideGyro = false;
 	}
 
@@ -223,7 +223,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getHeading() {
-		return navX.getHeading();
+		return ahrs.getHeading();
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public void setHeading(double heading) {
-		navX.setHeading(heading);
+		ahrs.setHeading(heading);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularVel() {
-		return navX.getAngularVelocity();
+		return ahrs.getAngularVelocity();
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularDisplacement() {
-		return navX.getAngularVelocity();
+		return ahrs.getAngularVelocity();
 	}
 
 	/**
@@ -352,11 +352,11 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 				leftMaster.getError(),
 				rightMaster.getError(),
 				cachedHeading,
-				navX.get9AxisHeading(),
+				ahrs.get9AxisHeading(),
 				cachedAngularVel,
 				cachedAngularDisplacement,
-				navX.getXAccel(),
-				navX.getYAccel()};
+				ahrs.getXAccel(),
+				ahrs.getYAccel()};
 	}
 
 	/**

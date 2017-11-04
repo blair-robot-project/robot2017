@@ -67,7 +67,7 @@ drive:
                       port: 8
                       inverted: false
         VelScale: 0.9
-        navX:
+        ahrs:
             '@id': driveNavX
             port: kMXP
 pneumatics:

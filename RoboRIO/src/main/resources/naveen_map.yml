@@ -181,7 +181,7 @@ drive:
                       port: 3
                       inverted: true
         VelScale: 0.9
-        navX:
+        ahrs:
             '@id': driveNavX
             port: kMXP
         shiftComponent:
@@ -543,7 +543,7 @@ startupCommand:
         runnables:
             - org.usfirst.frc.team449.robot.components.NavXRumbleComponent:
                 '@id': rumbleComponent
-                navX:
+                ahrs:
                   driveNavX
                 rumbleables:
                   - org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
