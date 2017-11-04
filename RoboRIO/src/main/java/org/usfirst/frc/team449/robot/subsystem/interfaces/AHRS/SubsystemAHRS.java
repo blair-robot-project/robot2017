@@ -1,12 +1,10 @@
-package org.usfirst.frc.team449.robot.subsystem.interfaces.navX;
+package org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS;
 
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.kauailabs.navx.frc.AHRS;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * A subsystem that has a navX on it.
+ * A subsystem that has a AHRS on it.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 public interface SubsystemAHRS {

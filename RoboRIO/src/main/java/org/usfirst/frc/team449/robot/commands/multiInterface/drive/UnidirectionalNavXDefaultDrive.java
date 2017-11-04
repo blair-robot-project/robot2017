@@ -9,8 +9,8 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 /**
  * Drive with arcade drive setup, and when the driver isn't turning, use a NavX to stabilize the robot's alignment.
@@ -118,17 +118,17 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 	@Override
 	protected void execute() {
 		SmartDashboard.putBoolean("Override",subsystem.getOverrideGyro());
-		//If we're driving straight but the driver tries to turn or overrides the navX:
-		if (drivingStraight && (!oi.commandingStraightCached() || subsystem.getOverrideGyro())) {
+		//If we're driving straight but the driver tries to turn or overrides the AHRS:
+		if (drivingStraight && (!oi.commandingStraight() || subsystem.getOverrideGyro())) {
 			//Switch to free drive
 			drivingStraight = false;
 		}
 		//If we're free driving and the driver stops turning:
 		else if (driveStraightLoopEntryTimer.get(!(subsystem.getOverrideGyro()) && !(drivingStraight) &&
-				oi.commandingStraightCached() && Math.abs(subsystem.getAngularVelCached()) <= maxAngularVelToEnterLoop)) {
+				oi.commandingStraight() && Math.abs(subsystem.getAngularVelCached()) <= maxAngularVelToEnterLoop)) {
 			//Switch to driving straight
 			drivingStraight = true;
-			//Set the setpoint to the current heading and reset the navX
+			//Set the setpoint to the current heading and reset the AHRS
 			this.getPIDController().reset();
 			this.getPIDController().setSetpoint(subsystem.getHeadingCached());
 			this.getPIDController().enable();

@@ -15,11 +15,6 @@ public abstract class OIArcade implements OIUnidirectional {
 	private double rotCached, fwdCached, leftCached, rightCached;
 
 	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 */
-	private boolean commandingStraightCached;
-
-	/**
 	 * Get the rotational input.
 	 *
 	 * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
@@ -98,23 +93,12 @@ public abstract class OIArcade implements OIUnidirectional {
 	}
 
 	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 *
-	 * @return True if the driver is trying to drive straight, false otherwise.
-	 */
-	@Override
-	public boolean commandingStraightCached(){
-		return commandingStraightCached;
-	}
-
-	/**
 	 * Updates all cached values with current ones.
 	 */
 	@Override
 	public void update() {
 		rotCached = getRot();
 		fwdCached = getFwd();
-		commandingStraightCached = commandingStraight();
 		leftCached = fwdCached + rotCached;
 		rightCached = fwdCached - rotCached;
 	}

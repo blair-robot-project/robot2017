@@ -118,7 +118,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/DriveSubsystem.html" title="interface in org.usfirst.frc.team449.robot.drive">DriveSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/unidirectional/DriveUnidirectional.html" title="interface in org.usfirst.frc.team449.robot.drive.unidirectional">DriveUnidirectional</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/loggable/Loggable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.loggable">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/updatable/Updatable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.updatable">Updatable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/SubsystemMP.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">SubsystemMP</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/TwoSideMPSubsystem/SubsystemMPTwoSides.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">SubsystemMPTwoSides</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></dd>
+<dd>edu.wpi.first.wpilibj.NamedSendable, edu.wpi.first.wpilibj.Sendable, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/DriveSubsystem.html" title="interface in org.usfirst.frc.team449.robot.drive">DriveSubsystem</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/unidirectional/DriveUnidirectional.html" title="interface in org.usfirst.frc.team449.robot.drive.unidirectional">DriveUnidirectional</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/loggable/Loggable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.loggable">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/updatable/Updatable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.updatable">Updatable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/SubsystemMP.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile">SubsystemMP</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/TwoSideMPSubsystem/SubsystemMPTwoSides.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">SubsystemMPTwoSides</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></dd>
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
@@ -128,7 +128,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">DriveTalonCluster</span>
 extends <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/YamlSubsystem.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">YamlSubsystem</a>
-implements <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/unidirectional/DriveUnidirectional.html" title="interface in org.usfirst.frc.team449.robot.drive.unidirectional">DriveUnidirectional</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/loggable/Loggable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.loggable">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/TwoSideMPSubsystem/SubsystemMPTwoSides.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">SubsystemMPTwoSides</a></pre>
+implements <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/unidirectional/DriveUnidirectional.html" title="interface in org.usfirst.frc.team449.robot.drive.unidirectional">DriveUnidirectional</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/generalInterfaces/loggable/Loggable.html" title="interface in org.usfirst.frc.team449.robot.generalInterfaces.loggable">Loggable</a>, <a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/motionProfile/TwoSideMPSubsystem/SubsystemMPTwoSides.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem">SubsystemMPTwoSides</a></pre>
 <div class="block">A drive with a cluster of any number of CANTalonSRX controlled motors on each side.</div>
 </li>
 </ul>
@@ -727,7 +727,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's heading using the navX</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getHeading--">getHeading</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getHeading--">getHeading</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>robot heading, in degrees, on [-180, 180]</dd>
 </dl>
@@ -743,7 +743,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's cached heading.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getHeadingCached--">getHeadingCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getHeadingCached--">getHeadingCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>robot heading, in degrees, on [-180, 180].</dd>
 </dl>
@@ -759,7 +759,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's angular velocity.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularVel--">getAngularVel</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularVel--">getAngularVel</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Angular velocity in degrees/sec</dd>
 </dl>
@@ -775,7 +775,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's cached angular velocity.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularVelCached--">getAngularVelCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularVelCached--">getAngularVelCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Angular velocity in degrees/sec</dd>
 </dl>
@@ -791,7 +791,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's angular displacement since being turned on.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularDisplacement--">getAngularDisplacement</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularDisplacement--">getAngularDisplacement</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Angular displacement in degrees.</dd>
 </dl>
@@ -807,7 +807,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <div class="block">Get the robot's cached angular displacement since being turned on.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularDisplacementCached--">getAngularDisplacementCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getAngularDisplacementCached--">getAngularDisplacementCached</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Angular displacement in degrees.</dd>
 </dl>
@@ -822,7 +822,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <pre>public&nbsp;boolean&nbsp;getOverrideGyro()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getOverrideGyro--">getOverrideGyro</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#getOverrideGyro--">getOverrideGyro</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>true if the NavX is currently overriden, false otherwise.</dd>
 </dl>
@@ -837,7 +837,7 @@ public&nbsp;java.lang.Double&nbsp;getRightPosCached()</pre>
 <pre>public&nbsp;void&nbsp;setOverrideGyro(boolean&nbsp;override)</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#setOverrideGyro-boolean-">setOverrideGyro</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.navX">SubsystemAHRS</a></code></dd>
+<dd><code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html#setOverrideGyro-boolean-">setOverrideGyro</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../../../org/usfirst/frc/team449/robot/subsystem/interfaces/navX/SubsystemAHRS.html" title="interface in org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS">SubsystemAHRS</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>override</code> - true to override the NavX, false to un-override it.</dd>
 </dl>

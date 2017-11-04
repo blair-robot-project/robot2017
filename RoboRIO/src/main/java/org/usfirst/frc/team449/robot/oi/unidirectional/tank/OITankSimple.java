@@ -26,11 +26,6 @@ public class OITankSimple extends OITank {
 	private final Throttle rightThrottle;
 
 	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 */
-	private boolean commandingStraightCached;
-
-	/**
 	 * The difference between left and right input within which the driver is considered to be trying to drive
 	 * straight.
 	 */
@@ -88,22 +83,6 @@ public class OITankSimple extends OITank {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) <= commandingStraightTolerance;
-	}
-
-	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 *
-	 * @return True if the driver is trying to drive straight, false otherwise.
-	 */
-	@Override
-	public boolean commandingStraightCached() {
-		return commandingStraightCached;
-	}
-
-	@Override
-	public void update(){
-		commandingStraightCached = commandingStraight();
-		super.update();
+		return Math.abs(getLeftOutputCached() - getRightOutputCached()) <= commandingStraightTolerance;
 	}
 }

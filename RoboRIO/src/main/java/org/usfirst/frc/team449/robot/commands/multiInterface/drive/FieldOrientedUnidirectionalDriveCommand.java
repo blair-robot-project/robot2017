@@ -8,8 +8,8 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,11 +105,7 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 	 */
 	@Override
 	protected void execute() {
-		SmartDashboard.putBoolean("enabled",this.getPIDController().isEnabled());
-		SmartDashboard.putNumber("NavX Error",this.getPIDController().getError());
-		SmartDashboard.putNumber("kP",this.getPIDController().getP());
-		//Do nothing
-		theta = oi.getTheta();
+		theta = oi.getThetaCached();
 		if (theta != null) {
 			for (AngularSnapPoint snapPoint : snapPoints) {
 				//See if we should snap
@@ -164,7 +160,7 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 		SmartDashboard.putNumber("PID loop output", output);
 
 		//Adjust the heading according to the PID output, it'll be positive if we want to go right.
-		subsystem.setOutput(oi.getVel() - output, oi.getVel() + output);
+		subsystem.setOutput(oi.getVelCached() - output, oi.getVelCached() + output);
 	}
 
 	/**

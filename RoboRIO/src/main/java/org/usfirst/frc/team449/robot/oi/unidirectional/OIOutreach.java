@@ -35,11 +35,6 @@ public class OIOutreach implements OIUnidirectional {
 	 */
 	private double cachedLeftOutput, cachedRightOutput;
 
-	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 */
-	private boolean cachedCommandingStraight;
-
 	@JsonCreator
 	public OIOutreach(@NotNull @JsonProperty(required = true) OIUnidirectional overridingOI,
 	                  @NotNull @JsonProperty(required = true) OIUnidirectional overridenOI,
@@ -84,7 +79,7 @@ public class OIOutreach implements OIUnidirectional {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return getLeftOutput() == getRightOutput();
+		return getLeftOutputCached() == getRightOutputCached();
 	}
 
 	/**
@@ -108,22 +103,11 @@ public class OIOutreach implements OIUnidirectional {
 	}
 
 	/**
-	 * Whether the driver was trying to drive straight when values were cached.
-	 *
-	 * @return True if the driver is trying to drive straight, false otherwise.
-	 */
-	@Override
-	public boolean commandingStraightCached() {
-		return cachedCommandingStraight;
-	}
-
-	/**
 	 * Updates all cached values with current ones.
 	 */
 	@Override
 	public void update() {
 		cachedLeftOutput = getLeftOutput();
 		cachedRightOutput = getRightOutput();
-		cachedCommandingStraight = cachedLeftOutput == cachedRightOutput;
 	}
 }

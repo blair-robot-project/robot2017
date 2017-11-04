@@ -10,7 +10,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 import java.util.List;
 
@@ -87,7 +87,7 @@ public class FieldOrientedUnidirectionalDriveCommandShifting<T extends YamlSubsy
 	@Override
 	protected void execute() {
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift(oi.getVel(), subsystem.getLeftVel(), subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+			autoshiftComponent.autoshift(oi.getVelCached(), subsystem.getLeftVelCached(), subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();
 	}

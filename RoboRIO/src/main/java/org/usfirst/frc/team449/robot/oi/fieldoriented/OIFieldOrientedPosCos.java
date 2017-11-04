@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.other.Clock;
  * A field-oriented OI that always points the robot an angle where cosine is positive, i.e. always pointing away from the driver station.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OIFieldOrientedPosCos implements OIFieldOriented{
+public class OIFieldOrientedPosCos extends OIFieldOriented{
 
 	/**
 	 * The throttle for the X-axis, which points towards the opposing driver station.

@@ -599,7 +599,7 @@ buttons:
                         gunnerGamepad
                 buttonNumber: 1
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': overrideNavXCommand
                 override: true
                 subsystem:
@@ -610,7 +610,7 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 overrideNavXButton
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': unoverrideNavXCommand
                 override: false
                 subsystem:
