@@ -93,7 +93,7 @@ oi:
             org.usfirst.frc.team449.robot.oi.throttles.ThrottlePolynomial:
                 <<: *rotThrottle
                 '@id': fwdThrottle
-                axis: 1
+                axis: 5
                 inverted: true
                 polynomial:
                     '@id': fwdPoly
