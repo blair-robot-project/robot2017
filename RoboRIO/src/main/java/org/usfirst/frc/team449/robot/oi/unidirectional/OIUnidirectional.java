@@ -1,6 +1,7 @@
 package org.usfirst.frc.team449.robot.oi.unidirectional;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
 import org.usfirst.frc.team449.robot.oi.OI;
 
 /**
@@ -8,7 +9,7 @@ import org.usfirst.frc.team449.robot.oi.OI;
  * holonomic)
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public interface OIUnidirectional extends OI{
+public interface OIUnidirectional extends Updatable, OI {
 
 	/**
 	 * The output to be given to the left side of the drive.
@@ -30,4 +31,25 @@ public interface OIUnidirectional extends OI{
 	 * @return True if the driver is trying to drive straight, false otherwise.
 	 */
 	boolean commandingStraight();
+
+	/**
+	 * The cached output to be given to the left side of the drive.
+	 *
+	 * @return Output to left side from [-1, 1]
+	 */
+	double getLeftOutputCached();
+
+	/**
+	 * The cached output to be given to the right side of the drive.
+	 *
+	 * @return Output to right side from [-1, 1]
+	 */
+	double getRightOutputCached();
+
+	/**
+	 * Whether the driver was trying to drive straight when values were cached.
+	 *
+	 * @return True if the driver is trying to drive straight, false otherwise.
+	 */
+	boolean commandingStraightCached();
 }

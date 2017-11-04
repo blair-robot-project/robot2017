@@ -8,7 +8,7 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.fieldoriented.OIFieldOriented;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
 	/**
 	 * The drive this command is controlling.
@@ -159,7 +159,7 @@ public class FieldOrientedUnidirectionalDriveCommand <T extends YamlSubsystem & 
 	protected void usePIDOutput(double output) {
 		SmartDashboard.putNumber("Unprocessed loop output", output);
 		//Process or zero the input depending on whether the NavX is being overriden.
-		output = subsystem.getOverrideNavX() ? 0 : processPIDOutput(output);
+		output = subsystem.getOverrideGyro() ? 0 : processPIDOutput(output);
 
 		SmartDashboard.putNumber("PID loop output", output);
 

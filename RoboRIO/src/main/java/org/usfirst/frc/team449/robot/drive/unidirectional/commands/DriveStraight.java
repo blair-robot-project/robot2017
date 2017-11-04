@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * Drives straight when using a tank drive.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveStraight<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class DriveStraight <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The oi that this command gets input from.
@@ -33,11 +33,6 @@ public class DriveStraight<T extends YamlSubsystem & DriveUnidirectional> extend
 	 */
 	@NotNull
 	private final T subsystem;
-
-	/**
-	 * The throttle gotten from the joystick. This is a field instead of a local variable to avoid garbage collection.
-	 */
-	private double throttle;
 
 	/**
 	 * Drive straight without NavX stabilization.
@@ -71,12 +66,10 @@ public class DriveStraight<T extends YamlSubsystem & DriveUnidirectional> extend
 	@Override
 	protected void execute() {
 		if (useLeft) {
-			throttle = oi.getLeftThrottle();
+			subsystem.setOutput(oi.getLeftOutputCached(), oi.getLeftOutputCached());
 		} else {
-			throttle = oi.getRightThrottle();
+			subsystem.setOutput(oi.getRightOutputCached(), oi.getRightOutputCached());;
 		}
-
-		subsystem.setOutput(throttle, throttle);
 	}
 
 	/**

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandWrapper;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
 
 /**
  * Toggle whether or not to override the navX.
@@ -19,7 +19,7 @@ public class ToggleOverrideNavX extends YamlCommandWrapper {
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	private final SubsystemNavX subsystem;
+	private final SubsystemAHRS subsystem;
 
 	/**
 	 * Default constructor.
@@ -27,7 +27,7 @@ public class ToggleOverrideNavX extends YamlCommandWrapper {
 	 * @param subsystem The subsystem to execute this command on
 	 */
 	@JsonCreator
-	public ToggleOverrideNavX(@NotNull @JsonProperty(required = true) SubsystemNavX subsystem) {
+	public ToggleOverrideNavX(@NotNull @JsonProperty(required = true) SubsystemAHRS subsystem) {
 		this.subsystem = subsystem;
 	}
 
@@ -44,7 +44,7 @@ public class ToggleOverrideNavX extends YamlCommandWrapper {
 	 */
 	@Override
 	protected void execute() {
-		subsystem.setOverrideNavX(!subsystem.getOverrideNavX());
+		subsystem.setOverrideGyro(!subsystem.getOverrideGyro());
 	}
 
 	/**

@@ -92,7 +92,7 @@ public class Logger implements Runnable {
 		FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
 		FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
 		//Write the file headers
-		eventLogWriter.write("time,class,message");
+		eventLogWriter.write("time,class,message" + "\n");
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryHeader = new StringBuilder();
 		telemetryHeader.append("time,");
@@ -112,7 +112,7 @@ public class Logger implements Runnable {
 		//Delete the trailing comma
 		telemetryHeader.deleteCharAt(telemetryHeader.length() - 1);
 
-		telemetryHeader.append("\n");
+		telemetryHeader.append(",\n");
 		//Write the telemetry file header
 		telemetryLogWriter.write(telemetryHeader.toString());
 		eventLogWriter.close();
@@ -201,10 +201,13 @@ public class Logger implements Runnable {
 				telemetryData.append(",");
 			}
 		}
-		telemetryData.append("\n");
+
+		String telemetryString = telemetryData.toString();
+		telemetryString = telemetryString.substring(0, telemetryString.length() - 1);
+		telemetryString += "\n";
 		//Log the data to a file.
 		try {
-			telemetryLogWriter.write(telemetryData.toString());
+			telemetryLogWriter.write(telemetryString);
 		} catch (IOException e) {
 			System.out.println("Logging failed!");
 			e.printStackTrace();

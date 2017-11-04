@@ -7,15 +7,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import edu.wpi.first.wpilibj.Joystick;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
+import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Polynomial;
 
 /**
  * An arcade OI with an option to use the D-pad for turning.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OIArcadeWithDPad extends OIArcade {
+public class OIArcadeWithDPad extends OIArcade implements Loggable {
 
 	/**
 	 * How much the D-pad moves the robot rotationally on a 0 to 1 scale, equivalent to pushing the turning stick that
@@ -82,7 +84,7 @@ public class OIArcadeWithDPad extends OIArcade {
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
 	}
-
+	
 	/**
 	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick
 	 * it is.
@@ -91,7 +93,6 @@ public class OIArcadeWithDPad extends OIArcade {
 	 */
 	@Override
 	public double getFwd() {
-		//Scale based on rotational throttle for more responsive turning at high speed
 		return fwdThrottle.getValue();
 	}
 
@@ -107,17 +108,51 @@ public class OIArcadeWithDPad extends OIArcade {
 		if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
 			//Output the shift value
 			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
-		} else {
-			//Return the throttle value if it's outside of the deadband.
-			if (fwdThrottle.getValue() == 0) {
-				return rotThrottle.getValue() * turnInPlaceRotScale;
-			} else {
-				if (scaleRotByFwdPoly != null) {
-					return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(fwdThrottle.getValue()));
-				} else {
-					return rotThrottle.getValue();
-				}
-			}
+		} else if (getFwd() == 0) { //Turning in place
+			return rotThrottle.getValue() * turnInPlaceRotScale;
+		} else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
+			return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(getFwd()));
+		} else { //Plain and simple
+			return rotThrottle.getValue();
 		}
+	}
+
+	/**
+	 * Get the headers for the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of String labels for data, where N is the length of the Object[] returned by getData().
+	 */
+	@NotNull
+	@Override
+	public String[] getHeader() {
+		return new String[]{
+				"Fwd",
+				"Rot"
+		};
+	}
+
+	/**
+	 * Get the data this subsystem logs every loop.
+	 *
+	 * @return An N-length array of Objects, where N is the number of labels given by getHeader.
+	 */
+	@NotNull
+	@Override
+	public Object[] getData() {
+		return new Object[]{
+				getFwd(),
+				getRot()
+		};
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return A string that will identify this object in the log file.
+	 */
+	@NotNull
+	@Override
+	public String getName() {
+		return "OI";
 	}
 }

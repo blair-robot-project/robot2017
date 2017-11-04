@@ -60,6 +60,11 @@ public class AutoshiftComponent {
 	private long timeLastDownshifted;
 
 	/**
+	 * Whether it's okay to up or down shift. Fields to avoid garbage collection.
+	 */
+	private boolean okayToUpshift, okayToDownshift;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param upshiftSpeed           The minimum speed both sides the drive must be going at to shift to high gear.
@@ -100,23 +105,23 @@ public class AutoshiftComponent {
 	 */
 	private boolean shouldDownshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
+		okayToDownshift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
 		//Or if we're just turning in place.
-		okToShift = okToShift || (forwardThrottle == 0);
+		okayToDownshift = okayToDownshift || (forwardThrottle == 0);
 		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs(forwardThrottle) < upshiftFwdThresh);
+		okayToDownshift = okayToDownshift || (Math.abs(forwardThrottle) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
+		okayToDownshift = okayToDownshift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
-		okToShift = downshiftBufferTimer.get(okToShift);
+		okayToDownshift = downshiftBufferTimer.get(okayToDownshift);
 
 		//Record the time if we do decide to shift.
-		if (okToShift) {
+		if (okayToDownshift) {
 			timeLastDownshifted = Clock.currentTimeMillis();
 		}
-		return okToShift;
+		return okayToDownshift;
 	}
 
 	/**
@@ -129,19 +134,19 @@ public class AutoshiftComponent {
 	 */
 	private boolean shouldUpshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
+		okayToUpshift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs(forwardThrottle) > upshiftFwdThresh;
+		okayToUpshift = okayToUpshift && Math.abs(forwardThrottle) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
+		okayToUpshift = okayToUpshift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
-		okToShift = upshiftBufferTimer.get(okToShift);
-		if (okToShift) {
+		okayToUpshift = upshiftBufferTimer.get(okayToUpshift);
+		if (okayToUpshift) {
 			timeLastUpshifted = Clock.currentTimeMillis();
 		}
-		return okToShift;
+		return okayToUpshift;
 	}
 
 	/**

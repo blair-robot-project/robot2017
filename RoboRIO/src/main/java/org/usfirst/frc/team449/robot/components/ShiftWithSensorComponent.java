@@ -37,24 +37,34 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 */
 	@NotNull
 	private final List<SimpleMotor> motorsToDisable;
+
 	/**
-	 * The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
+	 * The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the
+	 * motors.
 	 */
 	@NotNull
 	private final BufferTimer motorDisableTimer;
+
 	/**
 	 * The Notifier that runs checkToReenable periodically.
 	 */
 	@NotNull
 	private final Notifier sensorChecker;
+
 	/**
 	 * The period for the loop that checks the sensors and enables/disables the motors, in seconds.
 	 */
 	private final double sensorCheckerPeriodSecs;
+
 	/**
 	 * Whether the piston's position was correct the last time checkToReenable was run.
 	 */
 	private boolean pistonWasCorrect;
+
+	/**
+	 * Whether the piston's position is currently correct. Field to avoid garbage collection.
+	 */
+	private boolean pistonCorrect;
 
 	/**
 	 * Default constructor.
@@ -62,13 +72,15 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 * @param otherShiftables         All objects that should be shifted when this component's piston is.
 	 * @param piston                  The piston that shifts.
 	 * @param lowGearPistonPos        The piston position for low gear. Defaults to Forward.
-	 * @param startingGear            The gear to start in. Can be null, and if it is, the starting gear is gotten from the
-	 *                                piston's position.
+	 * @param startingGear            The gear to start in. Can be null, and if it is, the starting gear is gotten from
+	 *                                the piston's position.
 	 * @param highGearSensors         The reed switches that detect if the shifter pistons are in high gear.
 	 * @param lowGearSensors          The reed switches that detect if the shifter pistons are in low gear.
 	 * @param motorsToDisable         The motors that should be disabled while the piston is shifting.
-	 * @param motorDisableTimer       The timer for how long the piston can be considered shifting before we ignore the sensors and re-enable the motors.
-	 * @param sensorCheckerPeriodSecs The period for the loop that checks the sensors and enables/disables the motors, in seconds.
+	 * @param motorDisableTimer       The timer for how long the piston can be considered shifting before we ignore the
+	 *                                sensors and re-enable the motors.
+	 * @param sensorCheckerPeriodSecs The period for the loop that checks the sensors and enables/disables the motors,
+	 *                                in seconds.
 	 */
 	@JsonCreator
 	public ShiftWithSensorComponent(@NotNull @JsonProperty(required = true) List<Shiftable> otherShiftables,
@@ -95,7 +107,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 */
 	private void checkToReenable() {
 		//Check if the piston is in correct position by making sure each sensor is reading correctly.
-		boolean pistonCorrect = true;
+		pistonCorrect = true;
 		if (currentGear == Shiftable.gear.HIGH.getNumVal()) {
 			for (boolean sensor : highGearSensors.getStatus()) {
 				//The position is correct if all the sensors read true.

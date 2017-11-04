@@ -17,3 +17,5 @@ For info on our framework, see [here](http://team449.shoutwiki.com/wiki/Informat
 
 Reading everything [here](http://team449.shoutwiki.com/wiki/Category:Programming)
 before writing code is probably a good idea.
+
+MRA Education Day presentation: https://docs.google.com/presentation/d/1PWEmE_5zcDg5OGz8K20IKFjoHMwizs2ychw535TPyaI/edit?usp=sharing

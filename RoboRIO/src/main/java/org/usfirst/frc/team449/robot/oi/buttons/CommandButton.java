@@ -3,6 +3,7 @@ package org.usfirst.frc.team449.robot.oi.buttons;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jetbrains.annotations.NotNull;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 
 /**
@@ -18,7 +19,7 @@ public class CommandButton {
 	 * @param action  The action to do to the command.
 	 */
 	@JsonCreator
-	public CommandButton(@NotNull @JsonProperty(required = true) FactoryButton button,
+	public CommandButton(@NotNull @JsonProperty(required = true) MappedButton button,
 	                     @NotNull @JsonProperty(required = true) YamlCommand command,
 	                     @NotNull @JsonProperty(required = true) Action action) {
 		switch (action) {

@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * Run the motors until they move, slowly increasing the voltage up from 0.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DetermineNominalVoltage<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class DetermineNominalVoltage <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * The drive subsystem to execute this command on.
@@ -76,7 +76,7 @@ public class DetermineNominalVoltage<T extends YamlSubsystem & DriveUnidirection
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Math.max(Math.abs(subsystem.getLeftVel()), Math.abs(subsystem.getRightVel())) >= minSpeed;
+		return Math.max(Math.abs(subsystem.getLeftVelCached()), Math.abs(subsystem.getRightVelCached())) >= minSpeed;
 	}
 
 	/**

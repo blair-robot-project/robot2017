@@ -10,6 +10,16 @@ import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 public abstract class OIArcade implements OIUnidirectional {
 
 	/**
+	 * Cached output values.
+	 */
+	private double rotCached, fwdCached, leftCached, rightCached;
+
+	/**
+	 * Whether the driver was trying to drive straight when values were cached.
+	 */
+	private boolean commandingStraightCached;
+
+	/**
 	 * Get the rotational input.
 	 *
 	 * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
@@ -22,6 +32,24 @@ public abstract class OIArcade implements OIUnidirectional {
 	 * @return forward velocity component from [-1, 1], where 1 is forwards and -1 is backwards
 	 */
 	public abstract double getFwd();
+
+	/**
+	 * Get the cached rotational input.
+	 *
+	 * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
+	 */
+	public double getRotCached(){
+		return rotCached;
+	}
+
+	/**
+	 * Get the cached velocity input.
+	 *
+	 * @return forward velocity component from [-1, 1], where 1 is forwards and -1 is backwards
+	 */
+	public double getFwdCached(){
+		return fwdCached;
+	}
 
 	/**
 	 * The output to be given to the left side of the drive.
@@ -49,5 +77,45 @@ public abstract class OIArcade implements OIUnidirectional {
 	@Override
 	public boolean commandingStraight() {
 		return getRot() == 0;
+	}
+
+	/**
+	 * The cached output to be given to the left side of the drive.
+	 *
+	 * @return Output to left side from [-1, 1]
+	 */
+	public double getLeftOutputCached(){
+		return leftCached;
+	}
+
+	/**
+	 * The cached output to be given to the right side of the drive.
+	 *
+	 * @return Output to right side from [-1, 1]
+	 */
+	public double getRightOutputCached(){
+		return rightCached;
+	}
+
+	/**
+	 * Whether the driver was trying to drive straight when values were cached.
+	 *
+	 * @return True if the driver is trying to drive straight, false otherwise.
+	 */
+	@Override
+	public boolean commandingStraightCached(){
+		return commandingStraightCached;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		rotCached = getRot();
+		fwdCached = getFwd();
+		commandingStraightCached = commandingStraight();
+		leftCached = fwdCached + rotCached;
+		rightCached = fwdCached - rotCached;
 	}
 }
