@@ -83,6 +83,7 @@ oi:
                 stick: driverGamepad
                 axis: 0
                 deadband: 0.05
+                smoothingTimeSecs: 0.04
                 inverted: false
                 polynomial:
                     '@id': rotPoly

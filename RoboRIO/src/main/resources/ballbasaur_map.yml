@@ -87,6 +87,7 @@ oi:
                 '@id': rotThrottle
                 stick: driverGamepad
                 axis: 0
+                smoothingTimeSecs: 0.04
                 deadband: 0.05
                 inverted: false
         fwdThrottle:

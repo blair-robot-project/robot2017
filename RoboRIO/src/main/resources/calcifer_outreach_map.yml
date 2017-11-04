@@ -17,6 +17,7 @@ oi:
                         '@id': overridingRotThrottle
                         stick: overridingGamepad
                         axis: 0
+                        smoothingTimeSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
@@ -45,6 +46,7 @@ oi:
                         '@id': overridenRotThrottle
                         stick: overridenGamepad
                         axis: 0
+                        smoothingTimeSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
