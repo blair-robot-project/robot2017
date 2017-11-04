@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import org.jetbrains.annotations.NotNull;
-import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
@@ -18,7 +17,7 @@ import java.util.List;
  * A component to rumble controllers based off the jerk measurements from a NavX.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXRumbleComponent implements MappedRunnable{
+public class NavXRumbleComponent implements MappedRunnable {
 
 	/**
 	 * The factor to multiply feet/(sec^3) by to get Gs/millisecond, according to WolframAlpha.
@@ -70,6 +69,11 @@ public class NavXRumbleComponent implements MappedRunnable{
 	private double left, right;
 
 	/**
+	 * Variables for per-call acceleration calculation. Fields to avoid garbage collection.
+	 */
+	private double frontBack, leftRight;
+
+	/**
 	 * The time at which the acceleration was last measured.
 	 */
 	private long timeLastCalled;
@@ -109,7 +113,6 @@ public class NavXRumbleComponent implements MappedRunnable{
 	 */
 	@Override
 	public void run() {
-		double frontBack, leftRight;
 		if (yIsFrontBack) {
 			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
 			frontBack = Math.abs(navX.getYAccel());

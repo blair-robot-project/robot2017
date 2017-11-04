@@ -120,7 +120,7 @@ public class LoggingShooter extends YamlSubsystem implements Loggable, Subsystem
 	@NotNull
 	@Override
 	public String getName() {
-		return "multiSubsystem";
+		return "loggingShooter";
 	}
 
 	/**

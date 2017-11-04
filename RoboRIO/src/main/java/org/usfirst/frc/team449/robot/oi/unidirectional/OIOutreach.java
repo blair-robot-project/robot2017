@@ -30,6 +30,11 @@ public class OIOutreach implements OIUnidirectional {
 	@NotNull
 	private final Button button;
 
+	/**
+	 * The cached outputs for the left and right sides of the drive.
+	 */
+	private double cachedLeftOutput, cachedRightOutput;
+
 	@JsonCreator
 	public OIOutreach(@NotNull @JsonProperty(required = true) OIUnidirectional overridingOI,
 	                  @NotNull @JsonProperty(required = true) OIUnidirectional overridenOI,
@@ -74,6 +79,35 @@ public class OIOutreach implements OIUnidirectional {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return getLeftOutput() == getRightOutput();
+		return getLeftOutputCached() == getRightOutputCached();
+	}
+
+	/**
+	 * The cached output to be given to the left side of the drive.
+	 *
+	 * @return Output to left side from [-1, 1]
+	 */
+	@Override
+	public double getLeftOutputCached() {
+		return cachedLeftOutput;
+	}
+
+	/**
+	 * The cached output to be given to the right side of the drive.
+	 *
+	 * @return Output to right side from [-1, 1]
+	 */
+	@Override
+	public double getRightOutputCached() {
+		return cachedRightOutput;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		cachedLeftOutput = getLeftOutput();
+		cachedRightOutput = getRightOutput();
 	}
 }

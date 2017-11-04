@@ -10,14 +10,14 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.tank.OITank;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 /**
  * Drives straight using the NavX gyro to keep a constant alignment.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends PIDAngleCommand {
+public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {
 
 	/**
 	 * The drive subsystem to give output to.
@@ -87,15 +87,11 @@ public class NavXDriveStraight <T extends YamlSubsystem & DriveUnidirectional & 
 		output = processPIDOutput(output);
 
 		//Set throttle to the specified stick.
-		double throttle;
 		if (useLeft) {
-			throttle = oi.getLeftThrottle();
+			subsystem.setOutput(oi.getLeftOutputCached() - output, oi.getLeftOutputCached() + output);
 		} else {
-			throttle = oi.getRightThrottle();
+			subsystem.setOutput(oi.getRightOutputCached() - output, oi.getRightOutputCached() + output);
 		}
-
-		//Set the output to the throttle velocity adjusted by the PID output.
-		subsystem.setOutput(throttle - output, throttle + output);
 	}
 
 	/**

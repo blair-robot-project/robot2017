@@ -98,7 +98,7 @@ public class Logger implements Runnable {
 		FileWriter eventLogWriter = new FileWriter(this.eventLogFilename);
 		FileWriter telemetryLogWriter = new FileWriter(this.telemetryLogFilename);
 		//Write the file headers
-		eventLogWriter.write("time,class,message"+"\n");
+		eventLogWriter.write("time,class,message" + "\n");
 		//We use a StringBuilder because it's better for building up a string via concatenation.
 		StringBuilder telemetryHeader = new StringBuilder();
 		telemetryHeader.append("time,Clock.time,");
@@ -213,7 +213,7 @@ public class Logger implements Runnable {
 		}
 
 		String telemetryString = telemetryData.toString();
-		telemetryString = telemetryString.substring(0, telemetryString.length()-1);
+		telemetryString = telemetryString.substring(0, telemetryString.length() - 1);
 		telemetryString += "\n";
 		//Log the data to a file.
 		try {

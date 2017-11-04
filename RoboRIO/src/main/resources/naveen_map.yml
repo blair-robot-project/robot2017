@@ -96,6 +96,7 @@ oi:
                 stick: driverGamepad
                 axis: 0
                 deadband: 0.05
+                smoothingTimeSecs: 0.04
                 inverted: false
                 polynomial:
                     '@id': rotPoly
@@ -106,6 +107,8 @@ oi:
                 <<: *rotThrottle
                 '@id': fwdThrottle
                 axis: 5
+                stick:
+                    driverGamepad
                 inverted: true
                 polynomial:
                     '@id': fwdPoly
@@ -113,12 +116,12 @@ oi:
                         2 : 1
         invertDPad: false
         dPadShift: 0.1
-        turnInPlaceRotScale: 0.3
+        turnInPlaceRotScale: 0.5
         scaleRotByFwdPoly:
             '@id': scaleRotByFwdPoly
             powerToCoefficientMap: !!map
                 0.5: 0.6
-                0: 0.1
+                0: 0.2
 drive:
     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
         '@id': drive
@@ -199,7 +202,7 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
-        kP: 0.012
+        kP: 0.003
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 0
@@ -618,14 +621,14 @@ buttons:
                 unoverrideShifting
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': overrideNavXButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
                         gunnerGamepad
                 buttonNumber: 1
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': overrideNavXCommand
                 override: true
                 subsystem:
@@ -633,10 +636,10 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 overrideNavXButton
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': unoverrideNavXCommand
                 override: false
                 subsystem:
@@ -644,7 +647,7 @@ buttons:
                         drive
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': jiggleRobotButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -683,7 +686,7 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 climbButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
@@ -693,7 +696,7 @@ buttons:
                         climber
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': manualClimbButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -707,14 +710,14 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 manualClimbButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
                 stopClimbCommand
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': switchCameraButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -744,7 +747,7 @@ buttons:
                 '@id': openGearHandlerCommand
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.TriggerButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 pushGearButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidForward:
@@ -753,3 +756,17 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
+updater:
+    org.usfirst.frc.team449.robot.other.Updater:
+        '@id': updater
+        updatables:
+            - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                drive
+            - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                climber
+            - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                oi
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                pushGearThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                climbButtonThrottle

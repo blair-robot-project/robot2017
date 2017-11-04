@@ -1,4 +1,4 @@
-package org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands;
+package org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
- * A command that uses a navX to turn to a certain angle.
+ * A command that uses a AHRS to turn to a certain angle.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand {
@@ -21,7 +21,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * The subsystem to execute this command on.
 	 */
 	@NotNull
-	protected final SubsystemNavX subsystem;
+	protected final SubsystemAHRS subsystem;
 
 	/**
 	 * The minimum the robot should be able to output, to overcome friction.
@@ -61,7 +61,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	                       double minimumOutput, @Nullable Double maximumOutput,
 	                       double deadband,
 	                       boolean inverted,
-	                       @NotNull @JsonProperty(required = true) SubsystemNavX subsystem,
+	                       @NotNull @JsonProperty(required = true) SubsystemAHRS subsystem,
 	                       double kP,
 	                       double kI,
 	                       double kD) {
@@ -125,7 +125,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 * @param output The output from the WPILib angular PID loop.
 	 * @return That output after being deadbanded with the map-given deadband.
 	 */
-	protected double deadbandOutput(double output){
+	protected double deadbandOutput(double output) {
 		return this.getPIDController().getError() > deadband ? output : 0;
 	}
 
@@ -139,7 +139,7 @@ public abstract class PIDAngleCommand extends PIDCommand implements YamlCommand 
 	 */
 	@Override
 	protected double returnPIDInput() {
-		return subsystem.getGyroHeading();
+		return subsystem.getHeadingCached();
 	}
 
 	/**

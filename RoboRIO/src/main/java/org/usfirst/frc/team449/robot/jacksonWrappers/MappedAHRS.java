@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SerialPort;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -117,6 +116,7 @@ public class MappedAHRS {
 
 	/**
 	 * Convert from gs (acceleration due to gravity) to feet/(second^2).
+	 *
 	 * @param accelGs An acceleration in gs.
 	 * @return That acceleration in feet/(sec^2)
 	 */

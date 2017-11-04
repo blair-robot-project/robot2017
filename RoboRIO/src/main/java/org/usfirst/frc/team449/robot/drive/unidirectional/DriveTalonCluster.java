@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 
 /**
@@ -20,7 +20,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
+public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, DriveUnidirectional, Loggable, SubsystemMPTwoSides {
 
 	/**
 	 * Joystick scaling constant. Joystick output is scaled by this before being handed to the motors.
@@ -48,7 +48,14 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	/**
 	 * Whether or not to use the NavX for driving straight
 	 */
-	private boolean overrideNavX;
+	private boolean overrideGyro;
+
+	/**
+	 * Cached values for various sensor readings.
+	 */
+	@Nullable
+	private Double cachedLeftVel, cachedRightVel, cachedLeftPos, cachedRightPos;
+	private double cachedHeading, cachedAngularDisplacement, cachedAngularVel;
 
 	/**
 	 * Default constructor.
@@ -69,6 +76,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.navX = navX;
+		this.overrideGyro = false;
 	}
 
 	/**
@@ -129,6 +137,50 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
+	 * Get the cached velocity of the left side of the drive.
+	 *
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftVelCached() {
+		return cachedLeftVel;
+	}
+
+	/**
+	 * Get the cached velocity of the right side of the drive.
+	 *
+	 * @return The signed velocity in feet per second, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightVelCached() {
+		return cachedRightVel;
+	}
+
+	/**
+	 * Get the cached position of the left side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getLeftPosCached() {
+		return cachedLeftPos;
+	}
+
+	/**
+	 * Get the cached position of the right side of the drive.
+	 *
+	 * @return The signed position in feet, or null if the drive doesn't have encoders.
+	 */
+	@Nullable
+	@Override
+	public Double getRightPosCached() {
+		return cachedRightPos;
+	}
+
+	/**
 	 * Completely stop the robot by setting the voltage to each side to be 0.
 	 */
 	@Override
@@ -165,7 +217,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
-	 * Get the robot's heading using the navX
+	 * Get the robot's heading using the AHRS
 	 *
 	 * @return robot heading, in degrees, on [-180, 180]
 	 */
@@ -175,22 +227,27 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	}
 
 	/**
-	 * @return true if the NavX is currently overriden, false otherwise.
+	 * Get the robot's cached heading.
+	 *
+	 * @return robot heading, in degrees, on [-180, 180].
 	 */
 	@Override
-	public boolean getOverrideNavX() {
-		return overrideNavX;
+	public double getHeadingCached() {
+		return cachedHeading;
 	}
 
 	/**
-	 * @param override true to override the NavX, false to un-override it.
+	 * Get the robot's angular velocity.
+	 *
+	 * @return Angular velocity in degrees/sec
 	 */
 	@Override
-	public void setOverrideNavX(boolean override) {
-		overrideNavX = override;
+	public double getAngularVel() {
+		return navX.getRate();
 	}
 
 	/**
+<<<<<<< HEAD
 	 * @param headingDegrees The angle, in degrees from [-180, 180], to set the NavX's heading to.
 	 */
 	@Override
@@ -205,6 +262,51 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@NotNull
 	public MappedAHRS getNavX() {
 		return navX;
+=======
+	 * Get the robot's cached angular velocity.
+	 *
+	 * @return Angular velocity in degrees/sec
+	 */
+	@Override
+	public double getAngularVelCached() {
+		return cachedAngularVel;
+	}
+
+	/**
+	 * Get the robot's angular displacement since being turned on.
+	 *
+	 * @return Angular displacement in degrees.
+	 */
+	@Override
+	public double getAngularDisplacement() {
+		return navX.getAngle();
+	}
+
+	/**
+	 * Get the robot's cached angular displacement since being turned on.
+	 *
+	 * @return Angular displacement in degrees.
+	 */
+	@Override
+	public double getAngularDisplacementCached() {
+		return cachedAngularDisplacement;
+	}
+
+	/**
+	 * @return true if the NavX is currently overriden, false otherwise.
+	 */
+	@Override
+	public boolean getOverrideGyro() {
+		return overrideGyro;
+	}
+
+	/**
+	 * @param override true to override the NavX, false to un-override it.
+	 */
+	@Override
+	public void setOverrideGyro(boolean override) {
+		overrideGyro = override;
+>>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 	}
 
 	/**
@@ -244,24 +346,32 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	@Override
 	@NotNull
 	public Object[] getData() {
-		return new Object[]{leftMaster.getVelocity(),
-				rightMaster.getVelocity(),
+		return new Object[]{cachedLeftVel,
+				cachedRightVel,
 				leftMaster.getSetpoint(),
 				rightMaster.getSetpoint(),
 				leftMaster.getOutputCurrent(),
 				rightMaster.getOutputCurrent(),
 				leftMaster.getOutputVoltage(),
 				rightMaster.getOutputVoltage(),
-				leftMaster.getPositionFeet(),
-				rightMaster.getPositionFeet(),
+				cachedLeftPos,
+				cachedRightPos,
 				leftMaster.getError(),
 				rightMaster.getError(),
+<<<<<<< HEAD
 				navX.getHeading(),
 				navX.get9AxisHeading(),
 				navX.getAngularVelocity(),
 				navX.getAngularDisplacement(),
 				navX.getXAccel(),
 				navX.getYAccel()};
+=======
+				cachedHeading,
+				cachedAngularVel,
+				cachedAngularDisplacement,
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
+				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
+>>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 	}
 
 	/**
@@ -295,9 +405,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	 */
 	@Override
 	public void loadMotionProfile(@NotNull MotionProfileData left, @NotNull MotionProfileData right) {
-		Logger.addEvent("Loading left",this.getClass());
+		Logger.addEvent("Loading left", this.getClass());
 		leftMaster.loadProfile(left);
-		Logger.addEvent("Loading right",this.getClass());
+		Logger.addEvent("Loading right", this.getClass());
 		rightMaster.loadProfile(right);
 	}
 
@@ -364,5 +474,19 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemNavX, D
 	public void resetPosition() {
 		leftMaster.resetPosition();
 		rightMaster.resetPosition();
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		cachedLeftVel = getLeftVel();
+		cachedLeftPos = getLeftPos();
+		cachedRightVel = getRightVel();
+		cachedRightPos = getRightPos();
+		cachedHeading = getHeading();
+		cachedAngularDisplacement = getAngularDisplacement();
+		cachedAngularVel = getAngularVel();
 	}
 }

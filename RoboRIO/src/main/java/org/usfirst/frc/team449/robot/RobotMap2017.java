@@ -7,12 +7,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
+import org.usfirst.frc.team449.robot.oi.OI;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
-import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
-import org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
 import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
@@ -39,7 +39,7 @@ public class RobotMap2017 {
 	 * The OI for controlling this robot's drive.
 	 */
 	@NotNull
-	private final OIUnidirectional oi;
+	private final OI oi;
 
 	/**
 	 * The logger for recording events and telemetry data.
@@ -58,6 +58,12 @@ public class RobotMap2017 {
 	 */
 	@NotNull
 	private final Command defaultDriveCommand;
+
+	/**
+	 * A runnable that updates cached variables.
+	 */
+	@NotNull
+	private final Runnable updater;
 
 	/**
 	 * The climber for boarding the airship. Can be null.
@@ -211,54 +217,56 @@ public class RobotMap2017 {
 	/**
 	 * Default constructor.
 	 *
-	 * @param buttons             The buttons for controlling this robot. Can be null for an empty list.
-	 * @param oi                  The OI for controlling this robot's drive.
-	 * @param logger              The logger for recording events and telemetry data.
-	 * @param drive               The drive.
-	 * @param defaultDriveCommand The command for the drive to run during the teleoperated period.
-	 * @param climber             The climber for boarding the airship. Can be null.
-	 * @param shooter             The multiSubsystem for shooting fuel. Can be null.
-	 * @param camera              The cameras on this robot. Can be null.
-	 * @param intake              The intake for picking up and agitating balls. Can be null.
-	 * @param pneumatics          The pneumatics on this robot. Can be null.
-	 * @param gearHandler         The gear handler on this robot. Can be null.
-	 * @param RIOduinoPort        The I2C port of the RIOduino plugged into this robot. Can be null.
-	 * @param allianceSwitch      The switch for selecting which alliance we're on. Can be null if doMP is false or
-	 *                            testMP is true, but otherwise must have a value.
-	 * @param dropGearSwitch      The switch for deciding whether or not to drop the gear. Can be null if doMP is false
-	 *                            or testMP is true, but otherwise must have a value.
-	 * @param locationDial        The dial for selecting which side of the field the robot is on. Can be null if doMP is
-	 *                            false or testMP is true, but otherwise must have a value.
-	 * @param boilerAuto          The command to run in autonomous on the boiler side of the field. Can be null if doMP
-	 *                            is false or testMP is true, but otherwise must have a value.
-	 * @param centerAuto          The command to run in autonomous on the center of the field. Can be null if doMP is
-	 *                            false or testMP is true, but otherwise must have a value.
-	 * @param feederAuto          The command to run in autonomous on the feeding station side of the field. Can be null
-	 *                            if doMP is false or testMP is true, but otherwise must have a value.
-	 * @param leftTestProfile     The profile for the left side of the drive to run in test mode. Can be null if either
-	 *                            testMP or doMP are false, but otherwise must have a value.
-	 * @param rightTestProfile    The profile for the right side of the drive to run in test mode. Can be null if either
-	 *                            testMP or doMP are false, but otherwise must have a value.
-	 * @param leftProfiles        The starting position to peg profiles for the left side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
-	 *                            Can be null if doMP is false or testMP is true, but otherwise must have a value.
-	 * @param rightProfiles       The starting position to peg profiles for the right side. Should have options for
-	 *                            "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
-	 *                            Can be null if doMP is false or testMP is true, but otherwise must have a value.
-	 * @param nonMPAutoCommand    The command to run during autonomous if doMP is false. Can be null, and if it is, no
-	 *                            command is run during autonomous.
-	 * @param autoStartupCommand The command to be run when first enabled in autonomous mode.
-	 * @param teleopStartupCommand    The command to be run when first enabled in teleoperated mode.
-	 * @param startupCommand The command to be run when first enabled.
-	 * @param testMP              Whether to run the test or real motion profile during autonomous. Defaults to false.
-	 * @param doMP                Whether to run a motion profile during autonomous. Defaults to true.
+	 * @param buttons              The buttons for controlling this robot. Can be null for an empty list.
+	 * @param oi                   The OI for controlling this robot's drive.
+	 * @param logger               The logger for recording events and telemetry data.
+	 * @param drive                The drive.
+	 * @param defaultDriveCommand  The command for the drive to run during the teleoperated period.
+	 * @param updater A runnable that updates cached variables.
+	 * @param climber              The climber for boarding the airship. Can be null.
+	 * @param shooter              The multiSubsystem for shooting fuel. Can be null.
+	 * @param camera               The cameras on this robot. Can be null.
+	 * @param intake               The intake for picking up and agitating balls. Can be null.
+	 * @param pneumatics           The pneumatics on this robot. Can be null.
+	 * @param gearHandler          The gear handler on this robot. Can be null.
+	 * @param RIOduinoPort         The I2C port of the RIOduino plugged into this robot. Can be null.
+	 * @param allianceSwitch       The switch for selecting which alliance we're on. Can be null if doMP is false or
+	 *                             testMP is true, but otherwise must have a value.
+	 * @param dropGearSwitch       The switch for deciding whether or not to drop the gear. Can be null if doMP is false
+	 *                             or testMP is true, but otherwise must have a value.
+	 * @param locationDial         The dial for selecting which side of the field the robot is on. Can be null if doMP
+	 *                             is false or testMP is true, but otherwise must have a value.
+	 * @param boilerAuto           The command to run in autonomous on the boiler side of the field. Can be null if doMP
+	 *                             is false or testMP is true, but otherwise must have a value.
+	 * @param centerAuto           The command to run in autonomous on the center of the field. Can be null if doMP is
+	 *                             false or testMP is true, but otherwise must have a value.
+	 * @param feederAuto           The command to run in autonomous on the feeding station side of the field. Can be
+	 *                             null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param leftTestProfile      The profile for the left side of the drive to run in test mode. Can be null if either
+	 *                             testMP or doMP are false, but otherwise must have a value.
+	 * @param rightTestProfile     The profile for the right side of the drive to run in test mode. Can be null if
+	 *                             either testMP or doMP are false, but otherwise must have a value.
+	 * @param leftProfiles         The starting position to peg profiles for the left side. Should have options for
+	 *                             "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 *                             Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param rightProfiles        The starting position to peg profiles for the right side. Should have options for
+	 *                             "red_right", "red_center", "red_left", "blue_right", "blue_center", and "blue_left".
+	 *                             Can be null if doMP is false or testMP is true, but otherwise must have a value.
+	 * @param nonMPAutoCommand     The command to run during autonomous if doMP is false. Can be null, and if it is, no
+	 *                             command is run during autonomous.
+	 * @param autoStartupCommand   The command to be run when first enabled in autonomous mode.
+	 * @param teleopStartupCommand The command to be run when first enabled in teleoperated mode.
+	 * @param startupCommand       The command to be run when first enabled.
+	 * @param testMP               Whether to run the test or real motion profile during autonomous. Defaults to false.
+	 * @param doMP                 Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@Nullable List<CommandButton> buttons,
-	                    @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+	public RobotMap2017(@Nullable @JsonProperty(required = true) List<CommandButton> buttons,
+	                    @NotNull @JsonProperty(required = true) OI oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
 	                    @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
+	                    @NotNull @JsonProperty(required = true) MappedRunnable updater,
 	                    @Nullable ClimberCurrentLimited climber,
 	                    @Nullable LoggingShooter shooter,
 	                    @Nullable CameraNetwork camera,
@@ -290,6 +298,7 @@ public class RobotMap2017 {
 		this.pneumatics = pneumatics;
 		this.gearHandler = gearHandler;
 		this.logger = logger;
+		this.updater = updater;
 		this.RIOduinoPort = RIOduinoPort;
 		this.allianceSwitch = allianceSwitch;
 		this.dropGearSwitch = dropGearSwitch;
@@ -322,7 +331,7 @@ public class RobotMap2017 {
 	 * @return The OI for controlling this robot's drive.
 	 */
 	@NotNull
-	public OIUnidirectional getOI() {
+	public OI getOI() {
 		return oi;
 	}
 
@@ -542,5 +551,13 @@ public class RobotMap2017 {
 	@Nullable
 	public Command getStartupCommand() {
 		return startupCommand;
+	}
+
+	/**
+	 * @return A runnable that updates cached variables.
+	 */
+	@NotNull
+	public Runnable getUpdater() {
+		return updater;
 	}
 }

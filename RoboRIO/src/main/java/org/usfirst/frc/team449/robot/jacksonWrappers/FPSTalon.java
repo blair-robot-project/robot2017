@@ -84,10 +84,16 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private final Map<Integer, PerGearSettings> perGearSettings;
 
 	/**
+	 * Whether or not to invert the motor in voltage mode.
+	 */
+	private final boolean invertInVoltage;
+
+	/**
 	 * The settings currently being used by this Talon.
 	 */
 	@NotNull
 	protected PerGearSettings currentGearSettings;
+
 	/**
 	 * The time at which the motion profile status was last checked. Only getting the status once per tic avoids CAN
 	 * traffic.
@@ -95,15 +101,15 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private long timeMPStatusLastRead;
 
 	/**
-	 * Whether or not to invert the motor in voltage mode.
+	 * RPS as used in a unit conversion method. Field to avoid garbage collection.
 	 */
-	private final boolean invertInVoltage;
+	private Double RPS;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param port                       CAN port of this Talon.
-	 * @param invertInVoltage Whether or not to invert the motor in voltage mode.
+	 * @param invertInVoltage            Whether or not to invert the motor in voltage mode.
 	 * @param reverseOutput              Whether to reverse the output (identical effect to inverting outside of
 	 *                                   position PID)
 	 * @param enableBrakeMode            Whether to brake or coast when stopped.
@@ -337,7 +343,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		canTalon.changeControlMode(CANTalon.TalonControlMode.PercentVbus);
 
 		//Set the setpoint to the input given.
-		canTalon.set(percentVoltage*(invertInVoltage ? -1 : 1));
+		canTalon.set(percentVoltage * (invertInVoltage ? -1 : 1));
 	}
 
 	/**
@@ -388,8 +394,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		if (encoderCPR == null) {
 			return null;
 		}
-		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * feetPerRotation;
+		return nativeUnits / (encoderCPR * 4) * postEncoderGearing * feetPerRotation;
 	}
 
 	/**
@@ -404,8 +409,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		if (encoderCPR == null) {
 			return null;
 		}
-		double rotations = feet / feetPerRotation;
-		return rotations * (encoderCPR * 4) / postEncoderGearing;
+		return feet / feetPerRotation * (encoderCPR * 4) / postEncoderGearing;
 	}
 
 	/**
@@ -418,7 +422,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Nullable
 	protected Double encoderToFPS(double encoderReading) {
-		Double RPS = nativeToRPS(encoderReading);
+		RPS = nativeToRPS(encoderReading);
 		if (RPS == null) {
 			return null;
 		}
@@ -824,7 +828,8 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		private final double motionProfilePRev, motionProfileIRev, motionProfileDRev;
 
 		/**
-		 * The ratio of acceleration to velocity used to convert acceleration setpoints to delta velocity in each direction.
+		 * The ratio of acceleration to velocity used to convert acceleration setpoints to delta velocity in each
+		 * direction.
 		 */
 		private final double kaOverKvFwd, kaOverKvRev;
 
@@ -864,31 +869,32 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		 *                                null. Defaults to 0.
 		 * @param kD                      The derivative PID constant for the motor in this gear. Ignored if maxSpeed is
 		 *                                null. Defaults to 0.
-		 * @param motionProfilePFwd       The proportional PID constant for forwards motion profiles in this gear. Ignored if
-		 *                                maxSpeed is null. Defaults to 0.
-		 * @param motionProfileIFwd       The integral PID constant for forwards motion profiles in this gear. Ignored if
-		 *                                maxSpeed is null. Defaults to 0.
-		 * @param motionProfileDFwd       The derivative PID constant for forwards motion profiles in this gear. Ignored if
-		 *                                maxSpeed is null. Defaults to 0.
-		 * @param motionProfilePRev       The proportional PID constant for reverse motion profiles in this gear. Ignored if
-		 *                                maxSpeed is null. Defaults to motionProfilePFwd.
+		 * @param motionProfilePFwd       The proportional PID constant for forwards motion profiles in this gear.
+		 *                                Ignored if maxSpeed is null. Defaults to 0.
+		 * @param motionProfileIFwd       The integral PID constant for forwards motion profiles in this gear. Ignored
+		 *                                if maxSpeed is null. Defaults to 0.
+		 * @param motionProfileDFwd       The derivative PID constant for forwards motion profiles in this gear. Ignored
+		 *                                if maxSpeed is null. Defaults to 0.
+		 * @param motionProfilePRev       The proportional PID constant for reverse motion profiles in this gear.
+		 *                                Ignored if maxSpeed is null. Defaults to motionProfilePFwd.
 		 * @param motionProfileIRev       The integral PID constant for reverse motion profiles in this gear. Ignored if
 		 *                                maxSpeed is null. Defaults to motionProfileIFwd.
-		 * @param motionProfileDRev       The derivative PID constant for reverse motion profiles in this gear. Ignored if
-		 *                                maxSpeed is null. Defaults to motionProfileDFwd.
-		 * @param maxAccelFwd             The maximum forwards acceleration the robot is capable of in this gear, theoretically
-		 *                                stall torque of the drive output * wheel radius / (robot mass/2). Can be null
-		 *                                to not use acceleration feed-forward.
-		 * @param maxAccelRev             The maximum reverse acceleration the robot is capable of in this gear, theoretically
-		 *                                stall torque of the drive output * wheel radius / (robot mass/2). Defaults to maxAccelFwd.
-		 * @param maxSpeedMPFwd           The "fake" maximum speed to use for the forwards direction of MP mode, maxVoltage*(slope of vel vs.
-		 *                                voltage curve). Defaults to regular max speed.
-		 * @param maxSpeedMPRev           The "fake" maximum speed to use for the reverse direction of MP mode, maxVoltage*(slope of vel vs.
-		 *                                voltage curve). Defaults to maxSpeedMPFwd.
-		 * @param frictionCompFPSFwd      The speed, in FPS, to add to all MP velocity setpoints in the forwards direction to account for
-		 *                                friction. Defaults to 0.
-		 * @param frictionCompFPSRev      The speed, in FPS, to add to all MP velocity setpoints in the reverse direction to account for
-		 *                                friction. Defaults to frictionCompFPSFwd.
+		 * @param motionProfileDRev       The derivative PID constant for reverse motion profiles in this gear. Ignored
+		 *                                if maxSpeed is null. Defaults to motionProfileDFwd.
+		 * @param maxAccelFwd             The maximum forwards acceleration the robot is capable of in this gear,
+		 *                                theoretically stall torque of the drive output * wheel radius / (robot
+		 *                                mass/2). Can be null to not use acceleration feed-forward.
+		 * @param maxAccelRev             The maximum reverse acceleration the robot is capable of in this gear,
+		 *                                theoretically stall torque of the drive output * wheel radius / (robot
+		 *                                mass/2). Defaults to maxAccelFwd.
+		 * @param maxSpeedMPFwd           The "fake" maximum speed to use for the forwards direction of MP mode,
+		 *                                maxVoltage*(slope of vel vs. voltage curve). Defaults to regular max speed.
+		 * @param maxSpeedMPRev           The "fake" maximum speed to use for the reverse direction of MP mode,
+		 *                                maxVoltage*(slope of vel vs. voltage curve). Defaults to maxSpeedMPFwd.
+		 * @param frictionCompFPSFwd      The speed, in FPS, to add to all MP velocity setpoints in the forwards
+		 *                                direction to account for friction. Defaults to 0.
+		 * @param frictionCompFPSRev      The speed, in FPS, to add to all MP velocity setpoints in the reverse
+		 *                                direction to account for friction. Defaults to frictionCompFPSFwd.
 		 */
 		@JsonCreator
 		public PerGearSettings(int gearNum,

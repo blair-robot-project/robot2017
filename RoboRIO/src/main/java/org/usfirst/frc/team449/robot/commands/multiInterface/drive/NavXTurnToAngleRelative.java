@@ -10,13 +10,13 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
  * Turn a certain number of degrees from the current heading.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX> extends NavXTurnToAngle {
+public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends NavXTurnToAngle {
 
 	/**
 	 * Default constructor.
@@ -62,7 +62,7 @@ public class NavXTurnToAngleRelative <T extends YamlSubsystem & DriveUnidirectio
 		this.startTime = Clock.currentTimeMillis();
 		Logger.addEvent("NavXRelativeTurnToAngle init.", this.getClass());
 		//Do math to setup the setpoint.
-		this.setSetpoint(clipTo180(((SubsystemNavX) subsystem).getGyroHeading() + setpoint));
+		this.setSetpoint(clipTo180(((SubsystemAHRS) subsystem).getHeadingCached() + setpoint));
 		//Make sure to enable the controller!
 		this.getPIDController().enable();
 	}

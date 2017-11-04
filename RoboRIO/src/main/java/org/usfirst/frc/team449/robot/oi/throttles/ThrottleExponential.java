@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /**
@@ -34,6 +35,7 @@ public class ThrottleExponential extends ThrottleDeadbanded {
 	 * @param stick    The Joystick object being used
 	 * @param axis     The axis being used.
 	 * @param deadband The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param smoothingTimeSecs How many seconds of input to take into account when smoothing. Defaults to 0.02.
 	 * @param inverted Whether or not to invert the joystick input. Defaults to false.
 	 * @param base     The base that is raised to the power of the joystick input.
 	 */
@@ -41,9 +43,10 @@ public class ThrottleExponential extends ThrottleDeadbanded {
 	public ThrottleExponential(@NotNull @JsonProperty(required = true) MappedJoystick stick,
 	                           @JsonProperty(required = true) int axis,
 	                           double deadband,
+	                           @Nullable Double smoothingTimeSecs,
 	                           boolean inverted,
 	                           @JsonProperty(required = true) double base) {
-		super(stick, axis, deadband, inverted);
+		super(stick, axis, deadband, smoothingTimeSecs, inverted);
 		this.base = base;
 	}
 

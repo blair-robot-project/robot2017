@@ -83,6 +83,6 @@ public class OITankSimple extends OITank {
 	 */
 	@Override
 	public boolean commandingStraight() {
-		return Math.abs(leftThrottle.getValue() - rightThrottle.getValue()) <= commandingStraightTolerance;
+		return Math.abs(getLeftOutputCached() - getRightOutputCached()) <= commandingStraightTolerance;
 	}
 }

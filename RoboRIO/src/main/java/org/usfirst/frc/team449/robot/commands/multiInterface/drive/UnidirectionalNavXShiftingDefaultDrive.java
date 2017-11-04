@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.components.AutoshiftComponent;
-import org.usfirst.frc.team449.robot.components.NavXRumbleComponent;
 import org.usfirst.frc.team449.robot.drive.shifting.DriveShiftable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.shiftable.Shiftable;
@@ -12,7 +11,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
@@ -20,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemNavX;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemNavX & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
@@ -62,7 +61,7 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	 * @param subsystem                   The drive to execute this command on.
 	 * @param oi                          The OI controlling the robot.
 	 * @param autoshiftComponent          The helper object for autoshifting.
-	 * @param highGearAngularCoefficient The coefficient to multiply the loop output by in high gear. Defaults to 1.
+	 * @param highGearAngularCoefficient  The coefficient to multiply the loop output by in high gear. Defaults to 1.
 	 */
 	@JsonCreator
 	public UnidirectionalNavXShiftingDefaultDrive(@JsonProperty(required = true) double absoluteTolerance,
@@ -78,7 +77,7 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) OIUnidirectional oi,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
-	                                              Double highGearAngularCoefficient) {
+	                                              @Nullable Double highGearAngularCoefficient) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
 				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
 		this.autoshiftComponent = autoshiftComponent;
@@ -87,14 +86,14 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	}
 
 	/**
-	 * Autoshift, decide whether or not we should be in free drive or straight drive, and log data.
+	 * Autoshift and decide whether or not we should be in free drive or straight drive
 	 */
 	@Override
 	public void execute() {
 		//Auto-shifting
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift(oi.getLeftOutput(), oi.getRightOutput(), subsystem.getLeftVel(),
-					subsystem.getRightVel(), gear -> subsystem.setGear(gear));
+			autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached())/2., subsystem.getLeftVelCached(),
+					subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();
 	}

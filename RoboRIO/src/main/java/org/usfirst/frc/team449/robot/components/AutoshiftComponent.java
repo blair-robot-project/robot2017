@@ -60,6 +60,11 @@ public class AutoshiftComponent {
 	private long timeLastDownshifted;
 
 	/**
+	 * Whether it's okay to up or down shift. Fields to avoid garbage collection.
+	 */
+	private boolean okayToUpshift, okayToDownshift;
+
+	/**
 	 * Default constructor
 	 *
 	 * @param upshiftSpeed           The minimum speed both sides the drive must be going at to shift to high gear.
@@ -93,72 +98,69 @@ public class AutoshiftComponent {
 	/**
 	 * Determine whether the robot should downshift.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
 	 * @return True if the drive should downshift, false otherwise.
 	 */
-	public boolean shouldDownshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
+	private boolean shouldDownshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going slower than the downshift speed
-		boolean okToShift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
+		okayToDownshift = Math.max(Math.abs(leftVel), Math.abs(rightVel)) < downshiftSpeed;
 		//Or if we're just turning in place.
-		okToShift = okToShift || (leftThrottle == -rightThrottle);
+		okayToDownshift = okayToDownshift || (forwardThrottle == 0);
 		//Or commanding a low speed.
-		okToShift = okToShift || (Math.abs((leftThrottle + rightThrottle) / 2.) < upshiftFwdThresh);
+		okayToDownshift = okayToDownshift || (Math.abs(forwardThrottle) < upshiftFwdThresh);
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
+		okayToDownshift = okayToDownshift && Clock.currentTimeMillis() - timeLastUpshifted > cooldownAfterUpshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
-		okToShift = downshiftBufferTimer.get(okToShift);
+		okayToDownshift = downshiftBufferTimer.get(okayToDownshift);
 
 		//Record the time if we do decide to shift.
-		if (okToShift) {
+		if (okayToDownshift) {
 			timeLastDownshifted = Clock.currentTimeMillis();
 		}
-		return okToShift;
+		return okayToDownshift;
 	}
 
 	/**
 	 * Determine whether the robot should upshift.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
 	 * @return True if the drive should upshift, false otherwise.
 	 */
-	public boolean shouldUpshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel) {
+	private boolean shouldUpshift(double forwardThrottle, double leftVel, double rightVel) {
 		//We should shift if we're going faster than the upshift speed...
-		boolean okToShift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
+		okayToUpshift = Math.min(Math.abs(leftVel), Math.abs(rightVel)) > upshiftSpeed;
 		//AND the driver's trying to go forward fast.
-		okToShift = okToShift && Math.abs((leftThrottle + rightThrottle) / 2.) > upshiftFwdThresh;
+		okayToUpshift = okayToUpshift && Math.abs(forwardThrottle) > upshiftFwdThresh;
 		//But we can only shift if we're out of the cooldown period.
-		okToShift = okToShift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
+		okayToUpshift = okayToUpshift && Clock.currentTimeMillis() - timeLastDownshifted > cooldownAfterDownshift;
 
 		//We use a BufferTimer so we only shift if the conditions are met for a specific continuous interval.
 		// This avoids brief blips causing shifting.
-		okToShift = upshiftBufferTimer.get(okToShift);
-		if (okToShift) {
+		okayToUpshift = upshiftBufferTimer.get(okayToUpshift);
+		if (okayToUpshift) {
 			timeLastUpshifted = Clock.currentTimeMillis();
 		}
-		return okToShift;
+		return okayToUpshift;
 	}
 
 	/**
 	 * Determine if the subsystem should shift, and if yes, do the shifting.
 	 *
-	 * @param leftThrottle  The left side's throttle, on [-1, 1].
-	 * @param rightThrottle The right side's throttle, on [-1, 1].
-	 * @param leftVel       The velocity of the left side of the drive.
-	 * @param rightVel      The velocity of the right side of the drive.
-	 * @param shift         The function to actually shift gears.
+	 * @param forwardThrottle The forwards throttle, on [-1, 1].
+	 * @param leftVel         The velocity of the left side of the drive.
+	 * @param rightVel        The velocity of the right side of the drive.
+	 * @param shift           The function to actually shift gears.
 	 */
-	public void autoshift(double leftThrottle, double rightThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
-		if (shouldDownshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
+	public void autoshift(double forwardThrottle, double leftVel, double rightVel, Consumer<Integer> shift) {
+		if (shouldDownshift(forwardThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.LOW.getNumVal());
-		} else if (shouldUpshift(leftThrottle, rightThrottle, leftVel, rightVel)) {
+		} else if (shouldUpshift(forwardThrottle, leftVel, rightVel)) {
 			shift.accept(Shiftable.gear.HIGH.getNumVal());
 		}
 	}

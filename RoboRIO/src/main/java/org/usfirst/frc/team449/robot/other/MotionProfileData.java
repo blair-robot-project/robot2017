@@ -119,7 +119,7 @@ public class MotionProfileData {
 	/**
 	 * @return Whether or not the profile is inverted because we're driving it backwards.
 	 */
-	public boolean isInverted(){
+	public boolean isInverted() {
 		return inverted;
 	}
 

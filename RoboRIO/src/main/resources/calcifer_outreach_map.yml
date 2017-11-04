@@ -16,8 +16,11 @@ oi:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridingRotThrottle
                         '@id': overridingRotThrottle
-                        stick: overridingGamepad
+                        stick:
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridingGamepad
                         axis: 0
+                        smoothingTimeSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
@@ -28,7 +31,7 @@ oi:
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
-                turnInPlaceRotScale: 0.3
+                turnInPlaceRotScale: 0.6
                 scaleRotByFwdPoly:
                     '@id': scaleRotByFwdPolyOverriding
                     powerToCoefficientMap: !!map
@@ -45,8 +48,11 @@ oi:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleDeadbanded:
                         &overridenRotThrottle
                         '@id': overridenRotThrottle
-                        stick: overridenGamepad
+                        stick:
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridenGamepad
                         axis: 0
+                        smoothingTimeSecs: 0.04
                         deadband: 0.05
                         inverted: false
                 fwdThrottle:
@@ -57,14 +63,14 @@ oi:
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
-                turnInPlaceRotScale: 0.3
+                turnInPlaceRotScale: 0.6
                 scaleRotByFwdPoly:
                     '@id': scaleRotByFwdPolyOverriden
                     powerToCoefficientMap: !!map
                         0.5: 0.6
                         0: 0.1
         button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': overrideButton
                 joystick: overridingGamepad
                 buttonNumber: 6
@@ -254,7 +260,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': overridingClimbButtonThrottle
                         stick:
-                            overridingGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridingGamepad
                         axis: 2
                 triggerAt: 0.9
         command:
@@ -281,7 +288,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': overridingPushGearThrottle
                         stick:
-                            overridingGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridingGamepad
                         axis: 3
                 triggerAt: 0.9
         command:
@@ -309,7 +317,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': overridenClimbButtonThrottle
                         stick:
-                            overridenGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridenGamepad
                         axis: 2
                 triggerAt: 0.9
         command:
@@ -336,7 +345,8 @@ buttons:
                     org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
                         '@id': overridenPushGearThrottle
                         stick:
-                            overridenGamepad
+                            org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
+                                overridenGamepad
                         axis: 3
                 triggerAt: 0.9
         command:
@@ -354,3 +364,21 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
+updater:
+    org.usfirst.frc.team449.robot.other.Updater:
+        '@id': updater
+        updatables:
+            - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                drive
+            - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                climber
+            - org.usfirst.frc.team449.robot.oi.unidirectional.OIOutreach:
+                oi
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                overridenPushGearThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                overridenClimbButtonThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                overridingPushGearThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                overridingClimbButtonThrottle

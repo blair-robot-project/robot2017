@@ -87,6 +87,7 @@ oi:
                 '@id': rotThrottle
                 stick: driverGamepad
                 axis: 0
+                smoothingTimeSecs: 0.04
                 deadband: 0.05
                 inverted: false
         fwdThrottle:
@@ -177,3 +178,11 @@ logger:
     loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"
+updater:
+    org.usfirst.frc.team449.robot.other.Updater:
+        '@id': updater
+        updatables:
+            - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                drive
+            - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                oi
