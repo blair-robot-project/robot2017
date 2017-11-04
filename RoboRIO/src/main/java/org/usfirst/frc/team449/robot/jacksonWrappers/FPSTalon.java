@@ -101,6 +101,11 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	private long timeMPStatusLastRead;
 
 	/**
+	 * RPS as used in a unit conversion method. Field to avoid garbage collection.
+	 */
+	private Double RPS;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param port                       CAN port of this Talon.
@@ -389,8 +394,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		if (encoderCPR == null) {
 			return null;
 		}
-		double rotations = nativeUnits / (encoderCPR * 4) * postEncoderGearing;
-		return rotations * feetPerRotation;
+		return nativeUnits / (encoderCPR * 4) * postEncoderGearing * feetPerRotation;
 	}
 
 	/**
@@ -405,8 +409,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 		if (encoderCPR == null) {
 			return null;
 		}
-		double rotations = feet / feetPerRotation;
-		return rotations * (encoderCPR * 4) / postEncoderGearing;
+		return feet / feetPerRotation * (encoderCPR * 4) / postEncoderGearing;
 	}
 
 	/**
@@ -419,7 +422,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 	 */
 	@Nullable
 	protected Double encoderToFPS(double encoderReading) {
-		Double RPS = nativeToRPS(encoderReading);
+		RPS = nativeToRPS(encoderReading);
 		if (RPS == null) {
 			return null;
 		}

@@ -35,7 +35,10 @@ public class ThrottleBasic implements Throttle, PIDSource{
 	 */
 	private final boolean inverted;
 
-	private Random r = new Random();
+	/**
+	 * The cached value of the output.
+	 */
+	protected double cachedOutput;
 
 	/**
 	 * Default constructor.
@@ -60,6 +63,24 @@ public class ThrottleBasic implements Throttle, PIDSource{
 	 */
 	public double getValue() {
 		return (inverted ? -1 : 1) * stick.getRawAxis(axis);
+	}
+
+	/**
+	 * Get the cached output of the throttle this object represents.
+	 *
+	 * @return The output from [-1, 1].
+	 */
+	@Override
+	public double getValueCached() {
+		return cachedOutput;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		cachedOutput = getValue();
 	}
 
 	/**

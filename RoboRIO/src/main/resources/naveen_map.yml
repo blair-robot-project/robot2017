@@ -590,7 +590,7 @@ buttons:
                 unoverrideShifting
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': overrideNavXButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -605,7 +605,7 @@ buttons:
                         drive
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 overrideNavXButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
@@ -616,7 +616,7 @@ buttons:
                         drive
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': jiggleRobotButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -665,7 +665,7 @@ buttons:
                         climber
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': manualClimbButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -679,14 +679,14 @@ buttons:
                         climber
         action: WHEN_PRESSED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 manualClimbButton
         command:
             org.usfirst.frc.team449.robot.subsystem.interfaces.binaryMotor.commands.TurnMotorOffWithRequires:
                 stopClimbCommand
         action: WHEN_RELEASED
     -   button:
-            org.usfirst.frc.team449.robot.oi.buttons.FactoryJoystickButton:
+            org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 '@id': switchCameraButton
                 joystick:
                     org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick:
@@ -725,3 +725,17 @@ buttons:
                     org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple:
                         gearHandler
         action: WHEN_RELEASED
+updater:
+    org.usfirst.frc.team449.robot.other.Updater:
+        '@id': updater
+        updatables:
+            - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                drive
+            - org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited:
+                climber
+            - org.usfirst.frc.team449.robot.oi.unidirectional.arcade.OIArcadeWithDPad:
+                oi
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                pushGearThrottle
+            - org.usfirst.frc.team449.robot.oi.throttles.ThrottleBasic:
+                climbButtonThrottle

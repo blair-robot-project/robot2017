@@ -62,6 +62,11 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	private boolean pistonWasCorrect;
 
 	/**
+	 * Whether the piston's position is currently correct. Field to avoid garbage collection.
+	 */
+	private boolean pistonCorrect;
+
+	/**
 	 * Default constructor.
 	 *
 	 * @param otherShiftables         All objects that should be shifted when this component's piston is.
@@ -102,7 +107,7 @@ public class ShiftWithSensorComponent extends ShiftComponent {
 	 */
 	private void checkToReenable() {
 		//Check if the piston is in correct position by making sure each sensor is reading correctly.
-		boolean pistonCorrect = true;
+		pistonCorrect = true;
 		if (currentGear == Shiftable.gear.HIGH.getNumVal()) {
 			for (boolean sensor : highGearSensors.getStatus()) {
 				//The position is correct if all the sensors read true.

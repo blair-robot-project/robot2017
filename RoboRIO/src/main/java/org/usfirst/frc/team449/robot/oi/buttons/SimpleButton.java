@@ -10,10 +10,10 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedButton;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 
 /**
- * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a FactoryButton.
+ * A version of {@link edu.wpi.first.wpilibj.buttons.JoystickButton} that is a MappedButton.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class FactoryJoystickButton extends MappedButton {
+public class SimpleButton extends MappedButton {
 
 	/**
 	 * The joystick the button is on.
@@ -33,8 +33,8 @@ public class FactoryJoystickButton extends MappedButton {
 	 * @param buttonNumber The port of the button. Note that button numbers begin at 1, not 0.
 	 */
 	@JsonCreator
-	public FactoryJoystickButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
-	                             @JsonProperty(required = true) int buttonNumber) {
+	public SimpleButton(@NotNull @JsonProperty(required = true) MappedJoystick joystick,
+	                    @JsonProperty(required = true) int buttonNumber) {
 		this.joystick = joystick;
 		this.buttonNumber = buttonNumber;
 	}

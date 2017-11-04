@@ -56,16 +56,6 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	private final double turnInPlaceRotScale;
 
 	/**
-	 * Cached forwards and rotation values.
-	 */
-	private double cachedFwd, cachedRot;
-
-	/**
-	 * The time velocity and rotation were cached at.
-	 */
-	private long timeLastCached;
-
-	/**
 	 * Default constructor
 	 *
 	 * @param gamepad             The gamepad containing the joysticks and buttons. Can be null if not using the D-pad.
@@ -93,33 +83,8 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 		this.gamepad = gamepad;
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
-		timeLastCached = 0;
 	}
-
-	/**
-	 * Calculate and cache the values of fwd and rot.
-	 */
-	private void cacheValues() {
-		if (Clock.currentTimeMillis() > timeLastCached) {
-			timeLastCached = Clock.currentTimeMillis();
-
-			//Forwards is simple
-			cachedFwd = fwdThrottle.getValue();
-
-			//If the gamepad is being pushed to the left or right
-			if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
-				//Output the shift value
-				cachedRot = gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
-			} else if (cachedFwd == 0) { //Turning in place
-				cachedRot = rotThrottle.getValue() * turnInPlaceRotScale;
-			} else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
-				cachedRot = rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(cachedFwd));
-			} else { //Plain and simple
-				cachedRot = rotThrottle.getValue();
-			}
-		}
-	}
-
+	
 	/**
 	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick
 	 * it is.
@@ -128,8 +93,7 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	 */
 	@Override
 	public double getFwd() {
-		cacheValues();
-		return cachedFwd;
+		return fwdThrottle.getValue();
 	}
 
 	/**
@@ -140,8 +104,17 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 	 */
 	@Override
 	public double getRot() {
-		cacheValues();
-		return cachedRot;
+		//If the gamepad is being pushed to the left or right
+		if (gamepad != null && !(gamepad.getPOV() == -1 || gamepad.getPOV() % 180 == 0)) {
+			//Output the shift value
+			return gamepad.getPOV() < 180 ? dPadShift : -dPadShift;
+		} else if (getFwd() == 0) { //Turning in place
+			return rotThrottle.getValue() * turnInPlaceRotScale;
+		} else if (scaleRotByFwdPoly != null) { //If we're using Cheezy Drive
+			return rotThrottle.getValue() * scaleRotByFwdPoly.get(Math.abs(getFwd()));
+		} else { //Plain and simple
+			return rotThrottle.getValue();
+		}
 	}
 
 	/**

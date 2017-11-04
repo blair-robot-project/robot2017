@@ -45,6 +45,6 @@ public class TriggerButton extends MappedButton {
 	 */
 	@Override
 	public boolean get() {
-		return Math.abs(throttle.getValue()) >= triggerAt;
+		return Math.abs(throttle.getValueCached()) >= triggerAt;
 	}
 }

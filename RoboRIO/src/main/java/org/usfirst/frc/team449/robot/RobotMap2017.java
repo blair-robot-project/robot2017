@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
+import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
@@ -57,6 +58,12 @@ public class RobotMap2017 {
 	 */
 	@NotNull
 	private final Command defaultDriveCommand;
+
+	/**
+	 * A runnable that updates cached variables.
+	 */
+	@NotNull
+	private final Runnable updater;
 
 	/**
 	 * The climber for boarding the airship. Can be null.
@@ -215,6 +222,7 @@ public class RobotMap2017 {
 	 * @param logger               The logger for recording events and telemetry data.
 	 * @param drive                The drive.
 	 * @param defaultDriveCommand  The command for the drive to run during the teleoperated period.
+	 * @param updater A runnable that updates cached variables.
 	 * @param climber              The climber for boarding the airship. Can be null.
 	 * @param shooter              The multiSubsystem for shooting fuel. Can be null.
 	 * @param camera               The cameras on this robot. Can be null.
@@ -258,6 +266,7 @@ public class RobotMap2017 {
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
 	                    @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
+	                    @NotNull @JsonProperty(required = true) MappedRunnable updater,
 	                    @Nullable ClimberCurrentLimited climber,
 	                    @Nullable LoggingShooter shooter,
 	                    @Nullable CameraNetwork camera,
@@ -289,6 +298,7 @@ public class RobotMap2017 {
 		this.pneumatics = pneumatics;
 		this.gearHandler = gearHandler;
 		this.logger = logger;
+		this.updater = updater;
 		this.RIOduinoPort = RIOduinoPort;
 		this.allianceSwitch = allianceSwitch;
 		this.dropGearSwitch = dropGearSwitch;
@@ -541,5 +551,13 @@ public class RobotMap2017 {
 	@Nullable
 	public Command getStartupCommand() {
 		return startupCommand;
+	}
+
+	/**
+	 * @return A runnable that updates cached variables.
+	 */
+	@NotNull
+	public Runnable getUpdater() {
+		return updater;
 	}
 }

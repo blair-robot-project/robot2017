@@ -76,7 +76,7 @@ public class DetermineNominalVoltage <T extends YamlSubsystem & DriveUnidirectio
 	 */
 	@Override
 	protected boolean isFinished() {
-		return Math.max(Math.abs(subsystem.getLeftVel()), Math.abs(subsystem.getRightVel())) >= minSpeed;
+		return Math.max(Math.abs(subsystem.getLeftVelCached()), Math.abs(subsystem.getRightVelCached())) >= minSpeed;
 	}
 
 	/**

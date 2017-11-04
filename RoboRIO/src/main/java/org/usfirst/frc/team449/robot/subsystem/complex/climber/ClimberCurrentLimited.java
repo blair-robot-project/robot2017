@@ -48,6 +48,11 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	 */
 	private boolean motorSpinning;
 
+	/**
+	 * Whether the condition was met last time caching was done.
+	 */
+	private boolean conditionMetCached;
+
 
 	/**
 	 * Default constructor
@@ -163,5 +168,21 @@ public class ClimberCurrentLimited extends YamlSubsystem implements Loggable, Su
 	@Override
 	public boolean isConditionTrue() {
 		return powerLimitTimer.get(Math.abs(canTalonSRX.getOutputCurrent() * canTalonSRX.getOutputVoltage()) > maxPower);
+	}
+
+	/**
+	 * @return true if the condition was met when cached, false otherwise
+	 */
+	@Override
+	public boolean isConditionTrueCached() {
+		return conditionMetCached;
+	}
+
+	/**
+	 * Updates all cached values with current ones.
+	 */
+	@Override
+	public void update() {
+		conditionMetCached = isConditionTrue();
 	}
 }

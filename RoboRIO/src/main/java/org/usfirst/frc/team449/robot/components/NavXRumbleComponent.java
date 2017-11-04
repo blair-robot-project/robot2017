@@ -70,6 +70,11 @@ public class NavXRumbleComponent implements MappedRunnable {
 	private double left, right;
 
 	/**
+	 * Variables for per-call acceleration calculation. Fields to avoid garbage collection.
+	 */
+	private double frontBack, leftRight;
+
+	/**
 	 * The time at which the acceleration was last measured.
 	 */
 	private long timeLastCalled;
@@ -110,7 +115,6 @@ public class NavXRumbleComponent implements MappedRunnable {
 	 */
 	@Override
 	public void run() {
-		double frontBack, leftRight;
 		if (yIsFrontBack) {
 			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
 			frontBack = Math.abs(navX.getWorldLinearAccelY());

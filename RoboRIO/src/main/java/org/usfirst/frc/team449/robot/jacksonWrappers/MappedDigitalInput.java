@@ -18,6 +18,11 @@ public class MappedDigitalInput {
 	 */
 	@JsonIgnore
 	private final List<DigitalInput> digitalInputs;
+	
+	/**
+	 * Value of the inputs. Field to avoid garbage collection.
+	 */
+	private List<Boolean> digitalValues;
 
 	/**
 	 * Construct a MappedDigitalInput.
@@ -41,7 +46,7 @@ public class MappedDigitalInput {
 	@JsonIgnore
 	@NotNull
 	public List<Boolean> getStatus() {
-		List<Boolean> digitalValues = new ArrayList<>();
+		digitalValues = new ArrayList<>();
 		for (DigitalInput digitalInput : digitalInputs) {
 			//Negated because, by default, false means signal and true means no signal, and that's dumb.
 			digitalValues.add(!digitalInput.get());
