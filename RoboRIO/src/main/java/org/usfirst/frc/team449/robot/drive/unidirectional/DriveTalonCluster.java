@@ -222,8 +222,18 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 * @return robot heading, in degrees, on [-180, 180]
 	 */
 	@Override
-	public double getGyroHeading() {
+	public double getHeading() {
 		return navX.getHeading();
+	}
+
+	/**
+	 * Set the robot's heading.
+	 *
+	 * @param heading The heading to set to, in degrees on [-180, 180].
+	 */
+	@Override
+	public void setHeading(double heading) {
+		navX.setHeading(heading);
 	}
 
 	/**
@@ -243,26 +253,10 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularVel() {
-		return navX.getRate();
+		return navX.getAngularVelocity();
 	}
 
 	/**
-<<<<<<< HEAD
-	 * @param headingDegrees The angle, in degrees from [-180, 180], to set the NavX's heading to.
-	 */
-	@Override
-	public void setHeading(double headingDegrees) {
-		navX.setHeading(headingDegrees);
-	}
-
-	/**
-	 * @return An AHRS object representing this subsystem's NavX.
-	 */
-	@Override
-	@NotNull
-	public MappedAHRS getNavX() {
-		return navX;
-=======
 	 * Get the robot's cached angular velocity.
 	 *
 	 * @return Angular velocity in degrees/sec
@@ -279,7 +273,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularDisplacement() {
-		return navX.getAngle();
+		return navX.getAngularVelocity();
 	}
 
 	/**
@@ -306,7 +300,6 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	@Override
 	public void setOverrideGyro(boolean override) {
 		overrideGyro = override;
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 	}
 
 	/**
@@ -358,20 +351,12 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 				cachedRightPos,
 				leftMaster.getError(),
 				rightMaster.getError(),
-<<<<<<< HEAD
-				navX.getHeading(),
-				navX.get9AxisHeading(),
-				navX.getAngularVelocity(),
-				navX.getAngularDisplacement(),
-				navX.getXAccel(),
-				navX.getYAccel()};
-=======
 				cachedHeading,
+				navX.get9AxisHeading(),
 				cachedAngularVel,
 				cachedAngularDisplacement,
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
+				navX.getXAccel(),
+				navX.getYAccel()};
 	}
 
 	/**

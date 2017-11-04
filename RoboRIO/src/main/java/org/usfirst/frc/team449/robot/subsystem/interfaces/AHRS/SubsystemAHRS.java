@@ -17,6 +17,13 @@ public interface SubsystemAHRS {
 	double getHeading();
 
 	/**
+	 * Set the robot's heading.
+	 *
+	 * @param heading The heading to set to, in degrees on [-180, 180].
+	 */
+	void setHeading(double heading);
+
+	/**
 	 * Get the robot's cached heading.
 	 *
 	 * @return robot heading, in degrees, on [-180, 180].

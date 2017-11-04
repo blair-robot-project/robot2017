@@ -151,15 +151,8 @@ public class Pathgen {
 		// the circumference of a circle moved by the robot via C = 360 * n / θ
 		//You then find the diameter via C / π.
 		double balbasaurWheelbase = 30. / 12.;
-		//200 in: 29.96
-		//50 in: 34.2
 
-		//433.415
-<<<<<<< HEAD
 		double calciferWheelbase = 26.6536/12.;
-=======
-		double calciferWheelbase = 26. / 12.;
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 
 		Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH,
 				0.05, 5., 4.5, 9.); //Units are seconds, feet/second, feet/(second^2), and feet/(second^3)

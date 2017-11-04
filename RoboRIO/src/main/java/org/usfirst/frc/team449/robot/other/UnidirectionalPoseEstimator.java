@@ -5,10 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.NotNull;
-<<<<<<< HEAD
-=======
-import org.jetbrains.annotations.Nullable;
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
@@ -87,19 +83,9 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	private long lastTime;
 
 	/**
-	 * The most recently calculated effective wheelbase diameter (from the Eli method), in feet.
+	 * The most recently calculated effective wheelbase diameter, in feet.
 	 */
 	private double fudgedWheelbaseDiameter;
-
-	/**
-	 * Whether or not the left side was re-calculated last tic using the Noah method.
-	 */
-	private boolean recalcedLeft;
-
-	/**
-	 * The percent the Noah method changed the wrong encoder reading by.
-	 */
-	private double percentChanged;
 	
 	/**
 	 * Angle and magnitude of vector being calculated. Field to avoid garbage collection.
@@ -153,7 +139,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 		lastTime = 0;
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Calculate the x and y movement vector for the robot.
 	 *
@@ -163,56 +148,18 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	 * @param lastAngle The previous heading, in radians
 	 * @return An array of length 2 containing the [x, y] displacement of the robot.
 	 */
-	private static double[] calcVector(double left, double right, double deltaTheta, double lastAngle){
-		//The vector for how much the robot moves, element 0 is x and element 1 is y.
-		double[] vector = new double[2];
-=======
 	@NotNull
-	private double[] calcEliVector(double left, double right, double deltaTheta, double lastAngle) {
+	private double[] calcVector(double left, double right, double deltaTheta, double lastAngle) {
 
 		//If we're going in a straight line
 		if (deltaTheta == 0) {
-			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
-			return new double[]{left * Math.cos(lastAngle), left * Math.sin(lastAngle)};
+			return new double[]{(left+right)/2. * Math.cos(lastAngle), (left+right)/2. * Math.sin(lastAngle)};
 		} else {
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
 			vectorAngle = lastAngle + deltaTheta / 2.;
-			vectorMagnitude = 2. * ((left + right) / 2.) / deltaTheta * Math.sin(deltaTheta / 2.);
+			vectorMagnitude = 2. * ((left+right)/2.)/deltaTheta * Math.sin(deltaTheta / 2.);
 			return new double[]{vectorMagnitude * Math.cos(vectorAngle), vectorMagnitude * Math.sin(vectorAngle)};
-		}
-	}
-
-	@NotNull
-	private double[] calcVector(double left, double right, double robotDiameter, double deltaTheta, double lastAngle) {
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
-
-		//If we're going in a straight line
-		if (deltaTheta == 0) {
-			//we could use deltaRight here, doesn't matter. Going straight means no change in angle and left and right are the same.
-<<<<<<< HEAD
-			vector[0] = (left+right)/2. * Math.cos(lastAngle);
-			vector[1] = (left+right)/2. * Math.sin(lastAngle);
-		} else {
-			//This next part is too complicated to explain in comments. Read this wiki page instead:
-			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			double vectorAngle = lastAngle + deltaTheta/2.;
-			double vectorMagnitude = 2. * ((left+right)/2.)/deltaTheta * Math.sin(deltaTheta / 2.);
-			vector[0] = vectorMagnitude * Math.cos(vectorAngle);
-			vector[1] = vectorMagnitude * Math.sin(vectorAngle);
-=======
-			return new double[]{left * Math.cos(lastAngle), left * Math.sin(lastAngle)};
-		} else {
-			//This next part is too complicated to explain in comments. Read this wiki page instead:
-			// http://team449.shoutwiki.com/wiki/Pose_Estimation
-			if (left - right == 0) {
-				vectorMagnitude = 2* left / deltaTheta * Math.sin(deltaTheta / 2.);
-			} else {
-				vectorMagnitude = 2* robotDiameter / 2. * (left + right) / (left - right) * Math.sin(deltaTheta / 2.);
-			}
-			vectorAngle = lastAngle + deltaTheta / 2.;
-			return new double[]{vectorMagnitude * Math.cos(vectorAngle), vectorMagnitude * Math.sin(vectorAngle)};
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 		}
 	}
 
@@ -222,19 +169,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	@Override
 	public synchronized void run() {
 		//Record everything at the start, as it may change between executing lines of code and that would be bad.
-<<<<<<< HEAD
-		double left = subsystem.getLeftPos();
-		double right = subsystem.getRightPos();
-		double theta = Math.toRadians(subsystem.getNavX().getAngularDisplacement());
-		long time = Clock.currentTimeMillis();
-
-		//Calculate differences versus the last measurement
-		double deltaLeft = left - lastLeftPos;
-		double deltaRight = right - lastRightPos;
-		double deltaTheta = theta - lastTheta;
-
-		if (deltaTheta == 0){
-=======
 		left = subsystem.getLeftPos();
 		right = subsystem.getRightPos();
 		theta = Math.toRadians(subsystem.getAngularDisplacement());
@@ -245,54 +179,12 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 		deltaRight = right - lastRightPos;
 		deltaTheta = theta - lastTheta;
 		if (deltaTheta == 0) {
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 			fudgedWheelbaseDiameter = -1;
 		} else {
 			fudgedWheelbaseDiameter = (deltaLeft - deltaRight) / deltaTheta;
 		}
 
-<<<<<<< HEAD
-		double[] vector = calcVector(deltaLeft, deltaRight, deltaTheta, lastTheta);
-=======
-		if (robotDiameter != null) {
-			//Noah's Approach:
-
-			//For this next part, we assume that the gyro is 100% accurate at measuring the change in angle over the given
-
-			//time period and that the encoders will possibly overmeasure (due to wheel slip) but never undermeasure.
-			//Given those constraints, we have an overdetermined system because deltaTheta should be equal to
-			//(deltaLeft-deltaRight)/robotDiameter. We can use this to determine which wheel slipped more, and replace its
-			//reading with a value calculated from the other encoder and the gyro.
-			if (deltaTheta < (deltaLeft - deltaRight) / robotDiameter) {
-				if (deltaLeft > 0) {
-					percentChanged = ((deltaRight + robotDiameter * deltaTheta) - deltaLeft) / deltaLeft;
-					deltaLeft = deltaRight + robotDiameter * deltaTheta;
-					recalcedLeft = true;
-				} else {
-					percentChanged = ((deltaLeft - robotDiameter * deltaTheta) - deltaRight) / deltaRight;
-					deltaRight = deltaLeft - robotDiameter * deltaTheta;
-					recalcedLeft = false;
-				}
-			} else if (deltaTheta > (deltaLeft - deltaRight) / robotDiameter) {
-				if (deltaLeft < 0) {
-					percentChanged = ((deltaRight + robotDiameter * deltaTheta) - deltaLeft) / deltaLeft;
-					deltaLeft = deltaRight + robotDiameter * deltaTheta;
-					recalcedLeft = true;
-				} else {
-					percentChanged = ((deltaLeft - robotDiameter * deltaTheta) - deltaRight) / deltaRight;
-					deltaRight = deltaLeft - robotDiameter * deltaTheta;
-					recalcedLeft = false;
-				}
-			}
-			vector = calcVector(deltaLeft, deltaRight, robotDiameter, deltaTheta, lastTheta);
-		} else {
-
-			//Eli's Approach
-
-			//Here we assume all the measured values are correct and adjust the diameter to match.
-			vector = calcEliVector(deltaLeft, deltaRight, deltaTheta, lastTheta);
-		}
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
+		vector = calcVector(deltaLeft, deltaRight, deltaTheta, lastTheta);
 
 		//The vector for how much the robot moves, element 0 is x and element 1 is y.
 
@@ -384,6 +276,7 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	 *
 	 * @return The current x,y position in feet.
 	 */
+	@NotNull
 	public double[] getPos() {
 		return currentPos;
 	}
@@ -455,8 +348,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	public String[] getHeader() {
 		return new String[]{
 				"effective_wheelbase",
-				"recalced_left",
-				"percent_changed",
 				"x_displacement",
 				"y_displacement"
 		};
@@ -472,8 +363,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	public Object[] getData() {
 		return new Object[]{
 				fudgedWheelbaseDiameter,
-				recalcedLeft,
-				percentChanged,
 				getPos()[0],
 				getPos()[1]
 		};
@@ -487,13 +376,6 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	@NotNull
 	@Override
 	public String getName() {
-<<<<<<< HEAD
 		return "PoseEstimator";
-=======
-		if (robotDiameter != null) {
-			return "NoahPoseEstimator";
-		}
-		return "EliPoseEstimator";
->>>>>>> 91adccbf504af72bacfec371e289d43997aaa970
 	}
 }
