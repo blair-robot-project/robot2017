@@ -11,7 +11,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.BufferTimer;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 /**
  * Drive with arcade drive setup, autoshift, and when the driver isn't turning, use a NavX to stabilize the robot's
@@ -77,7 +77,7 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	                                              @NotNull @JsonProperty(required = true) T subsystem,
 	                                              @NotNull @JsonProperty(required = true) OIUnidirectional oi,
 	                                              @NotNull @JsonProperty(required = true) AutoshiftComponent autoshiftComponent,
-	                                              Double highGearAngularCoefficient) {
+	                                              @Nullable Double highGearAngularCoefficient) {
 		super(absoluteTolerance, toleranceBuffer, minimumOutput, maximumOutput, deadband, maxAngularVelToEnterLoop,
 				inverted, kP, kI, kD, driveStraightLoopEntryTimer, subsystem, oi);
 		this.autoshiftComponent = autoshiftComponent;
@@ -86,13 +86,13 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	}
 
 	/**
-	 * Autoshift, decide whether or not we should be in free drive or straight drive, and log data.
+	 * Autoshift and decide whether or not we should be in free drive or straight drive
 	 */
 	@Override
 	public void execute() {
 		//Auto-shifting
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift(oi.getLeftOutputCached(), oi.getRightOutputCached(), subsystem.getLeftVelCached(),
+			autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached())/2., subsystem.getLeftVelCached(),
 					subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();

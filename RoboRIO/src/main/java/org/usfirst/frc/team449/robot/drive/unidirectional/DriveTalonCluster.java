@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.TwoSideMPSubsystem.SubsystemMPTwoSides;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 
 /**
@@ -49,7 +49,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	/**
 	 * Whether or not to use the NavX for driving straight
 	 */
-	private boolean overrideNavX;
+	private boolean overrideGyro;
 
 	/**
 	 * Cached values for various sensor readings.
@@ -77,6 +77,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
 		this.navX = navX;
+		this.overrideGyro = false;
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	}
 
 	/**
-	 * Get the robot's heading using the navX
+	 * Get the robot's heading using the AHRS
 	 *
 	 * @return robot heading, in degrees, on [-180, 180]
 	 */
@@ -281,7 +282,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public boolean getOverrideGyro() {
-		return overrideNavX;
+		return overrideGyro;
 	}
 
 	/**
@@ -289,7 +290,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public void setOverrideGyro(boolean override) {
-		overrideNavX = override;
+		overrideGyro = override;
 	}
 
 	/**

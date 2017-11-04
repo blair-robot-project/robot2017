@@ -9,8 +9,8 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommand;
+import org.usfirst.frc.team449.robot.oi.OI;
 import org.usfirst.frc.team449.robot.oi.buttons.CommandButton;
-import org.usfirst.frc.team449.robot.oi.unidirectional.OIUnidirectional;
 import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
@@ -39,7 +39,7 @@ public class RobotMap2017 {
 	 * The OI for controlling this robot's drive.
 	 */
 	@NotNull
-	private final OIUnidirectional oi;
+	private final OI oi;
 
 	/**
 	 * The logger for recording events and telemetry data.
@@ -261,8 +261,8 @@ public class RobotMap2017 {
 	 * @param doMP                 Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@Nullable List<CommandButton> buttons,
-	                    @NotNull @JsonProperty(required = true) OIUnidirectional oi,
+	public RobotMap2017(@Nullable @JsonProperty(required = true) List<CommandButton> buttons,
+	                    @NotNull @JsonProperty(required = true) OI oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
 	                    @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
@@ -331,7 +331,7 @@ public class RobotMap2017 {
 	 * @return The OI for controlling this robot's drive.
 	 */
 	@NotNull
-	public OIUnidirectional getOI() {
+	public OI getOI() {
 		return oi;
 	}
 

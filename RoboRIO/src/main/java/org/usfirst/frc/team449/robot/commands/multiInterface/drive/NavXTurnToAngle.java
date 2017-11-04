@@ -11,11 +11,11 @@ import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
 import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Logger;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.PIDAngleCommand;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.PIDAngleCommand;
 
 /**
- * Turns to a specified angle, relative to the angle the navX was at when the robot was turned on.
+ * Turns to a specified angle, relative to the angle the AHRS was at when the robot was turned on.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
 public class NavXTurnToAngle <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends PIDAngleCommand {

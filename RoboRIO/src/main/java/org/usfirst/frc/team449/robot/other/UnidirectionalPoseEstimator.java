@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.drive.unidirectional.DriveUnidirectional;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.navX.SubsystemAHRS;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
 
 import java.util.ArrayList;
 import java.util.List;

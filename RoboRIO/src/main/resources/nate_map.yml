@@ -199,7 +199,7 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
-        kP: 0.012
+        kP: 0.003
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 0
@@ -609,7 +609,7 @@ buttons:
                         gunnerGamepad
                 buttonNumber: 1
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': overrideNavXCommand
                 override: true
                 subsystem:
@@ -620,7 +620,7 @@ buttons:
             org.usfirst.frc.team449.robot.oi.buttons.SimpleButton:
                 overrideNavXButton
         command:
-            org.usfirst.frc.team449.robot.subsystem.interfaces.navX.commands.OverrideNavX:
+            org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.commands.OverrideNavX:
                 '@id': unoverrideNavXCommand
                 override: false
                 subsystem:

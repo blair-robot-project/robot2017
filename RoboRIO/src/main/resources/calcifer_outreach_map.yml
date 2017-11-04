@@ -31,7 +31,7 @@ oi:
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
-                turnInPlaceRotScale: 0.3
+                turnInPlaceRotScale: 0.6
                 scaleRotByFwdPoly:
                     '@id': scaleRotByFwdPolyOverriding
                     powerToCoefficientMap: !!map
@@ -63,7 +63,7 @@ oi:
                         inverted: true
                 invertDPad: true
                 dPadShift: 0.1
-                turnInPlaceRotScale: 0.3
+                turnInPlaceRotScale: 0.6
                 scaleRotByFwdPoly:
                     '@id': scaleRotByFwdPolyOverriden
                     powerToCoefficientMap: !!map
