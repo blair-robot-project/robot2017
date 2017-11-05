@@ -169,7 +169,7 @@ public class Logger implements Runnable {
 		StringBuilder telemetryData = new StringBuilder();
 
 		//Log the times
-		telemetryData.append(System.currentTimeMillis()-startTime).append(",");
+		telemetryData.append(System.currentTimeMillis() - startTime).append(",");
 		telemetryData.append(Clock.currentTimeMillis()).append(",");
 
 		//Loop through each datum

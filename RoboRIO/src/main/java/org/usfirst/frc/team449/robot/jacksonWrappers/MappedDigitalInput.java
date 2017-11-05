@@ -18,7 +18,7 @@ public class MappedDigitalInput {
 	 */
 	@JsonIgnore
 	private final List<DigitalInput> digitalInputs;
-	
+
 	/**
 	 * Value of the inputs. Field to avoid garbage collection.
 	 */

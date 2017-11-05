@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.TurnAllOff;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.TurnAllOff;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
 
@@ -17,13 +17,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.Sole
  * intake, and stops feeder.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class LoadShooter <T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
+public class LoadShooter<T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Constructs a LoadShooter command group
 	 *
 	 * @param subsystemFlywheel flywheel subsystem. Can be null.
-	 * @param subsystemIntake  intake subsystem. Can be null.
+	 * @param subsystemIntake   intake subsystem. Can be null.
 	 */
 	@JsonCreator
 	public LoadShooter(@Nullable SubsystemFlywheel subsystemFlywheel,

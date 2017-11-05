@@ -32,7 +32,7 @@ public class MappedAHRS {
 	/**
 	 * Default constructor.
 	 *
-	 * @param port The port the NavX is plugged into. It seems like only kMXP (the port on the RIO) works.
+	 * @param port      The port the NavX is plugged into. It seems like only kMXP (the port on the RIO) works.
 	 * @param invertYaw Whether or not to invert the yaw axis. Defaults to true.
 	 */
 	@JsonCreator
@@ -40,78 +40,11 @@ public class MappedAHRS {
 	                  Boolean invertYaw) {
 		this.ahrs = new AHRS(port);
 		ahrs.reset();
-		if(invertYaw == null || invertYaw){
+		if (invertYaw == null || invertYaw) {
 			this.invertYaw = -1;
 		} else {
 			this.invertYaw = 1;
 		}
-	}
-
-	/**
-	 * Set the current yaw value.
-	 *
-	 * @param headingDegrees An angle in degrees, from [-180, 180], to set the heading to.
-	 */
-	public void setHeading(double headingDegrees){
-		ahrs.setAngleAdjustment(ahrs.getYaw()+invertYaw*headingDegrees);
-	}
-
-	/**
-	 * Get the current yaw value.
-	 *
-	 * @return The heading, in degrees from [-180, 180]
-	 */
-	public double getHeading(){
-		return ahrs.getYaw()*invertYaw;
-	}
-
-	/**
-	 * Get the current total angular displacement. Differs from getHeading because it doesn't limit angle.
-	 *
-	 * @return The angular displacement, in degrees.
-	 */
-	public double getAngularDisplacement(){
-		return ahrs.getAngle()*invertYaw;
-	}
-
-	/**
-	 * Uses the gyro axes, magnetometer, and compass to get the most accurate possible yaw value for the robot.
-	 *
-	 * @return The heading, in degrees from [-180, 180]
-	 */
-	public double get9AxisHeading(){
-		toRet = ahrs.getFusedHeading();
-		if (toRet > 180){
-			toRet -= 360;
-		}
-		return toRet*invertYaw;
-	}
-
-	/**
-	 * Get the current angular yaw velocity.
-	 *
-	 * @return The angular yaw velocity, in degrees/sec.
-	 */
-	public double getAngularVelocity(){
-		return ahrs.getRate()*invertYaw;
-	}
-
-	/**
-	 * Get the absolute X acceleration of the robot, relative to the field.
-	 *
-	 * @return Linear X acceleration, in feet/(sec^2)
-	 */
-	public double getXAccel(){
-		return gsToFeetPerSecondSquared(ahrs.getWorldLinearAccelX());
-	}
-
-	/**
-	 * Get the absolute Y acceleration of the robot, relative to the field.
-	 *
-	 * @return Linear Y acceleration, in feet/(sec^2)
-	 */
-	public double getYAccel(){
-		return gsToFeetPerSecondSquared(ahrs.getWorldLinearAccelY());
 	}
 
 	/**
@@ -121,7 +54,74 @@ public class MappedAHRS {
 	 * @return That acceleration in feet/(sec^2)
 	 */
 	@Contract(pure = true)
-	protected static double gsToFeetPerSecondSquared(double accelGs){
+	protected static double gsToFeetPerSecondSquared(double accelGs) {
 		return accelGs * 32.17; //Wolfram alpha said so
+	}
+
+	/**
+	 * Get the current yaw value.
+	 *
+	 * @return The heading, in degrees from [-180, 180]
+	 */
+	public double getHeading() {
+		return ahrs.getYaw() * invertYaw;
+	}
+
+	/**
+	 * Set the current yaw value.
+	 *
+	 * @param headingDegrees An angle in degrees, from [-180, 180], to set the heading to.
+	 */
+	public void setHeading(double headingDegrees) {
+		ahrs.setAngleAdjustment(ahrs.getYaw() + invertYaw * headingDegrees);
+	}
+
+	/**
+	 * Get the current total angular displacement. Differs from getHeading because it doesn't limit angle.
+	 *
+	 * @return The angular displacement, in degrees.
+	 */
+	public double getAngularDisplacement() {
+		return ahrs.getAngle() * invertYaw;
+	}
+
+	/**
+	 * Uses the gyro axes, magnetometer, and compass to get the most accurate possible yaw value for the robot.
+	 *
+	 * @return The heading, in degrees from [-180, 180]
+	 */
+	public double get9AxisHeading() {
+		toRet = ahrs.getFusedHeading();
+		if (toRet > 180) {
+			toRet -= 360;
+		}
+		return toRet * invertYaw;
+	}
+
+	/**
+	 * Get the current angular yaw velocity.
+	 *
+	 * @return The angular yaw velocity, in degrees/sec.
+	 */
+	public double getAngularVelocity() {
+		return ahrs.getRate() * invertYaw;
+	}
+
+	/**
+	 * Get the absolute X acceleration of the robot, relative to the field.
+	 *
+	 * @return Linear X acceleration, in feet/(sec^2)
+	 */
+	public double getXAccel() {
+		return gsToFeetPerSecondSquared(ahrs.getWorldLinearAccelX());
+	}
+
+	/**
+	 * Get the absolute Y acceleration of the robot, relative to the field.
+	 *
+	 * @return Linear Y acceleration, in feet/(sec^2)
+	 */
+	public double getYAccel() {
+		return gsToFeetPerSecondSquared(ahrs.getWorldLinearAccelY());
 	}
 }

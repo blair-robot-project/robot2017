@@ -14,7 +14,7 @@ import org.usfirst.frc.team449.robot.other.Clock;
  * A field-oriented OI that always points the robot an angle where cosine is positive, i.e. always pointing away from the driver station.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class OIFieldOrientedPosCos extends OIFieldOriented{
+public class OIFieldOrientedPosCos extends OIFieldOriented {
 
 	/**
 	 * The throttle for the X-axis, which points towards the opposing driver station.
@@ -73,23 +73,23 @@ public class OIFieldOrientedPosCos extends OIFieldOriented{
 	/**
 	 * Calculate the theta and vel values, can be called multiple times per tic but will only execute logic once.
 	 */
-	protected void calcValues(){
-		if (timeLastUpdated != Clock.currentTimeMillis()){
+	protected void calcValues() {
+		if (timeLastUpdated != Clock.currentTimeMillis()) {
 			x = xThrottle.getValue();
 			y = yThrottle.getValue();
 			vel = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
 			//0,0ish has no angle so null
-			if (vel < rDeadband){
+			if (vel < rDeadband) {
 				theta = null;
 				vel = 0;
 			} else {
 				//Use atan2 to get angle from -180 to 180
-				theta = Math.toDegrees(Math.atan2(y,x));
-				if (theta > 90){
+				theta = Math.toDegrees(Math.atan2(y, x));
+				if (theta > 90) {
 					vel *= -1;
 					theta -= 180;
-				} else if (theta < -90){
+				} else if (theta < -90) {
 					vel *= -1;
 					theta += 180;
 				}
@@ -111,9 +111,9 @@ public class OIFieldOrientedPosCos extends OIFieldOriented{
 		calcValues();
 		if (theta != null) {
 			SmartDashboard.putNumber("theta", theta);
-			SmartDashboard.putBoolean("thetaNull",false);
+			SmartDashboard.putBoolean("thetaNull", false);
 		} else {
-			SmartDashboard.putBoolean("thetaNull",true);
+			SmartDashboard.putBoolean("thetaNull", true);
 		}
 		return theta;
 	}
@@ -126,7 +126,7 @@ public class OIFieldOrientedPosCos extends OIFieldOriented{
 	@Override
 	public double getVel() {
 		calcValues();
-		SmartDashboard.putNumber("Vel",vel);
+		SmartDashboard.putNumber("Vel", vel);
 		return vel;
 	}
 }

@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  * Rotates the robot back and forth in order to dislodge any stuck balls.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class JiggleRobot <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends YamlCommandGroupWrapper {
+public class JiggleRobot<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Instantiate the CommandGroup

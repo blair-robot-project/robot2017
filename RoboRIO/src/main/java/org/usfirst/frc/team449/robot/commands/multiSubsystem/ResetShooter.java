@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.TurnAllOff;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
 
@@ -16,13 +16,13 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.Sole
  * Command group to reset everything. Turns everything off, raises intake
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ResetShooter <T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
+public class ResetShooter<T extends SubsystemIntake & SubsystemSolenoid> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Constructs a ResetShooter command group
 	 *
 	 * @param subsystemFlywheel flywheel subsystem. Can be null.
-	 * @param subsystemIntake  intake subsystem. Can be null.
+	 * @param subsystemIntake   intake subsystem. Can be null.
 	 */
 	@JsonCreator
 	public ResetShooter(@Nullable SubsystemFlywheel subsystemFlywheel,

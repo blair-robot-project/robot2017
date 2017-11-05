@@ -24,12 +24,12 @@ public class ThrottlePolynomial extends ThrottleDeadbanded {
 	/**
 	 * A basic constructor.
 	 *
-	 * @param stick      The Joystick object being used
-	 * @param axis       The axis being used. 0 is X, 1 is Y, 2 is Z.
-	 * @param deadband   The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
+	 * @param stick             The Joystick object being used
+	 * @param axis              The axis being used. 0 is X, 1 is Y, 2 is Z.
+	 * @param deadband          The deadband below which the input will be read as 0, on [0, 1]. Defaults to 0.
 	 * @param smoothingTimeSecs How many seconds of input to take into account when smoothing. Defaults to 0.02.
-	 * @param inverted   Whether or not to invert the joystick input. Defaults to false.
-	 * @param polynomial The polynomially that scales the throttle. Must not have any negative exponents.
+	 * @param inverted          Whether or not to invert the joystick input. Defaults to false.
+	 * @param polynomial        The polynomially that scales the throttle. Must not have any negative exponents.
 	 */
 	@JsonCreator
 	public ThrottlePolynomial(@NotNull @JsonProperty(required = true) MappedJoystick stick,

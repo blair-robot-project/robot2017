@@ -222,7 +222,7 @@ public class RobotMap2017 {
 	 * @param logger               The logger for recording events and telemetry data.
 	 * @param drive                The drive.
 	 * @param defaultDriveCommand  The command for the drive to run during the teleoperated period.
-	 * @param updater A runnable that updates cached variables.
+	 * @param updater              A runnable that updates cached variables.
 	 * @param climber              The climber for boarding the airship. Can be null.
 	 * @param shooter              The multiSubsystem for shooting fuel. Can be null.
 	 * @param camera               The cameras on this robot. Can be null.
