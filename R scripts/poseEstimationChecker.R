@@ -2,6 +2,47 @@
 rad2deg <- function(rad) {(rad * 180) / (pi)}
 deg2rad <- function(deg) {(deg * pi) / (180)}
 
+logLogSlope <- function(effectiveWheelbase, angularVel, n){
+  library("zoo")
+  avg <- weighted.mean(x=effectiveWheelbase, w=angularVel, na.rm=TRUE)
+  error <- effectiveWheelbase-avg
+  error <- error^2
+  avgError <- sqrt(rollmean(error, n, fill = NA))
+  logError <- log(avgError[(1+floor((n-1)/2)):(length(avgError)-floor(n/2))])
+  logVel <- log(angularVel[(1+floor((n-1)/2)):(length(angularVel)-floor(n/2))])
+  plot(x = logVel, y= logError)
+  model <- lm(logError ~ logVel)
+  abline(model, col="Green")
+  return(model)
+}
+
+drawRobot <- function(robotFile, x, y, theta){
+  robotCenter <- c(x,y)
+  robot <- read.csv(robotFile)
+  rotMatrix <- matrix(c(cos(theta), -sin(theta), sin(theta), cos(theta)), nrow=2, ncol=2, byrow=TRUE)
+  
+  point1s <- rotMatrix %*% matrix(c(robot$x1, robot$y1), nrow = 2, ncol = length(robot$x1), byrow = TRUE) 
+  point1s <- point1s + c(robotCenter[1], robotCenter[2])
+  
+  point2s <- rotMatrix %*% matrix(c(robot$x2, robot$y2), nrow = 2, ncol = length(robot$x1), byrow = TRUE) 
+  point2s <- point2s + c(robotCenter[1], robotCenter[2])
+  
+  #Interleave the point1s and point2s so lines() draws them correctly.
+  xs <- c(rbind(point1s[1,], point2s[1,]))
+  ys <- c(rbind(point1s[2,], point2s[2,]))
+  
+  lines(x=xs, y=ys, col="Blue")
+}
+
+plotField <- function(filename, xOffset=0, yOffset=0){
+  field <- read.csv(filename)
+  #Strings are read as factors by default, so we need to do this to make it read them as strings
+  field$col <- as.character(field$col)
+  for (i in 1:length(field$x1)){
+    lines(c(field$x1[i]+xOffset, field$x2[i]+xOffset), c(field$y1[i]+yOffset, field$y2[i]+yOffset), col=field$col[i])
+  }
+}
+
 #Find the distance between the end position of two things
 dist <- function(x1, y1, x2, y2){
   return(sqrt((x1[length(x1)] - x2[length(x2)])^2+(y1[length(y1)] - y2[length(y2)])^2))
@@ -9,7 +50,7 @@ dist <- function(x1, y1, x2, y2){
 
 #Calculate the effective wheelbase for a given delta left, right, and angle
 calcWheelbase <- function(deltaLeft, deltaRight, deltaAngle){
-  return((deltaLeft-deltaRight)/deltaAngle);
+  return((deltaRight-deltaLeft)/deltaAngle);
 }
 
 #Smooths a value while taking its derivative with respect to time.
@@ -47,21 +88,25 @@ plotWheelVsVel <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angul
   abline(a=avgWheelbase, b=0, col='green')
   
   #Plot wheelbase vs turn radius
-  plot(x=combinedAngular[,3]/combinedAngular[,1], y=combinedAngular[,2]-2.0833, xlab="Turn Radius (feet)", ylab="Error in wheelbase diameter (feet)", main="Error in Wheelbase Diameter vs. Turn Radius")
+  plot(x=combinedAngular[,3]/combinedAngular[,1], y=combinedAngular[,2], xlab="Turn Radius (feet)", ylab="Effective wheelbase diameter (feet)", main="Effective Wheelbase Diameter vs. Turn Radius")
   abline(a=avgWheelbase, b=0, col='green')
   
   return(avgWheelbase)
 }
 
 #A pose estimation algorithm that assumes the left and right sides have equal scrub, in opposite directions
-equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad){
+equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, realWheelbase = -1){
   #Convert because degrees suuuuck
   rawAngle <- deg2rad(rawAngleDegrees)
   
   #Set up output array
   out <- array(dim=c(length(timeMillis),8))
   colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","time","wheelbase")
-  out[1,] <- c(leftPos[1],rightPos[1],NA,NA,NA,NA,timeMillis[1],NA)
+  if(realWheelbase == -1){
+    out[1,] <- c(0,0,NA,NA,NA,NA,timeMillis[1],NA)
+  } else {
+    out[1,] <- c(0,0, realWheelbase/2*cos(rawAngle[1]+pi/2), realWheelbase/2*sin(rawAngle[1]+pi/2), realWheelbase/2*cos(rawAngle[1]-pi/2), realWheelbase/2*sin(rawAngle[1]-pi/2), timeMillis[1],realWheelbase)
+  }
   
   #Loop through each logged tic, calculating pose iteratively
   for(i in 2:length(timeMillis)){
@@ -83,8 +128,14 @@ equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMil
     angle <- rawAngle[i-1]+(deltaTheta/2)
 
     if (deltaTheta == 0){
+      x <- out[i-1,1]+avgMoved*cos(angle)
+      y <- out[i-1,2]+avgMoved*sin(angle)
       #If we're driving straight, we know the magnitude is just the average of the two sides
-      out[i,] <- c(out[i-1,1]+avgMoved*cos(angle),out[i-1,2]+avgMoved*sin(angle), NA, NA, NA, NA, timeMillis[i],NA)
+      if(realWheelbase == -1){
+        out[i,] <- c(out[i-1,1]+avgMoved*cos(angle),out[i-1,2]+avgMoved*sin(angle), NA, NA, NA, NA, timeMillis[i],NA) 
+      } else {
+        out[i,] <- c(x, y, x+realWheelbase/2*cos(rawAngle[i]+pi/2), y+realWheelbase/2*sin(rawAngle[i]+pi/2), x+realWheelbase/2*cos(rawAngle[i]-pi/2), y+realWheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i],realWheelbase)
+      }
     } else {
       #Magnitude of movement vector is 2*r*sin(deltaTheta/2), but r is just avg/deltaTheta
       mag <- 2*(avgMoved/deltaTheta)*sin(deltaTheta/2)
@@ -93,85 +144,21 @@ equalScrubPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMil
       x <- out[i-1,1]+mag*cos(angle)
       y <- out[i-1,2]+mag*sin(angle)
       
-      #Only log left and right wheel positions if the angular vel is above threshhold
-      if (deltaTheta/deltaTime < angularVelThreshRad){
-        out[i,] <- c(x, y, NA,NA,NA,NA, timeMillis[i],NA)
+      if(realWheelbase == -1){
+        #Only log left and right wheel positions if the angular vel is above threshhold
+        if (deltaTheta/deltaTime < angularVelThreshRad){
+          out[i,] <- c(x, y, NA,NA,NA,NA, timeMillis[i],NA)
+        } else {
+          out[i,] <- c(x, y, x+wheelbase/2*cos(rawAngle[i]+pi/2), y+wheelbase/2*sin(rawAngle[i]+pi/2), x+wheelbase/2*cos(rawAngle[i]-pi/2), y+wheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i],wheelbase)
+        }
       } else {
-        out[i,] <- c(x, y, x+wheelbase/2*cos(rawAngle[i]+pi/2), y+wheelbase/2*sin(rawAngle[i]+pi/2), x+wheelbase/2*cos(rawAngle[i]-pi/2), y+wheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i],wheelbase)
+        out[i,] <- c(x, y, x+realWheelbase/2*cos(rawAngle[i]+pi/2), y+realWheelbase/2*sin(rawAngle[i]+pi/2), x+realWheelbase/2*cos(rawAngle[i]-pi/2), y+realWheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i],realWheelbase)
       }
     }
   }
   
   #Plot results, with fake wheelbase, only showing points within 1 actual wheelbase of the path
   plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], na.rm = TRUE)-3,max(out[,1],na.rm = TRUE)+3), ylim=c(min(out[,2], na.rm = TRUE)-3,max(out[,2], na.rm=TRUE)+3), xlab="X position (Feet)", ylab="Y position (Feet)", main="Equal Scrub Pose Estimation Algorithm", asp=1)
-  lines(out[,3], out[,4], col="Green")
-  lines(out[,5], out[,6], col="Red")
-  
-  return(out)
-}
-
-#A pose estimation algorithm that ignores the worse encoder reading.
-ignoreWorstPoseEstimation <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase){
-  #Convert because degrees suuuuck
-  rawAngle <- deg2rad(rawAngleDegrees)
-  
-  #Set up output array
-  out <- array(dim=c(length(timeMillis),7))
-  colnames(out) <- c("X","Y","leftX","leftY","rightX","rightY","time")
-  angle <- rawAngle[1]
-  out[1,] <- c(leftPos[1],rightPos[1],actualWheelbase/2*cos(angle+pi/2), actualWheelbase/2*sin(angle+pi/2), actualWheelbase/2*cos(angle-pi/2), actualWheelbase/2*sin(angle-pi/2),timeMillis[1])
-  
-  #Loop through each logged tic, calculating pose iteratively
-  for(i in 2:length(timeMillis)){
-    
-    #Directly find change in position and angle
-    deltaLeft <- leftPos[i]-leftPos[i-1]
-    deltaRight <- rightPos[i]-rightPos[i-1]
-    deltaTheta <- rawAngle[i]-rawAngle[i-1]
-    
-    #The angle of the movement vector
-    angle <- rawAngle[i-1]+(deltaTheta/2)
-
-    #Take the side that slipped more and recalculate it from the wheelbase, change in angle, and other side's change
-    if (deltaTheta < (deltaLeft - deltaRight) / actualWheelbase) {
-      if (deltaLeft > 0) {
-        deltaLeft = deltaRight + actualWheelbase * deltaTheta;
-      } else {
-        deltaRight = deltaLeft - actualWheelbase * deltaTheta;
-      }
-    } else if (deltaTheta > (deltaLeft - deltaRight) / actualWheelbase) {
-      if (deltaLeft < 0) {
-        deltaLeft = deltaRight + actualWheelbase * deltaTheta;
-      } else {
-        deltaRight = deltaLeft - actualWheelbase * deltaTheta;
-      }
-    }
-    
-    #Calculate average after recalculating one of the sides
-    avgMoved <- (deltaLeft+deltaRight)/2
-    
-    #If we're driving straight, the magnitude is just the average of the two sides
-    if (deltaTheta == 0){
-      out[i,] <- c(out[i-1,1]+avgMoved*cos(angle),out[i-1,2]+avgMoved*sin(angle), x+actualWheelbase/2*cos(angle+pi/2), y+actualWheelbase/2*sin(angle+pi/2), x+actualWheelbase/2*cos(angle-pi/2), y+actualWheelbase/2*sin(angle-pi/2), timeMillis[i])
-    } else {
-      #If the sides moved the same distance but the angle changed, the radius is just the sector length over the angle
-      if (deltaLeft-deltaRight == 0){
-        r <- avgMoved/deltaTheta;
-      } else {
-        #If they moved a different distance, do a more complicated equation (may be the same as the other one, not doing the math yet)
-        r <- actualWheelbase / 2. * (deltaLeft + deltaRight) / (deltaLeft - deltaRight);
-      }
-      mag <- 2. * r * sin(deltaTheta / 2.);
-      
-      #Vector decomposition
-      x <- out[i-1,1]+mag*cos(angle)
-      y <- out[i-1,2]+mag*sin(angle)
-      out[i,] <- c(x, y, x+actualWheelbase/2*cos(rawAngle[i]+pi/2), y+actualWheelbase/2*sin(rawAngle[i]+pi/2), x+actualWheelbase/2*cos(rawAngle[i]-pi/2), y+actualWheelbase/2*sin(rawAngle[i]-pi/2), timeMillis[i])
-    }
-  }
-  
-  #Plot results, with real wheelbase
-  plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], out[,3], out[,5]),max(out[,1], out[,3], out[,5])), ylim=c(min(out[,2], out[,4], out[,6]),max(out[,2], out[,4], out[,6])), xlab="X position (Feet)", ylab="Y position (Feet)", main="Ignore-Worst Pose Estimation Algorithm",asp=1)
   lines(out[,3], out[,4], col="Green")
   lines(out[,5], out[,6], col="Red")
   
@@ -188,7 +175,7 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   #Set up output array
   out <- array(dim=c(length(timeMillis), 8))
   colnames(out) <- c("X","Y","leftX","leftY","rightX","rightY","angle","time")
-  out[1,] <- c(leftPos[1],rightPos[1],wheelRadius*cos(startingAngle+pi/2), wheelRadius*sin(startingAngle+pi/2), wheelRadius*cos(startingAngle-pi/2), wheelRadius*sin(startingAngle-pi/2),startingAngle,timeMillis[1])
+  out[1,] <- c(0,0,wheelRadius*cos(startingAngle+pi/2), wheelRadius*sin(startingAngle+pi/2), wheelRadius*cos(startingAngle-pi/2), wheelRadius*sin(startingAngle-pi/2),startingAngle,timeMillis[1])
   
   #Loop through each logged tic, calculating pose iteratively
   for(i in 2:length(timeMillis)){
@@ -198,13 +185,13 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
     deltaRight <- rightPos[i]-rightPos[i-1]
     
     #Average
-    avgMoved <- (deltaLeft+deltaRight)/2
+    avgMoved <- (deltaRight+deltaLeft)/2
     
     #Points in the direction the robot is facing at the start of tic
     perpendicular <- out[i-1,7]
     
     #The angle of the sector the path is tracing
-    theta <- (deltaLeft - deltaRight)/fakeWheelbase
+    theta <- (deltaRight - deltaLeft)/fakeWheelbase
     
     #If not turning, magnitude is just the average moved
     if(theta == 0){
@@ -229,11 +216,76 @@ encoderOnlyPoseEstimation <- function(leftPos, rightPos, startingAngleDegrees, t
   return(out)
 }
 
-#Make all the graphs, for wheelbase and all 3 algorithms, using the average effective wheelbase for encoder-only
-doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst, actualWheelbase){
+accelerometerOnlyPoseEstimation <- function(xAccel, yAccel, rawAngleDegrees, timeMillis, realWheelbase){
+  #Convert because degrees suuuuck
+  rawAngle <- deg2rad(rawAngleDegrees)
+  
+  #Set up output array
+  out <- array(dim=c(length(timeMillis),9))
+  colnames(out)<-c("X","Y","leftX","leftY","rightX","rightY","xVel","yVel","time")
+  out[1,] <- c(0,0, realWheelbase/2*cos(rawAngle[1]+pi/2), realWheelbase/2*sin(rawAngle[1]+pi/2), realWheelbase/2*cos(rawAngle[1]-pi/2), realWheelbase/2*sin(rawAngle[1]-pi/2),0,0, timeMillis[1])
+  
+  #Loop through each logged tic, calculating pose iteratively
+  for(i in 2:length(timeMillis)){
+    #Find change in time, in seconds
+    deltaTime <- (timeMillis[i] - out[i-1,9])/1000
+    xVel <- out[i-1,7]+xAccel[i]*deltaTime
+    yVel <- out[i-1,8]+yAccel[i]*deltaTime
+    x <- out[i-1,1]+xVel*deltaTime
+    y <- out[i-1,2]+yVel*deltaTime
+    angle <- rawAngle[i]
+    out[i,] <- c(x,y,x+realWheelbase/2*cos(angle+pi/2),y+realWheelbase/2*sin(angle+pi/2),x+realWheelbase/2*cos(angle-pi/2),y+realWheelbase/2*sin(angle-pi/2),xVel,yVel, timeMillis[i])
+  }
+  
+  #Plot results
+  plot(out[,1], out[,2], t="l", xlim = c(min(out[,1], out[,3], out[,5]),max(out[,1], out[,3], out[,5])), ylim=c(min(out[,2], out[,4], out[,6]),max(out[,2], out[,4], out[,6])), xlab="X position (Feet)", ylab="Y position (Feet)", main="Accelerometer-only Pose Estimation Algorithm",asp=1)
+  lines(out[,3], out[,4], col="Green")
+  lines(out[,5], out[,6], col="Red")
+  return(out)
+}
+
+#Make all the graphs, for wheelbase and both algorithms, using the average effective wheelbase for encoder-only
+doEverything <- function(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst){
   avg <- plotWheelVsVel(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad, smoothingConst)
   equalScrubPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, angularVelThreshRad)
-  ignoreWorstPoseEstimation(leftPos, rightPos, rawAngleDegrees, timeMillis, actualWheelbase)
   encoderOnlyPoseEstimation(leftPos=leftPos, rightPos=rightPos, startingAngleDegrees=rawAngleDegrees[1], timeMillis=timeMillis, fakeWheelbase=avg)
   return(avg)
 }
+
+animateRobot <- function(x, y, headingRadians, deltaTime, fieldFile, robotFile, robotRadius, frameSize=-1, filename="animation.mp4"){
+  library("animation")
+  theta <- deg2rad(headingRadians)
+  saveVideo({
+    for(i in 1:length(x)){
+      #Set up frame
+      if(frameSize == -1){
+        plot(x=c(),y=c(),xlim=c(min(x)-robotRadius, max(x)+robotRadius),ylim=c(min(y)-robotRadius, max(y)+robotRadius), asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      } else {
+        plot(x=c(),y=c(),xlim=c(x[i]-frameSize/2, x[i]+frameSize/2),ylim=c(y[i]-frameSize/2, y[i]+frameSize/2),asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      }
+      plotField(fieldFile, 0, 0)
+      drawRobot(robotFile, x[i],y[i],theta[i])
+    }
+  }, interval = deltaTime, ani.width = 600, ani.height = 600, video.name=filename)
+}
+
+tracedAnimation <- function(x, y, leftX, leftY, rightX, rightY, headingRadians, deltaTime, fieldFile, robotFile, robotRadius, frameSize=-1, filename="animation.mp4"){
+  library("animation")
+  theta <- deg2rad(headingRadians)
+  saveVideo({
+    for(i in 1:length(x)){
+      #Set up frame
+      if(frameSize == -1){
+        plot(x=c(),y=c(),xlim=c(min(x)-robotRadius, max(x)+robotRadius),ylim=c(min(y)-robotRadius, max(y)+robotRadius), asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      } else {
+        plot(x=c(),y=c(),xlim=c(x[i]-frameSize/2, x[i]+frameSize/2),ylim=c(y[i]-frameSize/2, y[i]+frameSize/2),asp=1, xlab="X position (feet)", ylab="Y position (feet)")
+      }
+      lines(x=leftX[1:i], y=leftY[1:i], col="Green")
+      lines(x=rightX[1:i], y=rightY[1:i], col="Red")
+      plotField(fieldFile, 0, 0)
+      drawRobot(robotFile, x[i],y[i],theta[i])
+    }
+  }, interval = deltaTime, ani.width = 1920, ani.height = 1080, video.name=filename)
+}
+
+#tracedAnimation(equalScrub[,1],equalScrub[,2], equalScrub[,3],equalScrub[,4],equalScrub[,5],equalScrub[,6],rel$Drive.raw_angle,0.05,"field.csv","robot.csv",27.138/12, -1, "traceAnimation.mp4")

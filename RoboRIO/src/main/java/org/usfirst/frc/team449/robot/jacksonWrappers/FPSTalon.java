@@ -686,6 +686,9 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 					currentGearSettings.getClosedLoopRampRate(), 1);
 		}
 
+		//Only call position getter once
+		double startPosition = data.resetPosition() ? 0 : getPositionFeet();
+
 		//Load in profiles
 		for (int i = 0; i < data.getData().length; ++i) {
 			CANTalon.TrajectoryPoint point = new CANTalon.TrajectoryPoint();
@@ -694,7 +697,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 			point.velocityOnly = velocityOnly;  // true => no position servo just velocity feedforward
 
 			// Set all the fields of the profile point
-			point.position = feetToEncoder(data.getData()[i][0]) * (data.isInverted() ? -1 : 1);
+			point.position = feetToEncoder(startPosition + (data.getData()[i][0] * (data.isInverted() ? -1 : 1)));
 
 			//Calculate vel based off inversion
 			if (data.isInverted()) {
@@ -713,7 +716,7 @@ public class FPSTalon implements SimpleMotor, Shiftable {
 				Logger.addEvent("Point " + Arrays.toString(data.getData()[i]) + " has an unattainable velocity+acceleration setpoint!", this.getClass());
 			}
 			point.timeDurMs = (int) data.getData()[i][3];
-			point.zeroPos = i == 0; // If it's the first point, set the encoder position to 0.
+			point.zeroPos = i == 0 && data.resetPosition(); // If it's the first point, set the encoder position to 0.
 			point.isLastPoint = (i + 1) == data.getData().length; // If it's the last point, isLastPoint = true
 
 			// Send the point to the Talon's buffer

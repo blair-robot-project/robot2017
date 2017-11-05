@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
 import org.usfirst.frc.team449.robot.other.MotionProfileData;
 import org.usfirst.frc.team449.robot.subsystem.complex.climber.ClimberCurrentLimited;
 import org.usfirst.frc.team449.robot.subsystem.complex.intake.IntakeFixedAndActuated;
-import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingShooter;
+import org.usfirst.frc.team449.robot.subsystem.complex.shooter.LoggingFlywheel;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SolenoidSimple;
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.camera.CameraNetwork;
 import org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics;
@@ -75,7 +75,7 @@ public class RobotMap2017 {
 	 * The multiSubsystem for shooting fuel. Can be null.
 	 */
 	@Nullable
-	private final LoggingShooter shooter;
+	private final LoggingFlywheel shooter;
 
 	/**
 	 * The cameras on this robot. Can be null.
@@ -261,14 +261,14 @@ public class RobotMap2017 {
 	 * @param doMP                 Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@Nullable @JsonProperty(required = true) List<CommandButton> buttons,
+	public RobotMap2017(@Nullable List<CommandButton> buttons,
 	                    @NotNull @JsonProperty(required = true) OI oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,
 	                    @NotNull @JsonProperty(required = true) YamlCommand defaultDriveCommand,
 	                    @NotNull @JsonProperty(required = true) MappedRunnable updater,
 	                    @Nullable ClimberCurrentLimited climber,
-	                    @Nullable LoggingShooter shooter,
+	                    @Nullable LoggingFlywheel shooter,
 	                    @Nullable CameraNetwork camera,
 	                    @Nullable IntakeFixedAndActuated intake,
 	                    @Nullable Pneumatics pneumatics,
@@ -371,7 +371,7 @@ public class RobotMap2017 {
 	 * @return The multiSubsystem for shooting fuel. Can be null.
 	 */
 	@Nullable
-	public LoggingShooter getShooter() {
+	public LoggingFlywheel getShooter() {
 		return shooter;
 	}
 

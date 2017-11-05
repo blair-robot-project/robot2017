@@ -29,8 +29,8 @@ public class Auto2017Boiler extends YamlCommandGroupWrapper {
 	 * @param allianceSwitch            The switch indicating which alliance we're on.
 	 * @param runRedPegToKeyProfile     The command for moving from the peg to the key, on the red side of the field.
 	 * @param runBluePegToKeyProfile    The command for moving from the peg to the key, on the blue side of the field.
-	 * @param spinUpShooter             The command for revving up the shooter. Can be null.
-	 * @param fireShooter               The command for firing the shooter. Can be null.
+	 * @param spinUpShooter             The command for revving up the flywheel. Can be null.
+	 * @param fireShooter               The command for firing the flywheel. Can be null.
 	 * @param waitBetweenProfilesMillis How long to wait between each motion profile. Defaults to 50 if less than 50.
 	 */
 	@JsonCreator

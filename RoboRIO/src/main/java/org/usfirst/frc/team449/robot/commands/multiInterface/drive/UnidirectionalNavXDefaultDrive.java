@@ -117,7 +117,6 @@ public class UnidirectionalNavXDefaultDrive <T extends YamlSubsystem & DriveUnid
 	 */
 	@Override
 	protected void execute() {
-		SmartDashboard.putBoolean("Override",subsystem.getOverrideGyro());
 		//If we're driving straight but the driver tries to turn or overrides the AHRS:
 		if (drivingStraight && (!oi.commandingStraight() || subsystem.getOverrideGyro())) {
 			//Switch to free drive

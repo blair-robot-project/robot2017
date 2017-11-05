@@ -4,7 +4,7 @@ testMP: true
 leftTestProfile:
     &leftTest
     '@id': leftTest
-    filename: "ballbasaurForward100InProfile.csv"
+    filename: "forward100InProfile.csv"
     inverted: true
     velocityOnly: true
 rightTestProfile:
@@ -67,7 +67,7 @@ drive:
                       port: 8
                       inverted: false
         VelScale: 0.9
-        navX:
+        ahrs:
             '@id': driveNavX
             port: kMXP
 pneumatics:
@@ -130,9 +130,9 @@ nonMPAutoCommand:
                 drive
         velocity: 1.0
         seconds: 1.5
-autoStartupCommand:
+teleopStartupCommand:
     org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        '@id': startupCommand
+        '@id': startTeleopCommand
         commandSet:
             - org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.commands.StartCompressor:
                 '@id': startCompressor
@@ -140,31 +140,30 @@ autoStartupCommand:
                     org.usfirst.frc.team449.robot.subsystem.singleImplementation.pneumatics.Pneumatics:
                         pneumatics
             - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
-                '@id': enableMotors
+                '@id': enableMotorsTeleop
                 subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
+                        drive
+autoStartupCommand:
+    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
+        '@id': startAutoCommand
+        commandSet:
+            - org.usfirst.frc.team449.robot.drive.commands.EnableMotors:
+                '@id': enableMotorsAuto
+                subsystem:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
             - org.usfirst.frc.team449.robot.drive.commands.ResetPosition:
                 '@id': resetPosition
                 subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
+                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonClusterShiftable:
                         drive
-teleopStartupCommand:
-    org.usfirst.frc.team449.robot.commands.general.ParallelCommandGroup:
-        startupCommand
 startupCommand:
     org.usfirst.frc.team449.robot.commands.general.RunRunnables:
         '@id': runRunnables
         runnables:
             - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-                '@id': noahPoseEstimator
-                robotDiameter: 2.0833
-                subsystem:
-                    org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
-                        drive
-                absolutePosAngleTolerance: 5
-            - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-                '@id': eliPoseEstimator
+                '@id': poseEstimator
                 subsystem:
                     org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
                         drive
@@ -175,9 +174,7 @@ logger:
         - org.usfirst.frc.team449.robot.drive.unidirectional.DriveTalonCluster:
             drive
         - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-            noahPoseEstimator
-        - org.usfirst.frc.team449.robot.other.UnidirectionalPoseEstimator:
-            eliPoseEstimator
+            poseEstimator
     loopTimeSecs: 0.02
     eventLogFilename: "/home/lvuser/logs/eventLog-"
     telemetryLogFilename: "/home/lvuser/logs/telemetryLog-"

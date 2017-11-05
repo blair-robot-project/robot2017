@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.YamlCommandGroupWrapper;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlywheel;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.SubsystemIntake;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.intake.commands.SetIntakeMode;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.SubsystemShooter;
-import org.usfirst.frc.team449.robot.subsystem.interfaces.shooter.commands.TurnAllOff;
+import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.commands.TurnAllOff;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.SubsystemSolenoid;
 import org.usfirst.frc.team449.robot.subsystem.interfaces.solenoid.commands.SolenoidReverse;
 
@@ -22,14 +22,14 @@ public class LoadShooter <T extends SubsystemIntake & SubsystemSolenoid> extends
 	/**
 	 * Constructs a LoadShooter command group
 	 *
-	 * @param subsystemShooter shooter subsystem. Can be null.
+	 * @param subsystemFlywheel flywheel subsystem. Can be null.
 	 * @param subsystemIntake  intake subsystem. Can be null.
 	 */
 	@JsonCreator
-	public LoadShooter(@Nullable SubsystemShooter subsystemShooter,
+	public LoadShooter(@Nullable SubsystemFlywheel subsystemFlywheel,
 	                   @Nullable T subsystemIntake) {
-		if (subsystemShooter != null) {
-			addParallel(new TurnAllOff(subsystemShooter));
+		if (subsystemFlywheel != null) {
+			addParallel(new TurnAllOff(subsystemFlywheel));
 		}
 		if (subsystemIntake != null) {
 			addParallel(new SolenoidReverse(subsystemIntake));

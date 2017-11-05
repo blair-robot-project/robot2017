@@ -1,7 +1,6 @@
 package org.usfirst.frc.team449.robot.drive.unidirectional;
 
 import com.fasterxml.jackson.annotation.*;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.command.Command;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +43,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 * The NavX gyro
 	 */
 	@NotNull
-	private final AHRS navX;
+	private final MappedAHRS ahrs;
 
 	/**
 	 * Whether or not to use the NavX for driving straight
@@ -63,20 +62,20 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 *
 	 * @param leftMaster  The master talon on the left side of the drive.
 	 * @param rightMaster The master talon on the right side of the drive.
-	 * @param navX        The NavX gyro for calculating this drive's heading and angular velocity.
+	 * @param ahrs        The NavX gyro for calculating this drive's heading and angular velocity.
 	 * @param VelScale    The amount to scale the output to the motor by. Defaults to 1.
 	 */
 	@JsonCreator
 	public DriveTalonCluster(@NotNull @JsonProperty(required = true) FPSTalon leftMaster,
 	                         @NotNull @JsonProperty(required = true) FPSTalon rightMaster,
-	                         @NotNull @JsonProperty(required = true) MappedAHRS navX,
+	                         @NotNull @JsonProperty(required = true) MappedAHRS ahrs,
 	                         @Nullable Double VelScale) {
 		super();
 		//Initialize stuff
 		this.VEL_SCALE = VelScale != null ? VelScale : 1.;
 		this.rightMaster = rightMaster;
 		this.leftMaster = leftMaster;
-		this.navX = navX;
+		this.ahrs = ahrs;
 		this.overrideGyro = false;
 	}
 
@@ -224,7 +223,17 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getHeading() {
-		return navX.pidGet();
+		return ahrs.getHeading();
+	}
+
+	/**
+	 * Set the robot's heading.
+	 *
+	 * @param heading The heading to set to, in degrees on [-180, 180].
+	 */
+	@Override
+	public void setHeading(double heading) {
+		ahrs.setHeading(heading);
 	}
 
 	/**
@@ -244,7 +253,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularVel() {
-		return navX.getRate();
+		return ahrs.getAngularVelocity();
 	}
 
 	/**
@@ -264,7 +273,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularDisplacement() {
-		return navX.getAngle();
+		return ahrs.getAngularDisplacement();
 	}
 
 	/**
@@ -315,8 +324,9 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 				"left_error",
 				"right_error",
 				"heading",
+				"9_axis_heading",
 				"rotational_velocity",
-				"raw_angle",
+				"angular_displacement",
 				"x_accel",
 				"y_accel"};
 	}
@@ -342,10 +352,11 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 				leftMaster.getError(),
 				rightMaster.getError(),
 				cachedHeading,
+				ahrs.get9AxisHeading(),
 				cachedAngularVel,
 				cachedAngularDisplacement,
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelX()),
-				MappedAHRS.gsToFeetPerSecondSquared(navX.getWorldLinearAccelY())};
+				ahrs.getXAccel(),
+				ahrs.getYAccel()};
 	}
 
 	/**
