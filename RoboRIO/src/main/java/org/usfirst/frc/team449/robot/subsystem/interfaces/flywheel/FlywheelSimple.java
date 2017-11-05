@@ -19,28 +19,28 @@ public class FlywheelSimple extends YamlSubsystem implements SubsystemFlywheel {
 	 * The motor that controls the flywheel.
 	 */
 	@NotNull
-	private SimpleMotor shooterMotor;
+	private final SimpleMotor shooterMotor;
 
 	/**
 	 * The motor that controls the feeder.
 	 */
 	@NotNull
-	private SimpleMotor feederMotor;
+	private final SimpleMotor feederMotor;
 
 	/**
 	 * The velocity for the flywheel to run at, on [-1, 1].
 	 */
-	private double shooterVelocity;
+	private final double shooterVelocity;
 
 	/**
 	 * The velocity for the feeder to run at, on [-1, 1].
 	 */
-	private double feederVelocity;
+	private final double feederVelocity;
 
 	/**
 	 * Time from giving the flywheel voltage to being ready to fire, in milliseconds.
 	 */
-	private long spinUpTimeMillis;
+	private final long spinUpTimeMillis;
 
 	/**
 	 * The current state of the flywheel.

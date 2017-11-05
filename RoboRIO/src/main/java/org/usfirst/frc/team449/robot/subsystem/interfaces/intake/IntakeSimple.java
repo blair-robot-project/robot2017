@@ -19,14 +19,20 @@ public class IntakeSimple extends YamlSubsystem implements SubsystemIntake {
 	 * The motor this subsystem controls.
 	 */
 	@NotNull
-	private SimpleMotor motor;
+	private final SimpleMotor motor;
 
 	/**
 	 * The velocities for the motor to go at for each of the modes, on [-1, 1]. Can be null to indicate that this intake
 	 * doesn't have/use that mode.
 	 */
 	@Nullable
-	private Double inSlowVel, inFastVel, outSlowVel, outFastVel;
+	private final Double inSlowVel;
+	@Nullable
+	private final Double inFastVel;
+	@Nullable
+	private final Double outSlowVel;
+	@Nullable
+	private final Double outFastVel;
 
 	/**
 	 * The current mode.

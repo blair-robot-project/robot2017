@@ -19,12 +19,12 @@ public class BinaryMotorSimple extends YamlSubsystem implements SubsystemBinaryM
 	 * The motor that this subsystem controls.
 	 */
 	@NotNull
-	private SimpleMotor motor;
+	private final SimpleMotor motor;
 
 	/**
 	 * The velocity to run the motor at, on [-1, 1].
 	 */
-	private double velocity;
+	private final double velocity;
 
 	/**
 	 * Whether or not the motor is currently on.

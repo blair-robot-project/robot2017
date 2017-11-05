@@ -23,7 +23,7 @@ public interface Shiftable {
 	enum gear {
 		LOW(1), HIGH(2);
 
-		private int numVal;
+		private final int numVal;
 
 		gear(int numVal) {
 			this.numVal = numVal;

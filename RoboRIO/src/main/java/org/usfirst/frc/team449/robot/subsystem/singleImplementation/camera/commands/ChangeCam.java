@@ -19,7 +19,7 @@ public class ChangeCam extends YamlCommandWrapper {
 	 * The subsystem to execute this command on
 	 */
 	@NotNull
-	private CameraNetwork subsystem;
+	private final CameraNetwork subsystem;
 
 	/**
 	 * Default constructor.

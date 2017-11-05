@@ -27,32 +27,27 @@ public class OIFieldOrientedPosCos extends OIFieldOriented {
 	 */
 	@NotNull
 	private final Throttle yThrottle;
-
+	/**
+	 * The radius, from [0,1], within which the joystick is considered to be "at rest."
+	 */
+	private final double rDeadband;
 	/**
 	 * The theta value calculated the last time calcValues was called.
 	 */
 	@Nullable
 	private Double theta;
-
 	/**
 	 * The velocity value calculated the last time calcValues was called.
 	 */
 	private double vel;
-
 	/**
 	 * The time calcValues was last called, in milliseconds
 	 */
 	private long timeLastUpdated;
-
 	/**
 	 * Variables for the outputs of the x and y throttles. Fields to avoid garbage collection.
 	 */
 	private double x, y;
-
-	/**
-	 * The radius, from [0,1], within which the joystick is considered to be "at rest."
-	 */
-	private double rDeadband;
 
 	/**
 	 * Default constructor
