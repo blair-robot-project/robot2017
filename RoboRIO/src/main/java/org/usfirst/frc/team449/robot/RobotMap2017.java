@@ -261,7 +261,7 @@ public class RobotMap2017 {
 	 * @param doMP                 Whether to run a motion profile during autonomous. Defaults to true.
 	 */
 	@JsonCreator
-	public RobotMap2017(@Nullable @JsonProperty(required = true) List<CommandButton> buttons,
+	public RobotMap2017(@Nullable List<CommandButton> buttons,
 	                    @NotNull @JsonProperty(required = true) OI oi,
 	                    @NotNull @JsonProperty(required = true) Logger logger,
 	                    @NotNull @JsonProperty(required = true) DriveTalonCluster drive,

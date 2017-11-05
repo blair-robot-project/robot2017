@@ -181,7 +181,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/shi
 <tr class="altColor">
 <td class="colOne"><code><span class="memberNameLink"><a href="../../../../../../../org/usfirst/frc/team449/robot/drive/unidirectional/DriveTalonClusterShiftable.html#DriveTalonClusterShiftable-org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon-org.usfirst.frc.team449.robot.jacksonWrappers.FPSTalon-org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS-java.lang.Double-org.usfirst.frc.team449.robot.components.ShiftComponent-boolean-">DriveTalonClusterShiftable</a></span>(<a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/FPSTalon.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">FPSTalon</a>&nbsp;leftMaster,
                           <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/FPSTalon.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">FPSTalon</a>&nbsp;rightMaster,
-                          <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">MappedAHRS</a>&nbsp;navX,
+                          <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">MappedAHRS</a>&nbsp;ahrs,
                           java.lang.Double&nbsp;VelScale,
                           <a href="../../../../../../../org/usfirst/frc/team449/robot/components/ShiftComponent.html" title="class in org.usfirst.frc.team449.robot.components">ShiftComponent</a>&nbsp;shiftComponent,
                           boolean&nbsp;startingOverrideAutoshift)</code>
@@ -275,7 +275,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/shi
                                   @NotNull
                                   <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/FPSTalon.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">FPSTalon</a>&nbsp;rightMaster,
                                   @NotNull
-                                  <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">MappedAHRS</a>&nbsp;navX,
+                                  <a href="../../../../../../../org/usfirst/frc/team449/robot/jacksonWrappers/MappedAHRS.html" title="class in org.usfirst.frc.team449.robot.jacksonWrappers">MappedAHRS</a>&nbsp;ahrs,
                                   @Nullable
                                   java.lang.Double&nbsp;VelScale,
                                   @NotNull
@@ -286,7 +286,7 @@ implements <a href="../../../../../../../org/usfirst/frc/team449/robot/drive/shi
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>leftMaster</code> - The master talon on the left side of the drive.</dd>
 <dd><code>rightMaster</code> - The master talon on the right side of the drive.</dd>
-<dd><code>navX</code> - The NavX on this drive.</dd>
+<dd><code>ahrs</code> - The NavX on this drive.</dd>
 <dd><code>VelScale</code> - The amount to scale the output to the motor by. Defaults to 1.</dd>
 <dd><code>shiftComponent</code> - The component that controls shifting.</dd>
 <dd><code>startingOverrideAutoshift</code> - Whether to start with autoshift disabled. Defaults to false.</dd>

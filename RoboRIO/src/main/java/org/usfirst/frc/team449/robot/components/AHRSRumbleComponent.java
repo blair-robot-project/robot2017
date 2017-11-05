@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.kauailabs.navx.frc.AHRS;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.generalInterfaces.rumbleable.Rumbleable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedAHRS;
@@ -14,21 +13,16 @@ import org.usfirst.frc.team449.robot.other.Clock;
 import java.util.List;
 
 /**
- * A component to rumble controllers based off the jerk measurements from a NavX.
+ * A component to rumble controllers based off the jerk measurements from an AHRS.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class NavXRumbleComponent implements MappedRunnable {
-
-	/**
-	 * The factor to multiply feet/(sec^3) by to get Gs/millisecond, according to WolframAlpha.
-	 */
-	private static final double FPS_CUBED_TO_GS_PER_MILLIS = 3.108e-5;
+public class AHRSRumbleComponent implements MappedRunnable {
 
 	/**
 	 * The NavX to get jerk measurements from.
 	 */
 	@NotNull
-	private final MappedAHRS navX;
+	private final MappedAHRS ahrs;
 
 	/**
 	 * The things to rumble.
@@ -81,7 +75,7 @@ public class NavXRumbleComponent implements MappedRunnable {
 	/**
 	 * Default constructor.
 	 *
-	 * @param navX            The NavX to get jerk measurements from.
+	 * @param ahrs            The NavX to get jerk measurements from.
 	 * @param rumbleables     The things to rumble.
 	 * @param minJerk         The minimum jerk that will trigger rumbling, in feet/(sec^3).
 	 * @param maxJerk         The jerk, in feet/(sec^3), that's scaled to maximum rumble. All jerks of greater magnitude
@@ -91,13 +85,13 @@ public class NavXRumbleComponent implements MappedRunnable {
 	 * @param invertLeftRight Whether to invert the left-right jerk measurement. Defaults to false.
 	 */
 	@JsonCreator
-	public NavXRumbleComponent(@NotNull @JsonProperty(required = true) MappedAHRS navX,
+	public AHRSRumbleComponent(@NotNull @JsonProperty(required = true) MappedAHRS ahrs,
 	                           @NotNull @JsonProperty(required = true) List<Rumbleable> rumbleables,
 	                           @JsonProperty(required = true) double minJerk,
 	                           @JsonProperty(required = true) double maxJerk,
 	                           boolean yIsFrontBack,
 	                           boolean invertLeftRight) {
-		this.navX = navX;
+		this.ahrs = ahrs;
 		this.rumbleables = rumbleables;
 		this.minJerk = minJerk;
 		this.maxJerk = maxJerk;
@@ -115,11 +109,11 @@ public class NavXRumbleComponent implements MappedRunnable {
 	public void run() {
 		if (yIsFrontBack) {
 			//Put an abs() here because we can't differentiate front vs back when rumbling, so we only care about magnitude.
-			frontBack = Math.abs(navX.getYAccel());
-			leftRight = navX.getXAccel() * (invertLeftRight ? -1 : 1);
+			frontBack = Math.abs(ahrs.getYAccel());
+			leftRight = ahrs.getXAccel() * (invertLeftRight ? -1 : 1);
 		} else {
-			frontBack = Math.abs(navX.getYAccel());
-			leftRight = navX.getXAccel() * (invertLeftRight ? -1 : 1);
+			frontBack = Math.abs(ahrs.getYAccel());
+			leftRight = ahrs.getXAccel() * (invertLeftRight ? -1 : 1);
 		}
 
 		//Left is negative jerk, so we subtract it from left so that when we're going left, left is bigger and vice versa

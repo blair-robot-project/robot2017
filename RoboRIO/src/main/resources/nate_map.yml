@@ -212,14 +212,14 @@ drive:
 defaultDriveCommand:
     org.usfirst.frc.team449.robot.commands.multiInterface.drive.UnidirectionalNavXShiftingDefaultDrive:
         '@id': defaultDriveCommand
-        kP: 0.003
+        kP: 0.001
         kI: 0.0
         kD: 0.0
         absoluteTolerance: 0
         toleranceBuffer: 25
         deadband: 2
         maxAngularVelToEnterLoop: 0.05
-        inverted: true
+        inverted: false
         highGearAngularCoefficient: 2
         driveStraightLoopEntryTimer:
             '@id': driveStraightLoopEntryTimer
@@ -551,7 +551,7 @@ startupCommand:
     org.usfirst.frc.team449.robot.commands.general.RunRunnables:
         '@id': runRunnables
         runnables:
-            - org.usfirst.frc.team449.robot.components.NavXRumbleComponent:
+            - org.usfirst.frc.team449.robot.components.AHRSRumbleComponent:
                 '@id': rumbleComponent
                 ahrs:
                   driveNavX

@@ -273,7 +273,7 @@ public class DriveTalonCluster extends YamlSubsystem implements SubsystemAHRS, D
 	 */
 	@Override
 	public double getAngularDisplacement() {
-		return ahrs.getAngularVelocity();
+		return ahrs.getAngularDisplacement();
 	}
 
 	/**
