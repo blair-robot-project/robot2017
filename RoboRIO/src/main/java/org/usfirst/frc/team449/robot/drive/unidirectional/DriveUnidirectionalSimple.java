@@ -19,13 +19,13 @@ public class DriveUnidirectionalSimple extends YamlSubsystem implements DriveUni
 	 * The motor for the left side of the drive.
 	 */
 	@NotNull
-	private SimpleMotor leftMotor;
+	private final SimpleMotor leftMotor;
 
 	/**
 	 * The motor for the right side of the drive.
 	 */
 	@NotNull
-	private SimpleMotor rightMotor;
+	private final SimpleMotor rightMotor;
 
 	/**
 	 * Default constructor

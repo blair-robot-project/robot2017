@@ -69,7 +69,6 @@ public class DriveStraight<T extends YamlSubsystem & DriveUnidirectional> extend
 			subsystem.setOutput(oi.getLeftOutputCached(), oi.getLeftOutputCached());
 		} else {
 			subsystem.setOutput(oi.getRightOutputCached(), oi.getRightOutputCached());
-			;
 		}
 	}
 

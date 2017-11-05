@@ -21,16 +21,14 @@ public class DetermineNominalVoltage<T extends YamlSubsystem & DriveUnidirection
 	 */
 	@NotNull
 	private final T subsystem;
-
+	/**
+	 * The minimum speed, in RPS, at which the drive is considered to be moving.
+	 */
+	private final double minSpeed;
 	/**
 	 * The current percent of max output commanded, on [0, 1].
 	 */
 	private double percentCommanded;
-
-	/**
-	 * The minimum speed, in RPS, at which the drive is considered to be moving.
-	 */
-	private double minSpeed;
 
 	/**
 	 * Default constructor
