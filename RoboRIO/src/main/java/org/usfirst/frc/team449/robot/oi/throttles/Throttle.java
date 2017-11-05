@@ -7,7 +7,7 @@ import org.usfirst.frc.team449.robot.generalInterfaces.updatable.Updatable;
  * An object representing an axis of a stick on a joystick.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
-public interface Throttle extends Updatable{
+public interface Throttle extends Updatable {
 
 	/**
 	 * Get the output of the throttle this object represents.

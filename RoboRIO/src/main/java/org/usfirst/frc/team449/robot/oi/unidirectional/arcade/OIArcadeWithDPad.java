@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import org.usfirst.frc.team449.robot.generalInterfaces.loggable.Loggable;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
 import org.usfirst.frc.team449.robot.oi.throttles.Throttle;
-import org.usfirst.frc.team449.robot.other.Clock;
 import org.usfirst.frc.team449.robot.other.Polynomial;
 
 /**
@@ -84,7 +83,7 @@ public class OIArcadeWithDPad extends OIArcade implements Loggable {
 		this.scaleRotByFwdPoly = scaleRotByFwdPoly;
 		this.turnInPlaceRotScale = turnInPlaceRotScale;
 	}
-	
+
 	/**
 	 * The output of the throttle controlling linear velocity, smoothed and adjusted according to what type of joystick
 	 * it is.

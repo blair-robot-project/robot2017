@@ -44,7 +44,7 @@ public abstract class OIFieldOriented implements OI {
 	 * and 90 is pointing at the left wall when looking out from the driver station. Returns null if vel is 0.
 	 */
 	@Nullable
-	public Double getThetaCached(){
+	public Double getThetaCached() {
 		return cachedTheta;
 	}
 
@@ -53,7 +53,7 @@ public abstract class OIFieldOriented implements OI {
 	 *
 	 * @return A velocity from [-1, 1].
 	 */
-	public double getVelCached(){
+	public double getVelCached() {
 		return cachedVel;
 	}
 

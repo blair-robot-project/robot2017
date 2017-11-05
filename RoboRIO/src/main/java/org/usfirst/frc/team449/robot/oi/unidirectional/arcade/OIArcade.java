@@ -33,7 +33,7 @@ public abstract class OIArcade implements OIUnidirectional {
 	 *
 	 * @return rotational velocity component from [-1, 1], where 1 is right and -1 is left.
 	 */
-	public double getRotCached(){
+	public double getRotCached() {
 		return rotCached;
 	}
 
@@ -42,7 +42,7 @@ public abstract class OIArcade implements OIUnidirectional {
 	 *
 	 * @return forward velocity component from [-1, 1], where 1 is forwards and -1 is backwards
 	 */
-	public double getFwdCached(){
+	public double getFwdCached() {
 		return fwdCached;
 	}
 
@@ -79,7 +79,7 @@ public abstract class OIArcade implements OIUnidirectional {
 	 *
 	 * @return Output to left side from [-1, 1]
 	 */
-	public double getLeftOutputCached(){
+	public double getLeftOutputCached() {
 		return leftCached;
 	}
 
@@ -88,7 +88,7 @@ public abstract class OIArcade implements OIUnidirectional {
 	 *
 	 * @return Output to right side from [-1, 1]
 	 */
-	public double getRightOutputCached(){
+	public double getRightOutputCached() {
 		return rightCached;
 	}
 

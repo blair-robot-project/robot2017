@@ -12,7 +12,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.MappedRunnable;
  * A Runnable for updating cached variables.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class Updater implements MappedRunnable{
+public class Updater implements MappedRunnable {
 
 	/**
 	 * The objects to update.
@@ -35,7 +35,7 @@ public class Updater implements MappedRunnable{
 	 */
 	@Override
 	public void run() {
-		for (Updatable updatable : updatables){
+		for (Updatable updatable : updatables) {
 			updatable.update();
 		}
 	}

@@ -9,15 +9,12 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import org.jetbrains.annotations.NotNull;
 import org.usfirst.frc.team449.robot.jacksonWrappers.MappedJoystick;
-import org.usfirst.frc.team449.robot.other.Clock;
-
-import java.util.Random;
 
 /**
  * A class representing a single axis on a joystick.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class ThrottleBasic implements Throttle, PIDSource{
+public class ThrottleBasic implements Throttle, PIDSource {
 
 	/**
 	 * The stick we're using
@@ -84,16 +81,6 @@ public class ThrottleBasic implements Throttle, PIDSource{
 	}
 
 	/**
-	 * Set which parameter of the device you are using as a process control variable.
-	 *
-	 * @param pidSource An enum to select the parameter.
-	 */
-	@Override
-	public void setPIDSourceType(PIDSourceType pidSource) {
-		//Do nothing
-	}
-
-	/**
 	 * Get which parameter of the device you are using as a process control variable.
 	 *
 	 * @return the currently selected PID source parameter
@@ -101,6 +88,16 @@ public class ThrottleBasic implements Throttle, PIDSource{
 	@Override
 	public PIDSourceType getPIDSourceType() {
 		return null;
+	}
+
+	/**
+	 * Set which parameter of the device you are using as a process control variable.
+	 *
+	 * @param pidSource An enum to select the parameter.
+	 */
+	@Override
+	public void setPIDSourceType(PIDSourceType pidSource) {
+		//Do nothing
 	}
 
 	/**

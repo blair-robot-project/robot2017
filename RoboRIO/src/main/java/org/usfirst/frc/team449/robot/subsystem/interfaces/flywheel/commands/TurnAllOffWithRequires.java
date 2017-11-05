@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.flywheel.SubsystemFlyw
  * continue running.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class TurnAllOffWithRequires <T extends YamlSubsystem & SubsystemFlywheel> extends TurnAllOff {
+public class TurnAllOffWithRequires<T extends YamlSubsystem & SubsystemFlywheel> extends TurnAllOff {
 
 	/**
 	 * Default constructor

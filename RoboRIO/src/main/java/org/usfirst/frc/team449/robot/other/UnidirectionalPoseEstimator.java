@@ -17,7 +17,7 @@ import java.util.List;
  * A Runnable for pose estimation that can take absolute positions.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidirectional> implements MappedRunnable, Loggable {
+public class UnidirectionalPoseEstimator<T extends SubsystemAHRS & DriveUnidirectional> implements MappedRunnable, Loggable {
 
 	/**
 	 * The subsystem to get gyro and encoder data from.
@@ -86,18 +86,18 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	 * The most recently calculated effective wheelbase diameter, in feet.
 	 */
 	private double fudgedWheelbaseDiameter;
-	
+
 	/**
 	 * Angle and magnitude of vector being calculated. Field to avoid garbage collection.
 	 */
 	private double vectorAngle, vectorMagnitude;
-	
+
 	/**
 	 * Per-run variables for run(). Fields to avoid garbage collection.
 	 */
 	private double left, right, theta, deltaLeft, deltaRight, deltaTheta;
 	private long time;
-	
+
 	/**
 	 * Output vector from run(). Field to avoid garbage collection.
 	 */
@@ -142,10 +142,10 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 	/**
 	 * Calculate the x and y movement vector for the robot.
 	 *
-	 * @param left The displacement of the left encoder, in feet
-	 * @param right The displacement of the right encoder, in feet
+	 * @param left       The displacement of the left encoder, in feet
+	 * @param right      The displacement of the right encoder, in feet
 	 * @param deltaTheta The angular displacement, in radians
-	 * @param lastAngle The previous heading, in radians
+	 * @param lastAngle  The previous heading, in radians
 	 * @return An array of length 2 containing the [x, y] displacement of the robot.
 	 */
 	@NotNull
@@ -153,12 +153,12 @@ public class UnidirectionalPoseEstimator <T extends SubsystemAHRS & DriveUnidire
 
 		//If we're going in a straight line
 		if (deltaTheta == 0) {
-			return new double[]{(left+right)/2. * Math.cos(lastAngle), (left+right)/2. * Math.sin(lastAngle)};
+			return new double[]{(left + right) / 2. * Math.cos(lastAngle), (left + right) / 2. * Math.sin(lastAngle)};
 		} else {
 			//This next part is too complicated to explain in comments. Read this wiki page instead:
 			// http://team449.shoutwiki.com/wiki/Pose_Estimation
 			vectorAngle = lastAngle + deltaTheta / 2.;
-			vectorMagnitude = 2. * ((left+right)/2.)/deltaTheta * Math.sin(deltaTheta / 2.);
+			vectorMagnitude = 2. * ((left + right) / 2.) / deltaTheta * Math.sin(deltaTheta / 2.);
 			return new double[]{vectorMagnitude * Math.cos(vectorAngle), vectorMagnitude * Math.sin(vectorAngle)};
 		}
 	}

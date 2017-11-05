@@ -13,7 +13,7 @@ import org.usfirst.frc.team449.robot.jacksonWrappers.YamlSubsystem;
  * Drive forward at constant speed then stop to tune PID.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class PIDTest <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandGroupWrapper {
+public class PIDTest<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandGroupWrapper {
 
 	/**
 	 * Default constructor

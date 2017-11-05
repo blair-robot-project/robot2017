@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.motionProfile.Subsyste
  * Runs the command that is currently loaded in the given subsystem.
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class RunLoadedProfile <T extends YamlSubsystem & SubsystemMP> extends YamlCommandWrapper {
+public class RunLoadedProfile<T extends YamlSubsystem & SubsystemMP> extends YamlCommandWrapper {
 
 	/**
 	 * The amount of time this command is allowed to run for, in milliseconds.

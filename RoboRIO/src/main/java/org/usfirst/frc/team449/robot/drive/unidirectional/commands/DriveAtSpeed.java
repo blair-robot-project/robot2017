@@ -15,7 +15,7 @@ import org.usfirst.frc.team449.robot.other.Logger;
  * Go at a certain velocity for a set number of seconds
  */
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class DriveAtSpeed <T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
+public class DriveAtSpeed<T extends YamlSubsystem & DriveUnidirectional> extends YamlCommandWrapper {
 
 	/**
 	 * Speed to go at

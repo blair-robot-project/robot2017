@@ -19,7 +19,7 @@ import org.usfirst.frc.team449.robot.subsystem.interfaces.AHRS.SubsystemAHRS;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.WRAPPER_OBJECT, property = "@class")
 @JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class)
-public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
+public class UnidirectionalNavXShiftingDefaultDrive<T extends YamlSubsystem & DriveUnidirectional & SubsystemAHRS & DriveShiftable> extends UnidirectionalNavXDefaultDrive {
 
 	/**
 	 * The drive to execute this command on.
@@ -92,7 +92,7 @@ public class UnidirectionalNavXShiftingDefaultDrive <T extends YamlSubsystem & D
 	public void execute() {
 		//Auto-shifting
 		if (!subsystem.getOverrideAutoshift()) {
-			autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached())/2., subsystem.getLeftVelCached(),
+			autoshiftComponent.autoshift((oi.getLeftOutputCached() + oi.getRightOutputCached()) / 2., subsystem.getLeftVelCached(),
 					subsystem.getRightVelCached(), gear -> subsystem.setGear(gear));
 		}
 		super.execute();

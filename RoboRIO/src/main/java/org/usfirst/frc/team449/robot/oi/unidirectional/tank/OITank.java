@@ -33,7 +33,7 @@ public abstract class OITank implements OIUnidirectional {
 	 *
 	 * @return percent of max speed for left motor cluster from [-1.0, 1.0]
 	 */
-	public double getLeftThrottleCached(){
+	public double getLeftThrottleCached() {
 		return leftThrottleCached;
 	}
 
@@ -42,7 +42,7 @@ public abstract class OITank implements OIUnidirectional {
 	 *
 	 * @return percent of max speed for right motor cluster from [-1.0, 1.0]
 	 */
-	public double getRightThrottleCached(){
+	public double getRightThrottleCached() {
 		return rightThrottleCached;
 	}
 
@@ -69,7 +69,7 @@ public abstract class OITank implements OIUnidirectional {
 	 *
 	 * @return Output to left side from [-1, 1]
 	 */
-	public double getLeftOutputCached(){
+	public double getLeftOutputCached() {
 		return leftThrottleCached;
 	}
 
@@ -78,7 +78,7 @@ public abstract class OITank implements OIUnidirectional {
 	 *
 	 * @return Output to right side from [-1, 1]
 	 */
-	public double getRightOutputCached(){
+	public double getRightOutputCached() {
 		return rightThrottleCached;
 	}
 
