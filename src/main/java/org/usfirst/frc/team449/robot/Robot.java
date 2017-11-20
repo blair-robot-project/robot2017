@@ -186,7 +186,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit() {
 		//Do the startup tasks
-		doStartupTasks();
+		Clock.updateTime();
 
 		//Read sensors
 		this.robotMap.getUpdater().run();
@@ -225,6 +225,7 @@ public class Robot extends IterativeRobot {
 
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -233,7 +234,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		//Do startup tasks
-		doStartupTasks();
+		Clock.updateTime();
 
 		//Read sensors
 		this.robotMap.getUpdater().run();
@@ -270,6 +271,7 @@ public class Robot extends IterativeRobot {
 		this.robotMap.getUpdater().run();
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -305,6 +307,7 @@ public class Robot extends IterativeRobot {
 		Clock.updateTime();
 		//Read sensors
 		this.robotMap.getUpdater().run();
+		loggerNotifier.startSingle(0);
 	}
 
 	/**
@@ -326,16 +329,5 @@ public class Robot extends IterativeRobot {
 			//Send the byte array.
 			i2C.transaction(WriteData, WriteData.length, null, 0);
 		}
-	}
-
-	/**
-	 * Do tasks that should be done when we first enable, in both auto and teleop.
-	 */
-	private void doStartupTasks() {
-		//Refresh the current time.
-		Clock.updateTime();
-
-		//Start running the logger
-		loggerNotifier.startPeriodic(robotMap.getLogger().getLoopTimeSecs());
 	}
 }
